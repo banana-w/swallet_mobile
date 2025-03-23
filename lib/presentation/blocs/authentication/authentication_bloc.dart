@@ -1,0 +1,99 @@
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:swallet_mobile/data/models.dart';
+import 'package:swallet_mobile/domain/repositories.dart';
+
+part 'authentication_event.dart';
+part 'authentication_state.dart';
+
+class AuthenticationBloc
+    extends Bloc<AuthenticationEvent, AuthenticationState> {
+  final AuthenticationRepository authenticationRepository;
+  AuthenticationBloc({required this.authenticationRepository})
+    : super(AuthenticationInitial()) {
+    on<StartAuthen>(_onStartAuthen);
+    on<LoginAccount>(_onLoginAccount);
+    on<RegisterAccount>(_onRegisterAccount);
+    on<VerifyAccount>(_onVerifyAccount);
+  }
+  Future<void> _onStartAuthen(
+    StartAuthen event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    emit(AuthenticationInitial());
+  }
+
+  //Admin = 1
+  //Lecturer = 2
+  //Brand = 3
+  //Store = 4
+  //Student = 5
+
+  Future<void> _onLoginAccount(
+    LoginAccount event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    emit(AuthenticationInProcess());
+    try {
+      var authenModel = await authenticationRepository.loginWithAccount(
+        event.userName,
+        event.password,
+      );
+      if (authenModel != null) {
+        if (authenModel.userModel.status == false) {
+          emit(AuthenticationFailed(error: 'Tài khoản không còn hoạt động'));
+        } else {
+          if (authenModel.role == 'Student') {
+            emit(AuthenticationSuccess());
+          } else {
+            emit(AuthenticationStoreSuccess());
+          }
+        }
+      } else {
+        emit(
+          AuthenticationFailed(error: 'Tài khoản hoặc mật khẩu không đúng!'),
+        );
+      }
+    } catch (e) {
+      emit(AuthenticationFailed(error: e.toString()));
+    }
+  }
+
+  Future<void> _onRegisterAccount(
+    RegisterAccount event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    emit(AuthenticationInProcess());
+    try {
+      var registerCheck = await authenticationRepository.registerAccount(
+        event.createAuthenModel,
+      );
+      if (registerCheck) {
+        emit(AuthenticationSuccess());
+      } else {
+        emit(AuthenticationFailed(error: 'Đăng ký thất bại!'));
+      }
+    } catch (e) {
+      emit(AuthenticationFailed(error: e.toString()));
+    }
+  }
+
+  Future<void> _onVerifyAccount(
+    VerifyAccount event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    emit(AuthenticationInProcess());
+    try {
+      var verifyCheck = await authenticationRepository.verifyAccount(
+        event.verifyAuthenModel,
+      );
+      if (verifyCheck) {
+        emit(AuthenticationSuccess());
+      } else {
+        emit(AuthenticationFailed(error: 'Đăng ký thất bại!'));
+      }
+    } catch (e) {
+      emit(AuthenticationFailed(error: e.toString()));
+    }
+  }
+}
