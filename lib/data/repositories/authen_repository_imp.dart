@@ -34,13 +34,15 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
           String authenString = jsonEncode(AuthenModel.fromJson(result));
           AuthenLocalDataSource.saveAuthen(authenString);
           AuthenLocalDataSource.saveToken(authenModel.jwt);
-          AuthenLocalDataSource.saveStudentId(authenModel.userModel.userId);
+          AuthenLocalDataSource.saveAccountId(authenModel.accountId);
+          AuthenLocalDataSource.saveIsVerified(authenModel.isVerified);
+
           return this.authenModel;
         } else {
           String authenString = jsonEncode(AuthenModel.fromJson(result));
           AuthenLocalDataSource.saveAuthen(authenString);
           AuthenLocalDataSource.saveToken(authenModel.jwt);
-          AuthenLocalDataSource.saveStoreId(authenModel.userModel.userId);
+          AuthenLocalDataSource.saveAccountId(authenModel.accountId);
           return this.authenModel;
         }
       }
@@ -51,45 +53,45 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
     }
   }
 
-  @override
-  Future<AuthenModel?> loginWithGmail(String idToken) async {
-    try {
-      Map<String, String> body = {'idToken': idToken};
-      http.Request req = http.Request(
-        'Post',
-        Uri.parse('$endPoint/login/google'),
-      )..followRedirects = false;
-      req.headers['Content-Type'] = 'application/json';
-      req.body = jsonEncode(body);
-      final streamedResponse = await http.Client().send(req);
-      final response = await http.Response.fromStream(streamedResponse);
+  // @override
+  // Future<AuthenModel?> loginWithGmail(String idToken) async {
+  //   try {
+  //     Map<String, String> body = {'idToken': idToken};
+  //     http.Request req = http.Request(
+  //       'Post',
+  //       Uri.parse('$endPoint/login/google'),
+  //     )..followRedirects = false;
+  //     req.headers['Content-Type'] = 'application/json';
+  //     req.body = jsonEncode(body);
+  //     final streamedResponse = await http.Client().send(req);
+  //     final response = await http.Response.fromStream(streamedResponse);
 
-      if (response.statusCode == 303) {
-        final result = jsonDecode(utf8.decode(response.bodyBytes));
-        UserModel userModel = UserModel.fromJson(result);
-        this.authenModel = AuthenModel(
-          jwt: '',
-          userModel: userModel,
-          role: 'Student',
-        );
-        String authenString = jsonEncode(this.authenModel);
-        AuthenLocalDataSource.saveAuthen(authenString);
-        return this.authenModel;
-      } else if (response.statusCode == 200) {
-        final result = jsonDecode(utf8.decode(response.bodyBytes));
-        this.authenModel = AuthenModel.fromJson(result);
-        String authenString = jsonEncode(AuthenModel.fromJson(result));
-        AuthenLocalDataSource.saveAuthen(authenString);
-        AuthenLocalDataSource.saveToken(authenModel.jwt);
-        AuthenLocalDataSource.saveStudentId(authenModel.userModel.userId);
-        return this.authenModel;
-      }
-      return null;
-    } catch (e) {
-      print(e);
-      throw Exception(e.toString());
-    }
-  }
+  //     if (response.statusCode == 303) {
+  //       final result = jsonDecode(utf8.decode(response.bodyBytes));
+  //       UserModel userModel = UserModel.fromJson(result);
+  //       this.authenModel = AuthenModel(
+  //         jwt: '',
+  //         userModel: userModel,
+  //         role: 'Student',
+  //       );
+  //       String authenString = jsonEncode(this.authenModel);
+  //       AuthenLocalDataSource.saveAuthen(authenString);
+  //       return this.authenModel;
+  //     } else if (response.statusCode == 200) {
+  //       final result = jsonDecode(utf8.decode(response.bodyBytes));
+  //       this.authenModel = AuthenModel.fromJson(result);
+  //       String authenString = jsonEncode(AuthenModel.fromJson(result));
+  //       AuthenLocalDataSource.saveAuthen(authenString);
+  //       AuthenLocalDataSource.saveToken(authenModel.jwt);
+  //       AuthenLocalDataSource.saveStudentId(authenModel.userModel.userId);
+  //       return this.authenModel;
+  //     }
+  //     return null;
+  //   } catch (e) {
+  //     print(e);
+  //     throw Exception(e.toString());
+  //   }
+  // }
 
   @override
   Future<bool> registerAccount(CreateAuthenModel createAuthenModel) async {
@@ -147,70 +149,70 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
     }
   }
 
-  @override
-  Future<bool> verifyAccount(VerifyAuthenModel verifyAuthenModel) async {
-    try {
-      final authenModel = await AuthenLocalDataSource.getAuthen();
-      final accountId = authenModel!.userModel.id;
-      final Map<String, String> headers = {
-        'Content-Type': 'multipart/form-data',
-        'Accept': 'application/json',
-      };
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse('$endPoint/register/google'),
-      );
+  // @override
+  // Future<bool> verifyAccount(VerifyAuthenModel verifyAuthenModel) async {
+  //   try {
+  //     final authenModel = await AuthenLocalDataSource.getAuthen();
+  //     final accountId = authenModel!.accountId;
+  //     final Map<String, String> headers = {
+  //       'Content-Type': 'multipart/form-data',
+  //       'Accept': 'application/json',
+  //     };
+  //     var request = http.MultipartRequest(
+  //       'POST',
+  //       Uri.parse('$endPoint/register/google'),
+  //     );
 
-      //thêm file cho request
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'StudentCardFront',
-          verifyAuthenModel.studentFrontCard!,
-        ),
-      );
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'StudentCardBack',
-          verifyAuthenModel.studentBackCard!,
-        ),
-      );
+  //     //thêm file cho request
+  //     request.files.add(
+  //       await http.MultipartFile.fromPath(
+  //         'StudentCardFront',
+  //         verifyAuthenModel.studentFrontCard!,
+  //       ),
+  //     );
+  //     request.files.add(
+  //       await http.MultipartFile.fromPath(
+  //         'StudentCardBack',
+  //         verifyAuthenModel.studentBackCard!,
+  //       ),
+  //     );
 
-      //thêm headers
-      request.headers.addAll(headers);
+  //     //thêm headers
+  //     request.headers.addAll(headers);
 
-      //thêm field cho request
-      request.fields.addAll({
-        'CampusId': verifyAuthenModel.campusId!,
-        'FullName': verifyAuthenModel.fullName!,
-        'Code': verifyAuthenModel.code!,
-        'Gender': verifyAuthenModel.gender.toString(),
-        'InviteCode': verifyAuthenModel.inviteCode!,
-        'Email': verifyAuthenModel.email!,
-        'DateOfBirth': verifyAuthenModel.dateofBirth!,
-        'Phone': verifyAuthenModel.phoneNumber!,
-        'AccountId': accountId,
-        'Address': '',
-      });
+  //     //thêm field cho request
+  //     request.fields.addAll({
+  //       'CampusId': verifyAuthenModel.campusId!,
+  //       'FullName': verifyAuthenModel.fullName!,
+  //       'Code': verifyAuthenModel.code!,
+  //       'Gender': verifyAuthenModel.gender.toString(),
+  //       'InviteCode': verifyAuthenModel.inviteCode!,
+  //       'Email': verifyAuthenModel.email!,
+  //       'DateOfBirth': verifyAuthenModel.dateofBirth!,
+  //       'Phone': verifyAuthenModel.phoneNumber!,
+  //       'AccountId': accountId,
+  //       'Address': '',
+  //     });
 
-      //gửi request
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
+  //     //gửi request
+  //     var streamedResponse = await request.send();
+  //     var response = await http.Response.fromStream(streamedResponse);
 
-      if (response.statusCode == 200) {
-        print(response);
-        final result = jsonDecode(utf8.decode(response.bodyBytes));
-        this.authenModel = AuthenModel.fromJson(result);
-        String authenString = jsonEncode(AuthenModel.fromJson(result));
-        AuthenLocalDataSource.saveAuthen(authenString);
-        AuthenLocalDataSource.saveToken(authenModel.jwt);
-        AuthenLocalDataSource.saveStudentId(authenModel.userModel.userId);
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      print(e);
-      throw Exception(e.toString());
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       print(response);
+  //       final result = jsonDecode(utf8.decode(response.bodyBytes));
+  //       this.authenModel = AuthenModel.fromJson(result);
+  //       String authenString = jsonEncode(AuthenModel.fromJson(result));
+  //       AuthenLocalDataSource.saveAuthen(authenString);
+  //       AuthenLocalDataSource.saveToken(authenModel.jwt);
+  //       AuthenLocalDataSource.saveAccountId(authenModel.accountId);
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //     throw Exception(e.toString());
+  //   }
+  // }
 }

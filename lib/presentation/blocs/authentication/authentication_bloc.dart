@@ -14,7 +14,7 @@ class AuthenticationBloc
     on<StartAuthen>(_onStartAuthen);
     on<LoginAccount>(_onLoginAccount);
     on<RegisterAccount>(_onRegisterAccount);
-    on<VerifyAccount>(_onVerifyAccount);
+    // on<VerifyAccount>(_onVerifyAccount);
   }
   Future<void> _onStartAuthen(
     StartAuthen event,
@@ -40,10 +40,10 @@ class AuthenticationBloc
         event.password,
       );
       if (authenModel != null) {
-        if (authenModel.userModel.status == false) {
+        if (authenModel.isVerified == false) {
           emit(AuthenticationFailed(error: 'Tài khoản không còn hoạt động'));
         } else {
-          if (authenModel.role == 'Student') {
+          if (authenModel.role == 'Sinh viên') {
             emit(AuthenticationSuccess());
           } else {
             emit(AuthenticationStoreSuccess());
@@ -78,22 +78,22 @@ class AuthenticationBloc
     }
   }
 
-  Future<void> _onVerifyAccount(
-    VerifyAccount event,
-    Emitter<AuthenticationState> emit,
-  ) async {
-    emit(AuthenticationInProcess());
-    try {
-      var verifyCheck = await authenticationRepository.verifyAccount(
-        event.verifyAuthenModel,
-      );
-      if (verifyCheck) {
-        emit(AuthenticationSuccess());
-      } else {
-        emit(AuthenticationFailed(error: 'Đăng ký thất bại!'));
-      }
-    } catch (e) {
-      emit(AuthenticationFailed(error: e.toString()));
-    }
-  }
+  // Future<void> _onVerifyAccount(
+  //   VerifyAccount event,
+  //   Emitter<AuthenticationState> emit,
+  // ) async {
+  //   emit(AuthenticationInProcess());
+  //   try {
+  //     var verifyCheck = await authenticationRepository.verifyAccount(
+  //       event.verifyAuthenModel,
+  //     );
+  //     if (verifyCheck) {
+  //       emit(AuthenticationSuccess());
+  //     } else {
+  //       emit(AuthenticationFailed(error: 'Đăng ký thất bại!'));
+  //     }
+  //   } catch (e) {
+  //     emit(AuthenticationFailed(error: e.toString()));
+  //   }
+  // }
 }

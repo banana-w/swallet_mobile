@@ -15,7 +15,7 @@ import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:http/http.dart' as http;
 
 class StudentRepositoryImp implements StudentRepository {
-  String endPoint = '${baseURL}students';
+  String endPoint = '${baseURL}Student/account';
   String? token;
   String? studentId;
   String sort = 'Id%2Cdesc';
@@ -196,7 +196,7 @@ class StudentRepositoryImp implements StudentRepository {
   }) async {
     try {
       final authenModel = await AuthenLocalDataSource.getAuthen();
-      final accountId = authenModel!.userModel.id;
+      final accountId = authenModel!.accountId;
       final token = await AuthenLocalDataSource.getToken();
       final Map<String, String> headers = {
         'Content-Type': 'multipart/form-data',

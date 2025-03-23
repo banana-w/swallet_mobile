@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
           duration: const Duration(milliseconds: 1500),
           child: Center(
             child: Text(
-              'UNIBEAN',
+              'SWALLET',
               style: GoogleFonts.openSans(
                 textStyle: TextStyle(
                   fontSize: 30,
@@ -93,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen> {
     var check = box.get('launchApp');
     if (check == null || check == false) {
       launchApp = false;
-      box.put('launchApp', true);
+      box.put('launchApp', false);
     } else {
       launchApp = true;
     }

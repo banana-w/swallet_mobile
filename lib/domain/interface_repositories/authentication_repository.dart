@@ -8,5 +8,5 @@ abstract class AuthenticationRepository {
 
   Future<bool> registerAccount(CreateAuthenModel createAuthenModel);
 
-  Future<bool> verifyAccount(VerifyAuthenModel verifyAuthenModel);
+  // Future<bool> verifyAccount(VerifyAuthenModel verifyAuthenModel);
 }

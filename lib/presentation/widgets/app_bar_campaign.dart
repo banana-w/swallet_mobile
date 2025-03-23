@@ -35,7 +35,7 @@ class AppBarCampaign extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: 50 * hem,
       centerTitle: true,
       title: Text(
-        'UniBean',
+        'Swallet',
         style: GoogleFonts.openSans(
           textStyle: TextStyle(
             fontSize: 22 * ffem,
