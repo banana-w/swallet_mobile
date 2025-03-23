@@ -31,15 +31,15 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
     try {
       final authenModel = await AuthenLocalDataSource.getAuthen();
 
-      bool isVerify = authenModel!.userModel.isVerify;
+      bool isVerify = authenModel!.isVerified;
       String role = authenModel.role;
 
-      String userId = authenModel.userModel.userId;
+      String userId = authenModel.accountId;
       if (userId != '') {
         final student = await studentRepository.fetchStudentById(
-          id: authenModel.userModel.userId,
+          id: authenModel.accountId,
         );
-        if (role == 'Student') {
+        if (role == 'Sinh viên') {
           if (isVerify) {
             emit(Verified(authenModel: authenModel, studentModel: student!));
           } else {
@@ -47,7 +47,7 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
           }
         } else {
           final store = await storeRepository.fetchStoreById(
-            storeId: authenModel.userModel.userId,
+            storeId: authenModel.accountId,
           );
           emit(StoreRole(authenModel: authenModel, storeModel: store!));
         }

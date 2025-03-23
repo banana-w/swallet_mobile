@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/welcome/welcome_screen.dart';
 // import 'package:unibean_app/presentation/screens/student_features/welcome/welcome_screen.dart';
 
 class Body extends StatefulWidget {
@@ -105,11 +106,11 @@ class _BodyState extends State<Body> {
                 SizedBox(height: 20 * hem),
                 TextButton(
                   onPressed: () {
-                    // Navigator.pushNamedAndRemoveUntil(
-                    //   context,
-                    //   WelcomeScreen.routeName,
-                    //   (Route<dynamic> route) => false,
-                    // );
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      WelcomeScreen.routeName,
+                      (Route<dynamic> route) => false,
+                    );
                   },
                   child: Container(
                     width: 270 * fem,
@@ -233,11 +234,11 @@ class _BodyState extends State<Body> {
                 ),
                 InkWell(
                   onTap: () {
-                    // Navigator.pushNamedAndRemoveUntil(
-                    //   context,
-                    //   WelcomeScreen.routeName,
-                    //   (Route<dynamic> route) => false,
-                    // );
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      WelcomeScreen.routeName,
+                      (Route<dynamic> route) => false,
+                    );
                   },
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 20 * hem),

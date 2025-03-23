@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/presentation/blocs/authentication/authentication_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/login/components/button_login.dart';
 import 'package:swallet_mobile/presentation/widgets/text_form_field_default.dart';
@@ -85,7 +86,7 @@ class _FormLoginState extends State<FormLogin> {
           // context.read<ChallengeBloc>().add(LoadChallenge());
           // PushNotification().initNotifications();
           // PushNotification().localNotiInit();
-          // context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
+          context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
           Navigator.pushNamedAndRemoveUntil(
             context,
             '/landing-screen',
@@ -94,7 +95,7 @@ class _FormLoginState extends State<FormLogin> {
         } else if (state is AuthenticationStoreSuccess) {
           context.read<RoleAppBloc>().add(RoleAppStart());
           // context.read<StoreBloc>().add(LoadStoreCampaignVouchers());
-          // context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
+          context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
           Navigator.pushNamedAndRemoveUntil(
             context,
             '/landing-screen-store',
