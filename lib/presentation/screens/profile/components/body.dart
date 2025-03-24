@@ -12,6 +12,7 @@ import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/profile/components/name_profile.dart';
 import 'package:swallet_mobile/presentation/screens/screens.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel/lucky_wheel_screen.dart';
 // import 'package:swallet_mobile/presentation/screens/student_features/profile/components/pending_card.dart';
 // import 'package:swallet_mobile/presentation/screens/student_features/profile/components/rejected_card.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
@@ -464,6 +465,24 @@ class Body extends StatelessWidget {
 
                                       child: Column(
                                         children: [
+                                          // ButtonProfile(
+                                          //   fem: fem,
+                                          //   hem: hem,
+                                          //   ffem: ffem,
+                                          //   widthIcon: 16,
+                                          //   heightIcon: 16,
+                                          //   onPressed: () async {
+                                          //     // context
+                                          //     //     .read<ProductBloc>()
+                                          //     //     .add(LoadProducts());
+                                          //     // Navigator.pushNamed(context,
+                                          //     //     ProductScreen.routeName);
+                                          //   },
+                                          //   svgIcon:
+                                          //       'assets/icons/change-bean-icon.svg',
+                                          //   title: 'Đổi đậu lấy quà',
+                                          // ),
+                                          // SizedBox(height: 10 * hem),
                                           ButtonProfile(
                                             fem: fem,
                                             hem: hem,
@@ -471,15 +490,14 @@ class Body extends StatelessWidget {
                                             widthIcon: 16,
                                             heightIcon: 16,
                                             onPressed: () async {
-                                              // context
-                                              //     .read<ProductBloc>()
-                                              //     .add(LoadProducts());
-                                              // Navigator.pushNamed(context,
-                                              //     ProductScreen.routeName);
+                                              Navigator.pushNamed(
+                                                context,
+                                                LuckyWheelScreen.routeName,
+                                              );
                                             },
                                             svgIcon:
                                                 'assets/icons/change-bean-icon.svg',
-                                            title: 'Đổi đậu lấy quà',
+                                            title: 'Lucky Wheel',
                                           ),
                                           SizedBox(height: 10 * hem),
                                           ButtonProfile(
@@ -500,6 +518,7 @@ class Body extends StatelessWidget {
                                                 'assets/icons/transaction-icon.svg',
                                             title: 'Lịch sử giao dịch',
                                           ),
+
                                           SizedBox(height: 10 * hem),
                                           ButtonProfile(
                                             fem: fem,

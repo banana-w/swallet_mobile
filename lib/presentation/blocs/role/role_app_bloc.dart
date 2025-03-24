@@ -7,7 +7,6 @@ import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
 
-
 part 'role_app_event.dart';
 part 'role_app_state.dart';
 

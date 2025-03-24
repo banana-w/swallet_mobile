@@ -34,16 +34,16 @@ class AppBarCampaign extends StatelessWidget implements PreferredSizeWidget {
       ),
       toolbarHeight: 50 * hem,
       centerTitle: true,
-      title: Text(
-        'Swallet',
-        style: GoogleFonts.openSans(
-          textStyle: TextStyle(
-            fontSize: 22 * ffem,
-            fontWeight: FontWeight.w900,
-            color: Colors.white,
-          ),
-        ),
-      ),
+      // title: Text(
+      //   'Swallet',
+      //   style: GoogleFonts.openSans(
+      //     textStyle: TextStyle(
+      //       fontSize: 22 * ffem,
+      //       fontWeight: FontWeight.w900,
+      //       color: Colors.white,
+      //     ),
+      //   ),
+      // ),
       actions: [
         // SvgPicture.asset('assets/icons/notification-icon.svg')
         Padding(

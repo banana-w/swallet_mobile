@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
+import 'package:swallet_mobile/data/models/student_features/voucher_student_item_model.dart';
+import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/domain/repositories.dart';
 part 'student_event.dart';

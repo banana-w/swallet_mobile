@@ -8,6 +8,8 @@ import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/profile/profile_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/landing/components/cus_nav_bar.dart';
 import 'package:swallet_mobile/presentation/screens/screens.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel/lucky_wheel_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/qr/qr_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/app_bar_campaign.dart';
 
 import '../../../widgets/unverified_screen.dart';
@@ -54,7 +56,11 @@ class LandingScreen extends StatelessWidget {
                     final studentId =
                         await AuthenLocalDataSource.getStudentId();
                     if (studentId != null) {
-                      // Navigator.pushNamed(context, QRScreen.routeName, arguments: studentId);
+                      Navigator.pushNamed(
+                        context,
+                        QRScreen.routeName,
+                        arguments: studentId,
+                      );
                     } else {
                       Navigator.pushNamed(context, UnverifiedScreen.routeName);
                     }

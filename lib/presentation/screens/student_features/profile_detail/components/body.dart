@@ -9,7 +9,7 @@ import 'package:swallet_mobile/domain/interface_repositories/student_features/st
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 
-import '../../../../../data/models.dart';
+import '../../../../../../data/models.dart';
 import 'information_card_profile.dart';
 
 class Body extends StatelessWidget {

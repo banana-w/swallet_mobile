@@ -4,8 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
-import 'package:swallet_mobile/presentation/screens/profile_detail/profile_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile_detail/profile_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/screens.dart';
+
+import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/profile_verification_screen.dart';
 
 import '../../../../../data/models.dart';
 
@@ -200,13 +202,13 @@ class VerifiedCard extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () async {
-                      // final studentModel =
-                      //     await AuthenLocalDataSource.getStudent();
-                      // Navigator.pushNamed(
-                      //   context,
-                      //   ProfileVerificationScreen.routeName,
-                      //   arguments: studentModel,
-                      // );
+                      final studentModel =
+                          await AuthenLocalDataSource.getStudent();
+                      Navigator.pushNamed(
+                        context,
+                        ProfileVerificationScreen.routeName,
+                        arguments: studentModel,
+                      );
                     },
                     child: Container(
                       padding: EdgeInsets.only(left: 5 * fem, right: 5 * fem),
