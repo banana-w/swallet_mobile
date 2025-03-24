@@ -6,8 +6,6 @@ import 'package:swallet_mobile/presentation/blocs/authentication/authentication_
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 
-import '../../../../data/models.dart';
-
 import 'components/body.dart';
 
 class ProfileDetailScreen extends StatelessWidget {
@@ -17,12 +15,13 @@ class ProfileDetailScreen extends StatelessWidget {
       builder:
           (_) => BlocListener<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
-              if (state is AuthenticationFailed)
+              if (state is AuthenticationFailed) {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   LoginScreen.routeName,
                   (Route<dynamic> route) => false,
                 );
+              }
             },
             child: ProfileDetailScreen(studentModel: studentModel),
           ),
@@ -53,16 +52,14 @@ class ProfileDetailScreen extends StatelessWidget {
             ),
           ),
           centerTitle: true,
-          title: Container(
-            child: Text(
-              'Trang cá nhân',
-              style: GoogleFonts.openSans(
-                textStyle: TextStyle(
-                  fontSize: 20 * ffem,
-                  fontWeight: FontWeight.w900,
-                  height: 1.3625 * ffem / fem,
-                  color: Colors.white,
-                ),
+          title: Text(
+            'Trang cá nhân',
+            style: GoogleFonts.openSans(
+              textStyle: TextStyle(
+                fontSize: 20 * ffem,
+                fontWeight: FontWeight.w900,
+                height: 1.3625 * ffem / fem,
+                color: Colors.white,
               ),
             ),
           ),

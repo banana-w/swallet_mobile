@@ -203,7 +203,7 @@ class Body extends StatelessWidget {
                                                             BorderRadius.circular(
                                                               100 * fem,
                                                             ),
-                                                        child: Container(
+                                                        child: SizedBox(
                                                           width: 80 * hem,
                                                           height: 80 * fem,
                                                           child: Image.asset(

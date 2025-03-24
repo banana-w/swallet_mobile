@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swallet_mobile/data/models.dart';
+import 'package:swallet_mobile/data/models/student_features/student_model.dart';
+import 'package:swallet_mobile/presentation/screens/profile_detail/profile_detail_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 import '../screens/screens.dart';
 
@@ -20,7 +22,10 @@ class AppRouter {
 
       case LoginScreen.routeName:
         return LoginScreen.route();
-
+        
+       case ProfileDetailScreen.routeName:
+        return ProfileDetailScreen.route(
+            studentModel: settings.arguments as StudentModel);
       default:
         return _errorRoute();
     }

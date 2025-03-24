@@ -151,11 +151,13 @@ class VerifiedCard extends StatelessWidget {
                     onTap: () async {
                       final studentModel =
                           await AuthenLocalDataSource.getStudent();
-                      Navigator.pushNamed(
-                        context,
-                        ProfileDetailScreen.routeName,
-                        arguments: studentModel,
-                      );
+                      if (context.mounted) {
+                        Navigator.pushNamed(
+                          context,
+                          ProfileDetailScreen.routeName,
+                          arguments: studentModel,
+                        );
+                      }
                     },
                     child: Container(
                       padding: EdgeInsets.only(left: 5 * fem, right: 5 * fem),

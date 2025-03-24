@@ -95,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen> {
       launchApp = false;
       box.put('launchApp', false);
     } else {
-      launchApp = true;
+      launchApp = false;
     }
   }
 }

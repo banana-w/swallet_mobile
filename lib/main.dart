@@ -72,13 +72,7 @@ class MyApp extends StatelessWidget {
                 (context) => AuthenticationBloc(
                   authenticationRepository: AuthenticationRepositoryImp(),
                 )..add(StartAuthen()),
-          ),
-          BlocProvider(
-            create:
-                (context) => AuthenticationBloc(
-                  authenticationRepository: AuthenticationRepositoryImp(),
-                )..add(StartAuthen()),
-          ),
+          )
         ],
         child: MaterialApp(
           navigatorKey: navigatorKey,
