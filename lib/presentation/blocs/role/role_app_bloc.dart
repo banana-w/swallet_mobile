@@ -1,15 +1,12 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/authen_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
-import 'package:swallet_mobile/domain/repositories.dart';
-import 'package:swallet_mobile/presentation/config/constants.dart';
 
-import '../../../data/models.dart';
 
 part 'role_app_event.dart';
 part 'role_app_state.dart';
@@ -66,6 +63,9 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
     try {
       final studentId = await AuthenLocalDataSource.getStudentId();
       if (studentId == null) {
+        AuthenLocalDataSource.removeAuthen();
+        AuthenLocalDataSource.clearAuthen();
+      } else {
         AuthenLocalDataSource.removeAuthen();
         AuthenLocalDataSource.clearAuthen();
       }

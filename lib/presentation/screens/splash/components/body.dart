@@ -14,29 +14,29 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   int pageIndex = 0;
   PageController pageController = PageController(initialPage: 0);
-  List<Map<String, String>> splashData = [
-    {
-      'image': 'assets/images/onboarding1.png',
-      'title': 'Xin Chào!',
-      'content':
-          'Tìm kiếm những thông tin hữu ích,\n những hoạt động thú vị và những phần quà đặc biệt.',
-      'button': 'Tiếp tục',
-    },
-    {
-      'image': 'assets/images/onboarding2.png',
-      'title': 'Nhận Bean Mọi Nơi!',
-      'content':
-          'Thu nhập các điểm thưởng\n và đổi lấy những phần quà hấp dẫn!.',
-      'button': 'Tiếp tục',
-    },
-    {
-      'image': 'assets/images/onboarding3.png',
-      'title': 'Ưu Đãi Độc Quyền',
-      'content':
-          'Bạn sẽ tìm thấy những ưu đãi cũng như\n các phần quà đặc biệt chỉ có tại đây.',
-      'button': 'Bắt đầu!',
-    },
-  ];
+List<Map<String, String>> splashData = [
+  {
+    'image': 'assets/images/onboarding1.png',
+    'title': 'Swallet - Ví tích điểm',
+    'content':
+        'Ứng dụng ví tích điểm cho sinh viên,\n thu thập "Seed" và đổi quà dễ dàng.',
+    'button': 'Tiếp tục',
+  },
+  {
+    'image': 'assets/images/onboarding2.png',
+    'title': 'Nhận Star Mọi Nơi!',
+    'content':
+        'Tham gia hoạt động, tích điểm,\n đổi quà hấp dẫn ngay trong tầm tay.',
+    'button': 'Tiếp tục',
+  },
+  {
+    'image': 'assets/images/onboarding3.png',
+    'title': 'Ưu Đãi Swallet',
+    'content':
+        'Đặc quyền và quà tặng \nchỉ dành riêng cho sinh viên.',
+    'button': 'Bắt đầu!',
+  },
+];
 
   @override
   Widget build(BuildContext context) {

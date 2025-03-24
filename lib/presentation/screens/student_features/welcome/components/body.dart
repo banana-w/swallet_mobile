@@ -41,7 +41,7 @@ class Body extends StatelessWidget {
           SizedBox(
             height: 60 * hem,
             child: Text(
-              'Tham gia các hoạt động bạn yêu thích,\n tích bean và đổi những phần quà đặc biệt!',
+              'Tham gia các hoạt động bạn yêu thích,\n tích "Seed" và đổi những phần quà đặc biệt!',
               textAlign: TextAlign.center,
               style: GoogleFonts.openSans(
                 textStyle: TextStyle(

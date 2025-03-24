@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/validation_repository.dart';
 
-import '../../../domain/repositories.dart';
 
 part 'validation_state.dart';
 
