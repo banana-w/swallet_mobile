@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:swallet_mobile/data/models.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/screens/profile_detail/profile_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_1_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_2_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_3_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_4_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_5_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_6_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_7_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_9_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 import '../screens/screens.dart';
 
@@ -22,10 +31,38 @@ class AppRouter {
 
       case LoginScreen.routeName:
         return LoginScreen.route();
-        
-       case ProfileDetailScreen.routeName:
+
+      case SignUpScreen.routeName:
+        return SignUpScreen.route();
+
+      case SignUp1Screen.routeName:
+        return SignUp1Screen.route(register: settings.arguments as bool);
+
+      case SignUp2Screen.routeName:
+        return SignUp2Screen.route();
+
+      case SignUp3Screen.routeName:
+        return SignUp3Screen.route();
+
+      case SignUp4Screen.routeName:
+        return SignUp4Screen.route();
+
+      case SignUp5Screen.routeName:
+        return SignUp5Screen.route();
+
+      case SignUp6Screen.routeName:
+        return SignUp6Screen.route();
+
+      case SignUp7Screen.routeName:
+        return SignUp7Screen.route();
+
+      case SignUp9Screen.routeName:
+        return SignUp9Screen.route();
+
+      case ProfileDetailScreen.routeName:
         return ProfileDetailScreen.route(
-            studentModel: settings.arguments as StudentModel);
+          studentModel: settings.arguments as StudentModel,
+        );
       default:
         return _errorRoute();
     }

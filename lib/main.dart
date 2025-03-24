@@ -4,16 +4,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:swallet_mobile/data/repositories/authen_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/store_features/store_repository_imp.dart';
+import 'package:swallet_mobile/data/repositories/student_features/campus_repository.dart';
 import 'package:swallet_mobile/data/repositories/student_features/student_repository_imp.dart';
+import 'package:swallet_mobile/data/repositories/student_features/validation_repository_imp.dart';
 import 'package:swallet_mobile/domain/entities/store_features/store.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
+import 'package:swallet_mobile/domain/interface_repositories/student_features/campus_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
+import 'package:swallet_mobile/domain/interface_repositories/student_features/validation_repository.dart';
 import 'package:swallet_mobile/domain/repositories.dart';
 import 'package:swallet_mobile/presentation/blocs/authentication/authentication_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/campus/campus_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/config/app_router.dart';
+import 'package:swallet_mobile/presentation/cubits/validation/validation_cubit.dart';
 import 'package:swallet_mobile/presentation/screens/splash/splash_screen.dart';
 import 'package:swallet_mobile/simple_bloc_observer.dart';
 
@@ -56,6 +62,14 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<StoreRepository>(
           create: (_) => StoreRepositoryImp(),
         ),
+        RepositoryProvider<CampusRepository>(
+          create: (_) => CampusRepositoryImp(),
+        ),
+        RepositoryProvider<ValidationRepository>(
+          create: (_) => ValidationRepositoryImp(),
+        ),
+        // RepositoryProvider<VerificationRepository>(
+        //     create: (_) => VerificationRepositoryImp()),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -72,7 +86,14 @@ class MyApp extends StatelessWidget {
                 (context) => AuthenticationBloc(
                   authenticationRepository: AuthenticationRepositoryImp(),
                 )..add(StartAuthen()),
-          )
+          ),
+          BlocProvider(
+            create:
+                (context) =>
+                    ValidationCubit(ValidationRepositoryImp())
+                      ..loadingValidation(),
+          ),
+          BlocProvider(create: (context) => CampusBloc(CampusRepositoryImp())),
         ],
         child: MaterialApp(
           navigatorKey: navigatorKey,
