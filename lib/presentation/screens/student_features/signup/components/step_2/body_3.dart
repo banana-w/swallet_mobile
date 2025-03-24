@@ -4,7 +4,7 @@ import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/components/step_2/form_3.dart';
 
 class Body3 extends StatefulWidget {
-  Body3({super.key});
+  const Body3({super.key});
 
   @override
   State<Body3> createState() => _Body3State();

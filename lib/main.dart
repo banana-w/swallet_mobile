@@ -93,7 +93,11 @@ class MyApp extends StatelessWidget {
                     ValidationCubit(ValidationRepositoryImp())
                       ..loadingValidation(),
           ),
-          BlocProvider(create: (context) => CampusBloc(CampusRepositoryImp())),
+          BlocProvider(
+            create:
+                (context) =>
+                    CampusBloc(CampusRepositoryImp())..add(LoadCampus(searchName: '')),
+          ),
         ],
         child: MaterialApp(
           navigatorKey: navigatorKey,

@@ -6,58 +6,70 @@ import '../../../presentation/config/constants.dart';
 import 'package:http/http.dart' as http;
 
 class ValidationRepositoryImp implements ValidationRepository {
-  String endPoint = '${baseURL}validations';
+  String endPoint = '${baseURL}Account';
 
   @override
-  Future<String> validateEmail({required String email}) async {
-    try {
-      final Map<String, String> headers = {'Content-Type': 'application/json'};
+Future<String> validateEmail({required String email}) async {
+  try {
+    final Map<String, String> headers = {'Content-Type': 'application/json'};
 
-      Map<String, String> body = {'email': email};
+    // Encode email để tránh lỗi ký tự đặc biệt
+    final String encodedEmail = Uri.encodeComponent(email);
+    final String url = '$endPoint/validEmail/$encodedEmail';
+    
+    http.Response response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+    );
 
-      http.Response response = await http.post(
-        Uri.parse('$endPoint/email'),
-        headers: headers,
-        body: jsonEncode(body),
-      );
-
-      if (response.statusCode == 200) {
-        // final List<dynamic> result =
-        //     jsonDecode(utf8.decode(response.bodyBytes));
-
-        return '';
-      }
-      List<dynamic> jsonReponse = jsonDecode(response.body);
-      String error = jsonReponse[0];
-      return error;
-    } catch (e) {
-      throw Exception(e.toString());
+    if (response.statusCode == 200) {
+      return '';
     }
-  }
 
-  @override
-  Future<String> validateUserName({required String userName}) async {
-    try {
-      final Map<String, String> headers = {'Content-Type': 'application/json'};
-
-      Map<String, String> body = {'userName': userName};
-
-      http.Response response = await http.post(
-        Uri.parse('$endPoint/username'),
-        headers: headers,
-        body: jsonEncode(body),
-      );
-
-      if (response.statusCode == 200) {
-        return '';
-      }
-      List<dynamic> jsonReponse = jsonDecode(response.body);
-      String error = jsonReponse[0];
-      return error;
-    } catch (e) {
-      throw Exception(e.toString());
+    // Kiểm tra định dạng response
+    final jsonResponse = jsonDecode(response.body);
+    if (jsonResponse is List && jsonResponse.isNotEmpty) {
+      return jsonResponse[0].toString();
+    } else if (jsonResponse is Map) {
+      return jsonResponse['Message'].toString();
     }
+    return 'Unknown error occurred';
+  } catch (e) {
+    return 'Failed to validate email: $e';
   }
+}
+
+@override
+Future<String> validateUserName({required String userName}) async {
+  try {
+    final Map<String, String> headers = {'Content-Type': 'application/json',
+                                          'Accept' : 'text/plain'};
+
+    // Encode username để tránh lỗi ký tự đặc biệt
+    final String encodedUserName = Uri.encodeComponent(userName);
+    final String url = '$endPoint/validUsername/$encodedUserName';
+    
+    http.Response response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return '';
+    }
+
+    // Kiểm tra định dạng response
+    final jsonResponse = jsonDecode(response.body);
+    if (jsonResponse is List && jsonResponse.isNotEmpty) {
+      return jsonResponse[0].toString();
+    } else if (jsonResponse is Map) {
+      return jsonResponse['Message'].toString();
+    }
+    return 'Unknown error occurred';
+  } catch (e) {
+    return 'Failed to validate username: $e';
+  }
+}
 
   @override
   Future<String> validateStudentCode({required String studentCode}) async {

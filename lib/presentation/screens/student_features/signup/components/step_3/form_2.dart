@@ -6,8 +6,6 @@ import 'package:swallet_mobile/presentation/screens/student_features/signup/scre
 
 import '../../../../../../../data/datasource/authen_local_datasource.dart';
 
-import 'drop_down_university.dart';
-
 class FormBody2 extends StatefulWidget {
   const FormBody2({
     super.key,
@@ -62,7 +60,7 @@ class _FormBody2State extends State<FormBody2> {
                 //     return null;
                 //   },
                 // ),
-                SizedBox(height: 20 * widget.hem),
+                SizedBox(height: 25 * widget.hem),
                 DropDownCampus(
                   fem: widget.fem,
                   hem: widget.hem,
@@ -105,7 +103,9 @@ void _submitForm(BuildContext context, campusController) async {
     createAuthenModel!.campusId = campusController.text;
     String createAuthenString = jsonEncode(createAuthenModel);
     AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
-    Navigator.pushNamed(context, SignUp4Screen.routeName);
+    if (context.mounted) {
+      Navigator.pushNamed(context, SignUp4Screen.routeName);
+    }
   } else {
     final verifyAuthenModel = await AuthenLocalDataSource.getVerifyAuthen();
     verifyAuthenModel!.campusId = campusController.text;
