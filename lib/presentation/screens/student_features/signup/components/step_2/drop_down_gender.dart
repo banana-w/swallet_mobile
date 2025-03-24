@@ -88,10 +88,11 @@ class _DropDownGenderState extends State<DropDownGender> {
             widget.genderController.text = newValue.toString();
           });
         },
+         validator: widget.validator,
         items:
             GenderModel.genders.map((g) {
               return DropdownMenuItem(
-                value: g.id,
+                value: g.id.toString(),
                 child: Text(g.name.toString()),
               );
             }).toList(),
