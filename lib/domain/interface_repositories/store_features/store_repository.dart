@@ -1,4 +1,6 @@
+import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
+import 'package:swallet_mobile/data/models/store_features/transaction_store_model.dart';
 
 import '../../../data/models.dart';
 
@@ -7,9 +9,12 @@ abstract class StoreRepository {
 
   Future<StoreModel?> fetchStoreById({required String storeId});
 
-  // Future<ApiResponse<List<TransactionStoreModel>>?> fetchTransactionsStoreId(
-  //     int? page, int? limit, int? typeIds,
-  //     {required String id});
+  Future<ApiResponse<List<TransactionStoreModel>>?> fetchTransactionsStoreId(
+    int? page,
+    int? limit,
+    int? typeIds, {
+    required String id,
+  });
 
   // Future<ApiResponse<List<CampaignVoucherStoreModel>>?>
   //     fetchCampaignVoucherStoreId(int? page, int? limit, String? search);

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:swallet_mobile/data/models.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
-import 'package:swallet_mobile/presentation/screens/profile_detail/profile_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel/lucky_wheel_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile_detail/profile_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/profile_verification_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/qr/qr_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_1_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_2_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_3_screen.dart';
@@ -58,6 +61,20 @@ class AppRouter {
 
       case SignUp9Screen.routeName:
         return SignUp9Screen.route();
+
+      case LuckyWheelScreen.routeName:
+        return LuckyWheelScreen.route();
+
+      case UnverifiedScreen.routeName:
+        return UnverifiedScreen.route();
+
+      case QRScreen.routeName:
+        return QRScreen.route(id: settings.arguments as String);
+
+      case ProfileVerificationScreen.routeName:
+        return ProfileVerificationScreen.route(
+          studentModel: settings.arguments as StudentModel,
+        );
 
       case ProfileDetailScreen.routeName:
         return ProfileDetailScreen.route(

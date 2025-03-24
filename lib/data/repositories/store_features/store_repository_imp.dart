@@ -4,7 +4,9 @@ import 'dart:convert';
 // import 'package:swallet_mobile/data/models/store_features/campagin_ranking_model.dart';
 // import 'package:swallet_mobile/data/models/store_features/campaign_voucher_information_model.dart';
 // import 'package:swallet_mobile/data/models/store_features/campaign_voucher_store_model.dart';
+import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
+import 'package:swallet_mobile/data/models/store_features/transaction_store_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
 // import 'package:swallet_mobile/data/models/store_features/student_ranking_model.dart';
 // import 'package:swallet_mobile/data/models/store_features/transact_result_model.dart';
@@ -24,56 +26,63 @@ class StoreRepositoryImp extends StoreRepository {
   int limit = 10;
   bool state = true;
 
-  // @override
-  // Future<ApiResponse<List<TransactionStoreModel>>?> fetchTransactionsStoreId(
-  //     int? page, int? limit, int? typeIds,
-  //     {required String id}) async {
-  //   try {
-  //     final token = await AuthenLocalDataSource.getToken();
-  //     // final storeId = await AuthenLocalDataSource.getStudentId();
-  //     final Map<String, String> headers = {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer $token'
-  //     };
-  //     if (typeIds == 0) {
-  //       http.Response response = await http.get(
-  //           Uri.parse(
-  //               '$endPoint/$id/histories?state=$state&sort=$sort&page=$page&limit=$limit'),
-  //           headers: headers);
-  //       if (response.statusCode == 200) {
-  //         final result = jsonDecode(utf8.decode(response.bodyBytes));
-  //         ApiResponse<List<TransactionStoreModel>> apiResponse =
-  //             ApiResponse<List<TransactionStoreModel>>.fromJson(
-  //                 result,
-  //                 (data) => data
-  //                     .map((e) => TransactionStoreModel.fromJson(e))
-  //                     .toList());
-  //         return apiResponse;
-  //       } else {
-  //         return null;
-  //       }
-  //     } else {
-  //       http.Response response = await http.get(
-  //           Uri.parse(
-  //               '$endPoint/$id/histories?state=$state&typeIds=$typeIds&sort=$sort&page=$page&limit=$limit'),
-  //           headers: headers);
-  //       if (response.statusCode == 200) {
-  //         final result = jsonDecode(utf8.decode(response.bodyBytes));
-  //         ApiResponse<List<TransactionStoreModel>> apiResponse =
-  //             ApiResponse<List<TransactionStoreModel>>.fromJson(
-  //                 result,
-  //                 (data) => data
-  //                     .map((e) => TransactionStoreModel.fromJson(e))
-  //                     .toList());
-  //         return apiResponse;
-  //       } else {
-  //         return null;
-  //       }
-  //     }
-  //   } catch (e) {
-  //     throw Exception(e.toString());
-  //   }
-  // }
+  @override
+  Future<ApiResponse<List<TransactionStoreModel>>?> fetchTransactionsStoreId(
+    int? page,
+    int? limit,
+    int? typeIds, {
+    required String id,
+  }) async {
+    try {
+      final token = await AuthenLocalDataSource.getToken();
+      // final storeId = await AuthenLocalDataSource.getStudentId();
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+      if (typeIds == 0) {
+        http.Response response = await http.get(
+          Uri.parse(
+            '$endPoint/$id/histories?state=$state&sort=$sort&page=$page&limit=$limit',
+          ),
+          headers: headers,
+        );
+        if (response.statusCode == 200) {
+          final result = jsonDecode(utf8.decode(response.bodyBytes));
+          ApiResponse<List<TransactionStoreModel>> apiResponse =
+              ApiResponse<List<TransactionStoreModel>>.fromJson(
+                result,
+                (data) =>
+                    data.map((e) => TransactionStoreModel.fromJson(e)).toList(),
+              );
+          return apiResponse;
+        } else {
+          return null;
+        }
+      } else {
+        http.Response response = await http.get(
+          Uri.parse(
+            '$endPoint/$id/histories?state=$state&typeIds=$typeIds&sort=$sort&page=$page&limit=$limit',
+          ),
+          headers: headers,
+        );
+        if (response.statusCode == 200) {
+          final result = jsonDecode(utf8.decode(response.bodyBytes));
+          ApiResponse<List<TransactionStoreModel>> apiResponse =
+              ApiResponse<List<TransactionStoreModel>>.fromJson(
+                result,
+                (data) =>
+                    data.map((e) => TransactionStoreModel.fromJson(e)).toList(),
+              );
+          return apiResponse;
+        } else {
+          return null;
+        }
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 
   // @override
   // Future<StoreModel?> fetchStoreById({required String storeId}) async {

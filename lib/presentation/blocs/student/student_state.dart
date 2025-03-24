@@ -14,17 +14,19 @@ final class StudentVoucherLoading extends StudentState {
   List<Object?> get props => [];
 }
 
-// final class StudentVouchersLoaded extends StudentState {
-//   final List<VoucherStudentModel> voucherModels;
+final class StudentVouchersLoaded extends StudentState {
+  final List<VoucherStudentModel> voucherModels;
 
-//   final bool hasReachedMax;
+  final bool hasReachedMax;
 
-//   StudentVouchersLoaded(
-//       {required this.voucherModels, this.hasReachedMax = false});
+  StudentVouchersLoaded({
+    required this.voucherModels,
+    this.hasReachedMax = false,
+  });
 
-//   @override
-//   List<Object?> get props => [voucherModels, hasReachedMax];
-// }
+  @override
+  List<Object?> get props => [voucherModels, hasReachedMax];
+}
 
 final class StudentFaled extends StudentState {
   final String error;
@@ -85,14 +87,14 @@ final class StudentVoucherItemLoading extends StudentState {
   List<Object?> get props => [];
 }
 
-// final class StudentVoucherItemLoaded extends StudentState {
-//   final VoucherStudentItemModel voucherStudentItemModel;
+final class StudentVoucherItemLoaded extends StudentState {
+  final VoucherStudentItemModel voucherStudentItemModel;
 
-//   StudentVoucherItemLoaded({required this.voucherStudentItemModel});
+  StudentVoucherItemLoaded({required this.voucherStudentItemModel});
 
-//   @override
-//   List<Object?> get props => [voucherStudentItemModel];
-// }
+  @override
+  List<Object?> get props => [voucherStudentItemModel];
+}
 
 final class StudentByIdSuccess extends StudentState {
   final StudentModel studentMode;
