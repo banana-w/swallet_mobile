@@ -63,7 +63,7 @@ class _DropDownCampusState extends State<DropDownCampus> {
                 ),
                 decoration: InputDecoration(
                   labelText: 'CƠ SỞ *',
-                  hintText: 'Chọn cơ sở',
+                  hintText: 'Đang tải cơ sở...',
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   labelStyle: GoogleFonts.openSans(
                     textStyle: TextStyle(

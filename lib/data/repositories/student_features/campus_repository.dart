@@ -7,7 +7,7 @@ import 'package:swallet_mobile/domain/interface_repositories/student_features/ca
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
 class CampusRepositoryImp implements CampusRepository {
-  String endPoint = '${baseURL}campuses';
+  String endPoint = '${baseURL}Campus';
   String sort = 'Id%2Cdesc';
   int page = 1;
   int limit = 10;

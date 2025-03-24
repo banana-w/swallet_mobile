@@ -49,8 +49,8 @@ class ValidationCubit extends Cubit<ValidationState> {
   Future<String?> validateStudentCode(String studentCode) async {
     emit(ValidationInProcess());
     try {
-      var check = await validationRepository.validateStudentCode(
-        studentCode: studentCode,
+      var check = await validationRepository.validateUserName(
+        userName: studentCode,
       );
       // print(check);
       if (check == '') {
@@ -67,8 +67,8 @@ class ValidationCubit extends Cubit<ValidationState> {
   Future<String?> validatePhoneNumber(String phone) async {
     emit(ValidationInProcess());
     try {
-      var check = await validationRepository.validatePhoneNumber(
-        phoneNumber: phone,
+      var check = await validationRepository.validateUserName(
+        userName: phone,
       );
       // print(check);
       if (check == '') {
@@ -85,8 +85,8 @@ class ValidationCubit extends Cubit<ValidationState> {
   Future<String?> validateInviteCode(String inviteCode) async {
     emit(ValidationInProcess());
     try {
-      var check = await validationRepository.validateInviteCode(
-        inviteCode: inviteCode,
+      var check = await validationRepository.validateUserName(
+        userName: inviteCode,
       );
       // print(check);
       if (check == '') {
