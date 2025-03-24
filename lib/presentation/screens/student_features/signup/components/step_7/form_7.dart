@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
+import 'package:swallet_mobile/presentation/blocs/authentication/authentication_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/cubits/validation/validation_cubit.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_8_screen.dart';
@@ -67,13 +68,12 @@ class _FormBody7State extends State<FormBody7> {
                     if (state is CheckPhoneFailed) {
                       return Column(
                         children: [
-                          Container(
+                          SizedBox(
                             width: 272 * widget.fem,
                             height: 80 * widget.hem,
                             child: InputDecorator(
                               decoration: InputDecoration(
                                 labelText: 'SỐ ĐIỆN THOẠI *',
-                                // hintText: hintText,
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.always,
                                 labelStyle: GoogleFonts.openSans(
@@ -236,31 +236,78 @@ class _FormBody7State extends State<FormBody7> {
             ),
           ),
           SizedBox(height: 30 * widget.hem),
-          BlocBuilder<ValidationCubit, ValidationState>(
-            builder: (context, state) {
-              return ButtonSignUp7(
-                widget: widget,
-                onPressed: () {
-                  if (state is CheckPhoneFailed) {
-                    if (_formKey.currentState!.validate()) {
-                      _submitForm(
-                        context,
-                        countryController,
-                        phoneNumberController,
-                      );
-                    }
-                  } else {
-                    if (_formKey.currentState!.validate()) {
-                      _submitForm(
-                        context,
-                        countryController,
-                        phoneNumberController,
-                      );
-                    }
-                  }
-                },
-              );
+          BlocListener<AuthenticationBloc, AuthenticationState>(
+            listener: (context, state) {
+              if (state is AuthenticationSuccess) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  SignUp9Screen.routeName,
+                  (Route<dynamic> route) => false,
+                );
+              } else if (state is AuthenticationInProcess) {
+                showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    Future.delayed(Duration(seconds: 20), () {
+                      Navigator.pop(context);
+                    });
+                    return AlertDialog(
+                      content: SizedBox(
+                        width: 250,
+                        height: 250,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: CircularProgressIndicator(
+                                color: kPrimaryColor,
+                              ),
+                            ),
+                            Text(
+                              'Đang tạo tài khoản...',
+                              style: GoogleFonts.openSans(
+                                textStyle: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
             },
+            child: BlocBuilder<ValidationCubit, ValidationState>(
+              builder: (context, state) {
+                return ButtonSignUp7(
+                  widget: widget,
+                  onPressed: () {
+                    if (state is CheckPhoneFailed) {
+                      if (_formKey.currentState!.validate()) {
+                        _submitForm(
+                          context,
+                          countryController,
+                          phoneNumberController,
+                        );
+                      }
+                    } else {
+                      if (_formKey.currentState!.validate()) {
+                        _submitForm(
+                          context,
+                          countryController,
+                          phoneNumberController,
+                        );
+                      }
+                    }
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -274,36 +321,37 @@ class _FormBody7State extends State<FormBody7> {
   ) async {
     final authenModel = await AuthenLocalDataSource.getAuthen();
     if (authenModel == null) {
-      print('0${phoneNumberController.text}');
-      context
-          .read<ValidationCubit>()
-          .validatePhoneNumber('0${phoneNumberController.text}')
-          .then((value) async {
-            if (value == '') {
-              // Lưu số điện thoại
-              final createAuthenModel =
-                  await AuthenLocalDataSource.getCreateAuthen();
-              createAuthenModel!.phoneNumber = '0${phoneNumberController.text}';
-              String createAuthenString = jsonEncode(createAuthenModel);
-              print(createAuthenString);
-              AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
+      if (context.mounted) {
+        print('0${phoneNumberController.text}');
+        context
+            .read<ValidationCubit>()
+            .validatePhoneNumber('0${phoneNumberController.text}')
+            .then((value) async {
+              if (value == '') {
+                // Lưu số điện thoại
+                final createAuthenModel =
+                    await AuthenLocalDataSource.getCreateAuthen();
+                createAuthenModel!.phoneNumber =
+                    '0${phoneNumberController.text}';
+                    
+                String createAuthenString = jsonEncode(createAuthenModel);
+                print(createAuthenString);
+                // AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
 
-              // Chuyển đến màn hình tiếp theo
-              Future.delayed(const Duration(seconds: 5), () {
-                Navigator.pushNamed(
-                  context,
-                  SignUp9Screen.routeName,
-                  arguments: phoneNumberController.text,
-                );
-              });
-            } else {
-              if (value == '["Số điện thoại không hợp lệ"]') {
-                setState(() {
-                  errorString = 'Số điện thoại không hợp lệ';
-                });
+                if (context.mounted) {
+                  context.read<AuthenticationBloc>().add(
+                    RegisterAccount(createAuthenModel: createAuthenModel!),
+                  );
+                }
+              } else {
+                if (value == '["Số điện thoại không hợp lệ"]') {
+                  setState(() {
+                    errorString = 'Số điện thoại không hợp lệ';
+                  });
+                }
               }
-            }
-          });
+            });
+      }
     } else {
       context
           .read<ValidationCubit>()
