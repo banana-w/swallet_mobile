@@ -217,7 +217,6 @@ void _submitForm(
           CreateAuthenModel createAuthenModel = CreateAuthenModel(
             userName: userNameController.text.trim(),
             password: passController.text.trim(),
-            passwordConfirmed: confirmPassController.text.trim(),
           );
           String createAuthenString = jsonEncode(createAuthenModel);
           AuthenLocalDataSource.saveCreateAuthen(createAuthenString);

@@ -40,7 +40,8 @@ class AuthenticationBloc
         event.password,
       );
       if (authenModel != null) {
-        if (authenModel.isVerified == false) {
+        //authenModel.isVerified == 
+        if (false) {
           emit(AuthenticationFailed(error: 'Tài khoản không còn hoạt động'));
         } else {
           if (authenModel.role == 'Sinh viên') {

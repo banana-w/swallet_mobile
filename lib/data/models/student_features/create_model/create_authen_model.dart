@@ -1,7 +1,6 @@
 class CreateAuthenModel {
   String? userName;
   String? password;
-  String? passwordConfirmed;
   String? campusId;
   String? fullName;
   int? gender;
@@ -18,7 +17,6 @@ class CreateAuthenModel {
   CreateAuthenModel({
     this.userName,
     this.password,
-    this.passwordConfirmed,
     this.campusId,
     this.fullName,
     this.gender,
@@ -37,7 +35,6 @@ class CreateAuthenModel {
     return CreateAuthenModel(
       userName: json['userName'],
       password: json['password'],
-      passwordConfirmed: json['passwordConfirmed'],
       campusId: json['campusId'],
       fullName: json['fullName'],
       studentFrontCard: json['studentFrontCard'],
@@ -56,7 +53,6 @@ class CreateAuthenModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['userName'] = this.userName;
     data['password'] = this.password;
-    data['passwordConfirmed'] = this.passwordConfirmed;
     data['campusId'] = this.campusId;
     data['phoneNumber'] = this.phoneNumber;
     data['code'] = this.code;
