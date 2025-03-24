@@ -12,7 +12,6 @@ import 'package:swallet_mobile/presentation/screens/student_features/signup/scre
 import 'package:swallet_mobile/presentation/widgets/text_form_field_default.dart';
 import 'package:swallet_mobile/presentation/widgets/text_form_field_password.dart';
 
-// import 'package:unibean_app/presentation/blocs/validation/validation_bloc.dart';
 
 class FormBody extends StatefulWidget {
   const FormBody({
@@ -222,11 +221,13 @@ void _submitForm(
           );
           String createAuthenString = jsonEncode(createAuthenModel);
           AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
-          Navigator.pushNamed(
-            context,
-            SignUp1Screen.routeName,
-            arguments: true,
-          );
+          if (context.mounted) {
+            Navigator.pushNamed(
+              context,
+              SignUp1Screen.routeName,
+              arguments: true,
+            );
+          }
         } else {
           return null;
         }

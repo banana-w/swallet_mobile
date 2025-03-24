@@ -5,11 +5,10 @@ sealed class CampusEvent extends Equatable {
 }
 
 final class LoadCampus extends CampusEvent {
-  final String universityId;
-  final String searchName;
+final String searchName;
 
-  LoadCampus({required this.universityId, required this.searchName});
+  LoadCampus({required this.searchName});
 
   @override
-  List<Object?> get props => [universityId];
+  List<Object?> get props => [searchName];
 }

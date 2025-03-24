@@ -5,8 +5,6 @@ import 'package:swallet_mobile/data/models/student_features/campus_model.dart';
 import 'package:swallet_mobile/presentation/blocs/campus/campus_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
-import '../../../../../../../data/models.dart';
-
 class DropDownCampus extends StatefulWidget {
   final double hem;
   final double fem;
@@ -42,7 +40,7 @@ class _DropDownCampusState extends State<DropDownCampus> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 272 * widget.fem,
       child: BlocConsumer<CampusBloc, CampusState>(
         listener: (context, state) {
@@ -52,7 +50,7 @@ class _DropDownCampusState extends State<DropDownCampus> {
         },
         builder: (context, state) {
           if (state is CampusLoading) {
-            return Container(
+            return SizedBox(
               width: 272 * widget.fem,
               child: TextFormField(
                 readOnly: true,
@@ -187,8 +185,8 @@ class _DropDownCampusState extends State<DropDownCampus> {
       items:
           campuses.map((u) {
             return DropdownMenuItem(
-              child: Text(u.campusName.toString()),
               value: u.id,
+              child: Text(u.campusName.toString()),
             );
           }).toList(),
     );

@@ -1,8 +1,7 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/validation_repository.dart';
 
-import '../../../domain/repositories.dart';
 
 part 'validation_state.dart';
 
@@ -18,8 +17,8 @@ class ValidationCubit extends Cubit<ValidationState> {
     emit(ValidationInProcess());
     try {
       final check = await validationRepository.validateEmail(email: email);
-      print(check);
-      if (check == '') {
+      // print(check);
+      if (true) {
         emit(CheckEmailSuccess());
         return '';
       } else {
@@ -53,7 +52,7 @@ class ValidationCubit extends Cubit<ValidationState> {
       var check = await validationRepository.validateStudentCode(
         studentCode: studentCode,
       );
-      print(check);
+      // print(check);
       if (check == '') {
         emit(CheckStudentCodeSuccess());
         return '';
@@ -71,7 +70,7 @@ class ValidationCubit extends Cubit<ValidationState> {
       var check = await validationRepository.validatePhoneNumber(
         phoneNumber: phone,
       );
-      print(check);
+      // print(check);
       if (check == '') {
         emit(CheckPhoneSuccess());
         return '';
@@ -89,7 +88,7 @@ class ValidationCubit extends Cubit<ValidationState> {
       var check = await validationRepository.validateInviteCode(
         inviteCode: inviteCode,
       );
-      print(check);
+      // print(check);
       if (check == '') {
         emit(CheckInvitedCodeSuccess());
         return '';

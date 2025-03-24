@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/welcome/components/body.dart';
 
-import '../../../blocs/blocs.dart';
 
 class WelcomeScreen extends StatelessWidget {
   static const String routeName = '/welcome';

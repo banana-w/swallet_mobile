@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:swallet_mobile/presentation/screens/screens.dart';
-import 'package:swallet_mobile/presentation/screens/splash/onboarding_screen.dart';
+
 
 class SplashScreen extends StatefulWidget {
   static const String routeName = '/splash';

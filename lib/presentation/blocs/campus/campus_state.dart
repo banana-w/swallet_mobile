@@ -13,7 +13,7 @@ final class CampusLoading extends CampusState {
 final class CampusLoaded extends CampusState {
   final List<CampusModel> campuses;
 
-  CampusLoaded({required this.campuses});
+  const CampusLoaded({required this.campuses});
   @override
   List<Object?> get props => [campuses];
 }
@@ -21,7 +21,7 @@ final class CampusLoaded extends CampusState {
 final class CampusFailed extends CampusState {
   final String error;
 
-  CampusFailed({required this.error});
+  const CampusFailed({required this.error});
   
   @override
   List<Object?> get props => [error];
