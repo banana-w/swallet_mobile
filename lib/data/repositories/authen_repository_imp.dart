@@ -102,7 +102,7 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
       };
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('$endPoint/register'),
+        Uri.parse('${baseURL}Account/studentRegister'),
       );
 
       //thêm file cho request
@@ -120,7 +120,6 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
       request.fields.addAll({
         'UserName': createAuthenModel.userName!,
         'Password': createAuthenModel.password!,
-        'PasswordConfirmed': createAuthenModel.passwordConfirmed!,
         'CampusId': createAuthenModel.campusId!,
         'FullName': createAuthenModel.fullName!,
         'Code': createAuthenModel.code!,
@@ -129,15 +128,15 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
         'Email': createAuthenModel.email!,
         'DateOfBirth': createAuthenModel.dateofBirth!,
         'Phone': createAuthenModel.phoneNumber!,
-        'Address': '',
-        'Description': '',
+        'Address': 'default',
+        'Description': 'default',
         'State': 'true',
       });
 
       //gửi request
       var response = await request.send();
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         print(response);
         return true;
       } else {

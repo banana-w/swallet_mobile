@@ -27,7 +27,7 @@ final class LogoutAccount extends AuthenticationEvent {
 final class RegisterAccount extends AuthenticationEvent {
   final CreateAuthenModel createAuthenModel;
 
-  RegisterAccount({required this.createAuthenModel});
+  const RegisterAccount({required this.createAuthenModel});
 
   @override
   List<Object?> get props => [createAuthenModel];
