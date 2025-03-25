@@ -12,7 +12,7 @@ final class InternetInitial extends InternetState {
 final class Connected extends InternetState {
   final String message;
 
-  Connected({required this.message});
+  const Connected({required this.message});
 
   @override
   List<Object?> get props => [];
@@ -21,7 +21,7 @@ final class Connected extends InternetState {
 final class NotConnected extends InternetState {
   final String message;
 
-  NotConnected({required this.message});
+  const NotConnected({required this.message});
 
   @override
   List<Object?> get props => [];

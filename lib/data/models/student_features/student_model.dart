@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:swallet_mobile/domain/entities.dart';
 import 'package:swallet_mobile/domain/entities/student_features/student.dart';
 
 class StudentModel extends Student {

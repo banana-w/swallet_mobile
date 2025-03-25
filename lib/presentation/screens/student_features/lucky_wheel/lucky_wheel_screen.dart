@@ -137,7 +137,7 @@ class _LuckyWheelScreenState extends State<LuckyWheelScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Vòng quay may mắn
-              Container(
+              SizedBox(
                 width: 300 * fem,
                 height: 300 * fem,
                 child: FortuneWheel(

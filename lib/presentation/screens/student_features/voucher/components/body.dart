@@ -99,13 +99,13 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
       },
       child: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: NestedScrollView(
           physics: AlwaysScrollableScrollPhysics(),
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
-              new SliverAppBar(
+              SliverAppBar(
                 pinned: true,
                 floating: true,
                 elevation: 0,

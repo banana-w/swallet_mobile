@@ -9,7 +9,7 @@ final class LoadStoreTransactions extends StoreEvent {
   final int limit;
   final String id;
   final int typeIds;
-  LoadStoreTransactions(
+  const LoadStoreTransactions(
       {this.page = 1, this.limit = 10, required this.id, this.typeIds = 0});
 
   @override
@@ -22,7 +22,7 @@ final class LoadMoreTransactionStore extends StoreEvent {
   final int typeIds;
   final ScrollController scrollController;
 
-  LoadMoreTransactionStore(this.scrollController,
+  const LoadMoreTransactionStore(this.scrollController,
       {this.page = 1, this.limit = 10, this.typeIds = 0});
   @override
   List<Object?> get props => [page, limit, typeIds, scrollController];
@@ -33,7 +33,7 @@ final class LoadStoreCampaignVouchers extends StoreEvent {
   final int limit;
   final String search;
 
-  LoadStoreCampaignVouchers(
+  const LoadStoreCampaignVouchers(
       {this.page = 1, this.limit = 100, this.search = ''});
 
   @override
@@ -46,7 +46,7 @@ final class ScanVoucherCode extends StoreEvent {
   final String description;
   final bool state;
 
-  ScanVoucherCode(
+  const ScanVoucherCode(
       {required this.storeId,
       required this.voucherCode,
       required this.description,
@@ -63,7 +63,7 @@ final class CreateBonus extends StoreEvent {
   final String description;
   final bool state;
 
-  CreateBonus(
+  const CreateBonus(
       {required this.storeId,
       required this.studentId,
       required this.amount,
@@ -78,7 +78,7 @@ final class LoadCampaignVoucherDetail extends StoreEvent {
   final String storeId;
   final String campaignVoucherId;
 
-  LoadCampaignVoucherDetail(
+  const LoadCampaignVoucherDetail(
       {required this.storeId, required this.campaignVoucherId});
 
   @override
@@ -96,7 +96,7 @@ final class UpdateStore extends StoreEvent {
   final String avatar;
   final bool state;
 
-  UpdateStore(
+  const UpdateStore(
       {required this.areaId,
       required this.storeId,
       required this.storeName,
@@ -125,7 +125,7 @@ final class LoadCampaignVoucherInformation extends StoreEvent {
   final String storeId;
   final String voucherCode;
 
-  LoadCampaignVoucherInformation(
+  const LoadCampaignVoucherInformation(
       {required this.storeId, required this.voucherCode});
   @override
   List<Object?> get props => [storeId, voucherCode];
@@ -134,7 +134,7 @@ final class LoadCampaignVoucherInformation extends StoreEvent {
 final class LoadStoreById extends StoreEvent {
   final String storeId;
 
-  LoadStoreById({required this.storeId});
+  const LoadStoreById({required this.storeId});
 
   @override
   List<Object?> get props => [storeId];

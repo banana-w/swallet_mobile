@@ -8,7 +8,7 @@ final class Verified extends RoleAppState {
   final AuthenModel authenModel;
   final StudentModel studentModel;
 
-  Verified({required this.authenModel, required this.studentModel});
+  const Verified({required this.authenModel, required this.studentModel});
   @override
   List<Object?> get props => [authenModel, studentModel];
 }
@@ -16,7 +16,7 @@ final class Verified extends RoleAppState {
 final class Unverified extends RoleAppState {
   final AuthenModel authenModel;
 
-  Unverified({required this.authenModel});
+  const Unverified({required this.authenModel});
   @override
   List<Object?> get props => [authenModel];
 }
@@ -25,7 +25,7 @@ final class StoreRole extends RoleAppState {
   final AuthenModel authenModel;
   final StoreModel storeModel;
 
-  StoreRole({required this.authenModel, required this.storeModel});
+  const StoreRole({required this.authenModel, required this.storeModel});
 
   @override
   List<Object?> get props => [authenModel, storeModel];

@@ -21,7 +21,7 @@ class CusNavBar extends StatelessWidget {
       builder: (context, state) {
         return CustomPaint(
           painter: NavPainter(),
-          child: Container(
+          child: SizedBox(
             height: 70 * hem,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -52,7 +52,7 @@ class CusNavBar extends StatelessWidget {
                           },
                           child: Column(
                             children: [
-                              Container(
+                              SizedBox(
                                 width: 20 * fem,
                                 height: 20 * fem,
                                 child:
@@ -105,7 +105,7 @@ class CusNavBar extends StatelessWidget {
                           },
                           child: Column(
                             children: [
-                              Container(
+                              SizedBox(
                                 width: 22 * fem,
                                 height: 22 * fem,
                                 child:
@@ -162,7 +162,7 @@ class CusNavBar extends StatelessWidget {
                         },
                         child: Column(
                           children: [
-                            Container(
+                            SizedBox(
                               width: 20 * fem,
                               height: 20 * fem,
                               child:

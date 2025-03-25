@@ -5,7 +5,6 @@ import 'package:swallet_mobile/domain/interface_repositories/store_features/stor
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
-import '../../../blocs/blocs.dart';
 import 'components/body.dart';
 
 class CampaignVoucherDetailScreen extends StatelessWidget {

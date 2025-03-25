@@ -23,7 +23,7 @@ class StudentCodeProfile extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
               width: 15 * fem,
               height: 15 * hem,
               child: SvgPicture.asset(

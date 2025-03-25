@@ -1,7 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../data/datasource/authen_local_datasource.dart';
 
 part 'verification_state.dart';
 

@@ -35,7 +35,7 @@ class _ContentFrom1State extends State<ContentFrom1> {
     return Column(
       children: [
         SizedBox(height: 40 * widget.widget.hem),
-        Container(
+        SizedBox(
           width: 272 * widget.widget.fem,
           // color: Colors.red,
           child: TextFormField(

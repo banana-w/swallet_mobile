@@ -180,32 +180,32 @@ class _FormBody6State extends State<FormBody6> {
 
   void _submitForm(
     BuildContext context,
-    _selectedFrontCard,
-    _selectedBackCard,
+    selectedFrontCard,
+    selectedBackCard,
   ) async {
     final authenModel = await AuthenLocalDataSource.getAuthen();
     if (authenModel == null) {
-      if (_selectedBackCard == null || _selectedFrontCard == null) {
+      if (selectedBackCard == null || selectedFrontCard == null) {
         setState(() {
           errorCard = 'Thẻ sinh viên không được bỏ trống';
         });
       } else if (_formKey.currentState!.validate()) {
         final createAuthenModel = await AuthenLocalDataSource.getCreateAuthen();
-        createAuthenModel!.studentFrontCard = _selectedFrontCard!.path;
+        createAuthenModel!.studentFrontCard = selectedFrontCard!.path;
         // createAuthenModel.studentBackCard = _selectedBackCard!.path;
         String createAuthenString = jsonEncode(createAuthenModel);
         AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
         Navigator.pushNamed(context, SignUp6Screen.routeName);
       }
     } else {
-      if (_selectedBackCard == null || _selectedFrontCard == null) {
+      if (selectedBackCard == null || selectedFrontCard == null) {
         setState(() {
           errorCard = 'Thẻ sinh viên không được bỏ trống';
         });
       } else if (_formKey.currentState!.validate()) {
         final verifyAuthenModel = await AuthenLocalDataSource.getVerifyAuthen();
-        verifyAuthenModel!.studentFrontCard = _selectedFrontCard!.path;
-        verifyAuthenModel.studentBackCard = _selectedBackCard!.path;
+        verifyAuthenModel!.studentFrontCard = selectedFrontCard!.path;
+        verifyAuthenModel.studentBackCard = selectedBackCard!.path;
         String verifyAuthenString = jsonEncode(verifyAuthenModel);
         AuthenLocalDataSource.saveVerifyAuthen(verifyAuthenString);
         Navigator.pushNamed(context, SignUp6Screen.routeName);
@@ -271,7 +271,7 @@ class _FormBody6State extends State<FormBody6> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height * 0.2,
           width: MediaQuery.of(context).size.width,
           child: Column(

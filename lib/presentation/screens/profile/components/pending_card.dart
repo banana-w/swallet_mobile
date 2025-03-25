@@ -54,11 +54,11 @@ class PendingCard extends StatelessWidget {
                   //avatar
                   ClipRRect(
                     borderRadius: BorderRadius.circular(100 * fem),
-                    child: Container(
+                    child: SizedBox(
                       width: 80 * hem,
                       height: 80 * fem,
                       child: Image.network(
-                        '${studentModel.studentCardFront}',
+                        studentModel.studentCardFront,
                         fit: BoxFit.fill,
                         errorBuilder: (context, error, stackTrace) {
                           return Image.asset(

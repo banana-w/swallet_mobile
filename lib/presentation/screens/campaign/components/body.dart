@@ -80,7 +80,7 @@ class Body extends StatelessWidget {
               },
               child: GestureDetector(
                 onTap: () {
-                  FocusScope.of(context).requestFocus(new FocusNode());
+                  FocusScope.of(context).requestFocus(FocusNode());
                 },
                 child: CustomScrollView(
                   slivers: [
@@ -233,7 +233,7 @@ class Body extends StatelessWidget {
                                                         left: 15 * fem,
                                                       ),
                                                       child: Text(
-                                                        '${campaignName.toString().toUpperCase()}',
+                                                        campaignName.toString().toUpperCase(),
                                                         style: GoogleFonts.openSans(
                                                           textStyle: TextStyle(
                                                             fontSize: 15 * ffem,

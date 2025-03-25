@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:swallet_mobile/data/models.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel/lucky_wheel_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_detail/profile_detail_screen.dart';

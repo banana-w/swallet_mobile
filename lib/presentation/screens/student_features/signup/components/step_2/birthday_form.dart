@@ -33,7 +33,7 @@ class _BirthdayFormState extends State<BirthdayForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 272 * widget.fem,
       child: TextFormField(
         validator: widget.validator,

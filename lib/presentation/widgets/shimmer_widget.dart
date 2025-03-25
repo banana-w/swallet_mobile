@@ -6,10 +6,10 @@ class ShimmerWidget extends StatelessWidget {
   final double height;
   final ShapeBorder shapeBorder;
 
-  const ShimmerWidget.rectangular({
+  const ShimmerWidget.rectangular({super.key, 
     this.width = double.infinity,
     required this.height,
-  }) : this.shapeBorder = const RoundedRectangleBorder();
+  }) : shapeBorder = const RoundedRectangleBorder();
 
   @override
   Widget build(BuildContext context) {

@@ -6,12 +6,12 @@ import '../../models.dart';
 class CampaignStoreCartModel extends Equatable {
   final List<CampaignVoucherStoreModel> campaignVouchers;
 
-  CampaignStoreCartModel({required this.campaignVouchers});
+  const CampaignStoreCartModel({required this.campaignVouchers});
 
   Map voucherCampaign(List<CampaignVoucherStoreModel> campaignVouchers) {
     Map<String?, List<CampaignVoucherStoreModel>> filterCampaign = {};
 
-    campaignVouchers.forEach((campaignVoucher) {
+    for (var campaignVoucher in campaignVouchers) {
       List<CampaignVoucherStoreModel> listItem = [];
       if (!filterCampaign.containsKey(campaignVoucher.campaignName)) {
         listItem.add(campaignVoucher);
@@ -24,7 +24,7 @@ class CampaignStoreCartModel extends Equatable {
           }
         });
       }
-    });
+    }
     return filterCampaign;
   }
 

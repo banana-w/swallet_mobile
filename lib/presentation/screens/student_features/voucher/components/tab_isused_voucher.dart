@@ -269,7 +269,7 @@ class VoucherCard extends StatelessWidget {
                     child: RotatedBox(
                       quarterTurns: 3,
                       child: Text(
-                        '${studentVoucher.brandName}',
+                        studentVoucher.brandName,
                         style: GoogleFonts.openSans(
                           textStyle: TextStyle(
                             fontSize: 13,
@@ -291,7 +291,7 @@ class VoucherCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${studentVoucher.voucherName}',
+                        studentVoucher.voucherName,
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -310,7 +310,7 @@ class VoucherCard extends StatelessWidget {
                                     flex: 2,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
-                                      child: Container(
+                                      child: SizedBox(
                                         width: 130 * fem,
                                         height: 140 * hem,
                                         child: Image.network(
@@ -355,7 +355,7 @@ class VoucherCard extends StatelessWidget {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          '${_formatDatetime(studentVoucher.dateBought)}',
+                                          _formatDatetime(studentVoucher.dateBought),
                                           style: GoogleFonts.openSans(
                                             textStyle: TextStyle(
                                               fontSize: 12,
@@ -381,7 +381,7 @@ class VoucherCard extends StatelessWidget {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          '${changeFormateDate(studentVoucher.expireOn)}',
+                                          changeFormateDate(studentVoucher.expireOn),
                                           style: GoogleFonts.openSans(
                                             textStyle: TextStyle(
                                               fontSize: 12,

@@ -2,7 +2,6 @@ import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/store_features/transaction_store_model.dart';
 
-import '../../../data/models.dart';
 
 abstract class StoreRepository {
   const StoreRepository();

@@ -20,7 +20,7 @@ final class StoreTransactionsLoaded extends StoreState {
   final List<TransactionStoreModel>? bonusTransactions;
   final bool hasReachedMax;
 
-  StoreTransactionsLoaded(
+  const StoreTransactionsLoaded(
     this.transactions,
     this.activityTransactions,
     this.bonusTransactions, {
@@ -39,7 +39,7 @@ final class StoreTransactionsLoaded extends StoreState {
 final class StoreFailed extends StoreState {
   final String error;
 
-  StoreFailed({required this.error});
+  const StoreFailed({required this.error});
 
   @override
   List<Object?> get props => [error];
@@ -54,7 +54,7 @@ final class StoreCampaignVoucherLoaded extends StoreState {
   final CampaignStoreCartModel campaignStoreCart;
   // final bool hasReach
 
-  StoreCampaignVoucherLoaded({required this.campaignStoreCart});
+  const StoreCampaignVoucherLoaded({required this.campaignStoreCart});
 
   @override
   List<Object?> get props => [campaignStoreCart];
@@ -63,7 +63,7 @@ final class StoreCampaignVoucherLoaded extends StoreState {
 final class ScanVoucherSuccess extends StoreState {
   final String result;
 
-  ScanVoucherSuccess({required this.result});
+  const ScanVoucherSuccess({required this.result});
 
   @override
   List<Object?> get props => [result];
@@ -77,7 +77,7 @@ final class ScanVoucherLoading extends StoreState {
 final class ScanVoucherFailed extends StoreState {
   final String error;
 
-  ScanVoucherFailed({required this.error});
+  const ScanVoucherFailed({required this.error});
 
   @override
   List<Object?> get props => [error];
@@ -100,7 +100,7 @@ final class CreateBonusLoading extends StoreState {
 final class CreateBonusFailed extends StoreState {
   final String error;
 
-  CreateBonusFailed({required this.error});
+  const CreateBonusFailed({required this.error});
 
   @override
   List<Object?> get props => [error];
@@ -114,7 +114,7 @@ final class StoreCampaignVoucherDetailLoading extends StoreState {
 final class StoreCampaignVoucherDetailLoaded extends StoreState {
   final CampaignVoucherDetailModel campaignVoucherDetailModel;
 
-  StoreCampaignVoucherDetailLoaded({required this.campaignVoucherDetailModel});
+  const StoreCampaignVoucherDetailLoaded({required this.campaignVoucherDetailModel});
 
   @override
   List<Object?> get props => [campaignVoucherDetailModel];
@@ -123,7 +123,7 @@ final class StoreCampaignVoucherDetailLoaded extends StoreState {
 final class StoreCampaignVoucherDetailFailed extends StoreState {
   final String error;
 
-  StoreCampaignVoucherDetailFailed({required this.error});
+  const StoreCampaignVoucherDetailFailed({required this.error});
 
   @override
   List<Object?> get props => [error];
@@ -137,7 +137,7 @@ final class StoreUpding extends StoreState {
 final class StoreUpdateSuccess extends StoreState {
   final StoreModel storeModel;
 
-  StoreUpdateSuccess({required this.storeModel});
+  const StoreUpdateSuccess({required this.storeModel});
 
   @override
   List<Object?> get props => [storeModel];
@@ -146,7 +146,7 @@ final class StoreUpdateSuccess extends StoreState {
 final class StoreUpdateFailed extends StoreState {
   final String error;
 
-  StoreUpdateFailed({required this.error});
+  const StoreUpdateFailed({required this.error});
 
   @override
   List<Object?> get props => [error];
@@ -170,7 +170,7 @@ final class StoreCampaignVoucherInforLoading extends StoreState {
 final class StoreCampaignVoucherInforFailed extends StoreState {
   final String error;
 
-  StoreCampaignVoucherInforFailed({required this.error});
+  const StoreCampaignVoucherInforFailed({required this.error});
 
   @override
   List<Object?> get props => [error];
@@ -179,7 +179,7 @@ final class StoreCampaignVoucherInforFailed extends StoreState {
 final class StoreByIdLoaed extends StoreState {
   final StoreModel storeModel;
 
-  StoreByIdLoaed({required this.storeModel});
+  const StoreByIdLoaed({required this.storeModel});
 
   @override
   List<Object?> get props => [storeModel];

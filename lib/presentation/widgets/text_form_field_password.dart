@@ -39,7 +39,7 @@ class _TextFormFieldPasswordState extends State<TextFormFieldPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 272 * widget.fem,
       child: TextFormField(
         obscureText: _isObscure,

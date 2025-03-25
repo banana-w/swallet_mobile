@@ -58,11 +58,11 @@ class RejectedCard extends StatelessWidget {
                   //avatar
                   ClipRRect(
                     borderRadius: BorderRadius.circular(100 * fem),
-                    child: Container(
+                    child: SizedBox(
                       width: 80 * hem,
                       height: 80 * fem,
                       child: Image.asset(
-                        '${studentModel.studentCardFront}',
+                        studentModel.studentCardFront,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Image.asset(

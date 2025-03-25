@@ -7,7 +7,6 @@ import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/campaign/components/voucher_card_list.dart';
 
-import '../../../blocs/blocs.dart';
 import '../../../widgets/shimmer_widget.dart';
 
 class CampaignVoucherListScreen extends StatelessWidget {

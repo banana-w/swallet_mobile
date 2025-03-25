@@ -16,12 +16,13 @@ class UpdateVerificationScreen extends StatelessWidget {
       builder:
           (_) => BlocListener<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
-              if (state is AuthenticationFailed)
+              if (state is AuthenticationFailed) {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   LoginScreen.routeName,
                   (Route<dynamic> route) => false,
                 );
+              }
             },
             child: UpdateVerificationScreen(studentModel: studentModel),
           ),

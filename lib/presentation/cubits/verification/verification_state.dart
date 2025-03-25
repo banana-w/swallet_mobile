@@ -22,7 +22,7 @@ final class OTPVerificationSuccess extends VerificationState {
 final class OTPVerificationFailed extends VerificationState {
   final String error;
 
-  OTPVerificationFailed({required this.error});
+  const OTPVerificationFailed({required this.error});
   @override
   List<Object> get props => [error];
 }
