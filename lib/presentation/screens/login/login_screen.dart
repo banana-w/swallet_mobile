@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/login/components/body.dart';
 
-import '../../blocs/blocs.dart';
 
 class LoginScreen extends StatelessWidget {
   static const String routeName = '/login';

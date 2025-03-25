@@ -7,7 +7,6 @@ import 'package:swallet_mobile/data/repositories/store_features/store_repository
 import 'package:swallet_mobile/data/repositories/student_features/campus_repository.dart';
 import 'package:swallet_mobile/data/repositories/student_features/student_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/validation_repository_imp.dart';
-import 'package:swallet_mobile/domain/entities/store_features/store.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/campus_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';

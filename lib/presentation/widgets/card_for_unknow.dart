@@ -72,7 +72,7 @@ class CardForUnknow extends StatelessWidget {
                 ),
               ],
             ),
-            Container(
+            SizedBox(
               // color: Colors.red,
               height: 40 * hem,
               child: Row(

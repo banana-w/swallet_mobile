@@ -4,7 +4,7 @@ import 'package:swallet_mobile/presentation/config/constants.dart';
 
 // ignore: must_be_immutable
 class TextFormFieldInviteCode extends StatelessWidget {
-  TextFormFieldInviteCode({
+  const TextFormFieldInviteCode({
     super.key,
     required this.hem,
     required this.fem,
@@ -23,7 +23,7 @@ class TextFormFieldInviteCode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 272 * fem,
       // color: Colors.red,
       child: TextFormField(

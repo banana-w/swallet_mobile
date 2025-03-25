@@ -340,7 +340,7 @@ class _FormBody7State extends State<FormBody7> {
 
                 if (context.mounted) {
                   context.read<AuthenticationBloc>().add(
-                    RegisterAccount(createAuthenModel: createAuthenModel!),
+                    RegisterAccount(createAuthenModel: createAuthenModel),
                   );
                 }
               } else {

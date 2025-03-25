@@ -24,7 +24,7 @@ class BodyVerification extends StatelessWidget {
     double hem = MediaQuery.of(context).size.height / baseHeight;
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).requestFocus(new FocusNode());
+        FocusScope.of(context).requestFocus(FocusNode());
       },
       child: CustomScrollView(
         slivers: [

@@ -56,11 +56,11 @@ class VerifiedCard extends StatelessWidget {
                   //avatar
                   ClipRRect(
                     borderRadius: BorderRadius.circular(100 * fem),
-                    child: Container(
+                    child: SizedBox(
                       width: 80 * hem,
                       height: 80 * fem,
                       child: Image.network(
-                        '${studentModel.studentCardFront}',
+                        studentModel.studentCardFront,
                         fit: BoxFit.fill,
                         errorBuilder: (context, error, stackTrace) {
                           return Image.asset(
@@ -78,7 +78,7 @@ class VerifiedCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //Name
-                      Container(
+                      SizedBox(
                         width: 190 * fem,
                         child: Row(
                           children: [

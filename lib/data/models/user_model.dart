@@ -47,26 +47,26 @@ class UserModel extends User {
     );
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['userId'] = this.userId;
-    data['name'] = this.name;
-    data['roleId'] = this.roleId;
-    data['role'] = this.role;
-    data['roleName'] = this.roleName;
-    data['userName'] = this.userName;
-    data['phone'] = this.phone;
-    data['email'] = this.email;
-    data['avatar'] = this.avatar;
-    data['fileName'] = this.fileName;
-    data['isVerify'] = this.isVerify;
-    data['dateCreated'] = this.dateCreated;
-    data['dateUpdated'] = this.dateUpdated;
-    data['dateVerified'] = this.dateVerified;
-    data['description'] = this.description;
-    data['state'] = this.state;
-    data['stateId'] = this.stateId;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['userId'] = userId;
+    data['name'] = name;
+    data['roleId'] = roleId;
+    data['role'] = role;
+    data['roleName'] = roleName;
+    data['userName'] = userName;
+    data['phone'] = phone;
+    data['email'] = email;
+    data['avatar'] = avatar;
+    data['fileName'] = fileName;
+    data['isVerify'] = isVerify;
+    data['dateCreated'] = dateCreated;
+    data['dateUpdated'] = dateUpdated;
+    data['dateVerified'] = dateVerified;
+    data['description'] = description;
+    data['state'] = state;
+    data['stateId'] = stateId;
+    data['status'] = status;
     return data;
   }
 }

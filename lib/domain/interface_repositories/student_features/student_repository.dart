@@ -1,6 +1,5 @@
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 
-import '../../../data/models.dart';
 
 abstract class StudentRepository {
   const StudentRepository();

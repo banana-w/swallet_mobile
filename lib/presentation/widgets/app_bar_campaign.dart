@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
-import 'package:swallet_mobile/presentation/screens/screens.dart';
 
-import '../blocs/blocs.dart';
-import 'unverified_screen.dart';
 
 class AppBarCampaign extends StatelessWidget implements PreferredSizeWidget {
   const AppBarCampaign({

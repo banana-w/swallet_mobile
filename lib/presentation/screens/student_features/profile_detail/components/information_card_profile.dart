@@ -91,7 +91,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
             builder: (BuildContext context) {
               Future.delayed(Duration(seconds: 10));
               return AlertDialog(
-                content: Container(
+                content: SizedBox(
                   width: 250,
                   height: 250,
                   child: Center(
@@ -265,7 +265,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                         SizedBox(
                           width: 150 * widget.fem,
                           child: Text(
-                            '${widget.studentModel.address}',
+                            widget.studentModel.address,
                             maxLines: 1,
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
@@ -488,7 +488,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
     showModalBottomSheet(
       context: context,
       builder: (_) {
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height * 0.2,
           width: MediaQuery.of(context).size.width,
           child: Column(

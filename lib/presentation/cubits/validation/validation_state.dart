@@ -16,7 +16,7 @@ final class ValidationInProcess extends ValidationState {
 
 
 final class CheckEmailSuccess extends ValidationState {
-  CheckEmailSuccess();
+  const CheckEmailSuccess();
 
   @override
   List<Object?> get props => [];
@@ -25,14 +25,14 @@ final class CheckEmailSuccess extends ValidationState {
 final class CheckEmailFailed extends ValidationState {
   final String error;
   final bool check;
-  CheckEmailFailed({required this.error, required this.check});
+  const CheckEmailFailed({required this.error, required this.check});
 
   @override
   List<Object?> get props => [error, check];
 }
 
 final class CheckUserNameSuccess extends ValidationState {
-  CheckUserNameSuccess();
+  const CheckUserNameSuccess();
 
   @override
   List<Object?> get props => [];
@@ -41,14 +41,14 @@ final class CheckUserNameSuccess extends ValidationState {
 final class CheckUserNameFailed extends ValidationState {
   final String error;
   final bool check;
-  CheckUserNameFailed({required this.error, required this.check});
+  const CheckUserNameFailed({required this.error, required this.check});
 
   @override
   List<Object?> get props => [error, check];
 }
 
 final class CheckStudentCodeSuccess extends ValidationState {
-  CheckStudentCodeSuccess();
+  const CheckStudentCodeSuccess();
 
   @override
   List<Object?> get props => [];
@@ -57,14 +57,14 @@ final class CheckStudentCodeSuccess extends ValidationState {
 final class CheckStudentCodeFailed extends ValidationState {
   final String error;
   final bool check;
-  CheckStudentCodeFailed({required this.error, required this.check});
+  const CheckStudentCodeFailed({required this.error, required this.check});
 
   @override
   List<Object?> get props => [error, check];
 }
 
 final class CheckInvitedCodeSuccess extends ValidationState {
-  CheckInvitedCodeSuccess();
+  const CheckInvitedCodeSuccess();
 
   @override
   List<Object?> get props => [];
@@ -73,14 +73,14 @@ final class CheckInvitedCodeSuccess extends ValidationState {
 final class CheckInvitedCodeFailed extends ValidationState {
   final String error;
   final bool check;
-  CheckInvitedCodeFailed({required this.error, required this.check});
+  const CheckInvitedCodeFailed({required this.error, required this.check});
 
   @override
   List<Object?> get props => [error, check];
 }
 
 final class CheckPhoneSuccess extends ValidationState {
-  CheckPhoneSuccess();
+  const CheckPhoneSuccess();
 
   @override
   List<Object?> get props => [];
@@ -89,7 +89,7 @@ final class CheckPhoneSuccess extends ValidationState {
 final class CheckPhoneFailed extends ValidationState {
   final String error;
   final bool check;
-  CheckPhoneFailed({required this.error, required this.check});
+  const CheckPhoneFailed({required this.error, required this.check});
 
   @override
   List<Object?> get props => [error, check];

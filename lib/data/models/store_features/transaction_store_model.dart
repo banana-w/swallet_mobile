@@ -42,23 +42,23 @@ class TransactionStoreModel extends TransactionStore {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['studentId'] = this.studentId;
-    data['studentName'] = this.studentName;
-    data['activity'] = this.activity;
-    data['storeId'] = this.storeId;
-    data['storeName'] = this.storeName;
-    data['amount'] = this.amount;
-    data['rate'] = this.rate;
-    data['walletId'] = this.walletId;
-    data['walletTypeId'] = this.walletTypeId;
-    data['walletType'] = this.walletType;
-    data['walletTypeName'] = this.walletTypeName;
-    data['dateCreated'] = this.dateCreated;
-    data['description'] = this.description;
-    data['state'] = this.state;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['studentId'] = studentId;
+    data['studentName'] = studentName;
+    data['activity'] = activity;
+    data['storeId'] = storeId;
+    data['storeName'] = storeName;
+    data['amount'] = amount;
+    data['rate'] = rate;
+    data['walletId'] = walletId;
+    data['walletTypeId'] = walletTypeId;
+    data['walletType'] = walletType;
+    data['walletTypeName'] = walletTypeName;
+    data['dateCreated'] = dateCreated;
+    data['description'] = description;
+    data['state'] = state;
+    data['status'] = status;
     return data;
   }
 }

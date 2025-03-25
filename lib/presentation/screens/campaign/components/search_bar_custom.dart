@@ -42,10 +42,10 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
             },
             viewConstraints: const BoxConstraints(maxHeight: 400.0),
             builder: (BuildContext context, SearchController controller) {
-              return Container(
+              return SizedBox(
                 height: 45,
                 child: SearchBar(
-                  backgroundColor: MaterialStateProperty.all(Colors.white),
+                  backgroundColor: WidgetStateProperty.all(Colors.white),
                   controller: controller,
                   // padding: const MaterialStatePropertyAll<EdgeInsets>(
                   //     EdgeInsets.symmetric(horizontal: 16.0)),
@@ -63,17 +63,17 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
                     FocusScope.of(context).unfocus();
                   },
                   hintText: 'Tìm kiếm theo tên ưu đãi',
-                  hintStyle: MaterialStateProperty.all(
+                  hintStyle: WidgetStateProperty.all(
                     const TextStyle(color: Colors.grey),
                   ),
-                  overlayColor: MaterialStateProperty.all(kPrimaryColor),
-                  shadowColor: MaterialStateProperty.all(Colors.transparent),
-                  shape: MaterialStateProperty.all(
+                  overlayColor: WidgetStateProperty.all(kPrimaryColor),
+                  shadowColor: WidgetStateProperty.all(Colors.transparent),
+                  shape: WidgetStateProperty.all(
                     const ContinuousRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                   ),
-                  side: MaterialStateProperty.all(
+                  side: WidgetStateProperty.all(
                     const BorderSide(color: Colors.grey, width: 1.0),
                   ),
                 ),

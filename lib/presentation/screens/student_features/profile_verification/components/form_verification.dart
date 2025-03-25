@@ -93,7 +93,7 @@ class _FormVerificationState extends State<FormVerification> {
             builder: (BuildContext context) {
               Future.delayed(Duration(seconds: 10));
               return AlertDialog(
-                content: Container(
+                content: SizedBox(
                   width: 250,
                   height: 250,
                   child: Center(
@@ -395,8 +395,8 @@ class _FormVerificationState extends State<FormVerification> {
 
   void _submitForm(
     BuildContext context,
-    _selectedFrontCard,
-    _selectedBackCard,
+    selectedFrontCard,
+    selectedBackCard,
     codeController,
   ) async {
     context
@@ -409,8 +409,8 @@ class _FormVerificationState extends State<FormVerification> {
               UpdateVerification(
                 studentId: studentModel!.id,
                 studentCode: codeController.text,
-                studentCardFront: _selectedFrontCard!.path,
-                studentCardBack: _selectedBackCard!.path,
+                studentCardFront: selectedFrontCard!.path,
+                studentCardBack: selectedBackCard!.path,
               ),
             );
           } else {
@@ -477,7 +477,7 @@ class _FormVerificationState extends State<FormVerification> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height * 0.2,
           width: MediaQuery.of(context).size.width,
           child: Column(

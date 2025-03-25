@@ -94,11 +94,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       final storeId = await AuthenLocalDataSource.getStoreId();
       if (event.scrollController.position.pixels ==
           event.scrollController.position.maxScrollExtent) {
-        if ((this.state as StoreTransactionsLoaded).hasReachedMax) {
+        if ((state as StoreTransactionsLoaded).hasReachedMax) {
           if (event.typeIds == 0) {
             emit(
               StoreTransactionsLoaded(
-                (this.state as StoreTransactionsLoaded).transactions,
+                (state as StoreTransactionsLoaded).transactions,
                 null,
                 null,
                 hasReachedMax: true,
@@ -108,7 +108,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(
               StoreTransactionsLoaded(
                 null,
-                (this.state as StoreTransactionsLoaded).activityTransactions,
+                (state as StoreTransactionsLoaded).activityTransactions,
                 null,
                 hasReachedMax: true,
               ),
@@ -118,7 +118,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               StoreTransactionsLoaded(
                 null,
                 null,
-                (this.state as StoreTransactionsLoaded).bonusTransactions,
+                (state as StoreTransactionsLoaded).bonusTransactions,
                 hasReachedMax: true,
               ),
             );
@@ -133,11 +133,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             id: storeId!,
           );
           if (event.typeIds == 0) {
-            if (apiResponse!.result.length == 0) {
+            if (apiResponse!.result.isEmpty) {
               emit(
                 StoreTransactionsLoaded(
                   List.from(
-                    (this.state as StoreTransactionsLoaded).transactions!,
+                    (state as StoreTransactionsLoaded).transactions!,
                   )..addAll(apiResponse.result),
                   null,
                   null,
@@ -149,7 +149,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               emit(
                 StoreTransactionsLoaded(
                   List.from(
-                    (this.state as StoreTransactionsLoaded).transactions!,
+                    (state as StoreTransactionsLoaded).transactions!,
                   )..addAll(apiResponse.result),
                   null,
                   null,
@@ -157,12 +157,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               );
             }
           } else if (event.typeIds == 1) {
-            if (apiResponse!.result.length == 0) {
+            if (apiResponse!.result.isEmpty) {
               emit(
                 StoreTransactionsLoaded(
                   null,
                   List.from(
-                    (this.state as StoreTransactionsLoaded)
+                    (state as StoreTransactionsLoaded)
                         .activityTransactions!,
                   )..addAll(apiResponse.result),
                   null,
@@ -175,7 +175,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 StoreTransactionsLoaded(
                   null,
                   List.from(
-                    (this.state as StoreTransactionsLoaded)
+                    (state as StoreTransactionsLoaded)
                         .activityTransactions!,
                   )..addAll(apiResponse.result),
                   null,
@@ -183,13 +183,13 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               );
             }
           } else if (event.typeIds == 2) {
-            if (apiResponse!.result.length == 0) {
+            if (apiResponse!.result.isEmpty) {
               emit(
                 StoreTransactionsLoaded(
                   null,
                   null,
                   List.from(
-                    (this.state as StoreTransactionsLoaded).bonusTransactions!,
+                    (state as StoreTransactionsLoaded).bonusTransactions!,
                   )..addAll(apiResponse.result),
                   hasReachedMax: true,
                 ),
@@ -201,7 +201,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   null,
                   null,
                   List.from(
-                    (this.state as StoreTransactionsLoaded).bonusTransactions!,
+                    (state as StoreTransactionsLoaded).bonusTransactions!,
                   )..addAll(apiResponse.result),
                 ),
               );

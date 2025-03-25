@@ -75,7 +75,7 @@ class Body extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
+                        SizedBox(
                           width: double.infinity,
                           height: 220 * hem,
                           child: Image.network(
@@ -102,7 +102,7 @@ class Body extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${campaignVoucherDetail.campaignName}',
+                                campaignVoucherDetail.campaignName,
                                 textAlign: TextAlign.justify,
                                 softWrap: true,
                                 style: GoogleFonts.openSans(
@@ -119,7 +119,7 @@ class Body extends StatelessWidget {
                                   bottom: 5 * hem,
                                 ),
                                 child: Text(
-                                  '${campaignVoucherDetail.voucherName}',
+                                  campaignVoucherDetail.voucherName,
                                   textAlign: TextAlign.justify,
                                   softWrap: true,
                                   style: GoogleFonts.openSans(
@@ -136,7 +136,7 @@ class Body extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        '${formatter.format((campaignVoucherDetail.price))}',
+                                        formatter.format((campaignVoucherDetail.price)),
                                         style: GoogleFonts.openSans(
                                           textStyle: TextStyle(
                                             fontSize: 22 * ffem,
@@ -258,7 +258,7 @@ class Body extends StatelessWidget {
                                     top: 5 * hem,
                                   ),
                                   child: HtmlWidget(
-                                    '${campaignVoucherDetail.voucherCondition}',
+                                    campaignVoucherDetail.voucherCondition,
                                     textStyle: GoogleFonts.openSans(
                                       textStyle: TextStyle(
                                         fontSize: 14 * ffem,
@@ -288,7 +288,7 @@ class Body extends StatelessWidget {
                                     top: 5 * hem,
                                   ),
                                   child: HtmlWidget(
-                                    '${campaignVoucherDetail.description}',
+                                    campaignVoucherDetail.description,
                                     textStyle: GoogleFonts.openSans(
                                       textStyle: TextStyle(
                                         fontSize: 14 * ffem,

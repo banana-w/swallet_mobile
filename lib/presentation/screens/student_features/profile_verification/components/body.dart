@@ -50,7 +50,7 @@ class Body extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(height: 20),
-                          Container(
+                          SizedBox(
                             width: 272 * fem,
                             // color: Colors.red,
                             child: TextFormField(
@@ -129,7 +129,7 @@ class Body extends StatelessWidget {
                           ),
 
                           SizedBox(height: 20), // Khoảng cách giữa các field
-                          Container(
+                          SizedBox(
                             width: 272 * fem,
                             child: TextFormField(
                               readOnly: true,
@@ -235,11 +235,11 @@ class Body extends StatelessWidget {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: Container(
+                              child: SizedBox(
                                 height: 250,
                                 width: double.infinity,
                                 child: Image.network(
-                                  '${studentModel.studentCardFront}',
+                                  studentModel.studentCardFront,
                                   fit: BoxFit.fill,
                                   loadingBuilder: (
                                     context,

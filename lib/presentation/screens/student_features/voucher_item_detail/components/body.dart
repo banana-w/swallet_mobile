@@ -48,7 +48,7 @@ class Body extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
+                        SizedBox(
                           width: double.infinity,
                           height: 220 * hem,
                           child: Image.network(
@@ -75,7 +75,7 @@ class Body extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${voucherItem.campaignName}',
+                                voucherItem.campaignName,
                                 textAlign: TextAlign.justify,
                                 softWrap: true,
                                 style: GoogleFonts.openSans(
@@ -92,7 +92,7 @@ class Body extends StatelessWidget {
                                   bottom: 5 * hem,
                                 ),
                                 child: Text(
-                                  '${voucherItem.voucherName}',
+                                  voucherItem.voucherName,
                                   textAlign: TextAlign.justify,
                                   softWrap: true,
                                   style: GoogleFonts.openSans(
@@ -109,7 +109,7 @@ class Body extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        '${formatter.format((voucherItem.price))}',
+                                        formatter.format((voucherItem.price)),
                                         style: GoogleFonts.openSans(
                                           textStyle: TextStyle(
                                             fontSize: 22 * ffem,
@@ -250,7 +250,7 @@ class Body extends StatelessWidget {
                                           borderRadius: BorderRadius.circular(
                                             10 * fem,
                                           ),
-                                          child: Container(
+                                          child: SizedBox(
                                             width: 50 * fem,
                                             height: 50 * hem,
                                             child: Image.network(
@@ -376,7 +376,7 @@ class Body extends StatelessWidget {
                                     top: 5 * hem,
                                   ),
                                   child: HtmlWidget(
-                                    '${voucherItem.condition}',
+                                    voucherItem.condition,
                                     textStyle: GoogleFonts.openSans(
                                       textStyle: TextStyle(
                                         fontSize: 14 * ffem,
@@ -617,7 +617,7 @@ void _detailModelBottomSheet(context, VoucherStudentItemModel voucherItem) {
                               right: 15 * fem,
                             ),
                             child: HtmlWidget(
-                              '${voucherItem.condition}',
+                              voucherItem.condition,
                               textStyle: GoogleFonts.openSans(
                                 textStyle: TextStyle(
                                   fontSize: 15 * ffem,
@@ -648,7 +648,7 @@ void _detailModelBottomSheet(context, VoucherStudentItemModel voucherItem) {
                               right: 15 * fem,
                             ),
                             child: HtmlWidget(
-                              '${voucherItem.description}',
+                              voucherItem.description,
                               textStyle: GoogleFonts.openSans(
                                 textStyle: TextStyle(
                                   fontSize: 15 * ffem,

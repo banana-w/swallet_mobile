@@ -4,7 +4,7 @@ class GenderModel extends Equatable {
   final int id;
   final String name;
 
-  GenderModel({required this.id, required this.name});
+  const GenderModel({required this.id, required this.name});
   
   @override
   List<Object?> get props => [id,name];

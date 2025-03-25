@@ -64,7 +64,7 @@ class VoucherCardList extends StatelessWidget {
                   padding: EdgeInsets.all(5),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Container(
+                    child: SizedBox(
                       width: 120 * fem,
                       height: 140 * hem,
                       child: Image.network(
@@ -83,7 +83,7 @@ class VoucherCardList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 5 * hem),
-                    Container(
+                    SizedBox(
                       width: 200 * fem,
                       child: Text(
                         voucher.voucherName,
@@ -100,7 +100,7 @@ class VoucherCardList extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 5 * hem),
-                    Container(
+                    SizedBox(
                       width: 200 * fem,
                       child: Text(
                         'Còn lại: ${voucher.quantityInStock}',

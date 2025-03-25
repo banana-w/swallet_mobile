@@ -88,7 +88,7 @@ class _FormBody1State extends State<FormBody1> {
                   return Column(
                     children: [
                       SizedBox(height: 40 * widget.hem),
-                      Container(
+                      SizedBox(
                         width: 272 * widget.fem,
                         // color: Colors.red,
                         child: TextFormField(

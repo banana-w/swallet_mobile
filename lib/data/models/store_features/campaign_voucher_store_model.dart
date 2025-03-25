@@ -48,26 +48,26 @@ class CampaignVoucherStoreModel extends CampaignVoucherStore {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['voucherId'] = this.voucherId;
-    data['voucherName'] = this.voucherName;
-    data['voucherImage'] = this.voucherImage;
-    data['campaignId'] = this.campaignId;
-    data['campaignName'] = this.campaignName;
-    data['price'] = this.price;
-    data['rate'] = this.rate;
-    data['quantity'] = this.quantity;
-    data['fromIndex'] = this.fromIndex;
-    data['toIndex'] = this.toIndex;
-    data['dateCreated'] = this.dateCreated;
-    data['dateUpdated'] = this.dateUpdated;
-    data['description'] = this.description;
-    data['state'] = this.state;
-    data['status'] = this.status;
-    data['quantityInStock'] = this.quantityInStock;
-    data['quantityInBought'] = this.quantityInBought;
-    data['quantityInUsed'] = this.quantityInUsed;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['voucherId'] = voucherId;
+    data['voucherName'] = voucherName;
+    data['voucherImage'] = voucherImage;
+    data['campaignId'] = campaignId;
+    data['campaignName'] = campaignName;
+    data['price'] = price;
+    data['rate'] = rate;
+    data['quantity'] = quantity;
+    data['fromIndex'] = fromIndex;
+    data['toIndex'] = toIndex;
+    data['dateCreated'] = dateCreated;
+    data['dateUpdated'] = dateUpdated;
+    data['description'] = description;
+    data['state'] = state;
+    data['status'] = status;
+    data['quantityInStock'] = quantityInStock;
+    data['quantityInBought'] = quantityInBought;
+    data['quantityInUsed'] = quantityInUsed;
     return data;
   }
 }

@@ -172,7 +172,7 @@ List<Map<String, String>> splashData = [
                   ),
                 ),
                 SizedBox(height: 20 * hem),
-                Container(
+                SizedBox(
                   height: 60 * hem,
                   child: Text(
                     splashData[index]['content']!,
