@@ -18,7 +18,7 @@ class TransactionStore extends Equatable {
   final bool state;
   final bool status;
 
-  TransactionStore(
+  const TransactionStore(
       {required this.id,
       required this.studentId,
       required this.studentName,
@@ -37,21 +37,21 @@ class TransactionStore extends Equatable {
       required this.status});
   @override
   List<Object?> get props => [
-        this.id,
-        this.studentId,
-        this.studentName,
-        this.activity,
-        this.storeId,
-        this.storeName,
-        this.amount,
-        this.rate,
-        this.walletId,
-        this.walletTypeId,
-        this.walletType,
-        this.walletTypeName,
-        this.dateCreated,
-        this.description,
-        this.state,
-        this.status
+        id,
+        studentId,
+        studentName,
+        activity,
+        storeId,
+        storeName,
+        amount,
+        rate,
+        walletId,
+        walletTypeId,
+        walletType,
+        walletTypeName,
+        dateCreated,
+        description,
+        state,
+        status
       ];
 }

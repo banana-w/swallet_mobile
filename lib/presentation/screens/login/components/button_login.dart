@@ -5,7 +5,6 @@ import 'package:swallet_mobile/presentation/blocs/authentication/authentication_
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/login/components/form_login.dart';
 
-import '../../../blocs/blocs.dart';
 
 class ButtonLogin extends StatelessWidget {
   const ButtonLogin({super.key, required this.widget, required this.onPressed});

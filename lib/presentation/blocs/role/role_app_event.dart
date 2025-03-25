@@ -5,13 +5,13 @@ sealed class RoleAppEvent extends Equatable {
 }
 
 final class RoleAppStart extends RoleAppEvent {
-  RoleAppStart();
+  const RoleAppStart();
   @override
   List<Object?> get props => [];
 }
 
 final class RoleAppEnd extends RoleAppEvent {
-  RoleAppEnd();
+  const RoleAppEnd();
   @override
   List<Object?> get props => [];
 }

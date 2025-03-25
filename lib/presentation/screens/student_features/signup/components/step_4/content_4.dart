@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:swallet_mobile/presentation/screens/student_features/signup/components/step_4/drop_down_major.dart';
 import 'package:swallet_mobile/presentation/widgets/text_form_field_default.dart';
 
 import 'form_4.dart';

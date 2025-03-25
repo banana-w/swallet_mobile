@@ -50,21 +50,21 @@ class CreateAuthenModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userName'] = this.userName;
-    data['password'] = this.password;
-    data['campusId'] = this.campusId;
-    data['phoneNumber'] = this.phoneNumber;
-    data['code'] = this.code;
-    data['dateofBirth'] = this.dateofBirth;
-    data['inviteCode'] = this.inviteCode;
-    data['studentFrontCard'] = this.studentFrontCard;
-    data['fullName'] = this.fullName;
-    data['gender'] = this.gender;
-    data['email'] = this.email;
-    data['description'] = this.description;
-    data['address'] = this.address;
-    data['state'] = this.state;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userName'] = userName;
+    data['password'] = password;
+    data['campusId'] = campusId;
+    data['phoneNumber'] = phoneNumber;
+    data['code'] = code;
+    data['dateofBirth'] = dateofBirth;
+    data['inviteCode'] = inviteCode;
+    data['studentFrontCard'] = studentFrontCard;
+    data['fullName'] = fullName;
+    data['gender'] = gender;
+    data['email'] = email;
+    data['description'] = description;
+    data['address'] = address;
+    data['state'] = state;
     return data;
   }
 }

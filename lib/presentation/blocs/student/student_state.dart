@@ -19,7 +19,7 @@ final class StudentVouchersLoaded extends StudentState {
 
   final bool hasReachedMax;
 
-  StudentVouchersLoaded({
+  const StudentVouchersLoaded({
     required this.voucherModels,
     this.hasReachedMax = false,
   });
@@ -31,7 +31,7 @@ final class StudentVouchersLoaded extends StudentState {
 final class StudentFaled extends StudentState {
   final String error;
 
-  StudentFaled({required this.error});
+  const StudentFaled({required this.error});
 
   @override
   List<Object?> get props => [error];
@@ -76,7 +76,7 @@ final class StudentUpding extends StudentState {
 final class StudentUpdateSuccess extends StudentState {
   final StudentModel studentModel;
 
-  StudentUpdateSuccess({required this.studentModel});
+  const StudentUpdateSuccess({required this.studentModel});
 
   @override
   List<Object?> get props => [studentModel];
@@ -90,7 +90,7 @@ final class StudentVoucherItemLoading extends StudentState {
 final class StudentVoucherItemLoaded extends StudentState {
   final VoucherStudentItemModel voucherStudentItemModel;
 
-  StudentVoucherItemLoaded({required this.voucherStudentItemModel});
+  const StudentVoucherItemLoaded({required this.voucherStudentItemModel});
 
   @override
   List<Object?> get props => [voucherStudentItemModel];
@@ -99,7 +99,7 @@ final class StudentVoucherItemLoaded extends StudentState {
 final class StudentByIdSuccess extends StudentState {
   final StudentModel studentMode;
 
-  StudentByIdSuccess({required this.studentMode});
+  const StudentByIdSuccess({required this.studentMode});
 
   @override
   List<Object?> get props => [studentMode];
@@ -108,14 +108,14 @@ final class StudentByIdSuccess extends StudentState {
 final class StudentByIdFailed extends StudentState {
   final String error;
 
-  StudentByIdFailed({required this.error});
+  const StudentByIdFailed({required this.error});
 
   @override
   List<Object?> get props => [error];
 }
 
 final class StudentByIdLoading extends StudentState {
-  StudentByIdLoading();
+  const StudentByIdLoading();
   @override
   List<Object?> get props => [];
 }
@@ -128,7 +128,7 @@ final class StudentUpdatingVerification extends StudentState {
 final class StudentUpdateVerificationSuccess extends StudentState {
   final StudentModel studentModel;
 
-  StudentUpdateVerificationSuccess({required this.studentModel});
+  const StudentUpdateVerificationSuccess({required this.studentModel});
 
   @override
   List<Object?> get props => [studentModel];
@@ -156,7 +156,7 @@ final class StudentWishlistLoading extends StudentState {
 final class StudentWishlistLoaded extends StudentState {
   final List<String> wishLists;
 
-  StudentWishlistLoaded({required this.wishLists});
+  const StudentWishlistLoaded({required this.wishLists});
 
   @override
   List<Object?> get props => [wishLists];

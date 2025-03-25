@@ -100,7 +100,7 @@ class Body extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            Container(
+                            SizedBox(
                               height: MediaQuery.of(context).size.height,
                               child: Stack(
                                 children: [
@@ -457,7 +457,7 @@ class Body extends StatelessWidget {
                                   Positioned(
                                     left: 0 * fem,
                                     top: 300 * hem,
-                                    child: Container(
+                                    child: SizedBox(
                                       // color: Colors.red,
                                       height:
                                           MediaQuery.of(context).size.height,
@@ -574,7 +574,7 @@ class Body extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            Container(
+                            SizedBox(
                               height: MediaQuery.of(context).size.height,
                               child: Stack(
                                 children: [
@@ -604,7 +604,7 @@ class Body extends StatelessWidget {
                                   Positioned(
                                     left: 0 * fem,
                                     top: 300 * hem,
-                                    child: Container(
+                                    child: SizedBox(
                                       // color: Colors.red,
                                       height:
                                           MediaQuery.of(context).size.height,

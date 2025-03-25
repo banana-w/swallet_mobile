@@ -19,7 +19,7 @@ class Content7 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 272 * widget.fem,
       height: 80 * widget.hem,
       child: InputDecorator(

@@ -42,10 +42,10 @@ class ButtonProfile extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         style: ButtonStyle(
-          shape: MaterialStateProperty.resolveWith<RoundedRectangleBorder?>((
-            Set<MaterialState> states,
+          shape: WidgetStateProperty.resolveWith<RoundedRectangleBorder?>((
+            Set<WidgetState> states,
           ) {
-            if (states.contains(MaterialState.pressed)) {
+            if (states.contains(WidgetState.pressed)) {
               return RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10 * fem),
                 side: const BorderSide(color: kPrimaryColor),
@@ -56,7 +56,7 @@ class ButtonProfile extends StatelessWidget {
               side: const BorderSide(color: Colors.white),
             );
           }),
-          backgroundColor: MaterialStateProperty.all(Colors.white),
+          backgroundColor: WidgetStateProperty.all(Colors.white),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

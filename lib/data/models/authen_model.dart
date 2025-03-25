@@ -1,7 +1,5 @@
-import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:swallet_mobile/data/models.dart';
 
 class AuthenModel extends Equatable {
   final String jwt;

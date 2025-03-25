@@ -21,7 +21,7 @@ class User extends Equatable {
   final String state;
   final bool status;
 
-  User({
+  const User({
     required this.id,
     required this.userId,
     required this.name,
@@ -45,24 +45,24 @@ class User extends Equatable {
 
   @override
   List<Object?> get props => [
-    this.id,
-    this.userId,
-    this.name,
-    this.roleId,
-    this.role,
-    this.roleName,
-    this.userName,
-    this.phone,
-    this.email,
-    this.avatar,
-    this.fileName,
-    this.isVerify,
-    this.dateCreated,
-    this.dateUpdated,
-    this.dateVerified,
-    this.description,
-    this.state,
-    this.stateId,
-    this.status,
+    id,
+    userId,
+    name,
+    roleId,
+    role,
+    roleName,
+    userName,
+    phone,
+    email,
+    avatar,
+    fileName,
+    isVerify,
+    dateCreated,
+    dateUpdated,
+    dateVerified,
+    description,
+    state,
+    stateId,
+    status,
   ];
 }

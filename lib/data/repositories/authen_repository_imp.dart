@@ -29,21 +29,21 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
-        this.authenModel = AuthenModel.fromJson(result);
-        if (this.authenModel.role == 'Sinh viên') {
+        authenModel = AuthenModel.fromJson(result);
+        if (authenModel.role == 'Sinh viên') {
           String authenString = jsonEncode(AuthenModel.fromJson(result));
           AuthenLocalDataSource.saveAuthen(authenString);
           AuthenLocalDataSource.saveToken(authenModel.jwt);
           AuthenLocalDataSource.saveAccountId(authenModel.accountId);
           AuthenLocalDataSource.saveIsVerified(authenModel.isVerified);
 
-          return this.authenModel;
+          return authenModel;
         } else {
           String authenString = jsonEncode(AuthenModel.fromJson(result));
           AuthenLocalDataSource.saveAuthen(authenString);
           AuthenLocalDataSource.saveToken(authenModel.jwt);
           AuthenLocalDataSource.saveAccountId(authenModel.accountId);
-          return this.authenModel;
+          return authenModel;
         }
       }
       return null;

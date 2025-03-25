@@ -1,6 +1,5 @@
 import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher.dart';
 
-import '../../entities.dart';
 
 class CampaignVoucherDetail extends CampaignVoucher {
   final String voucherCondition;

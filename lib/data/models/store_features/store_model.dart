@@ -70,35 +70,35 @@ class StoreModel extends Store {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['brandId'] = this.brandId;
-    data['brandName'] = this.brandName;
-    data['brandLogo'] = this.brandLogo;
-    data['areaId'] = this.areaId;
-    data['areaName'] = this.areaName;
-    data['areaImage'] = this.areaImage;
-    data['accountId'] = this.accountId;
-    data['storeName'] = this.storeName;
-    data['userName'] = this.userName;
-    data['avatar'] = this.avatar;
-    data['avatarFileName'] = this.avatarFileName;
-    data['file'] = this.file;
-    data['fileName'] = this.fileName;
-    data['email'] = this.email;
-    data['phone'] = this.phone;
-    data['address'] = this.address;
-    data['openingHours'] = this.openingHours;
-    data['closingHours'] = this.closingHours;
-    data['dateCreated'] = this.dateCreated;
-    data['dateUpdated'] = this.dateUpdated;
-    data['description'] = this.description;
-    data['state'] = this.state;
-    data['status'] = this.status;
-    data['numberOfCampaigns'] = this.numberOfCampaigns;
-    data['numberOfVouchers'] = this.numberOfVouchers;
-    data['numberOfBonuses'] = this.numberOfBonuses;
-    data['amountOfBonuses'] = this.amountOfBonuses;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['brandId'] = brandId;
+    data['brandName'] = brandName;
+    data['brandLogo'] = brandLogo;
+    data['areaId'] = areaId;
+    data['areaName'] = areaName;
+    data['areaImage'] = areaImage;
+    data['accountId'] = accountId;
+    data['storeName'] = storeName;
+    data['userName'] = userName;
+    data['avatar'] = avatar;
+    data['avatarFileName'] = avatarFileName;
+    data['file'] = file;
+    data['fileName'] = fileName;
+    data['email'] = email;
+    data['phone'] = phone;
+    data['address'] = address;
+    data['openingHours'] = openingHours;
+    data['closingHours'] = closingHours;
+    data['dateCreated'] = dateCreated;
+    data['dateUpdated'] = dateUpdated;
+    data['description'] = description;
+    data['state'] = state;
+    data['status'] = status;
+    data['numberOfCampaigns'] = numberOfCampaigns;
+    data['numberOfVouchers'] = numberOfVouchers;
+    data['numberOfBonuses'] = numberOfBonuses;
+    data['amountOfBonuses'] = amountOfBonuses;
     return data;
   }
 }

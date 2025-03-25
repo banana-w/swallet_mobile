@@ -20,7 +20,7 @@ class Student extends Equatable {
   final int state; // thay đổi từ String thành int để khớp với API
   final bool status;
 
-  Student({
+  const Student({
     required this.id,
     this.campusId, // không required vì có thể null
     required this.accountId,

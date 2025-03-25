@@ -36,7 +36,7 @@ final class RegisterAccount extends AuthenticationEvent {
 final class VerifyAccount extends AuthenticationEvent {
   final VerifyAuthenModel verifyAuthenModel;
 
-  VerifyAccount({required this.verifyAuthenModel});
+  const VerifyAccount({required this.verifyAuthenModel});
 
   @override
   List<Object?> get props => [verifyAuthenModel];
