@@ -1,7 +1,8 @@
-import 'package:swallet_mobile/domain/entities.dart';
+
+import 'package:swallet_mobile/domain/entities/student_features/user.dart';
 
 class UserModel extends User {
-  UserModel({
+  const UserModel({
     required super.id,
     required super.userId,
     required super.name,

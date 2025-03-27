@@ -16,7 +16,6 @@ import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel
 // import 'package:swallet_mobile/presentation/screens/student_features/profile/components/pending_card.dart';
 // import 'package:swallet_mobile/presentation/screens/student_features/profile/components/rejected_card.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
-import '../../../../../domain/repositories.dart';
 // import '../../../../blocs/blocs.dart';
 // import '../../../store_features/profile/components/name_profile.dart';
 import 'button_profile.dart';

@@ -13,6 +13,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/signup/scre
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_7_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_9_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/verify_email/screens/verifycode_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 import '../screens/screens.dart';
 
@@ -33,6 +34,9 @@ class AppRouter {
 
       case LoginScreen.routeName:
         return LoginScreen.route();
+
+      case VerifyCodeScreen.routeName:
+        return VerifyCodeScreen.route(email: settings.arguments as String);
 
       case SignUpScreen.routeName:
         return SignUpScreen.route();

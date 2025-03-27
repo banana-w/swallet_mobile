@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/models.dart';
-import 'package:swallet_mobile/domain/repositories.dart';
+import 'package:swallet_mobile/domain/interface_repositories/authentication_repository.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -40,15 +40,16 @@ class AuthenticationBloc
         event.password,
       );
       if (authenModel != null) {
-        //authenModel.isVerified == 
-        if (false) {
-          emit(AuthenticationFailed(error: 'Tài khoản không còn hoạt động'));
-        } else {
+        if (authenModel.isVerified) {
+          // Nếu đã xác thực (isVerified = true)
           if (authenModel.role == 'Sinh viên') {
             emit(AuthenticationSuccess());
           } else {
             emit(AuthenticationStoreSuccess());
           }
+        } else {
+          // Nếu chưa xác thực (isVerified = false)
+          emit(AuthenticationSuccessButNotVerified());
         }
       } else {
         emit(

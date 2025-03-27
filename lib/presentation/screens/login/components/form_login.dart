@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/presentation/blocs/authentication/authentication_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/login/components/button_login.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/verify_email/screens/verifycode_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/text_form_field_default.dart';
 import 'package:swallet_mobile/presentation/widgets/text_form_field_password.dart';
 
@@ -76,10 +78,17 @@ class _FormLoginState extends State<FormLogin> {
         widget.hem,
         widget.ffem,
       ),
+      AuthenticationSuccessButNotVerified() => _buildAuthIntial(
+          userNameController,
+          passwordController,
+          widget.fem,
+          widget.hem,
+          widget.ffem,
+        ),
     });
 
     loginWidget = BlocListener<AuthenticationBloc, AuthenticationState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is AuthenticationSuccess) {
           context.read<RoleAppBloc>().add(RoleAppStart());
           // context.read<ChallengeBloc>().add(LoadChallenge());
@@ -99,6 +108,15 @@ class _FormLoginState extends State<FormLogin> {
             context,
             '/landing-screen-store',
             (Route<dynamic> route) => false,
+          );
+        } else if (state is AuthenticationSuccessButNotVerified) {
+          final email = await AuthenLocalDataSource.getAuthen().then((value) {
+            return value!.email;
+          });
+          Navigator.pushNamed(
+            context,
+            VerifyCodeScreen.routeName,
+            arguments: email,
           );
         }
       },
