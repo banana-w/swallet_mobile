@@ -10,9 +10,6 @@ import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/components/tab_isused_voucher.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/components/tab_voucher.dart';
 
-import '../../../../../domain/repositories.dart';
-import '../../../../blocs/blocs.dart';
-import '../../../../widgets/unverified_screen.dart';
 
 class Body extends StatefulWidget {
   const Body({super.key, required this.studentId});

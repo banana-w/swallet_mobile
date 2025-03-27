@@ -36,6 +36,11 @@ class AuthenLocalDataSource {
     await sf.setString('isVerify', isVerify.toString());
   }
 
+  static Future<String?> getIsVerified() async {
+    final sf = await SharedPreferences.getInstance();
+    String? verify = sf.getString('isVerify');
+    return verify;
+  }
   static Future<String?> getStudentId() async {
     final sf = await SharedPreferences.getInstance();
     String? token = sf.getString('accountId');

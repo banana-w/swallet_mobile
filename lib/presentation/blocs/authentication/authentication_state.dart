@@ -15,6 +15,11 @@ final class AuthenticationSuccess extends AuthenticationState {
   @override
   List<Object?> get props => [];
 }
+final class AuthenticationSuccessButNotVerified extends AuthenticationState {
+  @override
+  List<Object?> get props => [];
+}
+
 
 final class AuthenticationStoreSuccess extends AuthenticationState {
   const AuthenticationStoreSuccess();

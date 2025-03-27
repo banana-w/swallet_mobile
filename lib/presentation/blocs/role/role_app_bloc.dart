@@ -26,29 +26,31 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
     emit(RoleAppLoading());
     try {
       final authenModel = await AuthenLocalDataSource.getAuthen();
+      final isVerifyAfter = await AuthenLocalDataSource.getIsVerified();
 
       bool isVerify = authenModel!.isVerified;
       String role = authenModel.role;
-
       String userId = authenModel.accountId;
-      if (userId != '') {
-        final student = await studentRepository.fetchStudentById(
-          id: authenModel.accountId,
-        );
-        if (role == 'Sinh viên') {
-          if (isVerify) {
-            emit(Verified(authenModel: authenModel, studentModel: student!));
+      if (isVerify || isVerifyAfter == "true") {
+        if (userId != '') {
+          final student = await studentRepository.fetchStudentById(
+            id: authenModel.accountId,
+          );
+          if (role == 'Sinh viên') {
+            if (student?.state == 2) {
+              emit(Verified(authenModel: authenModel, studentModel: student!));
+            } else {
+              emit(Unverified(authenModel: authenModel));
+            }
           } else {
-            emit(Unverified(authenModel: authenModel));
+            final store = await storeRepository.fetchStoreById(
+              storeId: authenModel.accountId,
+            );
+            emit(StoreRole(authenModel: authenModel, storeModel: store!));
           }
         } else {
-          final store = await storeRepository.fetchStoreById(
-            storeId: authenModel.accountId,
-          );
-          emit(StoreRole(authenModel: authenModel, storeModel: store!));
+          emit(Unverified(authenModel: authenModel));
         }
-      } else {
-        emit(Unverified(authenModel: authenModel));
       }
     } catch (e) {
       print(e);
