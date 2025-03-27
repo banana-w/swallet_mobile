@@ -9,11 +9,13 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
+import 'package:swallet_mobile/presentation/blocs/campus/campus_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/profile/components/name_profile.dart';
 import 'package:swallet_mobile/presentation/screens/profile/components/student_code_profile.dart';
 import 'package:swallet_mobile/presentation/screens/profile/components/unitiversity_name_profile.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile_update_detail/profile_update_detail_screen.dart';
 
 class InformationCardProfile extends StatefulWidget {
   const InformationCardProfile({
@@ -137,7 +139,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                                 child:
                                     _selectedAvatar == null
                                         ? Image.network(
-                                          '${student.fileNameFront}',
+                                          student.studentCardFront,
                                           // 'assets/images/ava_signup.png',
                                           width: 80 * widget.fem,
                                           height: 80 * widget.hem,
@@ -312,14 +314,17 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                   children: [
                     InkWell(
                       onTap: () async {
-                        // final student =
-                        //     await AuthenLocalDataSource.getStudent();
+                        final student =
+                            await AuthenLocalDataSource.getStudent();
 
-                        // context.read<CampusBloc>().add(
-                        //     LoadCampus(universityId: student!.universityId));
-                        // Navigator.pushNamed(
-                        //     context, ProfileUpdateDetailScreen.routeName,
-                        //     arguments: student);
+                        context.read<CampusBloc>().add(
+                          LoadCampus(searchName: ''),
+                        );
+                        Navigator.pushNamed(
+                          context,
+                          ProfileUpdateDetailScreen.routeName,
+                          arguments: student,
+                        );
                       },
                       child: Container(
                         padding: EdgeInsets.only(
@@ -512,7 +517,9 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                       UpdateStudent(
                         studentId: studentModel!.id,
                         fullName: studentModel.fullName,
-                        majorId: studentModel.id,
+                        studentCode: studentModel.code ?? '',
+                        dateOfBirth: DateTime.parse(studentModel.dateOfBirth),
+                        // majorId: studentModel.id,
                         campusId: studentModel.id,
                         avatar: _selectedAvatar!.path,
                         gender: gender,
@@ -571,7 +578,9 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                       UpdateStudent(
                         studentId: studentModel!.id,
                         fullName: studentModel.fullName,
-                        majorId: studentModel.id,
+                        studentCode: studentModel.code ?? '',
+                        dateOfBirth: DateTime.parse(studentModel.dateOfBirth),
+                        // majorId: studentModel.id,
                         campusId: studentModel.id,
                         avatar: _selectedAvatar!.path,
                         gender: gender,

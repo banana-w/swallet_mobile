@@ -170,7 +170,9 @@ final class LoadStudentOrders extends StudentEvent {
 final class UpdateStudent extends StudentEvent {
   final String studentId;
   final String fullName;
-  final String majorId;
+  final String studentCode;
+  final DateTime dateOfBirth;
+  // final String majorId;
   final String campusId;
   final int gender;
   final String avatar;
@@ -179,7 +181,9 @@ final class UpdateStudent extends StudentEvent {
   const UpdateStudent({
     required this.studentId,
     required this.fullName,
-    required this.majorId,
+    required this.studentCode,
+    required this.dateOfBirth,
+    // required this.majorId,
     required this.campusId,
     required this.gender,
     this.avatar = '',
@@ -190,7 +194,7 @@ final class UpdateStudent extends StudentEvent {
   List<Object?> get props => [
     studentId,
     fullName,
-    majorId,
+    // majorId,
     campusId,
     gender,
     address,

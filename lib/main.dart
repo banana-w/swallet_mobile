@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:swallet_mobile/data/repositories/authen_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/store_features/store_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/campus_repository.dart';
+import 'package:swallet_mobile/data/repositories/student_features/lucky_prize_repository.dart';
 import 'package:swallet_mobile/data/repositories/student_features/student_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/validation_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/verification_repository_imp.dart';
@@ -69,6 +70,11 @@ class MyApp extends StatelessWidget {
         ),
         RepositoryProvider<ValidationRepository>(
           create: (_) => ValidationRepositoryImp(),
+        ),
+        // RepositoryProvider<VerificationRepository>(
+        //     create: (_) => VerificationRepositoryImp()),
+        RepositoryProvider<LuckyPrizeRepository>(
+          create: (_) => LuckyPrizeRepository(),
         ),
         RepositoryProvider<VerificationRepository>(
           create: (_) => VerificationRepositoryImp(),

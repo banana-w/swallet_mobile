@@ -43,7 +43,7 @@ class AuthenLocalDataSource {
   }
   static Future<String?> getStudentId() async {
     final sf = await SharedPreferences.getInstance();
-    String? token = sf.getString('accountId');
+    String? token = sf.getString('studentId');
     return token;
   }
 
