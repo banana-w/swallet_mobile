@@ -1,14 +1,20 @@
+import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
-
+import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
 
 abstract class StudentRepository {
   const StudentRepository();
   Future<StudentModel?> fetchStudentById({required String id});
 
-  // Future<ApiResponse<List<VoucherStudentModel>>?> fetchVoucherStudentId(
-  //     int? page, int? limit, String? search,
-  //     bool? isUsed,
-  //     {required String id});
+  Future<void> updateWalletByStudentId(String studentId, int point);
+
+  Future<ApiResponse<List<VoucherStudentModel>>?> fetchVoucherStudentId(
+    int? page,
+    int? limit,
+    String? search,
+    bool? isUsed, {
+    required String id,
+  });
 
   // Future<ApiResponse<List<TransactionModel>>?> fetchTransactionsStudentId(
   //     int? page, int? limit, int? typeIds,
@@ -26,8 +32,9 @@ abstract class StudentRepository {
   Future<StudentModel?> putStudent({
     required String studentId,
     required String fullName,
-    required String majorId,
     required String campusId,
+    required String studentCode,
+    required DateTime dateOfBirth,
     required int gender,
     required String avatar,
     required String address,

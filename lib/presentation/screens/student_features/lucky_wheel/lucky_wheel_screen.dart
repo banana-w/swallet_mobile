@@ -1,9 +1,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
+import 'package:swallet_mobile/data/models/student_features/lucky_prize_model.dart';
+import 'package:swallet_mobile/data/repositories/student_features/lucky_prize_repository.dart';
+import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
+import 'package:swallet_mobile/presentation/blocs/lucky/lucky_wheel_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/lucky/lucky_wheel_event.dart';
+import 'package:swallet_mobile/presentation/blocs/lucky/lucky_wheel_state.dart';
 
-class LuckyWheelScreen extends StatefulWidget {
+class LuckyWheelScreen extends StatelessWidget {
   const LuckyWheelScreen({super.key});
   static const String routeName = '/lucky-wheel';
 
@@ -15,53 +23,119 @@ class LuckyWheelScreen extends StatefulWidget {
   }
 
   @override
-  State<LuckyWheelScreen> createState() => _LuckyWheelScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create:
+          (context) =>
+              LuckyWheelBloc(repository: context.read<LuckyPrizeRepository>())
+                ..add(LoadPrizes()),
+      child: const LuckyWheelView(),
+    );
+  }
 }
 
-class _LuckyWheelScreenState extends State<LuckyWheelScreen> {
-  // StreamController để điều khiển vòng quay
+class LuckyWheelView extends StatefulWidget {
+  const LuckyWheelView({super.key});
+
+  @override
+  State<LuckyWheelView> createState() => _LuckyWheelViewState();
+}
+
+class _LuckyWheelViewState extends State<LuckyWheelView> {
   final StreamController<int> _controller = StreamController<int>();
-  String _selectedPrize = ''; // Biến lưu kết quả giải thưởng
-  bool _isSpinning = false; // Trạng thái vòng quay
+  String _selectedPrize = '';
+  bool _isSpinning = false;
+  LuckyPrize? _selectedLuckyPrize; // Lưu phần thưởng được chọn
 
-  // Danh sách các giải thưởng
-  final List<String> prizes = [
-    '1000 Xu',
-    '5000 Xu',
-    '3000 Xu',
-    '900 Xu',
-    '700 Xu',
-    'May mắn lần sau',
-    '100 Xu',
-    '800 Xu',
-  ];
+  @override
+  void dispose() {
+    _controller.close();
+    super.dispose();
+  }
 
-  // Hàm xử lý khi nhấn nút quay
-  void _spinWheel() {
+  void _spinWheel(List<LuckyPrize> prizes) async {
     if (!_isSpinning) {
       setState(() {
         _isSpinning = true;
-        _selectedPrize = ''; // Reset kết quả trước khi quay
+        _selectedPrize = '';
+        _selectedLuckyPrize = null;
       });
 
-      // Tạo một giá trị ngẫu nhiên để chọn giải thưởng
-      final randomIndex = Fortune.randomInt(0, prizes.length);
+      // Tính toán xác suất để chọn phần thưởng
+      final randomIndex = _selectPrizeIndex(prizes);
       _controller.add(randomIndex);
 
-      // Giả lập thời gian quay (4 giây) trước khi hiển thị kết quả
-      Future.delayed(const Duration(seconds: 4), () {
+      Future.delayed(const Duration(seconds: 4), () async {
+        final selectedPrize = prizes[randomIndex];
         setState(() {
-          _selectedPrize = prizes[randomIndex];
+          _selectedPrize = selectedPrize.prizeName;
+          _selectedLuckyPrize = selectedPrize;
           _isSpinning = false;
         });
 
-        // Hiển thị thông báo kết quả
+        // Cập nhật quantity trong database
+        if (selectedPrize.quantity > 0) {
+          await context.read<LuckyPrizeRepository>().updatePrizeQuantity(
+            selectedPrize.id,
+            selectedPrize.quantity - 1,
+          );
+        }
+
+        // Nếu phần thưởng có value > 0 (dạng "XXX Xu"), gọi API để cộng điểm
+        if (selectedPrize.value > 0) {
+          try {
+            final student = await AuthenLocalDataSource.getStudent();
+            final studentId = student?.id;
+            if (studentId != null) {
+              await context.read<StudentRepository>().updateWalletByStudentId(
+                studentId,
+                selectedPrize.value,
+              );
+              // Hiển thị thông báo thành công
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Đã cộng ${selectedPrize.value} Xu vào ví của bạn!',
+                  ),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Không tìm thấy studentId')),
+              );
+            }
+          } catch (e) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
+          }
+        }
+
         _showResultDialog();
       });
     }
   }
 
-  // Hiển thị dialog kết quả
+  int _selectPrizeIndex(List<LuckyPrize> prizes) {
+    final totalProbability = prizes.fold<double>(
+      0,
+      (sum, prize) => sum + prize.probability,
+    );
+    final randomValue =
+        (DateTime.now().millisecondsSinceEpoch % 1000) /
+        1000 *
+        totalProbability;
+
+    double cumulativeProbability = 0;
+    for (int i = 0; i < prizes.length; i++) {
+      cumulativeProbability += prizes[i].probability;
+      if (randomValue <= cumulativeProbability) {
+        return i;
+      }
+    }
+    return prizes.length - 1;
+  }
+
   void _showResultDialog() {
     showDialog(
       context: context,
@@ -77,7 +151,7 @@ class _LuckyWheelScreenState extends State<LuckyWheelScreen> {
             ),
             content: Text(
               _selectedPrize.isNotEmpty
-                  ? 'Chúc mừng! Bạn đã nhận được: $_selectedPrize'
+                  ? 'Chúc mừng! Bạn đã được cộng ${_selectedLuckyPrize?.value ?? 0} Xu vào ví!'
                   : 'Đang quay...',
               style: GoogleFonts.openSans(fontSize: 16),
             ),
@@ -92,12 +166,6 @@ class _LuckyWheelScreenState extends State<LuckyWheelScreen> {
             ],
           ),
     );
-  }
-
-  @override
-  void dispose() {
-    _controller.close(); // Đóng StreamController khi widget bị hủy
-    super.dispose();
   }
 
   @override
@@ -132,85 +200,96 @@ class _LuckyWheelScreenState extends State<LuckyWheelScreen> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Vòng quay may mắn
-              SizedBox(
-                width: 300 * fem,
-                height: 300 * fem,
-                child: FortuneWheel(
-                  selected: _controller.stream,
-                  items:
-                      prizes
-                          .asMap()
-                          .entries
-                          .map(
-                            (entry) => FortuneItem(
-                              child: Text(
-                                entry.value,
-                                style: GoogleFonts.openSans(
-                                  fontSize: 14 * ffem,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              style: FortuneItemStyle(
-                                color:
-                                    entry.key % 2 == 0
-                                        ? Colors.yellow
-                                        : Colors.redAccent,
-                                borderColor: Colors.black,
-                                borderWidth: 2,
-                              ),
-                            ),
-                          )
-                          .toList(),
-                  onAnimationEnd: () {
-                    // Được gọi khi vòng quay dừng lại
-                    setState(() {
-                      _isSpinning = false;
-                    });
-                  },
+        child: BlocBuilder<LuckyWheelBloc, LuckyWheelState>(
+          builder: (context, state) {
+            if (state is LuckyWheelLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is LuckyWheelLoaded) {
+              final prizes = state.prizes;
+              if (prizes.isEmpty) {
+                return const Center(child: Text('Không có phần thưởng nào'));
+              }
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 300 * fem,
+                      height: 300 * fem,
+                      child: FortuneWheel(
+                        selected: _controller.stream,
+                        items:
+                            prizes
+                                .asMap()
+                                .entries
+                                .map(
+                                  (entry) => FortuneItem(
+                                    child: Text(
+                                      entry.value.prizeName,
+                                      style: GoogleFonts.openSans(
+                                        fontSize: 14 * ffem,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    style: FortuneItemStyle(
+                                      color:
+                                          entry.key % 2 == 0
+                                              ? Colors.yellow
+                                              : Colors.redAccent,
+                                      borderColor: Colors.black,
+                                      borderWidth: 2,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                        onAnimationEnd: () {
+                          setState(() {
+                            _isSpinning = false;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 30 * hem),
+                    ElevatedButton(
+                      onPressed: _isSpinning ? null : () => _spinWheel(prizes),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 40 * fem,
+                          vertical: 15 * hem,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30 * fem),
+                        ),
+                      ),
+                      child: Text(
+                        _isSpinning ? 'Đang quay...' : 'QUAY',
+                        style: GoogleFonts.openSans(
+                          fontSize: 18 * ffem,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20 * hem),
+                    if (_selectedPrize.isNotEmpty)
+                      Text(
+                        'Kết quả: $_selectedPrize',
+                        style: GoogleFonts.openSans(
+                          fontSize: 16 * ffem,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                  ],
                 ),
-              ),
-              SizedBox(height: 30 * hem),
-              // Nút quay
-              ElevatedButton(
-                onPressed: _isSpinning ? null : _spinWheel,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 40 * fem,
-                    vertical: 15 * hem,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30 * fem),
-                  ),
-                ),
-                child: Text(
-                  _isSpinning ? 'Đang quay...' : 'QUAY',
-                  style: GoogleFonts.openSans(
-                    fontSize: 18 * ffem,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20 * hem),
-              // Hiển thị kết quả (nếu có)
-              if (_selectedPrize.isNotEmpty)
-                Text(
-                  'Kết quả: $_selectedPrize',
-                  style: GoogleFonts.openSans(
-                    fontSize: 16 * ffem,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
-                ),
-            ],
-          ),
+              );
+            } else if (state is LuckyWheelError) {
+              return Center(child: Text('Lỗi: ${state.message}'));
+            }
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );
