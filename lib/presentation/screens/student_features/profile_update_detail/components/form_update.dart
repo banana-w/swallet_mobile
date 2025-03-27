@@ -9,7 +9,6 @@ import 'package:swallet_mobile/presentation/blocs/campus/campus_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
-import '../../../../../domain/repositories.dart';
 import '../../../../blocs/blocs.dart';
 import 'drop_down_campus.dart';
 import 'drop_down_gender.dart';
