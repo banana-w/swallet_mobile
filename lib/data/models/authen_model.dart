@@ -7,29 +7,22 @@ class AuthenModel extends Equatable {
   final bool isVerified;
   final String accountId;
   final String role;
+  final String email;
 
   const AuthenModel({
     required this.jwt,
     required this.accountId,
     required this.isVerified,
     required this.role,
+    required this.email,
   });
-
-  // factory AuthenModel.fromJson(Map<String, dynamic> json) {
-
-  //   return AuthenModel(
-  //     jwt: json['jwt'],
-  //     accountId: json['accountId'],
-  //     isVerified: json['isVerified'],
-  //     role: json['role'],
-  //   );
-  // }
 
   factory AuthenModel.fromJson(Map<String, dynamic> json) {
     final jwt = json['token'];
     final accountId = json['accountId'];
     final isVerified = json['isVerify'];
     final role = json['role'];
+    final email = json['email'];
 
     if (jwt == null) throw FormatException('jwt không được null');
     if (accountId == null) throw FormatException('accountId không được null');
@@ -41,6 +34,7 @@ class AuthenModel extends Equatable {
       accountId: accountId as String,
       isVerified: isVerified as bool,
       role: role as String,
+      email: email as String,
     );
   }
 
@@ -50,6 +44,7 @@ class AuthenModel extends Equatable {
     data['accountId'] = accountId;
     data['isVerify'] = isVerified;
     data['role'] = role;
+    data['email'] = email;
     return data;
   }
 

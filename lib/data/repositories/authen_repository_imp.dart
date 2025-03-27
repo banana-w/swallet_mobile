@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:swallet_mobile/data/models/authen_model.dart';
-import 'package:swallet_mobile/domain/repositories.dart';
+import 'package:swallet_mobile/domain/interface_repositories/authentication_repository.dart';
 
 import '../../presentation/config/constants.dart';
 import '../datasource/authen_local_datasource.dart';
@@ -31,7 +31,9 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
         authenModel = AuthenModel.fromJson(result);
         if (authenModel.role == 'Sinh viên') {
-          String authenString = jsonEncode(AuthenModel.fromJson(result));
+
+          String authenString = jsonEncode(authenModel);
+
           AuthenLocalDataSource.saveAuthen(authenString);
           AuthenLocalDataSource.saveToken(authenModel.jwt);
           AuthenLocalDataSource.saveAccountId(authenModel.accountId);
@@ -39,7 +41,7 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
 
           return authenModel;
         } else {
-          String authenString = jsonEncode(AuthenModel.fromJson(result));
+          String authenString = jsonEncode(authenModel);
           AuthenLocalDataSource.saveAuthen(authenString);
           AuthenLocalDataSource.saveToken(authenModel.jwt);
           AuthenLocalDataSource.saveAccountId(authenModel.accountId);

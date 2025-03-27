@@ -7,7 +7,6 @@ import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/presentation/blocs/authentication/authentication_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/cubits/validation/validation_cubit.dart';
-import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_8_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_9_screen.dart';
 import 'button_sign_up_7.dart';
 import 'content_7.dart';
@@ -352,59 +351,6 @@ class _FormBody7State extends State<FormBody7> {
               }
             });
       }
-    } else {
-      context
-          .read<ValidationCubit>()
-          .validatePhoneNumber('0${phoneNumberController.text}')
-          .then((value) async {
-            if (value == '') {
-              // await FirebaseAuth.instance.verifyPhoneNumber(
-              //   phoneNumber: '${countryController.text + phoneNumberController.text}',
-              //   timeout: const Duration(seconds: 60),
-              //   verificationCompleted: (PhoneAuthCredential credential) {
-              //     Future.delayed(const Duration(seconds: 5), () {
-              //       Navigator.pushNamed(context, SignUp8Screen.routeName,
-              //           arguments: phoneNumberController.text);
-              //     });
-              //   },
-              //   verificationFailed: (FirebaseAuthException e) {
-              //     if (e.code == 'invalid-phone-number') {
-              //       setState(() {
-              //         errorString = 'Số điện thoại không hợp lệ';
-              //       });
-              //     }
-              //   },
-              //   codeSent: (String verificationId, int? resendToken) async {
-              //     AuthenLocalDataSource.saveVerificationId(verificationId);
-              //   },
-              //   codeAutoRetrievalTimeout: (String verificationId) {
-              //     AuthenLocalDataSource.saveVerificationId(verificationId);
-              //   },
-              // );
-
-              // Lưu số điện thoại
-              final verifyAuthenModel =
-                  await AuthenLocalDataSource.getVerifyAuthen();
-              verifyAuthenModel!.phoneNumber = '0${phoneNumberController.text}';
-              String verifyAuthenString = jsonEncode(verifyAuthenModel);
-              AuthenLocalDataSource.saveVerifyAuthen(verifyAuthenString);
-
-              // Chuyển đến màn hình tiếp theo
-              Future.delayed(const Duration(seconds: 5), () {
-                Navigator.pushNamed(
-                  context,
-                  SignUp9Screen.routeName,
-                  arguments: phoneNumberController.text,
-                );
-              });
-            } else {
-              if (value == '["Số điện thoại không hợp lệ"]') {
-                setState(() {
-                  errorString = 'Số điện thoại không hợp lệ';
-                });
-              }
-            }
-          });
-    }
+    } 
   }
 }

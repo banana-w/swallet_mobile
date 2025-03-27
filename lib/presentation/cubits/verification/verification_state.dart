@@ -13,6 +13,10 @@ final class VerificationLoading extends VerificationState {
   @override
   List<Object> get props => [];
 }
+final class SendMailLoading extends VerificationState {
+  @override
+  List<Object> get props => [];
+}
 
 final class OTPVerificationSuccess extends VerificationState {
   @override
