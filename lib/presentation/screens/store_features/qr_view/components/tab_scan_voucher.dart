@@ -6,9 +6,7 @@ import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_voucher_information/campaign_vouher_information_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/failed_scan_voucher/failed_scan_voucher_screen.dart';
 
-import '../../../../blocs/blocs.dart';
 import '../../../../config/constants.dart';
-import '../../../screens.dart';
 import 'body.dart';
 import 'qr_scanner_overlay.dart';
 

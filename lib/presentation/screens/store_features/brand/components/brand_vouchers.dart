@@ -5,9 +5,7 @@ import 'package:swallet_mobile/domain/interface_repositories/student_features/br
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/voucher_list_screen.dart';
 
-import '../../../../blocs/blocs.dart';
 import '../../../../config/constants.dart';
-import '../../../screens.dart';
 
 class BrandVouchers extends StatelessWidget {
   const BrandVouchers({
