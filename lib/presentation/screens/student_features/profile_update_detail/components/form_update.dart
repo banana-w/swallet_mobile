@@ -47,7 +47,7 @@ class _FormBody1State extends State<FormUpdate> {
   void initState() {
     nameController.text = widget.studentModel.fullName;
     campusController.text = widget.studentModel.campusId ?? '';
-    if (widget.studentModel.gender == 'Female') {
+    if (widget.studentModel.gender == 1) {
       genderController.text = '1';
     } else {
       genderController.text = '2';
@@ -171,7 +171,7 @@ class _FormBody1State extends State<FormUpdate> {
                       child: Column(
                         children: [
                           SizedBox(height: 25 * widget.hem),
-                          Container(
+                          SizedBox(
                             width: 272 * widget.fem,
                             height: 65 * widget.hem,
                             // color: Colors.red,
@@ -268,7 +268,7 @@ class _FormBody1State extends State<FormUpdate> {
                             textController: studentCodeController,
                           ),
                           SizedBox(height: 25 * widget.hem),
-                          Container(
+                          SizedBox(
                             width:
                                 272 *
                                 widget
@@ -396,7 +396,11 @@ class _FormBody1State extends State<FormUpdate> {
                               return null;
                             },
                             genderName:
-                                widget.studentModel.gender?.toString() ?? '',
+                                widget.studentModel.gender != null
+                                    ? (widget.studentModel.gender == 1
+                                        ? 'Female'
+                                        : 'Male')
+                                    : '',
                           ),
                           SizedBox(height: 25 * widget.hem),
                           TextFormFieldDefault(

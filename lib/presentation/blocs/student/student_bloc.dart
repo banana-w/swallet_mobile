@@ -1,6 +1,8 @@
-import 'package:bloc/bloc.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_item_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
@@ -25,9 +27,10 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     // on<LoadVoucherItem>(_onLoadvoucherItem);
     on<UpdateStudent>(_onUpdateStudent);
     on<LoadStudentById>(_onLoadStudentById);
-    // on<UpdateVerification>(_onUpdateVerification);
+    on<UpdateVerification>(_onUpdateVerification);
     // on<LoadOrderDetailById>(_onLoadOrderDetailBydId);
     // on<HideUsedVouchers>(_onHideUsedVoucher);
+    on<SkipUpdateVerification>(_onSKipUpdateVerification);
   }
   var isLoadingMore = false;
   int pageTransaction = 1;
@@ -389,24 +392,29 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     }
   }
 
-  // Future<void> _onUpdateVerification(
-  //     UpdateVerification event, Emitter<StudentState> emit) async {
-  //   emit(StudentUpdatingVerification());
-  //   try {
-  //     var studentModel = await studentRepository.putVerification(
-  //         studentId: event.studentId,
-  //         studentCode: event.studentCode,
-  //         studentCardFont: event.studentCardFront,
-  //         studentCardBack: event.studentCardBack);
-  //     if (studentModel == null) {
-  //       emit(StudentFaled(error: 'Xác minh thất bại!'));
-  //     } else {
-  //       emit(StudentUpdateVerificationSuccess(studentModel: studentModel));
-  //     }
-  //   } catch (e) {
-  //     emit(StudentFaled(error: e.toString()));
-  //   }
-  // }
+  Future<void> _onUpdateVerification(
+      UpdateVerification event, Emitter<StudentState> emit) async {
+    emit(StudentUpdatingVerification());
+    try {
+      var studentModel = await studentRepository.putVerification(
+          studentId: event.studentId,
+          studentCardFont: event.studentCardFront,
+          );
+      if (studentModel == null) {
+        emit(StudentFaled(error: 'Xác minh thất bại!'));
+      } else {
+        emit(StudentUpdateVerificationSuccess(studentModel: studentModel));
+      }
+    } catch (e) {
+      emit(StudentFaled(error: e.toString()));
+    }
+  }
+
+ Future<void> _onSKipUpdateVerification(
+      SkipUpdateVerification event, Emitter<StudentState> emit) async {
+    var studentModel = await AuthenLocalDataSource.getStudent();
+      emit(StudentUpdateVerificationSuccess(studentModel: studentModel!));
+  }
 
   // Future<void> _onLoadOrderDetailBydId(
   //     LoadOrderDetailById event, Emitter<StudentState> emit) async {

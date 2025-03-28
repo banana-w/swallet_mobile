@@ -13,7 +13,6 @@ import 'package:swallet_mobile/presentation/screens/student_features/qr/qr_vouch
 import 'package:swallet_mobile/presentation/screens/student_features/voucher_item_detail/voucher_item_detail_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/paint_voucher_card.dart';
 
-import '../../../../blocs/blocs.dart';
 import '../../../../config/constants.dart';
 
 class TabIsUsedVoucher extends StatefulWidget {

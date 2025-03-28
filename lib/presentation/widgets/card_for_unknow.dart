@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
-
-import '../screens/screens.dart';
 
 class CardForUnknow extends StatelessWidget {
   const CardForUnknow({

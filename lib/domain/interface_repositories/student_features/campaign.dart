@@ -27,7 +27,7 @@ class Campaign extends Equatable {
   final String currentStateName;
   final bool status;
 
-  Campaign(
+  const Campaign(
       {required this.id,
       required this.brandId,
       required this.brandName,
@@ -55,30 +55,30 @@ class Campaign extends Equatable {
       required this.status});
   @override
   List<Object> get props => [
-        this.id,
-        this.brandId,
-        this.brandName,
-        this.brandAcronym,
-        this.typeId,
-        this.typeName,
-        this.campaignName,
-        this.image,
-        this.imageName,
-        this.file,
-        this.fileName,
-        this.condition,
-        this.link,
-        this.startOn,
-        this.endOn,
-        this.duration,
-        this.totalIncome,
-        this.totalSpending,
-        this.dateCreated,
-        this.dateUpdated,
-        this.description,
-        this.currentStateId,
-        this.currentState,
-        this.currentStateName,
-        this.status
+        id,
+        brandId,
+        brandName,
+        brandAcronym,
+        typeId,
+        typeName,
+        campaignName,
+        image,
+        imageName,
+        file,
+        fileName,
+        condition,
+        link,
+        startOn,
+        endOn,
+        duration,
+        totalIncome,
+        totalSpending,
+        dateCreated,
+        dateUpdated,
+        description,
+        currentStateId,
+        currentState,
+        currentStateName,
+        status
       ];
 }

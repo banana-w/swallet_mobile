@@ -46,7 +46,7 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
             if (student?.state == 2) {
               emit(Verified(authenModel: authenModel, studentModel: student!));
             } else {
-              emit(Unverified(authenModel: authenModel));
+              emit(Unverified(authenModel: authenModel, studentModel: student!));
             }
           } else if (role.contains("Giáo viên")) {
             final lecture = await lectureRepository.fetchLectureById(
@@ -60,7 +60,7 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
             emit(StoreRole(authenModel: authenModel, storeModel: store!));
           }
         } else {
-          emit(Unverified(authenModel: authenModel));
+          emit(RoleAppLoading());
         }
       }
     } catch (e) {

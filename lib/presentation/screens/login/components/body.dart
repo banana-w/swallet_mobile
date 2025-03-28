@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/login/components/form_login.dart';
-import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_6_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_screen.dart';
-
-import '../../screens.dart';
 
 class Body extends StatelessWidget {
   const Body({super.key});

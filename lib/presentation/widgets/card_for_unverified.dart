@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/update_verification_screen.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
@@ -176,6 +179,14 @@ class CardForUnVerified extends StatelessWidget {
                 //   SignUp1Screen.routeName,
                 //   arguments: false,
                 // );
+                final roleAppstate = context.read<RoleAppBloc>().state;
+                if (roleAppstate is Unverified) {
+                  Navigator.pushNamed(
+                    context,
+                    UpdateVerificationScreen.routeName,
+                    arguments: roleAppstate.studentModel,
+                  );
+                }
               },
               child: Container(
                 width: 120 * fem,

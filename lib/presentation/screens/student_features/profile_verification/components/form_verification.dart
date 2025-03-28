@@ -9,10 +9,11 @@ import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/cubits/validation/validation_cubit.dart';
+import 'package:swallet_mobile/presentation/cubits/verification/verification_cubit.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/verify_email/screens/verifycode_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/verify_studentMail/screens/verifycode_student_screen.dart';
 
-import '../../../../../data/models.dart';
 import '../../../../config/constants.dart';
-import '../../signup/components/step_5/upload_back_card.dart';
 import '../../signup/components/step_5/upload_front_card.dart';
 import 'text_form_field_default.dart';
 
@@ -36,9 +37,9 @@ class FormVerification extends StatefulWidget {
 
 class _FormVerificationState extends State<FormVerification> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController codeController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   File? _selectedFrontCard;
-  File? _selectedBackCard;
+  // File? _selectedBackCard;
   String? errorCard;
   @override
   void initState() {
@@ -50,25 +51,30 @@ class _FormVerificationState extends State<FormVerification> {
     return BlocListener<StudentBloc, StudentState>(
       listener: (context, state) {
         if (state is StudentUpdateVerificationSuccess) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                elevation: 0,
-                duration: const Duration(milliseconds: 2000),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Xác minh thành công',
-                  message: 'Xác minh sinh viên thành công!',
-                  contentType: ContentType.success,
-                ),
-              ),
-            );
-          Navigator.pushNamedAndRemoveUntil(
+          // ScaffoldMessenger.of(context)
+          //   ..hideCurrentSnackBar()
+          //   ..showSnackBar(
+          //     SnackBar(
+          //       elevation: 0,
+          //       duration: const Duration(milliseconds: 2000),
+          //       behavior: SnackBarBehavior.floating,
+          //       backgroundColor: Colors.transparent,
+          //       content: AwesomeSnackbarContent(
+          //         title: 'Xác minh thành công',
+          //         message: 'Xác minh sinh viên thành công!',
+          //         contentType: ContentType.success,
+          //       ),
+          //     ),
+          //   );
+
+          context.read<VerificationCubit>().resendVerificationEmail(
+            emailController.text,
+          );
+
+          Navigator.pushNamed(
             context,
-            '/landing-screen',
-            (Route<dynamic> route) => false,
+            VerifyCodeStudentScreen.routeName,
+            arguments: emailController.text,
           );
         } else if (state is StudentFaled) {
           ScaffoldMessenger.of(context)
@@ -80,30 +86,31 @@ class _FormVerificationState extends State<FormVerification> {
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Colors.transparent,
                 content: AwesomeSnackbarContent(
-                  title: 'Xác minh thất bại',
+                  title: 'Cập nhật ảnh thất bại',
                   message: 'Vui lòng xác minh lại!',
                   contentType: ContentType.failure,
                 ),
               ),
             );
           Navigator.pop(context);
-        } else if (state is StudentUpdatingVerification) {
-          showDialog<String>(
-            context: context,
-            builder: (BuildContext context) {
-              Future.delayed(Duration(seconds: 10));
-              return AlertDialog(
-                content: SizedBox(
-                  width: 250,
-                  height: 250,
-                  child: Center(
-                    child: CircularProgressIndicator(color: kPrimaryColor),
-                  ),
-                ),
-              );
-            },
-          );
-        }
+        } 
+        // else if (state is StudentUpdatingVerification) {
+        //   showDialog<String>(
+        //     context: context,
+        //     builder: (BuildContext context) {
+        //       Future.delayed(Duration(seconds: 10));
+        //       return AlertDialog(
+        //         content: SizedBox(
+        //           width: 250,
+        //           height: 250,
+        //           child: Center(
+        //             child: CircularProgressIndicator(color: kPrimaryColor),
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //   );
+        // }
       },
       child: Form(
         key: _formKey,
@@ -111,7 +118,7 @@ class _FormVerificationState extends State<FormVerification> {
           children: [
             BlocBuilder<ValidationCubit, ValidationState>(
               builder: (context, state) {
-                if (state is CheckStudentCodeFailed) {
+                if (state is CheckEmailFailed) {
                   return Column(
                     children: [
                       Container(
@@ -133,15 +140,15 @@ class _FormVerificationState extends State<FormVerification> {
                             hem: widget.hem,
                             fem: widget.fem,
                             ffem: widget.ffem,
-                            labelText: 'MÃ SỐ SINH VIÊN *',
-                            hintText: 'Nhập mã số sinh viên',
+                            labelText: 'Email SINH VIÊN *',
+                            hintText: 'Nhập email sinh viên',
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'MSSV không được bỏ trống';
+                                return 'Email không được bỏ trống';
                               }
                               return null;
                             },
-                            textController: codeController,
+                            textController: emailController,
                           ),
                         ),
                       ),
@@ -184,15 +191,15 @@ class _FormVerificationState extends State<FormVerification> {
                       hem: widget.hem,
                       fem: widget.fem,
                       ffem: widget.ffem,
-                      labelText: 'MÃ SỐ SINH VIÊN *',
-                      hintText: 'Nhập mã số sinh viên',
+                      labelText: 'EMAIL SINH VIÊN *',
+                      hintText: 'Nhập email sinh viên',
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'MSSV không được bỏ trống';
+                          return 'Emai sinh viên không được bỏ trống';
                         }
                         return null;
                       },
-                      textController: codeController,
+                      textController: emailController,
                     ),
                   ),
                 );
@@ -201,7 +208,7 @@ class _FormVerificationState extends State<FormVerification> {
             SizedBox(height: 15 * widget.hem),
             Container(
               width: 318 * widget.fem,
-              height: 400 * widget.hem,
+              height: 200 * widget.hem,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(15 * widget.fem),
@@ -213,106 +220,144 @@ class _FormVerificationState extends State<FormVerification> {
                   ),
                 ],
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _selectedFrontCard != null
-                      ? InkWell(
-                        onTap: () {
-                          _imageModelBottomSheet(context, _selectedFrontCard);
-                        },
-                        child: Container(
-                          width: 150 * widget.fem,
-                          height: 150 * widget.hem,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: FileImage(_selectedFrontCard!),
-                            ),
-                          ),
-                        ),
-                      )
-                      : Column(
-                        children: [
-                          Text(
-                            'Tải hình mặt trước của thẻ',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.openSans(
-                              textStyle: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14 * widget.ffem,
-                                fontWeight: FontWeight.w700,
+              child: Center(
+                child:
+                    _selectedFrontCard != null
+                        ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Hình mặt trước của thẻ',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.openSans(
+                                textStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14 * widget.ffem,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 10 * widget.hem),
-                          UpLoadFrontCard(
-                            fem: widget.fem,
-                            hem: widget.hem,
-                            ffem: widget.ffem,
-                            onPressed: () {
-                              _imageModelBottomSheet(
-                                context,
-                                _selectedFrontCard,
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                  SizedBox(
-                    width: 280 * widget.fem,
-                    child: Divider(
-                      thickness: 1 * widget.fem,
-                      color: const Color.fromARGB(255, 225, 223, 223),
-                    ),
-                  ),
-                  _selectedBackCard != null
-                      ? InkWell(
-                        onTap: () {
-                          _imageModelBottomSheet(context, _selectedBackCard);
-                        },
-                        child: Container(
-                          width: 150 * widget.fem,
-                          height: 150 * widget.hem,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: FileImage(_selectedBackCard!),
-                            ),
-                          ),
-                        ),
-                      )
-                      : Column(
-                        children: [
-                          Text(
-                            'Tải hình mặt sau của thẻ',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.openSans(
-                              textStyle: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14 * widget.ffem,
-                                fontWeight: FontWeight.w700,
+                            SizedBox(height: 10 * widget.hem),
+                            InkWell(
+                              onTap: () {
+                                _imageModelBottomSheet(
+                                  context,
+                                  _selectedFrontCard,
+                                );
+                              },
+                              child: Container(
+                                width: 150 * widget.fem,
+                                height: 150 * widget.hem,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: FileImage(_selectedFrontCard!),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 10 * widget.hem),
-                          UpLoadBackCard(
-                            fem: widget.fem,
-                            hem: widget.hem,
-                            ffem: widget.ffem,
-                            onPressed: () {
-                              _imageModelBottomSheet(
-                                context,
-                                _selectedBackCard,
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                ],
+                          ],
+                        )
+                        : widget.studentModel.studentCardFront.isNotEmpty
+                        ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Hình mặt trước của thẻ',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.openSans(
+                                textStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14 * widget.ffem,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10 * widget.hem),
+                            InkWell(
+                              onTap: () {
+                                _imageModelBottomSheet(
+                                  context,
+                                  _selectedFrontCard,
+                                );
+                              },
+                              child: SizedBox(
+                                width: 150 * widget.fem,
+                                height: 150 * widget.hem,
+                                child: Image.network(
+                                  widget.studentModel.studentCardFront,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Center(
+                                      child: Text(
+                                        'Lỗi tải ảnh',
+                                        style: GoogleFonts.openSans(
+                                          textStyle: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 12 * widget.ffem,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  loadingBuilder: (
+                                    context,
+                                    child,
+                                    loadingProgress,
+                                  ) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        value:
+                                            loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    (loadingProgress
+                                                            .expectedTotalBytes ??
+                                                        1)
+                                                : null,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                        : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Tải hình mặt trước của thẻ',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.openSans(
+                                textStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14 * widget.ffem,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10 * widget.hem),
+                            UpLoadFrontCard(
+                              fem: widget.fem,
+                              hem: widget.hem,
+                              ffem: widget.ffem,
+                              onPressed: () {
+                                _imageModelBottomSheet(
+                                  context,
+                                  _selectedFrontCard,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
               ),
             ),
+            SizedBox(height: 5 * widget.hem),
             errorCard != null
                 ? Padding(
                   padding: EdgeInsets.only(top: 5 * widget.hem),
@@ -330,60 +375,83 @@ class _FormVerificationState extends State<FormVerification> {
                 )
                 : SizedBox(height: 5 * widget.hem),
             SizedBox(height: 15 * widget.hem),
+            // Thêm ô thông tin xác nhận
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20 * widget.fem),
+              child: Text(
+                'Thông tin xác nhận chỉ được gửi một lần, sau khi xác thực thành công sẽ không được sửa.\n\nVui lòng kiểm tra kỹ thông tin',
+                textAlign: TextAlign.center,
+                maxLines: 4, // Cho phép 2 dòng
+                style: GoogleFonts.openSans(
+                  textStyle: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 13 * widget.ffem,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10 * widget.hem),
             BlocBuilder<ValidationCubit, ValidationState>(
-              builder: (context, state) {
-                return TextButton(
-                  onPressed: () async {
-                    if (state is CheckStudentCodeFailed) {
-                      if (_selectedBackCard == null ||
-                          _selectedFrontCard == null) {
-                        setState(() {
-                          errorCard = 'Thẻ sinh viên không được bỏ trống';
-                        });
-                      } else if (_formKey.currentState!.validate()) {
-                        _submitForm(
-                          context,
-                          _selectedFrontCard,
-                          _selectedBackCard,
-                          codeController,
-                        );
-                      }
-                    } else {
-                      if (_selectedBackCard == null ||
-                          _selectedFrontCard == null) {
-                        setState(() {
-                          errorCard = 'Thẻ sinh viên không được bỏ trống';
-                        });
-                      } else if (_formKey.currentState!.validate()) {
-                        _submitForm(
-                          context,
-                          _selectedFrontCard,
-                          _selectedBackCard,
-                          codeController,
-                        );
-                      }
-                    }
-                  },
-                  child: Container(
-                    width: 220 * widget.fem,
-                    height: 45 * widget.hem,
-                    decoration: BoxDecoration(
-                      color: kPrimaryColor,
-                      borderRadius: BorderRadius.circular(23 * widget.fem),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Xác minh',
-                        style: GoogleFonts.openSans(
-                          textStyle: TextStyle(
-                            fontSize: 17 * widget.ffem,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
+              builder: (context, validationState) {
+                return BlocBuilder<StudentBloc, StudentState>(
+                  builder: (context, studentState) {
+                    // Kiểm tra trạng thái loading từ StudentBloc
+                    final isLoading =
+                        studentState is StudentUpdatingVerification || validationState is ValidationInProcess;
+
+                    return TextButton(
+                      onPressed:
+                          isLoading
+                              ? null // Vô hiệu hóa nút khi đang loading
+                              : () async {
+                                if (_selectedFrontCard == null &&
+                                    widget
+                                        .studentModel
+                                        .studentCardFront
+                                        .isEmpty) {
+                                  setState(() {
+                                    errorCard =
+                                        'Thẻ sinh viên không được bỏ trống';
+                                  });
+                                } else if (_formKey.currentState!.validate()) {
+                                  _submitForm(
+                                    context,
+                                    _selectedFrontCard,
+                                    null,
+                                    emailController, // Giả định emailController là codeController
+                                  );
+                                }
+                              },
+                      child: Container(
+                        width: 220 * widget.fem,
+                        height: 45 * widget.hem,
+                        decoration: BoxDecoration(
+                          color: kPrimaryColor,
+                          borderRadius: BorderRadius.circular(23 * widget.fem),
+                        ),
+                        child: Center(
+                          child:
+                              isLoading
+                                  ? CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
+                                  )
+                                  : Text(
+                                    'Xác minh',
+                                    style: GoogleFonts.openSans(
+                                      textStyle: TextStyle(
+                                        fontSize: 17 * widget.ffem,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 );
               },
             ),
@@ -395,28 +463,29 @@ class _FormVerificationState extends State<FormVerification> {
 
   void _submitForm(
     BuildContext context,
-    selectedFrontCard,
-    selectedBackCard,
-    codeController,
+    File? selectedFrontCard,
+    File? selectedBackCard,
+    TextEditingController codeController,
   ) async {
-    context
+    final validationResult = await context
         .read<ValidationCubit>()
-        .validateStudentCode(codeController.text)
-        .then((value) async {
-          if (value == '') {
-            final studentModel = await AuthenLocalDataSource.getStudent();
-            context.read<StudentBloc>().add(
-              UpdateVerification(
-                studentId: studentModel!.id,
-                studentCode: codeController.text,
-                studentCardFront: selectedFrontCard!.path,
-                studentCardBack: selectedBackCard!.path,
-              ),
-            );
-          } else {
-            return null;
-          }
-        });
+        .validateStudentEmail(codeController.text);
+
+    if (validationResult == '') {
+      final studentModel = await AuthenLocalDataSource.getStudent();
+      if (studentModel != null && selectedFrontCard != null) {
+        context.read<StudentBloc>().add(
+          UpdateVerification(
+            studentId: studentModel.id,
+            studentCardFront: selectedFrontCard.path,
+          ),
+        );
+      } else if (studentModel != null && selectedFrontCard == null) {
+        context.read<StudentBloc>().add(
+          SkipUpdateVerification(studentId: "studentId"),
+        );
+      }
+    }
   }
 
   Future _pickerImageFromGallery(File? selectedImage, context) async {
@@ -437,7 +506,7 @@ class _FormVerificationState extends State<FormVerification> {
       selectedImage = File(returnedImage.path);
 
       setState(() {
-        _selectedBackCard = selectedImage;
+        // _selectedBackCard = selectedImage;
       });
       Navigator.pop(context);
     }
@@ -461,7 +530,7 @@ class _FormVerificationState extends State<FormVerification> {
       selectedImage = File(returnedImage.path);
 
       setState(() {
-        _selectedBackCard = selectedImage;
+        // _selectedBackCard = selectedImage;
       });
       Navigator.pop(context);
     }

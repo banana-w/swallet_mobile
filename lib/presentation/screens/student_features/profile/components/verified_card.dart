@@ -5,7 +5,6 @@ import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_detail/profile_detail_screen.dart';
-import 'package:swallet_mobile/presentation/screens/screens.dart';
 
 import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/profile_verification_screen.dart';
 
@@ -85,7 +84,7 @@ class VerifiedCard extends StatelessWidget {
                             Flexible(
                               child: Text(
                                 studentModel.fullName,
-                                // softWrap: true,
+                                softWrap: true,
                                 maxLines: 2,
                                 textAlign: TextAlign.start,
                                 style: GoogleFonts.openSans(

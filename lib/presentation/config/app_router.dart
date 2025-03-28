@@ -10,12 +10,19 @@ import 'package:swallet_mobile/presentation/screens/store_features/landing_scree
 import 'package:swallet_mobile/presentation/screens/store_features/profile_update_detail/profile_update_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/qr_view/qr_view_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/transact/transact_screen.dart';
+import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
+import 'package:swallet_mobile/presentation/screens/splash/onboarding_screen.dart';
+import 'package:swallet_mobile/presentation/screens/splash/splash_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign/campaign_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/challenge/challenge_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/landing/landing_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel/lucky_wheel_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_list_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_detail/profile_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_update_detail/profile_update_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/profile_verification_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/update_verification_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/qr/qr_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/qr/qr_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_1_screen.dart';
@@ -27,10 +34,11 @@ import 'package:swallet_mobile/presentation/screens/student_features/signup/scre
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_7_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_9_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/verify_studentMail/screens/verifycode_student_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/verify_email/screens/verifycode_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/welcome/welcome_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
-import '../screens/screens.dart';
 
 class AppRouter {
   // static final LandingScreenBloc landingScreenBloc = LandingScreenBloc();
@@ -58,6 +66,11 @@ class AppRouter {
 
       case VerifyCodeScreen.routeName:
         return VerifyCodeScreen.route(email: settings.arguments as String);
+
+      case VerifyCodeStudentScreen.routeName:
+        return VerifyCodeStudentScreen.route(
+          email: settings.arguments as String,
+        );
 
       case SignUpScreen.routeName:
         return SignUpScreen.route();
@@ -92,6 +105,12 @@ class AppRouter {
       case UnverifiedScreen.routeName:
         return UnverifiedScreen.route();
 
+      case NotificationScreen.routeName:
+        return NotificationScreen.route(data: null);
+
+      case NotificationListScreen.routeName:
+        return NotificationListScreen.route();
+
       case QRScreen.routeName:
         return QRScreen.route(id: settings.arguments as String);
 
@@ -111,6 +130,11 @@ class AppRouter {
 
       case ProfileVerificationScreen.routeName:
         return ProfileVerificationScreen.route(
+          studentModel: settings.arguments as StudentModel,
+        );
+
+      case UpdateVerificationScreen.routeName:
+        return UpdateVerificationScreen.route(
           studentModel: settings.arguments as StudentModel,
         );
 

@@ -103,7 +103,7 @@ class LandingScreen extends StatelessWidget {
               Navigator.pushNamed(context, UnverifiedScreen.routeName);
             }
           },
-          child: Container(
+          child: SizedBox(
             width: 20 * fem,
             height: 20 * hem,
             child: SvgPicture.asset('assets/icons/qr-unbean-icon.svg'),

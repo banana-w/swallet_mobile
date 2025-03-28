@@ -43,7 +43,7 @@ class _DropDownCampusState extends State<DropDownCampus> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       // height: 43 * widget.hem,
       width: 272 * widget.fem,
       child: _dropDownCampusLoaded(),

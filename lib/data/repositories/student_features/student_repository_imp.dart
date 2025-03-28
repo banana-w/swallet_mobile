@@ -16,7 +16,7 @@ import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:http/http.dart' as http;
 
 class StudentRepositoryImp implements StudentRepository {
-  String endPoint = '${baseURL}Student/account';
+  String endPoint = '${baseURL}Student';
   String? token;
   String? studentId;
   String sort = 'Id%2Cdesc';
@@ -33,7 +33,7 @@ class StudentRepositoryImp implements StudentRepository {
         'Authorization': 'Bearer $token',
       };
       http.Response response = await http.get(
-        Uri.parse('$endPoint/$id'),
+        Uri.parse('$endPoint/account/$id'),
         headers: headers,
       );
 
@@ -324,9 +324,7 @@ class StudentRepositoryImp implements StudentRepository {
   @override
   Future<StudentModel?> putVerification({
     required String studentId,
-    required String studentCode,
     required String studentCardFont,
-    required String studentCardBack,
   }) async {
     try {
       final token = await AuthenLocalDataSource.getToken();
@@ -336,22 +334,19 @@ class StudentRepositoryImp implements StudentRepository {
       };
       var request = http.MultipartRequest(
         'PUT',
-        Uri.parse('$endPoint/$studentId/verification'),
+        Uri.parse('$endPoint/$studentId/studentCardFront'),
       );
 
       //thêm file cho request
       request.files.add(
         await http.MultipartFile.fromPath('StudentCardFront', studentCardFont),
-      );
-      request.files.add(
-        await http.MultipartFile.fromPath('StudentCardBack', studentCardBack),
-      );
+      );     
 
       //thêm headers
       request.headers.addAll(headers);
 
       //thêm field cho request
-      request.fields.addAll({'Code': studentCode});
+      // request.fields.addAll({'Code': studentCode});
 
       //gửi request
       var streamedResponse = await request.send();
@@ -360,6 +355,14 @@ class StudentRepositoryImp implements StudentRepository {
       if (response.statusCode == 200) {
         print(response);
         final result = jsonDecode(utf8.decode(response.bodyBytes));
+        result.addAll({
+          'totalSpending': result['totalSpending'] ?? 1,
+          'totalIncome': result['totalIncome'] ?? 1,
+          'state': result['state'] ?? 1,
+          'status': result['status'] ?? true,
+          'fileNameFront': result['fileNameFront'] ?? 'fileName',
+          'fileNameBack': result['fileNameBack'] ?? 'fileName',
+        });
         StudentModel studentModel = StudentModel.fromJson(result);
 
         String studentString = jsonEncode(StudentModel.fromJson(result));

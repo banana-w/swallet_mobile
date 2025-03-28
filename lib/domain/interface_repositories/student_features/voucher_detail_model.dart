@@ -58,31 +58,31 @@ class VoucherDetailModel extends Voucher {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['brandId'] = this.brandId;
-    data['brandName'] = this.brandName;
-    data['typeId'] = this.typeId;
-    data['typeName'] = this.typeName;
-    data['voucherName'] = this.voucherName;
-    data['price'] = this.price;
-    data['rate'] = this.rate;
-    data['condition'] = this.condition;
-    data['image'] = this.image;
-    data['imageName'] = this.imageName;
-    data['file'] = this.file;
-    data['fileName'] = this.fileName;
-    data['dateCreated'] = this.dateCreated;
-    data['dateUpdated'] = this.dateUpdated;
-    data['description'] = this.description;
-    data['state'] = this.state;
-    data['status'] = this.status;
-    data['numberOfItems'] = this.numberOfItems;
-    data['brandImage'] = this.brandImage;
-    data['campaigns'] = this.campaigns.map((e) => e.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['brandId'] = brandId;
+    data['brandName'] = brandName;
+    data['typeId'] = typeId;
+    data['typeName'] = typeName;
+    data['voucherName'] = voucherName;
+    data['price'] = price;
+    data['rate'] = rate;
+    data['condition'] = condition;
+    data['image'] = image;
+    data['imageName'] = imageName;
+    data['file'] = file;
+    data['fileName'] = fileName;
+    data['dateCreated'] = dateCreated;
+    data['dateUpdated'] = dateUpdated;
+    data['description'] = description;
+    data['state'] = state;
+    data['status'] = status;
+    data['numberOfItems'] = numberOfItems;
+    data['brandImage'] = brandImage;
+    data['campaigns'] = campaigns.map((e) => e.toJson()).toList();
     return data;
   }
 
   @override
-  List<Object> get props => super.props..addAll([this.campaigns]);
+  List<Object> get props => super.props..addAll([campaigns]);
 }

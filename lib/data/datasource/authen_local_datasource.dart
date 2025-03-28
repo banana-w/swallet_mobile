@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swallet_mobile/data/models/authen_model.dart';
 import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
+import 'package:swallet_mobile/data/models/student_features/notification_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 
 import '../models.dart';
@@ -155,25 +156,25 @@ class AuthenLocalDataSource {
     }
   }
 
-  // static Future<void> saveNotification(String notificationString) async {
-  //   final sf = await SharedPreferences.getInstance();
-  //   await sf.setString('notiString', notificationString);
-  // }
+  static Future<void> saveNotification(String notificationString) async {
+    final sf = await SharedPreferences.getInstance();
+    await sf.setString('notiString', notificationString);
+  }
 
-  // static Future<List<NotificationModel>?> getNotifications() async {
-  //   final sf = await SharedPreferences.getInstance();
-  //   String? notiString = sf.getString('notiString');
-  //   if (notiString == null) {
-  //     return null;
-  //   } else {
-  //     final List<dynamic> jsonList = jsonDecode(notiString);
-  //     List<NotificationModel> listNotification =
-  //         jsonList
-  //             .map((e) => NotificationModel.fromJson(e as Map<String, dynamic>))
-  //             .toList();
-  //     return listNotification;
-  //   }
-  // }
+  static Future<List<NotificationModel>?> getNotifications() async {
+    final sf = await SharedPreferences.getInstance();
+    String? notiString = sf.getString('notiString');
+    if (notiString == null) {
+      return null;
+    } else {
+      final List<dynamic> jsonList = jsonDecode(notiString);
+      List<NotificationModel> listNotification =
+          jsonList
+              .map((e) => NotificationModel.fromJson(e as Map<String, dynamic>))
+              .toList();
+      return listNotification;
+    }
+  }
 
   static Future<void> saveUser(String userString) async {
     final sf = await SharedPreferences.getInstance();

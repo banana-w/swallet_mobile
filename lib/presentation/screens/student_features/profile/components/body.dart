@@ -11,7 +11,7 @@ import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile/components/name_profile.dart';
-import 'package:swallet_mobile/presentation/screens/screens.dart';
+import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel/lucky_wheel_screen.dart';
 // import 'package:swallet_mobile/presentation/screens/student_features/profile/components/pending_card.dart';
 // import 'package:swallet_mobile/presentation/screens/student_features/profile/components/rejected_card.dart';
@@ -597,7 +597,7 @@ class Body extends StatelessWidget {
                                     hem: hem,
                                     fem: fem,
                                     ffem: ffem,
-                                    authenModel: stateRole.authenModel,
+                                    studentModel: stateRole.studentModel,
                                   ),
 
                                   Positioned(

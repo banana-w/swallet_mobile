@@ -222,24 +222,25 @@ final class LoadStudentById extends StudentEvent {
 
 final class UpdateVerification extends StudentEvent {
   final String studentId;
-  final String studentCode;
   final String studentCardFront;
-  final String studentCardBack;
 
   const UpdateVerification({
     required this.studentId,
-    required this.studentCode,
     required this.studentCardFront,
-    required this.studentCardBack,
   });
 
   @override
   List<Object?> get props => [
     studentId,
-    studentCode,
-    studentCardBack,
     studentCardFront,
   ];
+}
+class SkipUpdateVerification extends StudentEvent {
+  final String studentId;
+  const SkipUpdateVerification({required this.studentId});
+  
+  @override
+  List<Object?> get props => [studentId];
 }
 
 final class LoadOrderDetailById extends StudentEvent {

@@ -3,6 +3,8 @@ abstract class ValidationRepository {
 
   Future<String> validateEmail({required String email});
 
+  Future<String> validateStudentEmail({required String email});
+
   Future<String> validateUserName({required String userName});
 
   Future<String> validateStudentCode({required String studentCode});

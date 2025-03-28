@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/widgets/shimmer_widget.dart';
 
-import '../../../../../data/models.dart';
 import '../../../../config/constants.dart';
 
 class Body extends StatelessWidget {
@@ -133,7 +132,7 @@ class Body extends StatelessWidget {
                             width: 272 * fem,
                             child: TextFormField(
                               readOnly: true,
-                              initialValue: studentModel.address,
+                              initialValue: studentModel.studentEmail,
                               style: GoogleFonts.openSans(
                                 textStyle: TextStyle(
                                   color: Colors.black,
