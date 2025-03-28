@@ -9,7 +9,7 @@ class CampaignVoucherDetail extends CampaignVoucher {
   final int quantityInBought;
   final int quantityInUsed;
 
-  CampaignVoucherDetail({
+  const CampaignVoucherDetail({
     required this.voucherCondition,
     required this.voucherDescription,
     required this.typeId,

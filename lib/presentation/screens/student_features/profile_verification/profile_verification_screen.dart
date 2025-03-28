@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/blocs/authentication/authentication_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
+import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 
-import '../../screens.dart';
 import 'components/body.dart';
 
 class ProfileVerificationScreen extends StatelessWidget {
@@ -52,16 +52,14 @@ class ProfileVerificationScreen extends StatelessWidget {
             ),
           ),
           centerTitle: true,
-          title: Container(
-            child: Text(
-              'Xác minh',
-              style: GoogleFonts.openSans(
-                textStyle: TextStyle(
-                  fontSize: 20 * ffem,
-                  fontWeight: FontWeight.w900,
-                  height: 1.3625 * ffem / fem,
-                  color: Colors.white,
-                ),
+          title: Text(
+            'Xác minh',
+            style: GoogleFonts.openSans(
+              textStyle: TextStyle(
+                fontSize: 20 * ffem,
+                fontWeight: FontWeight.w900,
+                height: 1.3625 * ffem / fem,
+                color: Colors.white,
               ),
             ),
           ),

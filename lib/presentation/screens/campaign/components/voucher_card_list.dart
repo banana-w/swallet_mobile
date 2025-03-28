@@ -5,7 +5,6 @@ import 'package:swallet_mobile/data/models/store_features/campaign_voucher_store
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_voucher_detail/campaign_voucher_detail_screen.dart';
 
-import '../../../../../data/models.dart';
 
 class VoucherCardList extends StatelessWidget {
   const VoucherCardList({

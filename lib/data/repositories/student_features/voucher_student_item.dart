@@ -7,7 +7,7 @@ class VoucherStudentItem extends VoucherStudent {
   final String campaignStateName;
   final String condition;
   final String usedAt;
-  VoucherStudentItem({
+  const VoucherStudentItem({
     required super.id,
     required super.voucherId,
     required super.voucherName,

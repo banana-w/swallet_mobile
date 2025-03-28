@@ -28,9 +28,7 @@ class VoucherRepositoryImp implements VoucherRepository {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       };
-      if (page == null) {
-        page = this.page;
-      }
+      page ??= this.page;
       http.Response response = await http.get(
         Uri.parse('$endPoint?sort=$sort&page=$page&limit=$limit'),
         headers: headers,

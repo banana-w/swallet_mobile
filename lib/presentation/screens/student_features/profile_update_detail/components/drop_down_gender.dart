@@ -48,7 +48,7 @@ class _DropDownGenderState extends State<DropDownGender> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 272 * widget.fem,
       child: DropdownButtonFormField(
         style: GoogleFonts.openSans(
@@ -106,8 +106,8 @@ class _DropDownGenderState extends State<DropDownGender> {
         items:
             GenderModel.genders.map((g) {
               return DropdownMenuItem(
-                child: Text(g.name.toString()),
                 value: g.id,
+                child: Text(g.name.toString()),
               );
             }).toList(),
       ),

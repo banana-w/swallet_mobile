@@ -21,7 +21,7 @@ class Voucher extends Equatable {
   final bool status;
   final int numberOfItems;
 
-  Voucher(
+  const Voucher(
       {required this.id,
       required this.brandId,
       required this.brandName,
@@ -44,24 +44,24 @@ class Voucher extends Equatable {
 
   @override
   List<Object> get props => [
-        this.id,
-        this.brandId,
-        this.brandName,
-        this.typeId,
-        this.typeName,
-        this.voucherName,
-        this.price,
-        this.rate,
-        this.condition,
-        this.image,
-        this.imageName,
-        this.file,
-        this.fileName,
-        this.dateCreated,
-        this.dateUpdated,
-        this.description,
-        this.state,
-        this.status,
-        this.numberOfItems
+        id,
+        brandId,
+        brandName,
+        typeId,
+        typeName,
+        voucherName,
+        price,
+        rate,
+        condition,
+        image,
+        imageName,
+        file,
+        fileName,
+        dateCreated,
+        dateUpdated,
+        description,
+        state,
+        status,
+        numberOfItems
       ];
 }
