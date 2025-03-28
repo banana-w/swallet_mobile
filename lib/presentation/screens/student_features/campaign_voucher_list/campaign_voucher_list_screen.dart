@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
-import 'package:swallet_mobile/presentation/screens/campaign/components/voucher_card_list.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/campaign/components/voucher_card_list.dart';
 
 import '../../../widgets/shimmer_widget.dart';
 

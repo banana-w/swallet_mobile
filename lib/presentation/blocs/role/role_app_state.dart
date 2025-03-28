@@ -32,6 +32,16 @@ final class StoreRole extends RoleAppState {
   List<Object?> get props => [authenModel, storeModel];
 }
 
+final class LectureRole extends RoleAppState {
+  final AuthenModel authenModel;
+  final LectureModel lectureModel;
+
+  const LectureRole({required this.authenModel, required this.lectureModel});
+
+  @override
+  List<Object?> get props => [authenModel, lectureModel];
+}
+
 final class RoleAppLoading extends RoleAppState {
   @override
   List<Object?> get props => [];

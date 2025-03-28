@@ -2,11 +2,10 @@ import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/store_features/transaction_store_model.dart';
 
-
 abstract class StoreRepository {
   const StoreRepository();
 
-  Future<StoreModel?> fetchStoreById({required String storeId});
+  Future<StoreModel?> fetchStoreById({required String accountId});
 
   Future<ApiResponse<List<TransactionStoreModel>>?> fetchTransactionsStoreId(
     int? page,

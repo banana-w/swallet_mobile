@@ -19,7 +19,7 @@ import '../../datasource/authen_local_datasource.dart';
 import 'package:http/http.dart' as http;
 
 class StoreRepositoryImp extends StoreRepository {
-  String endPoint = '${baseURL}stores';
+  String endPoint = '${baseURL}Store';
   String sort = 'Id%2Cdesc';
   int page = 1;
   int limit = 10;
@@ -83,31 +83,33 @@ class StoreRepositoryImp extends StoreRepository {
     }
   }
 
-  // @override
-  // Future<StoreModel?> fetchStoreById({required String storeId}) async {
-  //   try {
-  //     final token = await AuthenLocalDataSource.getToken();
+  @override
+  Future<StoreModel?> fetchStoreById({required String accountId}) async {
+    try {
+      final token = await AuthenLocalDataSource.getToken();
 
-  //     final Map<String, String> headers = {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer $token'
-  //     };
-  //     http.Response response =
-  //         await http.get(Uri.parse('$endPoint/$storeId'), headers: headers);
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+      http.Response response = await http.get(
+        Uri.parse('$endPoint/account/$accountId'),
+        headers: headers,
+      );
 
-  //     if (response.statusCode == 200) {
-  //       final result = jsonDecode(utf8.decode(response.bodyBytes));
-  //       StoreModel storeModel = StoreModel.fromJson(result);
-  //       String storeString = jsonEncode(StoreModel.fromJson(result));
-  //       AuthenLocalDataSource.saveStore(storeString);
-  //       return storeModel;
-  //     } else {
-  //       return null;
-  //     }
-  //   } catch (e) {
-  //     throw Exception(e.toString());
-  //   }
-  // }
+      if (response.statusCode == 200) {
+        final result = jsonDecode(utf8.decode(response.bodyBytes));
+        StoreModel storeModel = StoreModel.fromJson(result);
+        String storeString = jsonEncode(StoreModel.fromJson(result));
+        AuthenLocalDataSource.saveStore(storeString);
+        return storeModel;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 
   // @override
   // Future<ApiResponse<List<CampaignVoucherStoreModel>>?>
@@ -362,12 +364,6 @@ class StoreRepositoryImp extends StoreRepository {
     required String voucherCode,
   }) {
     // TODO: implement fecthCampaignVoucherInformation
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<StoreModel?> fetchStoreById({required String storeId}) {
-    // TODO: implement fetchStoreById
     throw UnimplementedError();
   }
 

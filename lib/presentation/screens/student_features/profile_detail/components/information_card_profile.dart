@@ -12,9 +12,9 @@ import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/blocs/campus/campus_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
-import 'package:swallet_mobile/presentation/screens/profile/components/name_profile.dart';
-import 'package:swallet_mobile/presentation/screens/profile/components/student_code_profile.dart';
-import 'package:swallet_mobile/presentation/screens/profile/components/unitiversity_name_profile.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile/components/name_profile.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile/components/student_code_profile.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile/components/unitiversity_name_profile.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_update_detail/profile_update_detail_screen.dart';
 
 class InformationCardProfile extends StatefulWidget {

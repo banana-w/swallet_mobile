@@ -31,7 +31,6 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
         authenModel = AuthenModel.fromJson(result);
         if (authenModel.role == 'Sinh viên') {
-
           String authenString = jsonEncode(authenModel);
 
           AuthenLocalDataSource.saveAuthen(authenString);
@@ -39,6 +38,13 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
           AuthenLocalDataSource.saveAccountId(authenModel.accountId);
           AuthenLocalDataSource.saveIsVerified(authenModel.isVerified);
 
+          return authenModel;
+        } else if (authenModel.role.contains("Giáo viên")) {
+          String authenString = jsonEncode(authenModel);
+          AuthenLocalDataSource.saveAuthen(authenString);
+          AuthenLocalDataSource.saveToken(authenModel.jwt);
+          AuthenLocalDataSource.saveAccountId(authenModel.accountId);
+          AuthenLocalDataSource.saveIsVerified(authenModel.isVerified);
           return authenModel;
         } else {
           String authenString = jsonEncode(authenModel);

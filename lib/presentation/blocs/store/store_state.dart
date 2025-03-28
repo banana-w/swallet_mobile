@@ -88,14 +88,14 @@ final class CreateBonusLoading extends StoreState {
   List<Object?> get props => [];
 }
 
-// final class CreateBonusSucess extends StoreState {
-//   final TransactResultModel transactModel;
+final class CreateBonusSucess extends StoreState {
+  final TransactResultModel transactModel;
 
-//   CreateBonusSucess({required this.transactModel});
+  CreateBonusSucess({required this.transactModel});
 
-//   @override
-//   List<Object?> get props => [];
-// }
+  @override
+  List<Object?> get props => [];
+}
 
 final class CreateBonusFailed extends StoreState {
   final String error;
@@ -114,7 +114,9 @@ final class StoreCampaignVoucherDetailLoading extends StoreState {
 final class StoreCampaignVoucherDetailLoaded extends StoreState {
   final CampaignVoucherDetailModel campaignVoucherDetailModel;
 
-  const StoreCampaignVoucherDetailLoaded({required this.campaignVoucherDetailModel});
+  const StoreCampaignVoucherDetailLoaded({
+    required this.campaignVoucherDetailModel,
+  });
 
   @override
   List<Object?> get props => [campaignVoucherDetailModel];
@@ -157,15 +159,16 @@ final class StoreCampaignVoucherInforLoading extends StoreState {
   List<Object?> get props => [];
 }
 
-// final class StoreCampaigVoucherInforSuccess extends StoreState {
-//   final CampaignVoucherInformationModel campaignVoucherInformationModel;
+final class StoreCampaigVoucherInforSuccess extends StoreState {
+  final CampaignVoucherInformationModel campaignVoucherInformationModel;
 
-//   StoreCampaigVoucherInforSuccess(
-//       {required this.campaignVoucherInformationModel});
+  StoreCampaigVoucherInforSuccess({
+    required this.campaignVoucherInformationModel,
+  });
 
-//   @override
-//   List<Object?> get props => [campaignVoucherInformationModel];
-// }
+  @override
+  List<Object?> get props => [campaignVoucherInformationModel];
+}
 
 final class StoreCampaignVoucherInforFailed extends StoreState {
   final String error;

@@ -1,9 +1,10 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/models/store_features/campaign_store_cart_model.dart';
+import 'package:swallet_mobile/data/models/store_features/campaign_voucher_information_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
+import 'package:swallet_mobile/data/models/store_features/transact_result_model.dart';
 import 'package:swallet_mobile/data/models/store_features/transaction_store_model.dart';
 import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
@@ -23,12 +24,29 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
     // on<LoadCampaignVoucherDetail>(_onLoadCampaignVoucherDetail);
     // on<UpdateStore>(_onUpdateStore);
     // on<LoadCampaignVoucherInformation>(_onLoadCampaignVoucherInformation);
-    // on<LoadStoreById>(_onLoadStoreById);
+    on<LoadStoreById>(_onLoadStoreById);
   }
   var isLoadingMore = false;
   int pageTransaction = 1;
   int pageActivityTransaction = 1;
   int pageBonusTranastion = 1;
+
+  Future<void> _onLoadStoreById(
+    LoadStoreById event,
+    Emitter<StoreState> emit,
+  ) async {
+    emit(StoreByIdLoading());
+    try {
+      var apiResponse = await storeRepository.fetchStoreById(
+        accountId: event.accountId,
+      );
+      // bool hasReachedMax = false;
+
+      emit(StoreByIdLoaed(storeModel: apiResponse!));
+    } catch (e) {
+      emit(StoreFailed(error: e.toString()));
+    }
+  }
 
   Future<void> _onLoadStoreTransactions(
     LoadStoreTransactions event,
@@ -135,9 +153,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             if (apiResponse!.result.isEmpty) {
               emit(
                 StoreTransactionsLoaded(
-                  List.from(
-                    (state as StoreTransactionsLoaded).transactions!,
-                  )..addAll(apiResponse.result),
+                  List.from((state as StoreTransactionsLoaded).transactions!)
+                    ..addAll(apiResponse.result),
                   null,
                   null,
                   hasReachedMax: true,
@@ -147,9 +164,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             } else {
               emit(
                 StoreTransactionsLoaded(
-                  List.from(
-                    (state as StoreTransactionsLoaded).transactions!,
-                  )..addAll(apiResponse.result),
+                  List.from((state as StoreTransactionsLoaded).transactions!)
+                    ..addAll(apiResponse.result),
                   null,
                   null,
                 ),
@@ -161,8 +177,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 StoreTransactionsLoaded(
                   null,
                   List.from(
-                    (state as StoreTransactionsLoaded)
-                        .activityTransactions!,
+                    (state as StoreTransactionsLoaded).activityTransactions!,
                   )..addAll(apiResponse.result),
                   null,
                   hasReachedMax: true,
@@ -174,8 +189,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 StoreTransactionsLoaded(
                   null,
                   List.from(
-                    (state as StoreTransactionsLoaded)
-                        .activityTransactions!,
+                    (state as StoreTransactionsLoaded).activityTransactions!,
                   )..addAll(apiResponse.result),
                   null,
                 ),
@@ -335,18 +349,4 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 //     }
 //   }
 
-//   Future<void> _onLoadStoreById(
-//       LoadStoreById event, Emitter<StoreState> emit) async {
-//     emit(StoreByIdLoading());
-//     try {
-//       var apiResponse =
-//           await storeRepository.fetchStoreById(storeId: event.storeId);
-//       // bool hasReachedMax = false;
-
-//       emit(StoreByIdLoaed(
-//           storeModel: apiResponse!));
-//     } catch (e) {
-//       emit(StoreFailed(error: e.toString()));
-//     }
-//   }
 // }

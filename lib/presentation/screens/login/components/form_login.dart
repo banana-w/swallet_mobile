@@ -5,11 +5,11 @@ import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/presentation/blocs/authentication/authentication_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/login/components/button_login.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/verify_email/screens/verifycode_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/text_form_field_default.dart';
 import 'package:swallet_mobile/presentation/widgets/text_form_field_password.dart';
-
 
 class FormLogin extends StatefulWidget {
   const FormLogin({
@@ -64,6 +64,13 @@ class _FormLoginState extends State<FormLogin> {
         widget.hem,
         widget.ffem,
       ),
+      AuthenticationLectureSuccess() => _buildAuthIntial(
+        userNameController,
+        passwordController,
+        widget.fem,
+        widget.hem,
+        widget.ffem,
+      ),
       AuthenticationInProcess() => _buildAuthIntial(
         userNameController,
         passwordController,
@@ -79,12 +86,12 @@ class _FormLoginState extends State<FormLogin> {
         widget.ffem,
       ),
       AuthenticationSuccessButNotVerified() => _buildAuthIntial(
-          userNameController,
-          passwordController,
-          widget.fem,
-          widget.hem,
-          widget.ffem,
-        ),
+        userNameController,
+        passwordController,
+        widget.fem,
+        widget.hem,
+        widget.ffem,
+      ),
     });
 
     loginWidget = BlocListener<AuthenticationBloc, AuthenticationState>(
@@ -102,11 +109,19 @@ class _FormLoginState extends State<FormLogin> {
           );
         } else if (state is AuthenticationStoreSuccess) {
           context.read<RoleAppBloc>().add(RoleAppStart());
-          // context.read<StoreBloc>().add(LoadStoreCampaignVouchers());
+          context.read<StoreBloc>().add(LoadStoreCampaignVouchers());
           context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
           Navigator.pushNamedAndRemoveUntil(
             context,
             '/landing-screen-store',
+            (Route<dynamic> route) => false,
+          );
+        } else if (state is AuthenticationLectureSuccess) {
+          context.read<RoleAppBloc>().add(RoleAppStart());
+          context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/landing-screen-lecture',
             (Route<dynamic> route) => false,
           );
         } else if (state is AuthenticationSuccessButNotVerified) {

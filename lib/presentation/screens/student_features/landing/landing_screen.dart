@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
-import 'package:swallet_mobile/presentation/screens/profile/profile_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile/profile_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign/campaign_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/challenge/challenge_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/landing/components/cus_nav_bar.dart';

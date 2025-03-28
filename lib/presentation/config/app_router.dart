@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:swallet_mobile/data/models/store_features/campaign_voucher_information_model.dart';
+import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
+import 'package:swallet_mobile/presentation/screens/lecture_features/landing_screen/landing_lecture_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/brand/brand_detail_store_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/campaign_voucher_information/campaign_vouher_information_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/landing_screen/landing_store_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/profile_update_detail/profile_update_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/qr_view/qr_view_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/transact/transact_screen.dart';
 import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 import 'package:swallet_mobile/presentation/screens/splash/onboarding_screen.dart';
 import 'package:swallet_mobile/presentation/screens/splash/splash_screen.dart';
@@ -14,6 +24,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/profile_upd
 import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/profile_verification_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/update_verification_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/qr/qr_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/qr/qr_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_1_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_2_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_3_screen.dart';
@@ -38,6 +49,12 @@ class AppRouter {
       case SplashScreen.routeName:
         return SplashScreen.route();
 
+      case '/landing-screen-store':
+        return MaterialPageRoute(builder: (_) => const LandingStoreScreen());
+
+      case '/landing-screen-lecture':
+        return MaterialPageRoute(builder: (_) => const LandingLectureScreen());
+
       case OnBoardingScreen.routeName:
         return OnBoardingScreen.route();
 
@@ -51,7 +68,9 @@ class AppRouter {
         return VerifyCodeScreen.route(email: settings.arguments as String);
 
       case VerifyCodeStudentScreen.routeName:
-        return VerifyCodeStudentScreen.route(email: settings.arguments as String);
+        return VerifyCodeStudentScreen.route(
+          email: settings.arguments as String,
+        );
 
       case SignUpScreen.routeName:
         return SignUpScreen.route();
@@ -123,9 +142,58 @@ class AppRouter {
         return ProfileUpdateDetailScreen.route(
           studentModel: settings.arguments as StudentModel,
         );
+      case QRVoucherScreen.routeName:
+        return QRVoucherScreen.route(id: settings.arguments as String);
 
+      case QrViewScreen.routeName:
+        return QrViewScreen.route(storeId: settings.arguments as String);
+
+      case ProfileUpdateDetailStoreScreen.routeName:
+        return ProfileUpdateDetailStoreScreen.route(
+          storeModel: settings.arguments as StoreModel,
+        );
+
+      case CampaignDetailScreen.routeName:
+        return CampaignDetailScreen.route(
+          campaignId: settings.arguments as String,
+        );
+
+      // case BrandDetailScreen.routeName:
+      //   return BrandDetailScreen.route(id: settings.arguments as String);
+
+      // case BrandListScreen.routeName:
+      //   return BrandListScreen.route();
+
+      case BrandDetailStoreScreen.routeName:
+        return BrandDetailStoreScreen.route(id: settings.arguments as String);
+
+      //store
+      // case TransactionStoreScreen.routeName:
+      //   return TransactionStoreScreen.route();
+
+      case TransactScreen.routeName:
+        List<dynamic> args = settings.arguments as List<dynamic>;
+        return TransactScreen.route(studentModel: args[0], brandId: args[1]);
+
+      case CampaignVoucherInformationScreen.routeName:
+        return CampaignVoucherInformationScreen.route(
+          campaginVoucherInformation:
+              settings.arguments as CampaignVoucherInformationModel,
+        );
+
+      // case BonusScreen.routeName:
+      //   return BonusScreen.route(storeModel: settings.arguments as StoreModel);
+
+      // case BonusDetailScreen.routeName:
+      //   return BonusDetailScreen.route(bonusId: settings.arguments as String);
+
+      // case CampaignDetailStoreScreen.routeName:
+      //   return CampaignDetailStoreScreen.route(
+      //       campaignId: settings.arguments as String);
       default:
         return _errorRoute();
+
+      //store
     }
   }
 
