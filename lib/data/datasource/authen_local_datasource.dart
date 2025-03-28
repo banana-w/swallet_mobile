@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swallet_mobile/data/models/authen_model.dart';
+import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 
@@ -41,6 +42,7 @@ class AuthenLocalDataSource {
     String? verify = sf.getString('isVerify');
     return verify;
   }
+
   static Future<String?> getStudentId() async {
     final sf = await SharedPreferences.getInstance();
     String? token = sf.getString('studentId');
@@ -116,6 +118,23 @@ class AuthenLocalDataSource {
       Map<String, dynamic> json = jsonDecode(studentString);
       StudentModel? studentModel = StudentModel.fromJson(json);
       return studentModel;
+    }
+  }
+
+  static Future<void> saveLecture(String lectureString) async {
+    final sf = await SharedPreferences.getInstance();
+    await sf.setString('lectureString', lectureString);
+  }
+
+  static Future<LectureModel?> getLecture() async {
+    final sf = await SharedPreferences.getInstance();
+    String? lectureString = sf.getString('lectureString');
+    if (lectureString == null) {
+      return null;
+    } else {
+      Map<String, dynamic> json = jsonDecode(lectureString);
+      LectureModel? lectureModel = LectureModel.fromJson(json);
+      return lectureModel;
     }
   }
 

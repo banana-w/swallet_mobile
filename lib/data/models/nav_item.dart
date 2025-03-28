@@ -111,3 +111,36 @@ class NavItemStore {
     ),
   ];
 }
+
+class NavItemLecturer {
+  Widget icon;
+  Widget icon2;
+  String title;
+
+  NavItemLecturer(this.icon, this.icon2, this.title);
+
+  static List<NavItemLecturer> navItems = [
+    NavItemLecturer(
+      SvgPicture.asset(
+        'assets/icons/profile-navbar-icon.svg', // Icon cho Campus (nếu không có, dùng icon khác)
+        colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+      ),
+      SvgPicture.asset(
+        'assets/icons/profile-navbar-icon.svg',
+        colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+      ),
+      "Campus",
+    ),
+    NavItemLecturer(
+      SvgPicture.asset(
+        'assets/icons/profile-navbar-icon.svg',
+        colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+      ),
+      SvgPicture.asset(
+        'assets/icons/profile-navbar-icon.svg',
+        colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+      ),
+      "Cá nhân",
+    ),
+  ];
+}

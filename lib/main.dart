@@ -3,14 +3,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:swallet_mobile/data/repositories/authen_repository_imp.dart';
+import 'package:swallet_mobile/data/repositories/lecture_features/lecture_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/store_features/store_repository_imp.dart';
+import 'package:swallet_mobile/data/repositories/student_features/brand_repository.dart';
+import 'package:swallet_mobile/data/repositories/student_features/campaign_repository.dart';
 import 'package:swallet_mobile/data/repositories/student_features/campus_repository.dart';
 import 'package:swallet_mobile/data/repositories/student_features/lucky_prize_repository.dart';
 import 'package:swallet_mobile/data/repositories/student_features/student_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/validation_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/verification_repository_imp.dart';
 import 'package:swallet_mobile/domain/interface_repositories/authentication_repository.dart';
+import 'package:swallet_mobile/domain/interface_repositories/lecture_features/lecture_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
+import 'package:swallet_mobile/domain/interface_repositories/student_features/brand_repository.dart';
+import 'package:swallet_mobile/domain/interface_repositories/student_features/campaign_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/campus_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/validation_repository.dart';
@@ -19,7 +25,9 @@ import 'package:swallet_mobile/presentation/blocs/authentication/authentication_
 import 'package:swallet_mobile/presentation/blocs/campus/campus_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/lecture/lecture_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/config/app_router.dart';
 import 'package:swallet_mobile/presentation/cubits/validation/validation_cubit.dart';
 import 'package:swallet_mobile/presentation/cubits/verification/verification_cubit.dart';
@@ -71,6 +79,9 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<ValidationRepository>(
           create: (_) => ValidationRepositoryImp(),
         ),
+        RepositoryProvider<CampaignRepository>(
+          create: (_) => CampaignRepositoryImp(),
+        ),
         // RepositoryProvider<VerificationRepository>(
         //     create: (_) => VerificationRepositoryImp()),
         RepositoryProvider<LuckyPrizeRepository>(
@@ -79,6 +90,18 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<VerificationRepository>(
           create: (_) => VerificationRepositoryImp(),
         ),
+        RepositoryProvider<StoreRepository>(
+          create: (_) => StoreRepositoryImp(),
+        ),
+        RepositoryProvider<BrandRepository>(
+          create: (_) => BrandRepositoryImp(),
+        ),
+        RepositoryProvider<LectureRepository>(
+          create: (_) => LectureRepositoryImp(),
+        ),
+        // RepositoryProvider<BrandRepository>(
+        //   create: (_) => BrandRepositoryImp(),
+        // ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -86,9 +109,11 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => LandingScreenBloc()),
           BlocProvider(
             create:
-                (context) =>
-                    RoleAppBloc(StudentRepositoryImp(), StoreRepositoryImp())
-                      ..add(RoleAppStart()),
+                (context) => RoleAppBloc(
+                  StudentRepositoryImp(),
+                  StoreRepositoryImp(),
+                  LectureRepositoryImp(),
+                )..add(RoleAppStart()),
           ),
           BlocProvider(
             create:
@@ -113,6 +138,25 @@ class MyApp extends StatelessWidget {
                 (context) =>
                     CampusBloc(CampusRepositoryImp())
                       ..add(LoadCampus(searchName: '')),
+          ),
+          BlocProvider(
+            create:
+                (context) => RoleAppBloc(
+                  StudentRepositoryImp(),
+                  StoreRepositoryImp(),
+                  LectureRepositoryImp(),
+                )..add(RoleAppStart()),
+          ),
+          BlocProvider(
+            create:
+                (context) =>
+                    StoreBloc(storeRepository: StoreRepositoryImp())
+                      ..add(LoadStoreCampaignVouchers()),
+          ),
+          BlocProvider(
+            create:
+                (context) =>
+                    LectureBloc(lectureRepository: LectureRepositoryImp()),
           ),
         ],
         child: MaterialApp(

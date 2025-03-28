@@ -5,17 +5,17 @@ class StoreModel extends Store {
     required super.id,
     required super.brandId,
     required super.brandName,
-    required super.brandLogo,
+    required super.brandLogo, // Giá trị mặc định không null
     required super.areaId,
     required super.areaName,
-    required super.areaImage,
+    required super.areaImage, // Giá trị mặc định không null
     required super.accountId,
     required super.storeName,
     required super.userName,
-    required super.avatar,
-    required super.avatarFileName,
-    required super.file,
-    required super.fileName,
+    required super.avatar, // Giá trị mặc định không null
+    required super.avatarFileName, // Giá trị mặc định không null
+    required super.file, // Giá trị mặc định không null
+    required super.fileName, // Giá trị mặc định không null
     required super.email,
     required super.phone,
     required super.address,
@@ -26,46 +26,47 @@ class StoreModel extends Store {
     required super.description,
     required super.state,
     required super.status,
-    required super.numberOfCampaigns,
-    required super.numberOfVouchers,
-    required super.numberOfBonuses,
-    required super.amountOfBonuses,
+    required super.numberOfCampaigns, // Giá trị mặc định không null
+    required super.numberOfVouchers, // Giá trị mặc định không null
+    required super.numberOfBonuses, // Giá trị mặc định không null
+    required super.amountOfBonuses, // Giá trị mặc định không null
   });
-  factory StoreModel.fromJson(Map<String, dynamic> json) {
-    double amountOfBonuses = 0;
-    if (json['amountOfBonuses'] != 0) {
-      amountOfBonuses = json['amountOfBonuses'];
-    }
 
+  factory StoreModel.fromJson(Map<String, dynamic> json) {
     return StoreModel(
-      id: json['id'],
-      brandId: json['brandId'],
-      brandName: json['brandName'],
-      brandLogo: json['brandLogo'] ?? '',
-      areaId: json['areaId'],
-      areaName: json['areaName'] ?? '',
-      areaImage: json['areaImage'] ?? '',
-      accountId: json['accountId'] ?? '',
-      storeName: json['storeName'] ?? '',
-      userName: json['userName'] ?? '',
-      avatar: json['avatar'] ?? '',
-      avatarFileName: json['avatarFileName'] ?? '',
-      file: json['file'] ?? '',
-      fileName: json['fileName'] ?? '',
-      email: json['email'] ?? '',
-      phone: json['phone'] ?? '',
-      address: json['address'] ?? '',
-      openingHours: json['openingHours'] ?? '',
-      closingHours: json['closingHours'] ?? '',
-      dateCreated: json['dateCreated'] ?? '',
-      dateUpdated: json['dateUpdated'] ?? '',
-      description: json['description'] ?? '',
-      state: json['state'],
-      status: json['status'],
-      numberOfCampaigns: json['numberOfCampaigns'],
-      numberOfVouchers: json['numberOfVouchers'],
-      numberOfBonuses: json['numberOfBonuses'],
-      amountOfBonuses: amountOfBonuses,
+      id: json['id'] as String,
+      brandId: json['brandId'] as String,
+      brandName: json['brandName'] as String,
+      brandLogo: json['brandLogo'] as String? ?? 'assets/images/bean_logo.jpg',
+      areaId: json['areaId'] as String,
+      areaName: json['areaName'] as String,
+      areaImage: json['areaImage'] as String? ?? 'assets/images/bean_logo.jpg',
+      accountId: json['accountId'] as String,
+      storeName: json['storeName'] as String,
+      userName: json['userName'] as String,
+      avatar: json['avatar'] as String? ?? 'assets/images/bean_logo.jpg',
+      avatarFileName: json['avatarFileName'] as String? ?? 'bean_logo.jpg',
+      file: json['file'] as String? ?? 'bean_logo.jpg',
+      fileName: json['fileName'] as String? ?? 'bean_logo.jpg',
+      email: json['email'] as String,
+      phone: json['phone'] as String,
+      address: json['address'] as String,
+      openingHours: json['openingHours'] as String,
+      closingHours: json['closingHours'] as String,
+      dateCreated: json['dateCreated'] as String,
+      dateUpdated: json['dateUpdated'] as String,
+      description: json['description'] as String,
+      state: json['state'] as bool,
+      status: json['status'] as bool,
+      numberOfCampaigns:
+          json['numberOfCampaigns'] as int? ?? 0, // Giá trị null thì dùng 0
+      numberOfVouchers:
+          json['numberOfVouchers'] as int? ?? 0, // Giá trị null thì dùng 0
+      numberOfBonuses:
+          json['numberOfBonuses'] as int? ?? 0, // Giá trị null thì dùng 0
+      amountOfBonuses:
+          (json['amountOfBonuses'] as num?)?.toDouble() ??
+          0.0, // Giá trị null thì dùng 0.0
     );
   }
 

@@ -2,8 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/authen_model.dart';
+import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
+import 'package:swallet_mobile/domain/interface_repositories/lecture_features/lecture_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
 
@@ -13,8 +15,12 @@ part 'role_app_state.dart';
 class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
   final StudentRepository studentRepository;
   final StoreRepository storeRepository;
-  RoleAppBloc(this.studentRepository, this.storeRepository)
-    : super(RoleAppLoading()) {
+  final LectureRepository lectureRepository;
+  RoleAppBloc(
+    this.studentRepository,
+    this.storeRepository,
+    this.lectureRepository,
+  ) : super(RoleAppLoading()) {
     on<RoleAppStart>(_onStartRoleApp);
     on<RoleAppEnd>(_onEndRoleApp);
   }
@@ -42,9 +48,14 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
             } else {
               emit(Unverified(authenModel: authenModel));
             }
+          } else if (role.contains("Giáo viên")) {
+            final lecture = await lectureRepository.fetchLectureById(
+              accountId: authenModel.accountId,
+            );
+            emit(LectureRole(authenModel: authenModel, lectureModel: lecture!));
           } else {
             final store = await storeRepository.fetchStoreById(
-              storeId: authenModel.accountId,
+              accountId: authenModel.accountId,
             );
             emit(StoreRole(authenModel: authenModel, storeModel: store!));
           }

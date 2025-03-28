@@ -44,6 +44,8 @@ class AuthenticationBloc
           // Nếu đã xác thực (isVerified = true)
           if (authenModel.role == 'Sinh viên') {
             emit(AuthenticationSuccess());
+          } else if (authenModel.role.contains('Giáo viên')) {
+            emit(AuthenticationLectureSuccess());
           } else {
             emit(AuthenticationStoreSuccess());
           }
