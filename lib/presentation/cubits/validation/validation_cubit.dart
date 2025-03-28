@@ -29,6 +29,22 @@ class ValidationCubit extends Cubit<ValidationState> {
     return null;
   }
 
+  Future<String?> validateStudentEmail(String email) async {
+    emit(ValidationInProcess());
+    try {
+      final check = await validationRepository.validateStudentEmail(email: email);
+      // print(check);
+      if (true) {
+        emit(CheckEmailSuccess());
+        return '';
+      } else {
+        emit(CheckEmailFailed(error: check, check: false));
+        return check;
+      }
+    } catch (e) {}
+    return null;
+  }
+
   Future<String?> validateUserName(String userName) async {
     emit(ValidationInProcess());
     try {

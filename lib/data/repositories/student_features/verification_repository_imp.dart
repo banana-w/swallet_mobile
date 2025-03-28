@@ -16,7 +16,7 @@ class VerificationRepositoryImp extends VerificationRepository {
         body: jsonEncode({'id': accountId,'email': email, 'code': code}),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && response.body == 'true') {
         return true;
       } else {
         throw Exception('Failed to verify code: ${response.statusCode}');
@@ -27,8 +27,24 @@ class VerificationRepositoryImp extends VerificationRepository {
   }
 
   @override
-  Future<bool> verifyStudent(String studenId, String email, String code) {
-    throw UnimplementedError();
+  Future<bool> verifyStudent(String studenId, String email, String code) async {
+    final url = Uri.parse('${baseURL}Auth/verify-student');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json', 'accept': 'text/plain'},
+        body: jsonEncode({'studentId': studenId,'email': email, 'code': code}),
+      );
+
+      if (response.statusCode == 200 && response.body == 'true') {
+        return true;
+      } else {
+        throw Exception('Failed to verify code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to verify code: $e');
+    }
   }
 
   @override

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:swallet_mobile/presentation/screens/screens.dart';
+import 'package:swallet_mobile/presentation/screens/splash/onboarding_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/welcome/welcome_screen.dart';
 
 
 class SplashScreen extends StatefulWidget {

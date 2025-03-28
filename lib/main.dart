@@ -19,6 +19,7 @@ import 'package:swallet_mobile/presentation/blocs/authentication/authentication_
 import 'package:swallet_mobile/presentation/blocs/campus/campus_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/notification/notification_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/config/app_router.dart';
 import 'package:swallet_mobile/presentation/cubits/validation/validation_cubit.dart';
@@ -27,6 +28,8 @@ import 'package:swallet_mobile/presentation/screens/splash/splash_screen.dart';
 import 'package:swallet_mobile/simple_bloc_observer.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
+
+final notificationBloc = NotificationBloc();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -83,6 +86,8 @@ class MyApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => InternetBloc()),
+          BlocProvider(
+              create: (context) => notificationBloc..add(LoadNotification())),
           BlocProvider(create: (context) => LandingScreenBloc()),
           BlocProvider(
             create:

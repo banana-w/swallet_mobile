@@ -47,11 +47,10 @@ abstract class StudentRepository {
 
   // Future<OrderModel?> createOrder(CreateOrderModel createOrderModel);
 
-  // Future<StudentModel?> putVerification(
-  //     {required String studentId,
-  //     required String studentCode,
-  //     required String studentCardFont,
-  //     required String studentCardBack});
+  Future<StudentModel?> putVerification(
+      {required String studentId,
+      required String studentCardFont,
+      });
 
   // Future<OrderDetailModel?> fetchOrderDetailByStudentId(
   //     {required String studentId, required String orderId});

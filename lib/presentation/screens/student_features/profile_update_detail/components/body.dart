@@ -13,7 +13,7 @@ import '../../../../../data/models.dart';
 import '../../../../blocs/blocs.dart';
 
 class Body extends StatelessWidget {
-  Body({super.key, required this.studentModel});
+  const Body({super.key, required this.studentModel});
 
   final StudentModel studentModel;
   @override
@@ -66,7 +66,7 @@ class Body extends StatelessWidget {
       },
       child: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: CustomScrollView(
           slivers: [

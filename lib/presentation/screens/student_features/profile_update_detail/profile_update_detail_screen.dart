@@ -4,10 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/blocs/authentication/authentication_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
+import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 
-import '../../../../data/models.dart';
-import '../../../blocs/blocs.dart';
-import '../../screens.dart';
 import 'components/body.dart';
 
 class ProfileUpdateDetailScreen extends StatelessWidget {

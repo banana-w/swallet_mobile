@@ -40,8 +40,8 @@ class CampaignModel extends Campaign {
       campaignName: json['campaignName'] ?? '',
       image: json['image'] ?? '',
       imageName: json['imageName'] ?? '',
-      file: json['file'] != null ? json['file'] : '',
-      fileName: json['fileName'] != null ? json['fileName'] : '',
+      file: json['file'] ?? '',
+      fileName: json['fileName'] ?? '',
       condition: json['condition'] ?? '',
       link: json['link'] ?? '',
       startOn: json['startOn'] ?? '',
@@ -60,32 +60,32 @@ class CampaignModel extends Campaign {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['brandId'] = this.brandId;
-    data['brandName'] = this.brandName;
-    data['brandAcronym'] = this.brandAcronym;
-    data['typeId'] = this.typeId;
-    data['typeName'] = this.typeName;
-    data['campaignName'] = this.campaignName;
-    data['image'] = this.image;
-    data['imageName'] = this.imageName;
-    data['file'] = this.file;
-    data['fileName'] = this.fileName;
-    data['condition'] = this.condition;
-    data['link'] = this.link;
-    data['startOn'] = this.startOn;
-    data['endOn'] = this.endOn;
-    data['duration'] = this.duration;
-    data['totalIncome'] = this.totalIncome;
-    data['totalSpending'] = this.totalSpending;
-    data['dateCreated'] = this.dateCreated;
-    data['dateUpdated'] = this.dateUpdated;
-    data['description'] = this.description;
-    data['currentStateId'] = this.currentStateId;
-    data['currentState'] = this.currentState;
-    data['currentStateName'] = this.currentStateName;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['brandId'] = brandId;
+    data['brandName'] = brandName;
+    data['brandAcronym'] = brandAcronym;
+    data['typeId'] = typeId;
+    data['typeName'] = typeName;
+    data['campaignName'] = campaignName;
+    data['image'] = image;
+    data['imageName'] = imageName;
+    data['file'] = file;
+    data['fileName'] = fileName;
+    data['condition'] = condition;
+    data['link'] = link;
+    data['startOn'] = startOn;
+    data['endOn'] = endOn;
+    data['duration'] = duration;
+    data['totalIncome'] = totalIncome;
+    data['totalSpending'] = totalSpending;
+    data['dateCreated'] = dateCreated;
+    data['dateUpdated'] = dateUpdated;
+    data['description'] = description;
+    data['currentStateId'] = currentStateId;
+    data['currentState'] = currentState;
+    data['currentStateName'] = currentStateName;
+    data['status'] = status;
     return data;
   }
 }

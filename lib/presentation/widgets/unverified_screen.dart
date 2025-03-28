@@ -55,7 +55,7 @@ class UnverifiedScreen extends StatelessWidget {
             ),
           ),
           title: Text(
-            'UniBean',
+            'Swallet',
             style: GoogleFonts.openSans(
               textStyle: TextStyle(
                 fontSize: 22 * ffem,
@@ -65,20 +65,20 @@ class UnverifiedScreen extends StatelessWidget {
               ),
             ),
           ),
-          // actions: [
-          //   // SvgPicture.asset('assets/icons/notification-icon.svg')
-          //   Padding(
-          //     padding: EdgeInsets.only(right: 20 * fem),
-          //     child: IconButton(
-          //       icon: Icon(
-          //         Icons.notifications,
-          //         color: Colors.white,
-          //         size: 28 * fem,
-          //       ),
-          //       onPressed: () {},
-          //     ),
-          //   ),
-          // ],
+          actions: [
+            // SvgPicture.asset('assets/icons/notification-icon.svg')
+            Padding(
+              padding: EdgeInsets.only(right: 20 * fem),
+              child: IconButton(
+                icon: Icon(
+                  Icons.notifications,
+                  color: Colors.white,
+                  size: 28 * fem,
+                ),
+                onPressed: () {},
+              ),
+            ),
+          ],
         ),
         backgroundColor: klighGreyColor,
         body: Center(child: CardForUnVerified(fem: fem, hem: hem, ffem: ffem)),

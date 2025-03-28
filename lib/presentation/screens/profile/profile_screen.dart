@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:swallet_mobile/presentation/blocs/notification/notification_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/profile/components/body.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_list_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/app_bar_campaign.dart';
+import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -17,7 +20,8 @@ class ProfileScreen extends StatelessWidget {
     double ffem = fem * 0.97;
     double baseHeight = 812;
     double hem = MediaQuery.of(context).size.height / baseHeight;
-    final roleState = context.watch<RoleAppBloc>().state;
+
+    final roleState = context.watch<RoleAppBloc>().state; /// get state from RoleAppBloc
 
     return authenScreen(roleState, fem, hem, ffem, context);
   }
@@ -76,47 +80,47 @@ class ProfileScreen extends StatelessWidget {
             // SvgPicture.asset('assets/icons/notification-icon.svg')
             Padding(
               padding: EdgeInsets.only(right: 20 * fem),
-              // child: BlocBuilder<NotificationBloc, NotificationState>(
-              //   builder: (context, state) {
-              //     if (state is NewNotification) {
-              //       return IconButton(
-              //         icon: Icon(
-              //           Icons.notifications_active_rounded,
-              //           color: Colors.yellow,
-              //           size: 25 * fem,
-              //         ),
-              //         onPressed: () {
-              //           if (roleState is Unverified) {
-              //             Navigator.pushNamed(
-              //                 context, UnverifiedScreen.routeName);
-              //           } else {
-              //             context
-              //                 .read<NotificationBloc>()
-              //                 .add(LoadNotification());
-              //             Navigator.pushNamed(
-              //                 context, NotificationListScreen.routeName);
-              //           }
-              //         },
-              //       );
-              //     }
-              //     return IconButton(
-              //       icon: Icon(
-              //         Icons.notifications,
-              //         color: Colors.white,
-              //         size: 25 * fem,
-              //       ),
-              //       onPressed: () {
-              //         if (roleState is Unverified) {
-              //           Navigator.pushNamed(
-              //               context, UnverifiedScreen.routeName);
-              //         } else {
-              //           Navigator.pushNamed(
-              //               context, NotificationListScreen.routeName);
-              //         }
-              //       },
-              //     );
-              //   },
-              // ),
+              child: BlocBuilder<NotificationBloc, NotificationState>(
+                builder: (context, state) {
+                  if (state is NewNotification) {
+                    return IconButton(
+                      icon: Icon(
+                        Icons.notifications_active_rounded,
+                        color: Colors.yellow,
+                        size: 25 * fem,
+                      ),
+                      onPressed: () {
+                        if (roleState is Unverified) {
+                          Navigator.pushNamed(
+                              context, UnverifiedScreen.routeName);
+                        } else {
+                          context
+                              .read<NotificationBloc>()
+                              .add(LoadNotification());
+                          Navigator.pushNamed(
+                              context, NotificationListScreen.routeName);
+                        }
+                      },
+                    );
+                  }
+                  return IconButton(
+                    icon: Icon(
+                      Icons.notifications,
+                      color: Colors.white,
+                      size: 25 * fem,
+                    ),
+                    onPressed: () {
+                      if (roleState is Unverified) {
+                        Navigator.pushNamed(
+                            context, UnverifiedScreen.routeName);
+                      } else {
+                        Navigator.pushNamed(
+                            context, NotificationListScreen.routeName);
+                      }
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),

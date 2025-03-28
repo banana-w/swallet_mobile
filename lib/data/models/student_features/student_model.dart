@@ -1,9 +1,7 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:swallet_mobile/domain/entities/student_features/student.dart';
 
 class StudentModel extends Student {
-  StudentModel({
+  const StudentModel({
     required super.id,
     super.campusId, // nullable
     required super.accountId,
@@ -12,6 +10,7 @@ class StudentModel extends Student {
     super.studentCardBack, // nullable
     super.fileNameBack, // nullable
     required super.fullName,
+    super.studentEmail, // nullable
     super.code, // nullable
     super.gender, // nullable
     required super.dateOfBirth,
@@ -34,6 +33,7 @@ class StudentModel extends Student {
       studentCardBack: json['studentCardBack'] as String?,
       fileNameBack: json['fileNameBack'] as String?,
       fullName: json['fullName'] as String,
+      studentEmail: json['studentEmail'] as String?,
       code: json['code'] as String?,
       gender: json['gender'] as int?,
       dateOfBirth: json['dateOfBirth'] as String,
@@ -57,6 +57,7 @@ class StudentModel extends Student {
     data['studentCardBack'] = studentCardBack;
     data['fileNameBack'] = fileNameBack;
     data['fullName'] = fullName;
+    data['studentEmail'] = studentEmail;
     data['code'] = code;
     data['gender'] = gender;
     data['dateOfBirth'] = dateOfBirth;

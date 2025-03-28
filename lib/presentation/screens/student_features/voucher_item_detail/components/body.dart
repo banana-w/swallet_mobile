@@ -11,7 +11,6 @@ import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/widgets/shimmer_widget.dart';
 
-import '../../../../../../data/models.dart';
 
 class Body extends StatelessWidget {
   const Body({super.key, required this.voucherStudentModel});

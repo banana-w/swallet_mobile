@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:swallet_mobile/data/models.dart';
 import 'package:swallet_mobile/data/models/authen_model.dart';
+import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/profile/components/name_profile.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/profile_verification_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/update_verification_screen.dart';
+import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
 class UnverifiedCard extends StatelessWidget {
   const UnverifiedCard({
@@ -12,13 +15,13 @@ class UnverifiedCard extends StatelessWidget {
     required this.hem,
     required this.fem,
     required this.ffem,
-    required this.authenModel,
+    required this.studentModel,
   });
 
   final double hem;
   final double fem;
   final double ffem;
-  final AuthenModel authenModel;
+  final StudentModel studentModel;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +59,7 @@ class UnverifiedCard extends StatelessWidget {
                       height: 80 * fem,
                       child: Image(
                         image: NetworkImage(
-                          'https://res.cloudinary.com/swallet/image/upload/v1740035465/pkr24evuemd21yl2vpzh.png',
+                          studentModel.studentCardFront,
                         ),
                         fit: BoxFit.fill,
                         errorBuilder: (context, error, stackTrace) {
@@ -80,7 +83,7 @@ class UnverifiedCard extends StatelessWidget {
                         fem: fem,
                         ffem: ffem,
                         hem: hem,
-                        name: authenModel.accountId, //email
+                        name: studentModel.fullName, //email
                       ),
 
                       //student code
@@ -134,7 +137,7 @@ class UnverifiedCard extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () {
-                      // Navigator.pushNamed(context, UnverifiedScreen.routeName);
+                      Navigator.pushNamed(context, UnverifiedScreen.routeName);
                     },
                     child: Container(
                       padding: EdgeInsets.only(left: 5 * fem, right: 5 * fem),
@@ -182,6 +185,11 @@ class UnverifiedCard extends StatelessWidget {
                       //   SignUp1Screen.routeName,
                       //   arguments: false,
                       // );
+                      Navigator.pushNamed(
+                        context,
+                        UpdateVerificationScreen.routeName,
+                        arguments: studentModel,
+                      );
                     },
                     child: Container(
                       padding: EdgeInsets.only(left: 5 * fem, right: 5 * fem),

@@ -1,6 +1,5 @@
 // lucky_wheel_bloc.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:swallet_mobile/data/models/student_features/lucky_prize_model.dart';
 import 'package:swallet_mobile/data/repositories/student_features/lucky_prize_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/lucky/lucky_wheel_event.dart';
 import 'package:swallet_mobile/presentation/blocs/lucky/lucky_wheel_state.dart';

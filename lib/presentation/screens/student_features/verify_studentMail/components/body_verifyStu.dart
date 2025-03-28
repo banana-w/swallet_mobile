@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
-import 'package:swallet_mobile/presentation/screens/student_features/verify_email/components/otp_form.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/verify_studentMail/components/otp_form_student.dart';
 
 // import '../../../../screens.dart';
 
-class Body8 extends StatelessWidget {
+class BodyVerifyStudent extends StatelessWidget {
   final String email;
-  const Body8({super.key, required this.email});
+  const BodyVerifyStudent({super.key, required this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class Body8 extends StatelessWidget {
                       height: 400 * hem,
                     ),
                     Text(
-                      'Nhập mã xác nhận',
+                      'Nhập mã xác nhận email sinh viên',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.openSans(
                           textStyle: TextStyle(
@@ -76,7 +76,7 @@ class Body8 extends StatelessWidget {
                     SizedBox(
                       height: 30 * hem,
                     ),
-                    OTPForm(
+                    OTPFormStudent(
                       fem: fem,
                       hem: hem,
                       defaultPinTheme: defaultPinTheme,
