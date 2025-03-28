@@ -11,11 +11,7 @@ import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/failed_scan_voucher/failed_scan_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/success_scan_voucher/success_scan_voucher_screen.dart';
 
-// import 'components/body.dart';
-
-import '../../../../data/models.dart';
 import '../../../config/constants.dart';
-import '../../screens.dart';
 
 class CampaignVoucherInformationScreen extends StatelessWidget {
   static const String routeName = '/campaign-voucher-information-store';
