@@ -27,9 +27,6 @@ class CampaignDetailModel extends CampaignDetail {
     required super.dateCreated,
     required super.dateUpdated,
     required super.description,
-    required super.currentStateId,
-    required super.currentState,
-    required super.currentStateName,
     required super.status,
     required super.typeImage,
   });
@@ -59,9 +56,6 @@ class CampaignDetailModel extends CampaignDetail {
       dateCreated: json['dateCreated'],
       dateUpdated: json['dateUpdated'],
       description: json['description'],
-      currentStateId: json['currentStateId'],
-      currentState: json['currentState'],
-      currentStateName: json['currentStateName'],
       status: json['status'],
       numberOfItemsUsed: json['numberOfItemsUsed'],
       usageCost: json['usageCost'],
@@ -71,36 +65,33 @@ class CampaignDetailModel extends CampaignDetail {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['brandId'] = this.brandId;
-    data['brandName'] = this.brandName;
-    data['brandAcronym'] = this.brandAcronym;
-    data['brandLogo'] = this.brandLogo;
-    data['typeId'] = this.typeId;
-    data['typeName'] = this.typeName;
-    data['typeImage'] = this.typeImage;
-    data['campaignName'] = this.campaignName;
-    data['image'] = this.image;
-    data['imageName'] = this.imageName;
-    data['file'] = this.file;
-    data['fileName'] = this.fileName;
-    data['condition'] = this.condition;
-    data['link'] = this.link;
-    data['startOn'] = this.startOn;
-    data['endOn'] = this.endOn;
-    data['duration'] = this.duration;
-    data['totalIncome'] = this.totalIncome;
-    data['totalSpending'] = this.totalSpending;
-    data['dateCreated'] = this.dateCreated;
-    data['dateUpdated'] = this.dateUpdated;
-    data['description'] = this.description;
-    data['currentStateId'] = this.currentStateId;
-    data['currentState'] = this.currentState;
-    data['currentStateName'] = this.currentStateName;
-    data['status'] = this.status;
-    data['numberOfItemsUsed'] = this.numberOfItemsUsed;
-    data['usageCost'] = this.usageCost;
-    data['totalCost'] = this.totalCost;
+    data['id'] = id;
+    data['brandId'] = brandId;
+    data['brandName'] = brandName;
+    data['brandAcronym'] = brandAcronym;
+    data['brandLogo'] = brandLogo;
+    data['typeId'] = typeId;
+    data['typeName'] = typeName;
+    data['typeImage'] = typeImage;
+    data['campaignName'] = campaignName;
+    data['image'] = image;
+    data['imageName'] = imageName;
+    data['file'] = file;
+    data['fileName'] = fileName;
+    data['condition'] = condition;
+    data['link'] = link;
+    data['startOn'] = startOn;
+    data['endOn'] = endOn;
+    data['duration'] = duration;
+    data['totalIncome'] = totalIncome;
+    data['totalSpending'] = totalSpending;
+    data['dateCreated'] = dateCreated;
+    data['dateUpdated'] = dateUpdated;
+    data['description'] = description;
+    data['status'] = status;
+    data['numberOfItemsUsed'] = numberOfItemsUsed;
+    data['usageCost'] = usageCost;
+    data['totalCost'] = totalCost;
     return data;
   }
 }

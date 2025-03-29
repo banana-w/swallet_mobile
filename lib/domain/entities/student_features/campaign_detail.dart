@@ -34,14 +34,11 @@ class CampaignDetail extends Campaign {
     required super.dateCreated,
     required super.dateUpdated,
     required super.description,
-    required super.currentStateId,
-    required super.currentState,
-    required super.currentStateName,
     required super.status,
   });
 
   @override
-  List<Object> get props =>
+  List<Object?> get props =>
       super.props..addAll([
         brandLogo,
         numberOfItemsUsed,

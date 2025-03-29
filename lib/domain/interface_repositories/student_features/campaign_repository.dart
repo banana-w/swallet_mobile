@@ -9,8 +9,9 @@ abstract class CampaignRepository {
   const CampaignRepository();
 
   Future<ApiResponse<List<CampaignModel>>?> fecthCampaigns({
+    String? searchName,
     int? page,
-    int? limit,
+    int? size,
   });
 
   Future<CampaignDetailModel?> fecthCampaignById({required String id});

@@ -35,20 +35,14 @@ dependencies:
   pinput: ^5.0.1
   flutter_timer_countdown: ^1.0.7
   mobile_scanner: ^3.5.5
-
-flutter_native_splash:
-  background_image: assets/images/background_splash.png
-  image: assets/images/logo_splash.png
+  flutter_launcher_icons: ^0.14.3
+  carousel_slider: ^5.0.0
+  smooth_page_indicator: ^1.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-
-lutter_launcher_icons:
-  anroid: true
-  image_path: "assets/icons/logo_bean.png"
-  min_sdk_android: 19
 
 flutter:
 
