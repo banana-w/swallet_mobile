@@ -5,8 +5,8 @@ import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/landing_screen/components/cus_nav_bar_lecture.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/profile/profile_store_screen.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/qr_view/qr_view_screen.dart';
+import 'package:swallet_mobile/presentation/screens/lecture_features/profile/profile_lecture_screen.dart';
+import 'package:swallet_mobile/presentation/screens/lecture_features/qr_generate/qr_generate_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/app_bar_store.dart';
 
 class LandingLectureScreen extends StatelessWidget {
@@ -58,7 +58,7 @@ class LandingLectureScreen extends StatelessWidget {
 
                       Navigator.pushNamed(
                         context,
-                        QrViewScreen.routeName,
+                        QRGenerateScreen.routeName,
                         arguments: lectureId,
                       );
                     },
@@ -117,7 +117,7 @@ class LandingLectureScreen extends StatelessWidget {
                         final lectureId = lecture?.id;
                         Navigator.pushNamed(
                           context,
-                          QrViewScreen.routeName,
+                          QRGenerateScreen.routeName,
                           arguments: lectureId,
                         );
                       },
@@ -173,7 +173,7 @@ class LandingLectureScreen extends StatelessWidget {
                       final lectureId = lecture?.id;
                       Navigator.pushNamed(
                         context,
-                        QrViewScreen.routeName,
+                        QRGenerateScreen.routeName,
                         arguments: lectureId,
                       );
                     },
@@ -200,10 +200,10 @@ class LandingLectureScreen extends StatelessWidget {
 }
 
 List<Widget> bottomNavScreen = [
-  ProfileStoreScreen(),
-  ProfileStoreScreen(),
-  ProfileStoreScreen(),
-  ProfileStoreScreen(),
+  ProfileLectureScreen(),
+  ProfileLectureScreen(),
+  ProfileLectureScreen(),
+  ProfileLectureScreen(),
 ];
 
 PreferredSizeWidget? _buildAppbar(

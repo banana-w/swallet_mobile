@@ -1,8 +1,8 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
+import 'package:swallet_mobile/data/models/lecture_features/qr_response';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_item_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
@@ -15,6 +15,7 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
 
   StudentBloc({required this.studentRepository}) : super(StudentInitial()) {
     on<LoadStudentVouchers>(_onLoadStudentVouchers);
+    on<ScanLectureQR>(_onScanLectureQR);
     // on<LoadMoreStudentVouchers>(_onLoadMoreVouchers);
     // on<LoadStudentTransactions>(_onLoadStudentTransactions);
     // on<LoadStudentOrders>(_onLoadStudentOrder);
@@ -45,6 +46,23 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   var isLoadingMoreOrder = false;
 
   // --------------------
+
+  Future<void> _onScanLectureQR(
+    ScanLectureQR event,
+    Emitter<StudentState> emit,
+  ) async {
+    emit(const QRScanLoading());
+    try {
+      final response = await studentRepository.scanLectureQR(
+        qrCode: event.qrCode,
+        studentId: event.studentId,
+      );
+      emit(QRScanSuccess(response));
+    } catch (e) {
+      emit(QRScanFailed(e.toString()));
+    }
+  }
+
   Future<void> _onLoadStudentVouchers(
     LoadStudentVouchers event,
     Emitter<StudentState> emit,
@@ -393,13 +411,15 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   }
 
   Future<void> _onUpdateVerification(
-      UpdateVerification event, Emitter<StudentState> emit) async {
+    UpdateVerification event,
+    Emitter<StudentState> emit,
+  ) async {
     emit(StudentUpdatingVerification());
     try {
       var studentModel = await studentRepository.putVerification(
-          studentId: event.studentId,
-          studentCardFont: event.studentCardFront,
-          );
+        studentId: event.studentId,
+        studentCardFont: event.studentCardFront,
+      );
       if (studentModel == null) {
         emit(StudentFaled(error: 'Xác minh thất bại!'));
       } else {
@@ -410,10 +430,12 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     }
   }
 
- Future<void> _onSKipUpdateVerification(
-      SkipUpdateVerification event, Emitter<StudentState> emit) async {
+  Future<void> _onSKipUpdateVerification(
+    SkipUpdateVerification event,
+    Emitter<StudentState> emit,
+  ) async {
     var studentModel = await AuthenLocalDataSource.getStudent();
-      emit(StudentUpdateVerificationSuccess(studentModel: studentModel!));
+    emit(StudentUpdateVerificationSuccess(studentModel: studentModel!));
   }
 
   // Future<void> _onLoadOrderDetailBydId(

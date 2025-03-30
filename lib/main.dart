@@ -32,6 +32,7 @@ import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/config/app_router.dart';
 import 'package:swallet_mobile/presentation/cubits/validation/validation_cubit.dart';
 import 'package:swallet_mobile/presentation/cubits/verification/verification_cubit.dart';
+import 'package:swallet_mobile/presentation/screens/lecture_features/landing_screen/components/cus_nav_bar_lecture.dart';
 import 'package:swallet_mobile/presentation/screens/splash/splash_screen.dart';
 import 'package:swallet_mobile/simple_bloc_observer.dart';
 
@@ -102,6 +103,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<LectureRepository>(
           create: (_) => LectureRepositoryImp(),
         ),
+
         // RepositoryProvider<BrandRepository>(
         //   create: (_) => BrandRepositoryImp(),
         // ),
@@ -163,6 +165,10 @@ class MyApp extends StatelessWidget {
             create:
                 (context) =>
                     LectureBloc(lectureRepository: LectureRepositoryImp()),
+          ),
+          BlocProvider(
+            create: (context) => LandingScreenBloc(),
+            child: CusNavLectureBar(),
           ),
         ],
         child: MaterialApp(

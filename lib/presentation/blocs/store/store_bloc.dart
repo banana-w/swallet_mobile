@@ -325,28 +325,28 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 //     }
 //   }
 
-//   Future<void> _onLoadCampaignVoucherInformation(
-//       LoadCampaignVoucherInformation event, Emitter<StoreState> emit) async {
-//     emit(StoreCampaignVoucherInforLoading());
-//     try {
-//       var apiResponse = await storeRepository.fecthCampaignVoucherInformation(
-//           storeId: event.storeId, voucherCode: event.voucherCode);
-//       var check = apiResponse.keys.first;
-//       if (check) {
-//         var result = apiResponse.values.first;
-//         emit(StoreCampaigVoucherInforSuccess(
-//             campaignVoucherInformationModel: result!));
-//       } else {
-//         String error = apiResponse.values.first;
-//         if(error == '["Khuyến mãi không hợp lệ"]'){
-//              emit(StoreCampaignVoucherInforFailed(error: 'Khuyến mãi không hợp lệ'));
-//         }else{
-//         emit(StoreCampaignVoucherInforFailed(error: error));
-//         }
-//       }
-//     } catch (e) {
-//       emit(StoreCampaignVoucherInforFailed(error: e.toString()));
-//     }
-//   }
+  // Future<void> _onLoadCampaignVoucherInformation(
+  //     LoadCampaignVoucherInformation event, Emitter<StoreState> emit) async {
+  //   emit(StoreCampaignVoucherInforLoading());
+  //   try {
+  //     var apiResponse = await storeRepository.fecthCampaignVoucherInformation(
+  //         storeId: event.storeId, voucherCode: event.voucherCode);
+  //     var check = apiResponse.keys.first;
+  //     if (check) {
+  //       var result = apiResponse.values.first;
+  //       emit(StoreCampaigVoucherInforSuccess(
+  //           campaignVoucherInformationModel: result!));
+  //     } else {
+  //       String error = apiResponse.values.first;
+  //       if(error == '["Khuyến mãi không hợp lệ"]'){
+  //            emit(StoreCampaignVoucherInforFailed(error: 'Khuyến mãi không hợp lệ'));
+  //       }else{
+  //       emit(StoreCampaignVoucherInforFailed(error: error));
+  //       }
+  //     }
+  //   } catch (e) {
+  //     emit(StoreCampaignVoucherInforFailed(error: e.toString()));
+  //   }
+  // }
 
 // }

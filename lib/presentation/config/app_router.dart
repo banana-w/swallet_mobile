@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:swallet_mobile/data/models/lecture_features/qr_response';
 import 'package:swallet_mobile/data/models/store_features/campaign_voucher_information_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/landing_screen/landing_lecture_screen.dart';
+import 'package:swallet_mobile/presentation/screens/lecture_features/qr_generate/qr_generate_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/brand/brand_detail_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_voucher_information/campaign_vouher_information_screen.dart';
@@ -25,6 +27,8 @@ import 'package:swallet_mobile/presentation/screens/student_features/profile_ver
 import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/update_verification_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/qr/qr_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/qr/qr_voucher_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/qr_view/qr_student_view_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/qr_view/success-scren.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_1_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_2_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_3_screen.dart';
@@ -38,6 +42,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/verify_stud
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/verify_email/screens/verifycode_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/welcome/welcome_screen.dart';
+import 'package:swallet_mobile/presentation/screens/success_scan_voucher/success_scan_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
 class AppRouter {
@@ -58,6 +63,9 @@ class AppRouter {
       case OnBoardingScreen.routeName:
         return OnBoardingScreen.route();
 
+      case QRGenerateScreen.routeName: // '/qr-generate'
+        return QRGenerateScreen.route(lectureId: settings.arguments as String);
+
       case WelcomeScreen.routeName:
         return WelcomeScreen.route();
 
@@ -70,6 +78,11 @@ class AppRouter {
       case VerifyCodeStudentScreen.routeName:
         return VerifyCodeStudentScreen.route(
           email: settings.arguments as String,
+        );
+
+      case SuccessScanLectureQRScreen.routeName:
+        return SuccessScanLectureQRScreen.route(
+          response: settings.arguments as ScanQRResponse,
         );
 
       case SignUpScreen.routeName:
@@ -147,6 +160,11 @@ class AppRouter {
 
       case QrViewScreen.routeName:
         return QrViewScreen.route(storeId: settings.arguments as String);
+
+      case QrStudentViewScreen.routeName:
+        return QrStudentViewScreen.route(
+          studentId: settings.arguments as String,
+        );
 
       case ProfileUpdateDetailStoreScreen.routeName:
         return ProfileUpdateDetailStoreScreen.route(

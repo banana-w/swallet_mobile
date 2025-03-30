@@ -2,15 +2,9 @@ import 'dart:convert';
 
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
-// import 'package:swallet_mobile/data/models/api_response.dart';
-// import 'package:swallet_mobile/data/models/student_features/create_model/create_order_model.dart';
-// import 'package:swallet_mobile/data/models/student_features/order_detail_model.dart';
-// import 'package:swallet_mobile/data/models/student_features/order_model.dart';
+import 'package:swallet_mobile/data/models/lecture_features/qr_response';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
-// import 'package:swallet_mobile/data/models/student_features/transaction_model.dart';
-// import 'package:swallet_mobile/data/models/student_features/voucher_student_item_model.dart';
-// import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:http/http.dart' as http;
@@ -49,6 +43,43 @@ class StudentRepositoryImp implements StudentRepository {
       }
     } catch (e) {
       throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<ScanQRResponse> scanLectureQR({
+    required String qrCode,
+    required String studentId,
+  }) async {
+    try {
+      token = await AuthenLocalDataSource.getToken();
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+
+      final Map<String, dynamic> body = {
+        'qrCodeJson': qrCode,
+        'studentId': studentId,
+      };
+
+      http.Response response = await http.post(
+        Uri.parse('https://swallet-api.onrender.com/api/Lecturer/scan-qrcode'),
+        headers: headers,
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(utf8.decode(response.bodyBytes));
+        print('API Response: $result'); // Log để kiểm tra
+        return ScanQRResponse.fromJson(result);
+      } else {
+        throw Exception(
+          'Failed to scan QR: ${response.statusCode} - ${response.body}',
+        );
+      }
+    } catch (e) {
+      throw Exception('Failed to scan QR: ${e.toString()}');
     }
   }
 
@@ -340,7 +371,7 @@ class StudentRepositoryImp implements StudentRepository {
       //thêm file cho request
       request.files.add(
         await http.MultipartFile.fromPath('StudentCardFront', studentCardFont),
-      );     
+      );
 
       //thêm headers
       request.headers.addAll(headers);

@@ -13,4 +13,12 @@ abstract class LectureRepository {
     required bool state,
     required bool status,
   });
+
+  Future<Map<String, String>> generateQRCode({
+    required int points,
+    // required String expirationTime,
+    // required String startOnTime,
+    required int availableHours,
+    required String lecturerId,
+  });
 }

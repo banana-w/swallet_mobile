@@ -26,8 +26,8 @@ class CusNavLectureBar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children:
-                  NavItemStore.navItems.map((item) {
-                    var index = NavItemStore.navItems.indexOf(item);
+                  NavItemLecturer.navItems.map((item) {
+                    var index = NavItemLecturer.navItems.indexOf(item);
                     if (index == 1) {
                       return Container(
                         width: 50 * fem,
