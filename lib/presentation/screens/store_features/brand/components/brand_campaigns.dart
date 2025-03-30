@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_store_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
 
 import '../../../../blocs/blocs.dart';
 import '../../../../config/constants.dart';
@@ -123,7 +124,7 @@ class BrandCampaigns extends StatelessWidget {
                               onTap: () {
                                 Navigator.pushNamed(
                                   context,
-                                  CampaignDetailScreen.routeName,
+                                  CampaignDetailStudentScreen.routeName,
                                   arguments: campaignModel.id,
                                 );
                               },
@@ -133,11 +134,11 @@ class BrandCampaigns extends StatelessWidget {
                                 ffem: ffem,
                                 campaignModel: campaignModel,
                                 onTap: () {
-                                  // Navigator.pushNamed(
-                                  //   context,
-                                  //   CampaignDetailStoreScreen.routeName,
-                                  //   arguments: campaignModel.id,
-                                  // );
+                                  Navigator.pushNamed(
+                                    context,
+                                    CampaignDetailStoreScreen.routeName,
+                                    arguments: campaignModel.id,
+                                  );
                                 },
                               ),
                             );

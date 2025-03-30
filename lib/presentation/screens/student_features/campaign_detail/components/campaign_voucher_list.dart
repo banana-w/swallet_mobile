@@ -2,7 +2,6 @@
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_svg/svg.dart';
 // import 'package:google_fonts/google_fonts.dart';
-// import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 // import '../../../../blocs/blocs.dart';
 // import '../../../../config/constants.dart';
 // import '../../../../widgets/shimmer_widget.dart';
@@ -78,6 +77,7 @@
 //                     scrollDirection: Axis.horizontal,
 //                     itemCount: state.campaignVouchers.length,
 //                     itemBuilder: (context, index) {
+//                       var campaignVoucher = state.campaignVouchers[index];
 //                       return GestureDetector(
 //                         onTap: () async {
 //                           final studentId =
@@ -116,8 +116,7 @@
 //                                         height: 150 * hem,
 //                                         width: 180 * fem,
 //                                         child: Image.network(
-//                                           state.campaignVouchers[index]
-//                                               .voucherImage,
+//                                           campaignVoucher.voucherImage,
 //                                           fit: BoxFit.fill,
 //                                           loadingBuilder: (context, child,
 //                                               loadingProgress) {
@@ -144,7 +143,7 @@
 //                                         right: 10 * fem,
 //                                         top: 10 * hem),
 //                                     child: Text(
-//                                       state.campaignVouchers[index].voucherName,
+//                                       campaignVoucher.voucherName,
 //                                       overflow: TextOverflow.ellipsis,
 //                                       maxLines: 2,
 //                                       style: GoogleFonts.openSans(
@@ -180,7 +179,7 @@
 //                                     Row(
 //                                       children: [
 //                                         Text(
-//                                           '${formatter.format(state.campaignVouchers[index].price)}',
+//                                           '${formatter.format(campaignVoucher.price)}',
 //                                           style: GoogleFonts.openSans(
 //                                               textStyle: TextStyle(
 //                                             fontSize: 20 * ffem,
@@ -199,6 +198,48 @@
 //                                             height: 22 * fem,
 //                                           ),
 //                                         )
+//                                       ],
+//                                     ),
+//                                   ],
+//                                 ),
+//                               ),
+//                             ),
+//                             Positioned(
+//                               bottom: 10 * fem,
+//                               right: 0,
+//                               child: Container(
+//                                 padding: EdgeInsets.only(
+//                                     left: 10 * fem, right: 10 * fem),
+                              
+//                                 child: Row(
+//                                   mainAxisAlignment:
+//                                       MainAxisAlignment.spaceBetween,
+//                                   crossAxisAlignment: CrossAxisAlignment.start,
+//                                   children: [
+//                                      Row(
+//                                       children: [
+//                                         Text(
+//                                           '${state.campaignVouchers[index].quantityInStock}',
+//                                           style: GoogleFonts.openSans(
+//                                               textStyle: TextStyle(
+//                                             fontSize: 14 * ffem,
+//                                             color: kPrimaryColor,
+//                                             fontWeight: FontWeight.normal,
+//                                           )),
+//                                         ),
+//                                         Padding(
+//                                           padding:
+//                                               EdgeInsets.only(right: 5 * fem),
+//                                           child: Text(
+//                                             '/${state.campaignVouchers[index].quantity}',
+//                                             style: GoogleFonts.openSans(
+//                                                 textStyle: TextStyle(
+//                                               fontSize: 14 * ffem,
+//                                               color: Colors.black,
+//                                               fontWeight: FontWeight.normal,
+//                                             )),
+//                                           ),
+//                                         ),
 //                                       ],
 //                                     ),
 //                                   ],

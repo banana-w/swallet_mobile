@@ -3,9 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
 
-import '../../../../blocs/blocs.dart';
 import '../../../../config/constants.dart';
 import '../../../../widgets/shimmer_widget.dart';
 import '../../campaign/components/campaign_list_card.dart';
@@ -119,7 +118,7 @@ class BrandCampaigns extends StatelessWidget {
                             return GestureDetector(
                               onTap: () {
                                 Navigator.pushNamed(
-                                    context, CampaignDetailScreen.routeName,
+                                    context, CampaignDetailStudentScreen.routeName,
                                     arguments: campaignModel.id);
                               },
                               child: CampaignListCard(
@@ -129,7 +128,7 @@ class BrandCampaigns extends StatelessWidget {
                                 campaignModel: campaignModel,
                                 onTap: () {
                                   Navigator.pushNamed(
-                                      context, CampaignDetailScreen.routeName,
+                                      context, CampaignDetailStudentScreen.routeName,
                                       arguments: campaignModel.id);
                                 },
                               ),

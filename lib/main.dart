@@ -22,6 +22,7 @@ import 'package:swallet_mobile/domain/interface_repositories/student_features/st
 import 'package:swallet_mobile/domain/interface_repositories/student_features/validation_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/verification_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/authentication/authentication_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/campus/campus_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
@@ -85,8 +86,6 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<CampaignRepository>(
           create: (_) => CampaignRepositoryImp(),
         ),
-        // RepositoryProvider<VerificationRepository>(
-        //     create: (_) => VerificationRepositoryImp()),
         RepositoryProvider<LuckyPrizeRepository>(
           create: (_) => LuckyPrizeRepository(),
         ),
@@ -102,9 +101,9 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<LectureRepository>(
           create: (_) => LectureRepositoryImp(),
         ),
-        // RepositoryProvider<BrandRepository>(
-        //   create: (_) => BrandRepositoryImp(),
-        // ),
+        RepositoryProvider<BrandRepository>(
+          create: (_) => BrandRepositoryImp(),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -164,6 +163,10 @@ class MyApp extends StatelessWidget {
                 (context) =>
                     LectureBloc(lectureRepository: LectureRepositoryImp()),
           ),
+          BlocProvider(
+            create: (context) =>
+                BrandBloc(brandRepository: BrandRepositoryImp())
+                  ..add(LoadBrands(limit: 5)),),
         ],
         child: MaterialApp(
           navigatorKey: navigatorKey,

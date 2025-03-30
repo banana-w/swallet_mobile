@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
-import '../../../../blocs/blocs.dart';
 
 class OthersInforBrandDetail extends StatefulWidget {
   const OthersInforBrandDetail({

@@ -1,18 +1,15 @@
 import 'package:swallet_mobile/domain/interface_repositories/student_features/campaign.dart';
 
 class CampaignDetail extends Campaign {
-  final String brandLogo;
-  final int numberOfItemsUsed;
-  final double usageCost;
-  final double totalCost;
-  final String typeImage;
+  // final String brandLogo;
+  // final int numberOfItemsUsed;
+  // final double usageCost;
+  // final double totalCost;
+  // final String typeImage;
+  final List<String> campaignDetailId;
 
-  CampaignDetail({
-    required this.brandLogo,
-    required this.numberOfItemsUsed,
-    required this.totalCost,
-    required this.usageCost,
-    required this.typeImage,
+  const CampaignDetail({
+    required this.campaignDetailId,
     required super.id,
     required super.brandId,
     required super.brandName,
@@ -38,12 +35,5 @@ class CampaignDetail extends Campaign {
   });
 
   @override
-  List<Object?> get props =>
-      super.props..addAll([
-        brandLogo,
-        numberOfItemsUsed,
-        usageCost,
-        totalCost,
-        typeImage,
-      ]);
+  List<Object?> get props => super.props..addAll([campaignDetailId]);
 }

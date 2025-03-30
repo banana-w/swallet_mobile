@@ -6,7 +6,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_model.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
 
@@ -69,11 +69,11 @@ class _CampaignCarouselState extends State<CampaignCarousel> {
                               context, UnverifiedScreen.routeName);
                         } else {
                           Navigator.pushNamed(
-                              context, CampaignDetailScreen.routeName,
+                              context, CampaignDetailStudentScreen.routeName,
                               arguments: campaign.id);
                         }
                       },
-                      child: Container(
+                      child: SizedBox(
                         width: 360,
                         child: Card(
                           elevation: 2,
@@ -87,7 +87,7 @@ class _CampaignCarouselState extends State<CampaignCarousel> {
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(10),
                                     topRight: Radius.circular(10)),
-                                child: Container(
+                                child: SizedBox(
                                   width: double.infinity,
                                   height: 210,
                                   child: Image.network(
@@ -116,7 +116,7 @@ class _CampaignCarouselState extends State<CampaignCarousel> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Container(
+                                  SizedBox(
                                     width: 200,
                                     child: Column(
                                       crossAxisAlignment:
@@ -159,7 +159,7 @@ class _CampaignCarouselState extends State<CampaignCarousel> {
                                             context, UnverifiedScreen.routeName);
                                       } else {
                                         Navigator.pushNamed(context,
-                                            CampaignDetailScreen.routeName,
+                                            CampaignDetailStudentScreen.routeName,
                                             arguments: campaign.id);
                                       }
                                     },

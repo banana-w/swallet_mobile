@@ -1,11 +1,8 @@
 import 'package:swallet_mobile/domain/entities/student_features/campaign_detail.dart';
 
 class CampaignDetailModel extends CampaignDetail {
-  CampaignDetailModel({
-    required super.brandLogo,
-    required super.numberOfItemsUsed,
-    required super.totalCost,
-    required super.usageCost,
+  const CampaignDetailModel({
+    required super.campaignDetailId,
     required super.id,
     required super.brandId,
     required super.brandName,
@@ -28,7 +25,6 @@ class CampaignDetailModel extends CampaignDetail {
     required super.dateUpdated,
     required super.description,
     required super.status,
-    required super.typeImage,
   });
 
   factory CampaignDetailModel.fromJson(Map<String, dynamic> json) {
@@ -37,10 +33,10 @@ class CampaignDetailModel extends CampaignDetail {
       brandId: json['brandId'],
       brandName: json['brandName'] ?? '',
       brandAcronym: json['brandAcronym'] ?? '',
-      brandLogo: json['brandLogo'] ?? '',
+      // brandLogo: json['brandLogo'] ?? '',
       typeId: json['typeId'],
       typeName: json['typeName'] ?? '',
-      typeImage: json['typeImage'] ?? '',
+      // typeImage: json['typeImage'] ?? '',
       campaignName: json['campaignName'] ?? '',
       image: json['image'] ?? '',
       imageName: json['imageName'] ?? '',
@@ -57,9 +53,12 @@ class CampaignDetailModel extends CampaignDetail {
       dateUpdated: json['dateUpdated'],
       description: json['description'],
       status: json['status'],
-      numberOfItemsUsed: json['numberOfItemsUsed'],
-      usageCost: json['usageCost'],
-      totalCost: json['totalCost'],
+      campaignDetailId: json['campaignDetailId'] != null
+          ? List<String>.from(json['campaignDetailId'])
+          : [],
+      // numberOfItemsUsed: json['numberOfItemsUsed'],
+      // usageCost: json['usageCost'],
+      // totalCost: json['totalCost'],
     );
   }
 
@@ -69,10 +68,10 @@ class CampaignDetailModel extends CampaignDetail {
     data['brandId'] = brandId;
     data['brandName'] = brandName;
     data['brandAcronym'] = brandAcronym;
-    data['brandLogo'] = brandLogo;
+    // data['brandLogo'] = brandLogo;
     data['typeId'] = typeId;
     data['typeName'] = typeName;
-    data['typeImage'] = typeImage;
+    // data['typeImage'] = typeImage;
     data['campaignName'] = campaignName;
     data['image'] = image;
     data['imageName'] = imageName;
@@ -89,9 +88,9 @@ class CampaignDetailModel extends CampaignDetail {
     data['dateUpdated'] = dateUpdated;
     data['description'] = description;
     data['status'] = status;
-    data['numberOfItemsUsed'] = numberOfItemsUsed;
-    data['usageCost'] = usageCost;
-    data['totalCost'] = totalCost;
+    // data['numberOfItemsUsed'] = numberOfItemsUsed;
+    // data['usageCost'] = usageCost;
+    // data['totalCost'] = totalCost;
     return data;
   }
 }

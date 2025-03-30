@@ -124,7 +124,7 @@ class BrandCard extends StatelessWidget {
                     width: 120 * fem,
                     child: Image.network(
                       // brandModel.logo,
-                      'https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/333040498_522945569983337_7674952463810792053_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeFBHiQFCoGZ3qZFLJYp5902NzRh2Lsl2_Y3NGHYuyXb9sBbrnYnJoAVnexGrco0YOhl9kH88kK0pVzhHOjrY8Ws&_nc_ohc=j3jCQ76nHEgQ7kNvgEe-0uD&_nc_oc=Adn1UwVPZba7Rc6d0QqOoNHTiGyJPd9NaO2CcbFJHxw0_PmV9XkCKhwbp8gie2N54Uc&_nc_zt=23&_nc_ht=scontent.fsgn2-7.fna&_nc_gid=BbaMiZAbO9FRLBceFBv_nw&oh=00_AYFUeHkhv80oXjilz4im-mOeKXsmEyC8xya4C54Do_KeUQ&oe=67ED9CE4',
+                      'null',
                       fit: BoxFit.fill,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) {

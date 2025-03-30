@@ -4,7 +4,7 @@ import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/landing_screen/landing_lecture_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/brand/brand_detail_store_screen.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_voucher_information/campaign_vouher_information_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/landing_screen/landing_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/profile_update_detail/profile_update_detail_screen.dart';
@@ -14,6 +14,7 @@ import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 import 'package:swallet_mobile/presentation/screens/splash/onboarding_screen.dart';
 import 'package:swallet_mobile/presentation/screens/splash/splash_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign/campaign_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/challenge/challenge_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/landing/landing_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel/lucky_wheel_screen.dart';
@@ -120,6 +121,15 @@ class AppRouter {
       case CampaignScreen.routeName:
         return CampaignScreen.route();
 
+      case CampaignDetailStoreScreen.routeName:
+        return CampaignDetailStoreScreen.route(
+          campaignId: settings.arguments as String,
+        );
+      case CampaignDetailStudentScreen.routeName:
+        return CampaignDetailStudentScreen.route(
+          campaignId: settings.arguments as String,
+        );
+
       case VoucherScreen.routeName:
         return VoucherScreen.route();
 
@@ -151,11 +161,6 @@ class AppRouter {
       case ProfileUpdateDetailStoreScreen.routeName:
         return ProfileUpdateDetailStoreScreen.route(
           storeModel: settings.arguments as StoreModel,
-        );
-
-      case CampaignDetailScreen.routeName:
-        return CampaignDetailScreen.route(
-          campaignId: settings.arguments as String,
         );
 
       // case BrandDetailScreen.routeName:

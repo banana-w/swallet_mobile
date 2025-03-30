@@ -14,14 +14,12 @@ import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/brand/components/campaign_list_card.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/brand_list/brand_list_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/brand_list/components/body.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign/components/campaign_carousel.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign/components/membership_card.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
 
-import '../../../../../data/models.dart';
-import '../../../../blocs/blocs.dart';
 import '../../../../config/constants.dart';
 import '../../../../widgets/card_for_unverified.dart';
 import '../../../../widgets/unverified_screen.dart';
@@ -164,7 +162,7 @@ class _BodyState extends State<CampaignScreenBody> {
                           BlocBuilder<CampaignBloc, CampaignState>(
                             builder: (context, state) {
                               if (state is CampaignsLoaded) {
-                                if (state.campaigns.length == 0) {
+                                if (state.campaigns.isEmpty) {
                                   return Container(
                                     width: double.infinity,
                                     margin: EdgeInsets.only(
@@ -413,7 +411,7 @@ class _BodyState extends State<CampaignScreenBody> {
                               if (state is CampaignLoading) {
                                 return shimmerLoading(1);
                               } else if (state is CampaignsLoaded) {
-                                if (state.campaigns.length == 0) {
+                                if (state.campaigns.isEmpty) {
                                   return Container(
                                     width: double.infinity,
                                     margin: EdgeInsets.only(
@@ -474,7 +472,7 @@ class _BodyState extends State<CampaignScreenBody> {
                                             } else {
                                               Navigator.pushNamed(
                                                   context,
-                                                  CampaignDetailScreen
+                                                  CampaignDetailStudentScreen
                                                       .routeName,
                                                   arguments: state
                                                       .campaigns[index].id);
@@ -495,7 +493,7 @@ class _BodyState extends State<CampaignScreenBody> {
                                               } else {
                                                 Navigator.pushNamed(
                                                     context,
-                                                    CampaignDetailScreen
+                                                    CampaignDetailStudentScreen
                                                         .routeName,
                                                     arguments: state
                                                         .campaigns[index].id);

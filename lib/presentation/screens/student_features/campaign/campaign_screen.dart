@@ -48,9 +48,6 @@ class CampaignScreen extends StatelessWidget {
           );
         },
       ),
-      // child: Container(
-      //   child: Lottie.asset('assets/animations/loading-screen.json'),
-      // ),
     );
   }
 }

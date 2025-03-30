@@ -25,7 +25,7 @@ final class LoadMoreCampaigns extends CampaignEvent {
 final class LoadCampaignById extends CampaignEvent {
   final String id;
 
-  LoadCampaignById({required this.id});
+  const LoadCampaignById({required this.id});
 
   @override
   List<Object?> get props => [id];

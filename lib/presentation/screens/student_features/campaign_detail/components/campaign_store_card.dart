@@ -48,7 +48,7 @@
 //               borderRadius:
 //                   BorderRadius.circular(
 //                       10 * fem),
-//               child: Container(
+//               child: SizedBox(
 //                 width: 70 * fem,
 //                 height: 85 * hem,
 //                 child: Image.network(
@@ -82,7 +82,7 @@
 //                 CrossAxisAlignment.start,
 //             mainAxisAlignment: MainAxisAlignment.start,
 //             children: [
-//               Container(
+//               SizedBox(
 //                 width: 250 * fem,
 //                 // height: 45*hem,
 //                 child: Text(
@@ -101,7 +101,7 @@
 //                SizedBox(
 //                 height: 2 * hem,
 //               ),
-//                 Container(
+//                 SizedBox(
 //                 width: 250 * fem,
 //                 // height: 45*hem,
 //                 child: Text(
@@ -120,7 +120,7 @@
 //               SizedBox(
 //                 height: 2 * hem,
 //               ),
-//                 Container(
+//                 SizedBox(
 //                 width: 220 * fem,
 //                 // height: 45*hem,
 //                 child: Text(

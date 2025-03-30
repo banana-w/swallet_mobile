@@ -74,7 +74,7 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
             page: page,
             size: event.limit,
           );
-          if (apiResponse!.result.length == 0) {
+          if (apiResponse!.result.isEmpty) {
             emit(
               CampaignsLoaded(
                 campaigns: List.from((this.state as CampaignsLoaded).campaigns)
