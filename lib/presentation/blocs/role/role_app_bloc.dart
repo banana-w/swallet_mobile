@@ -25,6 +25,51 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
     on<RoleAppEnd>(_onEndRoleApp);
   }
 
+  // Future<void> _onStartRoleApp(
+  //   RoleAppStart event,
+  //   Emitter<RoleAppState> emit,
+  // ) async {
+  //   emit(RoleAppLoading());
+  //   try {
+  //     final authenModel = await AuthenLocalDataSource.getAuthen();
+  //     final isVerifyAfter = await AuthenLocalDataSource.getIsVerified();
+
+  //     bool isVerify = authenModel!.isVerified;
+  //     String role = authenModel.role;
+  //     String userId = authenModel.accountId;
+  //     if (isVerify || isVerifyAfter == "true") {
+  //       if (userId != '') {
+  //         final student = await studentRepository.fetchStudentById(
+  //           id: authenModel.accountId,
+  //         );
+  //         if (role == 'Sinh viên') {
+  //           if (student?.state == 2) {
+  //             emit(Verified(authenModel: authenModel, studentModel: student!));
+  //           } else {
+  //             emit(
+  //               Unverified(authenModel: authenModel, studentModel: student!),
+  //             );
+  //           }
+  //         } else if (role.contains('Giáo viên')) {
+  //           final lecture = await lectureRepository.fetchLectureById(
+  //             accountId: authenModel.accountId,
+  //           );
+  //           emit(LectureRole(authenModel: authenModel, lectureModel: lecture!));
+  //         } else {
+  //           final store = await storeRepository.fetchStoreById(
+  //             accountId: authenModel.accountId,
+  //           );
+  //           emit(StoreRole(authenModel: authenModel, storeModel: store!));
+  //         }
+  //       } else {
+  //         emit(RoleAppLoading());
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
   Future<void> _onStartRoleApp(
     RoleAppStart event,
     Emitter<RoleAppState> emit,
@@ -37,18 +82,21 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
       bool isVerify = authenModel!.isVerified;
       String role = authenModel.role;
       String userId = authenModel.accountId;
+
       if (isVerify || isVerifyAfter == "true") {
         if (userId != '') {
-          final student = await studentRepository.fetchStudentById(
-            id: authenModel.accountId,
-          );
           if (role == 'Sinh viên') {
+            final student = await studentRepository.fetchStudentById(
+              id: authenModel.accountId,
+            );
             if (student?.state == 2) {
               emit(Verified(authenModel: authenModel, studentModel: student!));
             } else {
-              emit(Unverified(authenModel: authenModel, studentModel: student!));
+              emit(
+                Unverified(authenModel: authenModel, studentModel: student!),
+              );
             }
-          } else if (role.contains("Giáo viên")) {
+          } else if (role.contains('Giáo viên')) {
             final lecture = await lectureRepository.fetchLectureById(
               accountId: authenModel.accountId,
             );

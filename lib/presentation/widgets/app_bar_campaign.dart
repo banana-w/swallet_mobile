@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 
-
 class AppBarCampaign extends StatelessWidget implements PreferredSizeWidget {
   const AppBarCampaign({
     super.key,

@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/lecture_features/lecture_repository.dart';
@@ -9,49 +8,47 @@ part 'lecture_state.dart';
 class LectureBloc extends Bloc<LectureEvent, LectureState> {
   final LectureRepository lectureRepository;
 
-  LectureBloc({required this.lectureRepository}) : super(LectureInitial()) {
-    // on<UpdateLecture>(_onUpdateLecture);
+  LectureBloc({required this.lectureRepository})
+    : super(const LectureInitial()) {
     on<LoadLectureById>(_onLoadLectureById);
+    on<GenerateQRCodeEvent>(_onGenerateQRCode);
   }
 
   Future<void> _onLoadLectureById(
     LoadLectureById event,
     Emitter<LectureState> emit,
   ) async {
-    emit(LectureByIdLoading());
+    emit(const LectureLoading());
     try {
-      var apiResponse = await lectureRepository.fetchLectureById(
+      final lecture = await lectureRepository.fetchLectureById(
         accountId: event.id,
       );
-      emit(LectureByIdSuccess(lectureModel: apiResponse!));
+      if (lecture != null) {
+        emit(LectureLoaded(lecture));
+      } else {
+        emit(const LectureLoadFailed('Lecture not found'));
+      }
     } catch (e) {
-      emit(LectureByIdFailed(error: e.toString()));
+      emit(LectureLoadFailed(e.toString()));
     }
   }
 
-  // Future<void> _onUpdateStudent(
-  //   UpdateStudent event,
-  //   Emitter<StudentState> emit,
-  // ) async {
-  //   emit(StudentUpding());
-  //   try {
-  //     var studentModel = await studentRepository.putStudent(
-  //       studentId: event.studentId,
-  //       fullName: event.fullName,
-  //       studentCode: event.studentCode,
-  //       dateOfBirth: event.dateOfBirth,
-  //       campusId: event.campusId,
-  //       gender: event.gender,
-  //       address: event.address,
-  //       avatar: event.avatar,
-  //     );
-  //     if (studentModel == null) {
-  //       emit(StudentFaled(error: 'Sửa thất bại!'));
-  //     } else {
-  //       emit(StudentUpdateSuccess(studentModel: studentModel));
-  //     }
-  //   } catch (e) {
-  //     emit(StudentFaled(error: e.toString()));
-  //   }
-  // }
+  Future<void> _onGenerateQRCode(
+    GenerateQRCodeEvent event,
+    Emitter<LectureState> emit,
+  ) async {
+    emit(const QRCodeGenerating());
+    try {
+      final qrCodeData = await lectureRepository.generateQRCode(
+        points: event.points,
+        // expirationTime: event.expirationTime,
+        // startOnTime: event.startOnTime,
+        availableHours: event.availableHours,
+        lecturerId: event.lecturerId, // Sửa thành lecturerId
+      );
+      emit(QRCodeGenerated(qrCodeData)); // qrCodeData là Map
+    } catch (e) {
+      emit(QRCodeGenerationFailed(e.toString()));
+    }
+  }
 }

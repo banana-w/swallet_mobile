@@ -1,34 +1,45 @@
 part of 'lecture_bloc.dart';
 
-sealed class LectureState extends Equatable {
+abstract class LectureState {
   const LectureState();
 }
 
-final class LectureInitial extends LectureState {
-  @override
-  List<Object?> get props => [];
+class LectureInitial extends LectureState {
+  const LectureInitial();
 }
 
-final class LectureByIdSuccess extends LectureState {
-  final LectureModel lectureModel;
-
-  const LectureByIdSuccess({required this.lectureModel});
-
-  @override
-  List<Object?> get props => [lectureModel];
+class LectureLoading extends LectureState {
+  const LectureLoading();
 }
 
-final class LectureByIdFailed extends LectureState {
-  final String error;
-
-  const LectureByIdFailed({required this.error});
-
+class LectureLoaded extends LectureState {
+  final LectureModel lecture;
+  const LectureLoaded(this.lecture);
   @override
-  List<Object?> get props => [error];
+  List<Object?> get props => [lecture];
 }
 
-final class LectureByIdLoading extends LectureState {
-  const LectureByIdLoading();
+class LectureLoadFailed extends LectureState {
+  final String message;
+  const LectureLoadFailed(this.message);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [message];
+}
+
+class QRCodeGenerating extends LectureState {
+  const QRCodeGenerating();
+}
+
+class QRCodeGenerated extends LectureState {
+  final Map<String, String> qrCodeData; // Sửa thành Map<String, String>
+  const QRCodeGenerated(this.qrCodeData);
+  @override
+  List<Object?> get props => [qrCodeData];
+}
+
+class QRCodeGenerationFailed extends LectureState {
+  final String message;
+  const QRCodeGenerationFailed(this.message);
+  @override
+  List<Object?> get props => [message];
 }
