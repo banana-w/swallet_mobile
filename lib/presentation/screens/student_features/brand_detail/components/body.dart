@@ -8,6 +8,7 @@ import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/brand/components/brand_campaigns.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/brand/components/brand_detail_showdal.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/brand/components/detail_shadow_bottom.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/brand/components/infor_card_brand_detail.dart';
 import '../../../../config/constants.dart';
 import '../../../../widgets/shimmer_widget.dart';
 
@@ -26,17 +27,19 @@ class BrandDetailBody extends StatelessWidget {
         if (state is Connected) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-              elevation: 0,
-              duration: const Duration(milliseconds: 2000),
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.transparent,
-              content: AwesomeSnackbarContent(
-                title: 'Đã kết nối internet',
-                message: 'Đã kết nối internet!',
-                contentType: ContentType.success,
+            ..showSnackBar(
+              SnackBar(
+                elevation: 0,
+                duration: const Duration(milliseconds: 2000),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Đã kết nối internet',
+                  message: 'Đã kết nối internet!',
+                  contentType: ContentType.success,
+                ),
               ),
-            ));
+            );
         } else if (state is NotConnected) {
           showCupertinoDialog(
             context: context,
@@ -46,14 +49,14 @@ class BrandDetailBody extends StatelessWidget {
                 content: Text('Vui lòng kết nối Internet'),
                 actions: [
                   TextButton(
-                      onPressed: () {
-                        final stateInternet =
-                            context.read<InternetBloc>().state;
-                        if (stateInternet is Connected) {
-                          Navigator.pop(context);
-                        } else {}
-                      },
-                      child: const Text('Đồng ý'))
+                    onPressed: () {
+                      final stateInternet = context.read<InternetBloc>().state;
+                      if (stateInternet is Connected) {
+                        Navigator.pop(context);
+                      } else {}
+                    },
+                    child: const Text('Đồng ý'),
+                  ),
                 ],
               );
             },
@@ -76,36 +79,31 @@ class BrandDetailBody extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 180 * hem,
-                                decoration: const BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            'assets/images/background_splash.png'),
-                                        fit: BoxFit.cover))),
-                            SizedBox(
-                              height: 120 * hem,
-                            )
+                              width: MediaQuery.of(context).size.width,
+                              height: 180 * hem,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                    'assets/images/background_splash.png',
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 120 * hem),
                           ],
                         ),
-                        // Positioned(
-                        //   top: 80 * hem,
-                        //   left: 0 * fem,
-                        //   right: 0 * fem,
-                        //   child: BlocProvider(
-                        //     create: (context) => WishlistBloc(
-                        //         studentRepository:
-                        //             context.read<StudentRepository>(),
-                        //         wishListRepository:
-                        //             context.read<WishListRepository>()),
-                        //     child: InformationCardBrandDetail(
-                        //       hem: hem,
-                        //       fem: fem,
-                        //       ffem: ffem,
-                        //       brandModel: state.brand,
-                        //     ),
-                        //   ),
-                        // ),
+                        Positioned(
+                          top: 80 * hem,
+                          left: 0 * fem,
+                          right: 0 * fem,
+                          child: InformationCardBrandDetail(
+                            hem: hem,
+                            fem: fem,
+                            ffem: ffem,
+                            brandModel: state.brand,
+                          ),
+                        ),
                       ],
                     ),
                     BrandDetailShadow(
@@ -117,18 +115,27 @@ class BrandDetailBody extends StatelessWidget {
                       },
                       brandModel: state.brand,
                     ),
-                    SizedBox(
-                      height: 5 * hem,
-                    ),
+                    SizedBox(height: 5 * hem),
                     BlocProvider(
-                      create: (context) => BrandBloc(
-                          brandRepository: context.read<BrandRepository>())
-                        ..add(LoadBrandCampaignsById(id: state.brand.id)),
+                      create:
+                          (context) => BrandBloc(
+                            brandRepository: context.read<BrandRepository>(),
+                          )..add(
+                            LoadBrandCampaignsById(
+                              id: state.brand.id,
+                              page: 1,
+                              size: 10,
+                            ),
+                          ),
                       child: BrandCampaigns(
-                          fem: fem, ffem: ffem, hem: hem, id: state.brand.id),
-                    )
+                        fem: fem,
+                        ffem: ffem,
+                        hem: hem,
+                        id: state.brand.id,
+                      ),
+                    ),
                   ]),
-                )
+                ),
               ],
             );
           }
@@ -144,28 +151,19 @@ Widget buildBrandDetailShimmer(double fem, double hem) {
     crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
-      SizedBox(
-        height: 120 * fem,
-      ),
+      SizedBox(height: 120 * fem),
       Container(
         margin: EdgeInsets.only(left: 15 * fem, right: 15 * fem),
         color: Colors.white,
-        child: ShimmerWidget.rectangular(
-          height: 150 * hem,
-        ),
+        child: ShimmerWidget.rectangular(height: 150 * hem),
       ),
       Container(
         margin: EdgeInsets.only(left: 15 * fem, right: 15 * fem, top: 20 * hem),
-        child: ShimmerWidget.rectangular(
-          height: 100 * hem,
-        ),
+        child: ShimmerWidget.rectangular(height: 100 * hem),
       ),
       Container(
         margin: EdgeInsets.only(left: 15 * fem, right: 15 * fem, top: 20 * hem),
-        child: ShimmerWidget.rectangular(
-          height: 20 * hem,
-          width: 150 * fem,
-        ),
+        child: ShimmerWidget.rectangular(height: 20 * hem, width: 150 * fem),
       ),
       Column(
         children: [
@@ -184,7 +182,7 @@ Widget buildBrandDetailShimmer(double fem, double hem) {
             ),
           ),
         ],
-      )
+      ),
     ],
   );
 }
@@ -202,8 +200,9 @@ void _detailModelBottomSheet(context, brandModel) {
       return Container(
         height: 500 * hem,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15 * fem),
-            color: klighGreyColor),
+          borderRadius: BorderRadius.circular(15 * fem),
+          color: klighGreyColor,
+        ),
         child: DetailShowdalBottom(
           hem: hem,
           fem: fem,

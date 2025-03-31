@@ -56,17 +56,19 @@ class _BodyState extends State<CampaignScreenBody> {
         if (state is Connected) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-              elevation: 0,
-              duration: const Duration(milliseconds: 2000),
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.transparent,
-              content: AwesomeSnackbarContent(
-                title: 'Đã kết nối internet',
-                message: 'Đã kết nối internet!',
-                contentType: ContentType.success,
+            ..showSnackBar(
+              SnackBar(
+                elevation: 0,
+                duration: const Duration(milliseconds: 2000),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Đã kết nối internet',
+                  message: 'Đã kết nối internet!',
+                  contentType: ContentType.success,
+                ),
               ),
-            ));
+            );
         } else if (state is NotConnected) {
           showCupertinoDialog(
             context: context,
@@ -76,14 +78,14 @@ class _BodyState extends State<CampaignScreenBody> {
                 content: Text('Vui lòng kết nối Internet'),
                 actions: [
                   TextButton(
-                      onPressed: () {
-                        final stateInternet =
-                            context.read<InternetBloc>().state;
-                        if (stateInternet is Connected) {
-                          Navigator.pop(context);
-                        } else {}
-                      },
-                      child: const Text('Đồng ý'))
+                    onPressed: () {
+                      final stateInternet = context.read<InternetBloc>().state;
+                      if (stateInternet is Connected) {
+                        Navigator.pop(context);
+                      } else {}
+                    },
+                    child: const Text('Đồng ý'),
+                  ),
                 ],
               );
             },
@@ -93,7 +95,7 @@ class _BodyState extends State<CampaignScreenBody> {
       child: RefreshIndicator(
         onRefresh: () async {
           context.read<CampaignBloc>().add(LoadCampaigns());
-          context.read<BrandBloc>().add(LoadBrands());
+          context.read<BrandBloc>().add(LoadBrands(page: 1, size: 10));
         },
         child: CustomScrollView(
           controller: context.read<CampaignBloc>().scrollController,
@@ -108,33 +110,43 @@ class _BodyState extends State<CampaignScreenBody> {
                       builder: (context, state) {
                         if (state is Unverified) {
                           return Container(
-                              padding: EdgeInsets.only(
-                                  top: 15 * fem, bottom: 15 * fem),
-                              color: kbgWhiteColor,
-                              child: CardForUnVerified(
-                                  fem: fem, hem: hem, ffem: ffem));
+                            padding: EdgeInsets.only(
+                              top: 15 * fem,
+                              bottom: 15 * fem,
+                            ),
+                            color: kbgWhiteColor,
+                            child: CardForUnVerified(
+                              fem: fem,
+                              hem: hem,
+                              ffem: ffem,
+                            ),
+                          );
                         } else if (state is Verified) {
                           return Container(
-                              padding: EdgeInsets.only(
-                                  top: 15 * fem, bottom: 15 * fem),
-                              color: kbgWhiteColor,
-                              child: MemberShipCard(
-                                  fem: fem,
-                                  hem: hem,
-                                  ffem: ffem,
-                                  heightText: heightText,
-                                  studentModel: state.studentModel));
+                            padding: EdgeInsets.only(
+                              top: 15 * fem,
+                              bottom: 15 * fem,
+                            ),
+                            color: kbgWhiteColor,
+                            child: MemberShipCard(
+                              fem: fem,
+                              hem: hem,
+                              ffem: ffem,
+                              heightText: heightText,
+                              studentModel: state.studentModel,
+                            ),
+                          );
                         }
                         return Center(
-                            child: Lottie.asset(
-                                'assets/animations/loading-screen.json',
-                                width: 50 * fem,
-                                height: 50 * hem));
+                          child: Lottie.asset(
+                            'assets/animations/loading-screen.json',
+                            width: 50 * fem,
+                            height: 50 * hem,
+                          ),
+                        );
                       },
                     ),
-                    SizedBox(
-                      height: 5 * hem,
-                    ),
+                    SizedBox(height: 5 * hem),
 
                     //Hôm nay có gì
                     Container(
@@ -149,16 +161,15 @@ class _BodyState extends State<CampaignScreenBody> {
                             child: Text(
                               'HÔM NAY CÓ GÌ',
                               style: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
-                                fontSize: 15 * ffem,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w800,
-                              )),
+                                textStyle: TextStyle(
+                                  fontSize: 15 * ffem,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
                             ),
                           ),
-                          SizedBox(
-                            height: 10 * hem,
-                          ),
+                          SizedBox(height: 10 * hem),
                           BlocBuilder<CampaignBloc, CampaignState>(
                             builder: (context, state) {
                               if (state is CampaignsLoaded) {
@@ -166,11 +177,14 @@ class _BodyState extends State<CampaignScreenBody> {
                                   return Container(
                                     width: double.infinity,
                                     margin: EdgeInsets.only(
-                                        left: 15 * fem, right: 15 * fem),
+                                      left: 15 * fem,
+                                      right: 15 * fem,
+                                    ),
                                     height: 220 * hem,
                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.white),
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.white,
+                                    ),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
@@ -181,7 +195,9 @@ class _BodyState extends State<CampaignScreenBody> {
                                           'assets/icons/campaign-navbar-icon.svg',
                                           width: 60 * fem,
                                           colorFilter: ColorFilter.mode(
-                                              kLowTextColor, BlendMode.srcIn),
+                                            kLowTextColor,
+                                            BlendMode.srcIn,
+                                          ),
                                         ),
                                         Center(
                                           child: Padding(
@@ -189,11 +205,12 @@ class _BodyState extends State<CampaignScreenBody> {
                                             child: Text(
                                               'Không có chiến dịch nào \nđang diễn ra!',
                                               style: GoogleFonts.openSans(
-                                                  textStyle: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16,
-                                              )),
+                                                textStyle: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -221,9 +238,7 @@ class _BodyState extends State<CampaignScreenBody> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 5 * hem,
-                    ),
+                    SizedBox(height: 5 * hem),
 
                     //Các thwung hiệu
                     Container(
@@ -239,21 +254,26 @@ class _BodyState extends State<CampaignScreenBody> {
                                 Text(
                                   'THƯƠNG HIỆU',
                                   style: GoogleFonts.openSans(
-                                      textStyle: TextStyle(
-                                    fontSize: 15 * ffem,
-                                    height: heightText,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w800,
-                                  )),
+                                    textStyle: TextStyle(
+                                      fontSize: 15 * ffem,
+                                      height: heightText,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
                                 ),
                                 InkWell(
                                   onTap: () {
                                     if (roleState is Unverified) {
                                       Navigator.pushNamed(
-                                          context, UnverifiedScreen.routeName);
+                                        context,
+                                        UnverifiedScreen.routeName,
+                                      );
                                     } else {
                                       Navigator.pushNamed(
-                                          context, BrandListScreen.routeName);
+                                        context,
+                                        BrandListScreen.routeName,
+                                      );
                                     }
                                   },
                                   child: Container(
@@ -261,32 +281,31 @@ class _BodyState extends State<CampaignScreenBody> {
                                     width: 22 * fem,
                                     margin: EdgeInsets.only(left: 8 * fem),
                                     decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(80)),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(80),
+                                    ),
                                     child: Icon(
                                       Icons.arrow_forward_rounded,
                                       size: 18 * fem,
                                       color: kDarkPrimaryColor,
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 12 * hem,
-                          ),
+                          SizedBox(height: 12 * hem),
                           BlocProvider(
-                            create: (context) => BrandBloc(
-                                brandRepository:
-                                    context.read<BrandRepository>())
-                              ..add(LoadBrands(limit: 5)),
+                            create:
+                                (context) => BrandBloc(
+                                  brandRepository:
+                                      context.read<BrandRepository>(),
+                                )..add(LoadBrands(page: 1, size: 10)),
                             child: BlocBuilder<BrandBloc, BrandState>(
-                                builder: (context, state) {
-                              if (state is BrandsLoaded) {
-                                return SizedBox(
-                                    height: 120 * hem,
+                              builder: (context, state) {
+                                if (state is BrandsLoaded) {
+                                  return SizedBox(
+                                    height: 140 * hem,
                                     width: MediaQuery.of(context).size.width,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
@@ -296,25 +315,31 @@ class _BodyState extends State<CampaignScreenBody> {
                                           return InkWell(
                                             onTap: () {
                                               if (roleState is Unverified) {
-                                                Navigator.pushNamed(context,
-                                                    UnverifiedScreen.routeName);
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  UnverifiedScreen.routeName,
+                                                );
                                               } else {
-                                                Navigator.pushNamed(context,
-                                                    BrandListScreen.routeName);
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  BrandListScreen.routeName,
+                                                );
                                               }
                                             },
                                             child: Container(
                                               width: 80 * fem,
                                               decoration: BoxDecoration(),
                                               margin: EdgeInsets.only(
-                                                  left: 5 * fem,
-                                                  right: 5 * fem),
+                                                left: 5 * fem,
+                                                right: 5 * fem,
+                                              ),
                                               child: Column(
                                                 children: [
                                                   ClipRRect(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            80 * fem),
+                                                          80 * fem,
+                                                        ),
                                                     child: Container(
                                                       width: 80 * fem,
                                                       height: 80 * hem,
@@ -330,21 +355,22 @@ class _BodyState extends State<CampaignScreenBody> {
                                                           ),
                                                           Text(
                                                             'Xem thêm',
-                                                            textAlign: TextAlign
-                                                                .center,
+                                                            textAlign:
+                                                                TextAlign
+                                                                    .center,
                                                             maxLines: 2,
-                                                            style: GoogleFonts
-                                                                .openSans(
-                                                                    textStyle:
-                                                                        TextStyle(
-                                                              fontSize:
-                                                                  10 * ffem,
-                                                              color:
-                                                                  Colors.black,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal,
-                                                            )),
+                                                            style: GoogleFonts.openSans(
+                                                              textStyle: TextStyle(
+                                                                fontSize:
+                                                                    10 * ffem,
+                                                                color:
+                                                                    Colors
+                                                                        .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal,
+                                                              ),
+                                                            ),
                                                           ),
                                                         ],
                                                       ),
@@ -356,27 +382,30 @@ class _BodyState extends State<CampaignScreenBody> {
                                           );
                                         } else {
                                           return BrandCard(
-                                              fem: fem,
-                                              hem: hem,
-                                              ffem: ffem,
-                                              brandModel: state.brands[index]);
+                                            fem: fem,
+                                            hem: hem,
+                                            ffem: ffem,
+                                            brandModel: state.brands[index],
+                                          );
                                         }
                                       },
-                                    ));
-                              }
-                              return Center(
+                                    ),
+                                  );
+                                }
+                                return Center(
                                   child: Lottie.asset(
-                                      'assets/animations/loading-screen.json',
-                                      width: 50 * fem,
-                                      height: 50 * hem));
-                            }),
+                                    'assets/animations/loading-screen.json',
+                                    width: 50 * fem,
+                                    height: 50 * hem,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 5 * hem,
-                    ),
+                    SizedBox(height: 5 * hem),
 
                     //Chiến dịch ưu đãi
                     Container(
@@ -392,19 +421,18 @@ class _BodyState extends State<CampaignScreenBody> {
                                 Text(
                                   'CHIẾN DỊCH ƯU ĐÃI',
                                   style: GoogleFonts.openSans(
-                                      textStyle: TextStyle(
-                                    fontSize: 15 * ffem,
-                                    height: heightText,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w800,
-                                  )),
+                                    textStyle: TextStyle(
+                                      fontSize: 15 * ffem,
+                                      height: heightText,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 12 * hem,
-                          ),
+                          SizedBox(height: 12 * hem),
                           // CampaignPaged()
                           BlocBuilder<CampaignBloc, CampaignState>(
                             builder: (context, state) {
@@ -415,11 +443,14 @@ class _BodyState extends State<CampaignScreenBody> {
                                   return Container(
                                     width: double.infinity,
                                     margin: EdgeInsets.only(
-                                        left: 15 * fem, right: 15 * fem),
+                                      left: 15 * fem,
+                                      right: 15 * fem,
+                                    ),
                                     height: 220 * hem,
                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.white),
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.white,
+                                    ),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
@@ -430,7 +461,9 @@ class _BodyState extends State<CampaignScreenBody> {
                                           'assets/icons/campaign-navbar-icon.svg',
                                           width: 60 * fem,
                                           colorFilter: ColorFilter.mode(
-                                              kLowTextColor, BlendMode.srcIn),
+                                            kLowTextColor,
+                                            BlendMode.srcIn,
+                                          ),
                                         ),
                                         Center(
                                           child: Padding(
@@ -438,11 +471,12 @@ class _BodyState extends State<CampaignScreenBody> {
                                             child: Text(
                                               'Không có chiến dịch nào \nđang diễn ra!',
                                               style: GoogleFonts.openSans(
-                                                  textStyle: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16,
-                                              )),
+                                                textStyle: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -453,9 +487,10 @@ class _BodyState extends State<CampaignScreenBody> {
                                   return ListView.builder(
                                     physics: NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
-                                    itemCount: state.hasReachMax
-                                        ? state.campaigns.length
-                                        : state.campaigns.length + 1,
+                                    itemCount:
+                                        state.hasReachMax
+                                            ? state.campaigns.length
+                                            : state.campaigns.length + 1,
                                     itemBuilder: (context, index) {
                                       if (index >= state.campaigns.length) {
                                         return Center(
@@ -467,15 +502,18 @@ class _BodyState extends State<CampaignScreenBody> {
                                         return GestureDetector(
                                           onTap: () {
                                             if (roleState is Unverified) {
-                                              Navigator.pushNamed(context,
-                                                  UnverifiedScreen.routeName);
+                                              Navigator.pushNamed(
+                                                context,
+                                                UnverifiedScreen.routeName,
+                                              );
                                             } else {
                                               Navigator.pushNamed(
-                                                  context,
-                                                  CampaignDetailStudentScreen
-                                                      .routeName,
-                                                  arguments: state
-                                                      .campaigns[index].id);
+                                                context,
+                                                CampaignDetailStudentScreen
+                                                    .routeName,
+                                                arguments:
+                                                    state.campaigns[index].id,
+                                              );
                                             }
                                           },
                                           child: CampaignListCard(
@@ -487,16 +525,17 @@ class _BodyState extends State<CampaignScreenBody> {
                                             onTap: () {
                                               if (roleState is Unverified) {
                                                 Navigator.pushNamed(
-                                                    context,
-                                                    UnverifiedScreen
-                                                        .routeName);
+                                                  context,
+                                                  UnverifiedScreen.routeName,
+                                                );
                                               } else {
                                                 Navigator.pushNamed(
-                                                    context,
-                                                    CampaignDetailStudentScreen
-                                                        .routeName,
-                                                    arguments: state
-                                                        .campaigns[index].id);
+                                                  context,
+                                                  CampaignDetailStudentScreen
+                                                      .routeName,
+                                                  arguments:
+                                                      state.campaigns[index].id,
+                                                );
                                               }
                                             },
                                           ),
@@ -513,16 +552,14 @@ class _BodyState extends State<CampaignScreenBody> {
                               );
                             },
                           ),
-                          SizedBox(
-                            height: 10 * hem,
-                          ),
+                          SizedBox(height: 10 * hem),
                         ],
                       ),
                     ),
                   ],
-                )
+                ),
               ]),
-            )
+            ),
           ],
         ),
       ),
