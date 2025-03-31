@@ -7,9 +7,10 @@ class CampaignDetail extends Campaign {
   // final double totalCost;
   // final String typeImage;
   final List<String> campaignDetailId;
-
+  final String brandLogo;
   const CampaignDetail({
     required this.campaignDetailId,
+    required this.brandLogo,
     required super.id,
     required super.brandId,
     required super.brandName,
@@ -35,5 +36,5 @@ class CampaignDetail extends Campaign {
   });
 
   @override
-  List<Object?> get props => super.props..addAll([campaignDetailId]);
+  List<Object?> get props => super.props..addAll([campaignDetailId, brandLogo]);
 }

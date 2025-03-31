@@ -3,6 +3,7 @@ import 'package:swallet_mobile/domain/entities/student_features/campaign_detail.
 class CampaignDetailModel extends CampaignDetail {
   const CampaignDetailModel({
     required super.campaignDetailId,
+    required super.brandLogo,
     required super.id,
     required super.brandId,
     required super.brandName,
@@ -39,6 +40,7 @@ class CampaignDetailModel extends CampaignDetail {
       // typeImage: json['typeImage'] ?? '',
       campaignName: json['campaignName'] ?? '',
       image: json['image'] ?? '',
+      brandLogo: json['brandLogo'] ?? '',
       imageName: json['imageName'] ?? '',
       file: json['file'] ?? '',
       fileName: json['fileName'] ?? '',

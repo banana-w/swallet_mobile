@@ -94,7 +94,7 @@ class Body extends StatelessWidget {
                       children: [
                         Column(
                           children: [
-                            Container(
+                            SizedBox(
                               height: 200 * hem,
                               width: MediaQuery.of(context).size.width,
                               child: Image.network(
@@ -150,7 +150,7 @@ class Body extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
+                                SizedBox(
                                   width: 300 * fem,
                                   child: Text(
                                     '${state.campaignDetailModel.campaignName}',
@@ -177,12 +177,12 @@ class Body extends StatelessWidget {
                                     ClipRRect(
                                       borderRadius:
                                           BorderRadius.circular(10 * fem),
-                                      child: Container(
+                                      child: SizedBox(
                                         height: 35 * hem,
                                         width: 35 * fem,
                                         child: Image.network(
-                                          // state.campaignDetailModel.brandLogo,
-                                          state.campaignDetailModel.image,
+                                          state.campaignDetailModel.brandLogo,
+                                          // state.campaignDetailModel.image,
                                           fit: BoxFit.fill,
                                           errorBuilder:
                                               (context, error, stackTrace) {
@@ -356,10 +356,8 @@ class Body extends StatelessWidget {
                 ],
               );
             }
-            return Container(
-              child: Center(
-                child: Text('Error'),
-              ),
+            return Center(
+              child: Text('Error'),
             );
           },
         ),
