@@ -2,60 +2,95 @@ import 'package:equatable/equatable.dart';
 
 class CampaignVoucher extends Equatable {
   final String id;
-  final String voucherId;
+  final String brandId;
+  final String brandName;
+  final String typeId;
+  final String typeName;
   final String voucherName;
-  final String voucherImage;
-  final String campaignId;
-  final String campaignName;
   final double price;
   final double rate;
-  final int quantity;
-  final int fromIndex;
-  final int toIndex;
+  final String condition;
+  final String image;
+  final String imageName;
+  final String? file; // Nullable vì có thể là null
+  final String? fileName; // Nullable vì có thể là null
   final String dateCreated;
   final String dateUpdated;
   final String description;
   final bool state;
   final bool status;
-  final int quantityInStock;
+  final int numberOfItems;
+  final int? numberOfItemsAvailable; // Nullable vì trong JSON là null
 
-  const CampaignVoucher(
-      {required this.id,
-      required this.voucherId,
-      required this.voucherName,
-      required this.voucherImage,
-      required this.campaignId,
-      required this.campaignName,
-      required this.price,
-      required this.rate,
-      required this.quantity,
-      required this.fromIndex,
-      required this.toIndex,
-      required this.dateCreated,
-      required this.dateUpdated,
-      required this.description,
-      required this.state,
-      required this.status,
-      required this.quantityInStock});
+  const CampaignVoucher({
+    required this.id,
+    required this.brandId,
+    required this.brandName,
+    required this.typeId,
+    required this.typeName,
+    required this.voucherName,
+    required this.price,
+    required this.rate,
+    required this.condition,
+    required this.image,
+    required this.imageName,
+    this.file,
+    this.fileName,
+    required this.dateCreated,
+    required this.dateUpdated,
+    required this.description,
+    required this.state,
+    required this.status,
+    required this.numberOfItems,
+    this.numberOfItemsAvailable,
+  });
+
+  factory CampaignVoucher.fromJson(Map<String, dynamic> json) {
+    return CampaignVoucher(
+      id: json['id'] as String,
+      brandId: json['brandId'] as String,
+      brandName: json['brandName'] as String,
+      typeId: json['typeId'] as String,
+      typeName: json['typeName'] as String,
+      voucherName: json['voucherName'] as String,
+      price: (json['price'] as num).toDouble(),
+      rate: (json['rate'] as num).toDouble(),
+      condition: json['condition'] as String,
+      image: json['image'] as String,
+      imageName: json['imageName'] as String,
+      file: json['file'] as String?,
+      fileName: json['fileName'] as String?,
+      dateCreated: json['dateCreated'] as String,
+      dateUpdated: json['dateUpdated'] as String,
+      description: json['description'] as String,
+      state: json['state'] as bool,
+      status: json['status'] as bool,
+      numberOfItems: json['numberOfItems'] as int,
+      numberOfItemsAvailable: json['numberOfItemsAvailable'] as int?,
+    );
+  }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         id,
-        voucherId,
+        brandId,
+        brandName,
+        typeId,
+        typeName,
         voucherName,
-        voucherImage,
-        campaignId,
-        campaignName,
         price,
         rate,
-        quantity,
-        fromIndex,
-        toIndex,
+        condition,
+        image,
+        imageName,
+        file,
+        fileName,
         dateCreated,
         dateUpdated,
         description,
         state,
         status,
-        quantityInStock
+        numberOfItems,
+        numberOfItemsAvailable,
       ];
 }

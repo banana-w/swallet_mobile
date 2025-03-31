@@ -39,6 +39,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/signup/scre
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_7_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_9_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/store_list/store_list_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/verify_studentMail/screens/verifycode_student_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/verify_email/screens/verifycode_screen.dart';
@@ -124,6 +125,11 @@ class AppRouter {
 
       case NotificationListScreen.routeName:
         return NotificationListScreen.route();
+
+      case StoreListScreen.routeName:
+        List<dynamic> args = settings.arguments as List<dynamic>;
+        return StoreListScreen.route(
+            brandId: args[0], campaignDetailModel: args[1]);
 
       case QRScreen.routeName:
         return QRScreen.route(id: settings.arguments as String);
