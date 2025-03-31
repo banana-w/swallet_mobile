@@ -1,4 +1,5 @@
 import 'package:swallet_mobile/data/models/api_response.dart';
+import 'package:swallet_mobile/data/models/lecture_features/qr_response';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
 
@@ -7,6 +8,11 @@ abstract class StudentRepository {
   Future<StudentModel?> fetchStudentById({required String id});
 
   Future<void> updateWalletByStudentId(String studentId, int point);
+
+  Future<ScanQRResponse> scanLectureQR({
+    required String qrCode,
+    required String studentId,
+  });
 
   Future<ApiResponse<List<VoucherStudentModel>>?> fetchVoucherStudentId(
     int? page,
@@ -47,10 +53,10 @@ abstract class StudentRepository {
 
   // Future<OrderModel?> createOrder(CreateOrderModel createOrderModel);
 
-  Future<StudentModel?> putVerification(
-      {required String studentId,
-      required String studentCardFont,
-      });
+  Future<StudentModel?> putVerification({
+    required String studentId,
+    required String studentCardFont,
+  });
 
   // Future<OrderDetailModel?> fetchOrderDetailByStudentId(
   //     {required String studentId, required String orderId});

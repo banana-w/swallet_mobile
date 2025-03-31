@@ -139,6 +139,31 @@ final class StudentOrderDetailLoading extends StudentState {
   List<Object?> get props => [];
 }
 
+class QRScanLoading extends StudentState {
+  const QRScanLoading();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class QRScanSuccess extends StudentState {
+  final ScanQRResponse response;
+
+  const QRScanSuccess(this.response);
+
+  @override
+  List<Object?> get props => [response];
+}
+
+class QRScanFailed extends StudentState {
+  final String error;
+
+  const QRScanFailed(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}
+
 // final class StudentOrderDetailLoaded extends StudentState {
 //   final OrderDetailModel orderDetailModel;
 

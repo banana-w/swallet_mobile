@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class AppBarStore extends StatelessWidget implements PreferredSizeWidget {
   const AppBarStore({
     super.key,
@@ -20,19 +19,23 @@ class AppBarStore extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       flexibleSpace: Container(
         decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/images/background_splash.png'),
-                fit: BoxFit.cover)),
+          image: DecorationImage(
+            image: AssetImage('assets/images/background_splash.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
       ),
       toolbarHeight: 50 * hem,
       centerTitle: true,
       title: Text(
-        'UniBean',
+        'Swallet',
         style: GoogleFonts.openSans(
-            textStyle: TextStyle(
-                fontSize: 22 * ffem,
-                fontWeight: FontWeight.w900,
-                color: Colors.white)),
+          textStyle: TextStyle(
+            fontSize: 22 * ffem,
+            fontWeight: FontWeight.w900,
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }

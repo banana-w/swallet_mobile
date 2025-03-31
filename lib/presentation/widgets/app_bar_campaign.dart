@@ -6,7 +6,6 @@ import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_list_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
-
 class AppBarCampaign extends StatelessWidget implements PreferredSizeWidget {
   const AppBarCampaign({
     super.key,

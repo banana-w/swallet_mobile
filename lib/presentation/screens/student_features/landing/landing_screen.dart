@@ -8,6 +8,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/profile/pro
 import 'package:swallet_mobile/presentation/screens/student_features/campaign/campaign_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/challenge/challenge_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/landing/components/cus_nav_bar.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/qr_view/qr_student_view_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/voucher_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/app_bar_campaign.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
@@ -92,13 +93,14 @@ class LandingScreen extends StatelessWidget {
           elevation: 5 * fem,
           shape: const CircleBorder(),
           onPressed: () async {
-            final studentId = await AuthenLocalDataSource.getStudentId();
+            final student = await AuthenLocalDataSource.getStudent();
+            final studentId = student!.id;
             if (studentId != null) {
-              // Navigator.pushNamed(
-              //   context,
-              //   QRScreen.routeName,
-              //   arguments: studentId,
-              // );
+              Navigator.pushNamed(
+                context,
+                QrStudentViewScreen.routeName,
+                arguments: studentId,
+              );
             } else {
               Navigator.pushNamed(context, UnverifiedScreen.routeName);
             }

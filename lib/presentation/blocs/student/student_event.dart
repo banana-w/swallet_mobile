@@ -4,6 +4,16 @@ sealed class StudentEvent extends Equatable {
   const StudentEvent();
 }
 
+class ScanLectureQR extends StudentEvent {
+  final String qrCode;
+  final String studentId;
+
+  const ScanLectureQR({required this.qrCode, required this.studentId});
+
+  @override
+  List<Object> get props => [qrCode, studentId];
+}
+
 final class LoadStudentVouchers extends StudentEvent {
   final int page;
   final int limit;
@@ -230,15 +240,13 @@ final class UpdateVerification extends StudentEvent {
   });
 
   @override
-  List<Object?> get props => [
-    studentId,
-    studentCardFront,
-  ];
+  List<Object?> get props => [studentId, studentCardFront];
 }
+
 class SkipUpdateVerification extends StudentEvent {
   final String studentId;
   const SkipUpdateVerification({required this.studentId});
-  
+
   @override
   List<Object?> get props => [studentId];
 }
