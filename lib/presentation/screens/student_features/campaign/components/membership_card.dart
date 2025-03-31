@@ -90,10 +90,9 @@ class MemberShipCard extends StatelessWidget {
                                 EdgeInsets.only(left: 20 * fem, top: 0 * hem),
                             child: Row(
                               children: [
-                                // studentModel.greenWalletBalance == 0
-                                1 == 0
+                                studentModel.coinBalance == 0
                                     ? Text(
-                                        '${0.toStringAsFixed(0)}',
+                                        '${studentModel.coinBalance?.toStringAsFixed(0)}',
                                         style: GoogleFonts.openSans(
                                             textStyle: TextStyle(
                                           fontSize: 18 * ffem,
@@ -103,7 +102,7 @@ class MemberShipCard extends StatelessWidget {
                                         )),
                                       )
                                     : Text(
-                                        '${formatter.format(1000)}',
+                                        formatter.format(studentModel.coinBalance),
                                         style: GoogleFonts.openSans(
                                             textStyle: TextStyle(
                                           fontSize: 18 * ffem,
