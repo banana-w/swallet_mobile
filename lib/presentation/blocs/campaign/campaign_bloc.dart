@@ -34,8 +34,9 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
     emit(CampaignLoading());
     try {
       var apiResponse = await campaignRepository.fecthCampaigns(
+        searchName: null,
         page: event.page,
-        limit: event.limit,
+        size: event.limit,
       );
       if (apiResponse!.totalPages < apiResponse.size) {
         emit(
@@ -71,9 +72,9 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
           page++;
           var apiResponse = await campaignRepository.fecthCampaigns(
             page: page,
-            limit: event.limit,
+            size: event.limit,
           );
-          if (apiResponse!.result.length == 0) {
+          if (apiResponse!.result.isEmpty) {
             emit(
               CampaignsLoaded(
                 campaigns: List.from((this.state as CampaignsLoaded).campaigns)

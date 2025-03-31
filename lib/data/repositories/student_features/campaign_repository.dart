@@ -12,75 +12,59 @@ import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher
 import 'package:swallet_mobile/domain/interface_repositories/student_features/campaign_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
-import '../../models.dart';
 
 class CampaignRepositoryImp implements CampaignRepository {
   final _studentRepository = StudentRepositoryImp();
-  String endPoint = '${baseURL}campaigns';
+  String endPoint = '${baseURL}Campaign';
   String sort = 'Id%2Cdesc';
   int page = 1;
   int limit = 3;
   String? token;
 
-  @override
+ @override
   Future<ApiResponse<List<CampaignModel>>?> fecthCampaigns({
+    String? searchName,
     int? page,
-    int? limit,
+    int? size,
   }) async {
     try {
-      final Map<String, String> headers = {'Content-Type': 'application/json'};
-      if (page == null) {
-        page = this.page;
-      }
-      if (limit == null) {
-        limit = this.limit;
-      }
-      final authenModel = await AuthenLocalDataSource.getAuthen();
-      final studentModel = await _studentRepository.fetchStudentById(
-        id: authenModel!.accountId,
-      );
-      if (studentModel == null) {
-        http.Response response = await http.get(
-          Uri.parse('$endPoint?stateIds=3&sort=$sort&page=$page&limit=$limit'),
-          headers: headers,
-        );
+      // Headers khớp với curl
+      final Map<String, String> headers = {
+        'accept': 'text/plain', // Thay vì Content-Type
+      };
 
-        if (response.statusCode == 200) {
-          final result = jsonDecode(utf8.decode(response.bodyBytes));
-          ApiResponse<List<CampaignModel>> apiResponse =
-              ApiResponse<List<CampaignModel>>.fromJson(
-                result,
-                (data) => data.map((e) => CampaignModel.fromJson(e)).toList(),
-              );
-          return apiResponse;
-        } else {
-          return null;
-        }
+      // Gán giá trị mặc định nếu không truyền tham số
+      page ??= this.page;
+      size ??= limit;
+
+      // Tạo query string dựa trên curl
+      final queryParams = {
+        if (searchName != null) 'searchName': searchName,
+        'page': page.toString(),
+        'size': size.toString(),
+      };
+      // Tạo URI với query parameters
+      final uri = Uri.parse('$endPoint/getAll').replace(queryParameters: queryParams);
+
+      // Gửi yêu cầu HTTP GET
+      final response = await http.get(uri, headers: headers);
+
+      if (response.statusCode == 200) {
+        // Giả định response là JSON dù header accept là text/plain
+        final result = jsonDecode(utf8.decode(response.bodyBytes));
+        final apiResponse = ApiResponse<List<CampaignModel>>.fromJson(
+          result,
+          (data) => (data).map((e) => CampaignModel.fromJson(e)).toList(),
+        );
+        return apiResponse;
       } else {
-        String campusId = studentModel.campusId ?? '';
-        http.Response response = await http.get(
-          Uri.parse(
-            '$endPoint?m&campusIds=$campusId&stateIds=3&sort=$sort&page=$page&limit=$limit',
-          ),
-          headers: headers,
-        );
-
-        if (response.statusCode == 200) {
-          final result = jsonDecode(utf8.decode(response.bodyBytes));
-          ApiResponse<List<CampaignModel>> apiResponse =
-              ApiResponse<List<CampaignModel>>.fromJson(
-                result,
-                (data) => data.map((e) => CampaignModel.fromJson(e)).toList(),
-              );
-          return apiResponse;
-        } else {
-          return null;
-        }
+        return null;
       }
     } catch (e) {
       throw Exception(e.toString());
     }
   }
+
 
   @override
   Future<CampaignDetailModel?> fecthCampaignById({required String id}) async {
@@ -257,4 +241,5 @@ class CampaignRepositoryImp implements CampaignRepository {
       throw Exception(e.toString());
     }
   }
+  
 }

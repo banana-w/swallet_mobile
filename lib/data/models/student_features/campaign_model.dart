@@ -11,8 +11,8 @@ class CampaignModel extends Campaign {
     required super.campaignName,
     required super.image,
     required super.imageName,
-    required super.file,
-    required super.fileName,
+    super.file,
+    super.fileName,
     required super.condition,
     required super.link,
     required super.startOn,
@@ -23,9 +23,6 @@ class CampaignModel extends Campaign {
     required super.dateCreated,
     required super.dateUpdated,
     required super.description,
-    required super.currentStateId,
-    required super.currentState,
-    required super.currentStateName,
     required super.status,
   });
 
@@ -52,9 +49,6 @@ class CampaignModel extends Campaign {
       dateCreated: json['dateCreated'] ?? '',
       dateUpdated: json['dateUpdated'] ?? '',
       description: json['description'] ?? '',
-      currentStateId: json['currentStateId'] ?? 0,
-      currentState: json['currentState'] ?? '',
-      currentStateName: json['currentStateName'] ?? '',
       status: json['status'] ?? true,
     );
   }
@@ -82,9 +76,6 @@ class CampaignModel extends Campaign {
     data['dateCreated'] = dateCreated;
     data['dateUpdated'] = dateUpdated;
     data['description'] = description;
-    data['currentStateId'] = currentStateId;
-    data['currentState'] = currentState;
-    data['currentStateName'] = currentStateName;
     data['status'] = status;
     return data;
   }

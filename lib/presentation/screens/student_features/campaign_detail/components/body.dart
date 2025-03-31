@@ -9,11 +9,11 @@ import 'package:swallet_mobile/domain/interface_repositories/student_features/ca
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/components/campaign_detail_showdal.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/components/detail_showdal_bottom.dart';
 
 import '../../../../widgets/shimmer_widget.dart';
-import 'campaign_detail_showdal.dart';
-import 'campaign_store_card.dart';
-import 'detail_showdal_bottom.dart';
+
 
 class Body extends StatelessWidget {
   const Body({super.key, required this.id});
@@ -94,7 +94,7 @@ class Body extends StatelessWidget {
                       children: [
                         Column(
                           children: [
-                            Container(
+                            SizedBox(
                               height: 200 * hem,
                               width: MediaQuery.of(context).size.width,
                               child: Image.network(
@@ -150,7 +150,7 @@ class Body extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
+                                SizedBox(
                                   width: 300 * fem,
                                   child: Text(
                                     '${state.campaignDetailModel.campaignName}',
@@ -177,12 +177,12 @@ class Body extends StatelessWidget {
                                     ClipRRect(
                                       borderRadius:
                                           BorderRadius.circular(10 * fem),
-                                      child: Container(
+                                      child: SizedBox(
                                         height: 35 * hem,
                                         width: 35 * fem,
                                         child: Image.network(
-                                          // state.campaignDetailModel.brandLogo,
-                                          state.campaignDetailModel.image,
+                                          state.campaignDetailModel.brandLogo,
+                                          // state.campaignDetailModel.image,
                                           fit: BoxFit.fill,
                                           errorBuilder:
                                               (context, error, stackTrace) {
@@ -307,7 +307,7 @@ class Body extends StatelessWidget {
                     //               child: ListView.builder(
                     //                 physics: NeverScrollableScrollPhysics(),
                     //                 scrollDirection: Axis.horizontal,
-                    //                 itemCount: 1,
+                    //                 itemCount: state.campaignStores.length,
                     //                 itemBuilder: (context, index) {
                     //                   var storeModel =
                     //                       state.campaignStores[index];
@@ -331,14 +331,33 @@ class Body extends StatelessWidget {
                     SizedBox(
                       height: 20 * hem,
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          right: 15 * fem, left: 25 * fem, bottom: 10 * hem),
+                      child: Text(
+                        'Ưu đãi trong chiến dịch',
+                        style: GoogleFonts.openSans(
+                            textStyle: TextStyle(
+                          fontSize: 16.5 * ffem,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700,
+                        )),
+                      ),
+                    ),
+                    // CampaignVoucherList(
+                    //     fem: fem,
+                    //     hem: hem,
+                    //     ffem: ffem,
+                    //     campaignDetallModeil: state.campaignDetailModel),
+                    SizedBox(
+                      height: 20 * hem,
+                    )
                   ]))
                 ],
               );
             }
-            return Container(
-              child: Center(
-                child: Text('Error'),
-              ),
+            return Center(
+              child: Text('Error'),
             );
           },
         ),

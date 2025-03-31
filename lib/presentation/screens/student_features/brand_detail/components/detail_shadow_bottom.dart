@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:swallet_mobile/data/models/student_features/brand_model.dart';
 
-import '../../../../config/constants.dart';
 import '../../../../widgets/shimmer_widget.dart';
 
 class DetailShowdalBottom extends StatelessWidget {
@@ -12,13 +11,13 @@ class DetailShowdalBottom extends StatelessWidget {
     required this.hem,
     required this.fem,
     required this.ffem,
-    required this.campaignDetailModel,
+    required this.brandModel,
   });
 
   final double hem;
   final double fem;
   final double ffem;
-  final CampaignDetailModel campaignDetailModel;
+  final BrandModel brandModel;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +69,7 @@ class DetailShowdalBottom extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(left: 15 * fem),
                           child: Text(
-                            'Thời gian chiến dịch',
+                            'Thời gian làm việc',
                             style: GoogleFonts.openSans(
                                 textStyle: TextStyle(
                               fontSize: 16 * ffem,
@@ -83,7 +82,8 @@ class DetailShowdalBottom extends StatelessWidget {
                           padding: EdgeInsets.only(
                               top: 5 * hem, left: 15 * fem, right: 15 * fem),
                           child: Text(
-                            '${changeFormateDate(campaignDetailModel.startOn)} - ${changeFormateDate(campaignDetailModel.endOn)}',
+                            // ' ${formatTime(brandModel.openingHours)} - ${formatTime(brandModel.closingHours)}.',
+                            ' ${formatTime(brandModel.openingHours)} - ${formatTime(brandModel.closingHours)}.',
                             textAlign: TextAlign.justify,
                             softWrap: true,
                             style: GoogleFonts.openSans(
@@ -101,7 +101,7 @@ class DetailShowdalBottom extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(left: 15 * fem),
                           child: Text(
-                            'Thể lệ chiến dịch',
+                            'Thông tin liên lạc',
                             style: GoogleFonts.openSans(
                                 textStyle: TextStyle(
                               fontSize: 16 * ffem,
@@ -113,21 +113,27 @@ class DetailShowdalBottom extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(
                               top: 5 * hem, left: 15 * fem, right: 15 * fem),
-                          // child: Text(
-                          //   campaignDetailModel.condition,
-                          //   textAlign: TextAlign.justify,
-                          //   softWrap: true,
-                          //   style: GoogleFonts.openSans(
-                          //     textStyle: TextStyle(
-                          //       fontSize: 13 * ffem,
-                          //       color: Colors.black,
-                          //       fontWeight: FontWeight.normal,
-                          //     ),
-                          //   ),
-                          // ),
-                          child: HtmlWidget(
-                            '${campaignDetailModel.condition}',
-                            textStyle: GoogleFonts.openSans(
+                          child: Text(
+                            'Địa chỉ email: ${brandModel.email}.',
+                            // textAlign: TextAlign.justify,
+                            softWrap: true,
+                            style: GoogleFonts.openSans(
+                              textStyle: TextStyle(
+                                fontSize: 15 * ffem,
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: 5 * hem, left: 15 * fem, right: 15 * fem),
+                          child: Text(
+                            'Số điện thoại: ${brandModel.phone}.',
+                            // textAlign: TextAlign.justify,
+                            softWrap: true,
+                            style: GoogleFonts.openSans(
                               textStyle: TextStyle(
                                 fontSize: 15 * ffem,
                                 color: Colors.black,
@@ -142,7 +148,7 @@ class DetailShowdalBottom extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(left: 15 * fem),
                           child: Text(
-                            'Nội dung chiến dịch',
+                            'Thông tin về chiến dịch',
                             style: GoogleFonts.openSans(
                                 textStyle: TextStyle(
                               fontSize: 16 * ffem,
@@ -155,7 +161,7 @@ class DetailShowdalBottom extends StatelessWidget {
                           padding: EdgeInsets.only(
                               top: 5 * hem, left: 15 * fem, right: 15 * fem),
                           child: HtmlWidget(
-                            '${campaignDetailModel.description}',
+                            brandModel.description,
                             textStyle: GoogleFonts.openSans(
                               textStyle: TextStyle(
                                 fontSize: 15 * ffem,
@@ -164,6 +170,9 @@ class DetailShowdalBottom extends StatelessWidget {
                               ),
                             ),
                           ),
+                        ),
+                        SizedBox(
+                          height: 15 * hem,
                         ),
                       ],
                     ),
@@ -245,4 +254,21 @@ Widget buildShowdalShimmer(double fem, double hem) {
       ),
     ],
   );
+}
+
+// String changeFormateDate(String dateTime) {
+//   DateTime formatDate = DateTime.parse(dateTime);
+//   String formattedDate = DateFormat('dd/MM/yyyy').format(formatDate);
+//   return formattedDate;
+// }
+
+String formatTime(String inputTimeString) {
+  // Parse the input time string
+  DateTime parsedTime = DateTime.parse("2024-01-01 $inputTimeString");
+
+  // Format the DateTime object to a string with "h:mm" format
+  String formattedTime =
+      "${parsedTime.hour.toString().padLeft(2, '0')}:${parsedTime.minute.toString().padLeft(2, '0')}";
+
+  return formattedTime;
 }

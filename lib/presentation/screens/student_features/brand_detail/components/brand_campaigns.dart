@@ -3,22 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
 
-import '../../../../blocs/blocs.dart';
 import '../../../../config/constants.dart';
 import '../../../../widgets/shimmer_widget.dart';
-import 'campaign_list_card.dart';
+import '../../campaign/components/campaign_list_card.dart';
 
 class BrandCampaigns extends StatelessWidget {
-  const BrandCampaigns({
-    super.key,
-    required this.fem,
-    required this.ffem,
-    required this.hem,
-    required this.id,
-  });
+  const BrandCampaigns(
+      {super.key,
+      required this.fem,
+      required this.ffem,
+      required this.hem,
+      required this.id});
 
   final double fem;
   final double ffem;
@@ -40,9 +37,8 @@ class BrandCampaigns extends StatelessWidget {
                   margin: EdgeInsets.only(left: 15 * fem, right: 15 * fem),
                   height: 220 * hem,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -50,10 +46,8 @@ class BrandCampaigns extends StatelessWidget {
                       SvgPicture.asset(
                         'assets/icons/empty-icon.svg',
                         width: 60 * fem,
-                        colorFilter: ColorFilter.mode(
-                          kLowTextColor,
-                          BlendMode.srcIn,
-                        ),
+                        colorFilter:
+                            ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
                       ),
                       Center(
                         child: Padding(
@@ -62,16 +56,17 @@ class BrandCampaigns extends StatelessWidget {
                             'Không có chiến dịch nào \nđang diễn ra',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.openSans(
-                              textStyle: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                              ),
-                            ),
+                                textStyle: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            )),
                           ),
                         ),
                       ),
-                      SizedBox(height: 10 * fem),
+                      SizedBox(
+                        height: 10 * fem,
+                      ),
                     ],
                   ),
                 );
@@ -90,28 +85,28 @@ class BrandCampaigns extends StatelessWidget {
                               return Text(
                                 'Chiến dịch đang diễn ra (${state.campaignModels.length})',
                                 style: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 16 * ffem,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                    textStyle: TextStyle(
+                                  fontSize: 16 * ffem,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                )),
                               );
                             }
                             return Text(
                               'Chiến dịch đang diễn ra',
                               style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 16 * ffem,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                                  textStyle: TextStyle(
+                                fontSize: 16 * ffem,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              )),
                             );
                           },
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Container(
                         child: ListView.builder(
                           padding: EdgeInsets.zero,
@@ -123,10 +118,8 @@ class BrandCampaigns extends StatelessWidget {
                             return GestureDetector(
                               onTap: () {
                                 Navigator.pushNamed(
-                                  context,
-                                  CampaignDetailStudentScreen.routeName,
-                                  arguments: campaignModel.id,
-                                );
+                                    context, CampaignDetailStudentScreen.routeName,
+                                    arguments: campaignModel.id);
                               },
                               child: CampaignListCard(
                                 fem: fem,
@@ -135,10 +128,8 @@ class BrandCampaigns extends StatelessWidget {
                                 campaignModel: campaignModel,
                                 onTap: () {
                                   Navigator.pushNamed(
-                                    context,
-                                    CampaignDetailStoreScreen.routeName,
-                                    arguments: campaignModel.id,
-                                  );
+                                      context, CampaignDetailStudentScreen.routeName,
+                                      arguments: campaignModel.id);
                                 },
                               ),
                             );
@@ -165,11 +156,17 @@ Widget buildBrandVouchersShimmer(double fem, double hem) {
     children: [
       Container(
         margin: EdgeInsets.only(left: 15 * fem, top: 20 * hem),
-        child: ShimmerWidget.rectangular(height: 130 * hem, width: 320 * fem),
+        child: ShimmerWidget.rectangular(
+          height: 130 * hem,
+          width: 320 * fem,
+        ),
       ),
       Container(
         margin: EdgeInsets.only(left: 15 * fem, top: 20 * hem),
-        child: ShimmerWidget.rectangular(height: 130 * hem, width: 320 * fem),
+        child: ShimmerWidget.rectangular(
+          height: 130 * hem,
+          width: 320 * fem,
+        ),
       ),
     ],
   );

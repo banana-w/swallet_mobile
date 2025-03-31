@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/components/body.dart';
 
 import 'components/body.dart';
 
-class CampaignDetailScreen extends StatelessWidget {
-  static const String routeName = '/campaign-detail-student';
+class CampaignDetailStoreScreen extends StatelessWidget {
+  static const String routeName = '/campaign-detail-store';
 
   static Route route({required String campaignId}) {
     return MaterialPageRoute(
-      builder: (_) => CampaignDetailScreen(campaignId: campaignId),
+      builder: (_) => CampaignDetailStoreScreen(
+        campaignId: campaignId,
+      ),
       settings: const RouteSettings(arguments: routeName),
     );
   }
 
-  const CampaignDetailScreen({super.key, required this.campaignId});
+  const CampaignDetailStoreScreen({super.key, required this.campaignId});
 
   final String campaignId;
 
@@ -39,11 +40,8 @@ class CampaignDetailScreen extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      '/landing-screen',
-                      (Route<dynamic> route) => false,
-                    );
+                    Navigator.pushNamedAndRemoveUntil(context,
+                        '/landing-screen-store', (Route<dynamic> route) => false);
                   },
                   child: Icon(
                     Icons.arrow_back_rounded,
@@ -59,7 +57,9 @@ class CampaignDetailScreen extends StatelessWidget {
         ),
         backgroundColor: klighGreyColor,
         extendBodyBehindAppBar: true,
-        body: Body(id: campaignId),
+        body: Body(
+          id: campaignId,
+        ),
       ),
     );
   }

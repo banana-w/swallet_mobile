@@ -1,35 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
+import 'package:swallet_mobile/data/models/student_features/brand_model.dart';
+
 import '../../../../config/constants.dart';
 
-class CampaignDetailShowdal extends StatelessWidget {
-  const CampaignDetailShowdal(
+class BrandDetailShadow extends StatelessWidget {
+  const BrandDetailShadow(
       {super.key,
       required this.fem,
       required this.hem,
       required this.ffem,
       required this.onTap,
-      required this.campaignDetailModel});
-
+      required this.brandModel});
   final double fem;
   final double hem;
   final double ffem;
   final VoidCallback onTap;
-  final CampaignDetailModel campaignDetailModel;
-
+  final BrandModel brandModel;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      // onTap: () {
-      //   checkLength(campaignDetailModel.condition);
-      // },
       child: Container(
         margin: EdgeInsets.only(right: 15 * fem, left: 15 * fem),
         padding: EdgeInsets.only(
-            right: 10 * fem, left: 10 * fem, top: 15 * hem, bottom: 15 * hem),
+            right: 10 * fem, left: 15 * fem, top: 15 * hem, bottom: 15 * hem),
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10), color: Colors.white),
@@ -40,7 +35,7 @@ class CampaignDetailShowdal extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(left: 0 * fem),
               child: Text(
-                'Thể lệ chiến dịch',
+                'Thông tin liên lạc',
                 style: GoogleFonts.openSans(
                     textStyle: TextStyle(
                   fontSize: 15 * ffem,
@@ -49,12 +44,30 @@ class CampaignDetailShowdal extends StatelessWidget {
                 )),
               ),
             ),
-            Container(
-              padding: EdgeInsets.only(left: 5 * fem, top: 5 * hem),
-              // height: campaignDetailModel.condition.length >= 200 ? 75 : 35,
-              child: HtmlWidget(
-                '${campaignDetailModel.condition}',
-                textStyle: GoogleFonts.openSans(
+            Padding(
+              padding: EdgeInsets.only(
+                  top: 5 * hem),
+              child: Text(
+                'Địa chỉ email: ${brandModel.email}.',
+                // textAlign: TextAlign.justify,
+                softWrap: true,
+                style: GoogleFonts.openSans(
+                  textStyle: TextStyle(
+                    fontSize: 14 * ffem,
+                    color: Colors.black,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  top: 5 * hem),
+              child: Text(
+                'Số điện thoại: ${brandModel.phone}.',
+                // textAlign: TextAlign.justify,
+                softWrap: true,
+                style: GoogleFonts.openSans(
                   textStyle: TextStyle(
                     fontSize: 14 * ffem,
                     color: Colors.black,

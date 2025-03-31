@@ -43,7 +43,7 @@ final class CampaignsFailed extends CampaignState {
 final class CampaignByIdLoaded extends CampaignState {
   final CampaignDetailModel campaignDetailModel;
 
-  CampaignByIdLoaded({required this.campaignDetailModel});
+  const CampaignByIdLoaded({required this.campaignDetailModel});
 
   @override
   List<Object?> get props => [campaignDetailModel];
