@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
@@ -92,13 +93,29 @@ class _LuckyWheelViewState extends State<LuckyWheelView> {
                 selectedPrize.value,
               );
               // Hiển thị thông báo thành công
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Đã cộng ${selectedPrize.value} Xu vào ví của bạn!',
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   SnackBar(
+              //     content: Text(
+              //       'Đã cộng ${selectedPrize.value} Xu vào ví của bạn!',
+              //     ),
+              //   ),
+              // );
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    elevation: 0,
+                    duration: const Duration(milliseconds: 2000),
+                    behavior: SnackBarBehavior.floating,
+                    backgroundColor: Colors.transparent,
+                    content: AwesomeSnackbarContent(
+                      title: 'Xin chúc mừng!',
+                      message:
+                          'Đã cộng ${selectedPrize.value} Xu vào ví của bạn!',
+                      contentType: ContentType.success,
+                    ),
                   ),
-                ),
-              );
+                );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Không tìm thấy studentId')),
@@ -111,7 +128,7 @@ class _LuckyWheelViewState extends State<LuckyWheelView> {
           }
         }
 
-        _showResultDialog();
+        // _showResultDialog();
       });
     }
   }
@@ -272,16 +289,16 @@ class _LuckyWheelViewState extends State<LuckyWheelView> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20 * hem),
-                    if (_selectedPrize.isNotEmpty)
-                      Text(
-                        'Kết quả: $_selectedPrize',
-                        style: GoogleFonts.openSans(
-                          fontSize: 16 * ffem,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
+                    // SizedBox(height: 20 * hem),
+                    // if (_selectedPrize.isNotEmpty)
+                    //   Text(
+                    //     'Kết quả: $_selectedPrize',
+                    //     style: GoogleFonts.openSans(
+                    //       fontSize: 16 * ffem,
+                    //       fontWeight: FontWeight.w600,
+                    //       color: Colors.black,
+                    //     ),
+                    //   ),
                   ],
                 ),
               );

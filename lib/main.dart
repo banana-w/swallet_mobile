@@ -165,10 +165,12 @@ class MyApp extends StatelessWidget {
                     LectureBloc(lectureRepository: LectureRepositoryImp()),
           ),
           BlocProvider(
-            create: (context) =>
-                BrandBloc(brandRepository: BrandRepositoryImp())
-                  ..add(LoadBrands(limit: 5)),),
-          BlocProvider(        
+            create:
+                (context) =>
+                    BrandBloc(brandRepository: BrandRepositoryImp())
+                      ..add(LoadBrands(page: 1, size: 10)),
+          ),
+          BlocProvider(
             create: (context) => LandingScreenBloc(),
             child: CusNavLectureBar(),
           ),

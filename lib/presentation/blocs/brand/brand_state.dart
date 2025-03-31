@@ -48,11 +48,11 @@ final class BrandVouchersByIdLoaded extends BrandState {
   List<Object?> get props => [vouchers];
 }
 
-final class BrandCampaignsByIdLoaded extends BrandState {
+class BrandCampaignsByIdLoaded extends BrandState {
   final List<CampaignModel> campaignModels;
 
-  BrandCampaignsByIdLoaded({required this.campaignModels});
+  const BrandCampaignsByIdLoaded({required this.campaignModels});
 
   @override
-  List<Object?> get props => [CampaignModel];
+  List<Object?> get props => [campaignModels];
 }

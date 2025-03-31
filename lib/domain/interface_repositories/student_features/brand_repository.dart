@@ -6,7 +6,11 @@ import 'package:swallet_mobile/data/models/student_features/voucher_model.dart';
 abstract class BrandRepository {
   const BrandRepository();
 
-  Future<ApiResponse<List<BrandModel>>?> fecthBrands({int? page, int? limit});
+  Future<ApiResponse<List<BrandModel>>?> fetchBrands({
+    int? page,
+    int? size,
+    bool status,
+  });
 
   Future<BrandModel?> fecthBrandById({required String id});
 
@@ -19,6 +23,12 @@ abstract class BrandRepository {
   Future<ApiResponse<List<CampaignModel>>?> fecthCampaignssByBrandId(
     int? page,
     int? limit, {
+    required String id,
+  });
+
+  Future<ApiResponse<List<CampaignModel>>?> fetchCampaignsByBrandId(
+    int? page,
+    int? size, { // Thay limit thành size
     required String id,
   });
 }

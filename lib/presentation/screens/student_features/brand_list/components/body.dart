@@ -25,7 +25,7 @@ class Body extends StatelessWidget {
       create:
           (context) =>
               BrandBloc(brandRepository: context.read<BrandRepository>())
-                ..add(LoadBrands()),
+                ..add(LoadBrands(page: 1, size: 10)),
       child: BlocBuilder<BrandBloc, BrandState>(
         builder: (context, state) {
           if (state is BrandLoading) {
@@ -123,8 +123,8 @@ class BrandCard extends StatelessWidget {
                     height: 100 * hem,
                     width: 120 * fem,
                     child: Image.network(
-                      // brandModel.logo,
-                      'null',
+                      brandModel.coverPhoto,
+                      // 'null',
                       fit: BoxFit.fill,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) {

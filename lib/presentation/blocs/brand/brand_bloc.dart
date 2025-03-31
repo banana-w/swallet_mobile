@@ -11,9 +11,18 @@ part 'brand_state.dart';
 
 class BrandBloc extends Bloc<BrandEvent, BrandState> {
   final BrandRepository brandRepository;
-  BrandBloc({required this.brandRepository}) : super(BrandInitial()) {
+  final ScrollController scrollController = ScrollController();
+  int page = 1;
+  bool isLoadingMore = false;
+  final bool status;
+  BrandBloc({required this.brandRepository, this.status = true})
+    : super(BrandInitial()) {
     scrollController.addListener(() {
-      add(LoadMoreBrands());
+      if (scrollController.position.pixels ==
+              scrollController.position.maxScrollExtent &&
+          !isLoadingMore) {
+        add(LoadMoreBrands());
+      }
     });
 
     on<LoadBrands>(_onLoadBrands);
@@ -23,19 +32,23 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
     on<LoadBrandCampaignsById>(_onLoadBrandCampaignsById);
   }
 
-  int page = 1;
-  ScrollController scrollController = ScrollController();
-  var isLoadingMore = false;
-
   //------------
   Future<void> _onLoadBrands(LoadBrands event, Emitter<BrandState> emit) async {
     emit(BrandLoading());
     try {
-      var apiResponse = await brandRepository.fecthBrands(
+      var apiResponse = await brandRepository.fetchBrands(
         page: event.page,
-        limit: event.limit,
+        size: event.size, // Thay limit thành size
+        status: status, // Thêm status
       );
-      if (apiResponse!.totalPages < apiResponse.size) {
+
+      if (apiResponse == null) {
+        emit(BrandsFailed(error: 'Failed to load brands'));
+        return;
+      }
+
+      // Kiểm tra nếu đã đạt đến trang cuối
+      if (apiResponse.totalPages <= page) {
         emit(
           BrandsLoaded(
             brands: apiResponse.result.toList(),
@@ -54,16 +67,29 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
     LoadMoreBrands event,
     Emitter<BrandState> emit,
   ) async {
+    if (isLoadingMore) return; // Tránh gọi nhiều lần khi đang tải
+
     try {
-      if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
-        isLoadingMore = true;
-        page++;
-        var apiResponse = await brandRepository.fecthBrands(page: page);
-        if (apiResponse!.result.length == 0) {
+      isLoadingMore = true;
+      page++; // Tăng page để tải trang tiếp theo
+
+      var apiResponse = await brandRepository.fetchBrands(
+        page: page,
+        size: 10, // Giá trị mặc định cho size, có thể thay đổi
+        status: status, // Thêm status
+      );
+
+      if (apiResponse == null) {
+        emit(BrandsFailed(error: 'Failed to load more brands'));
+        return;
+      }
+
+      final currentState = state;
+      if (currentState is BrandsLoaded) {
+        if (apiResponse.result.isEmpty || apiResponse.totalPages <= page) {
           emit(
             BrandsLoaded(
-              brands: List.from((this.state as BrandsLoaded).brands)
+              brands: List.from(currentState.brands)
                 ..addAll(apiResponse.result),
               hasReachedMax: true,
             ),
@@ -71,14 +97,17 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
         } else {
           emit(
             BrandsLoaded(
-              brands: List.from((this.state as BrandsLoaded).brands)
+              brands: List.from(currentState.brands)
                 ..addAll(apiResponse.result),
+              hasReachedMax: false,
             ),
           );
         }
       }
     } catch (e) {
       emit(BrandsFailed(error: e.toString()));
+    } finally {
+      isLoadingMore = false;
     }
   }
 
@@ -101,9 +130,9 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
   ) async {
     emit(BrandLoading());
     try {
-      final apiResponse = await brandRepository.fecthCampaignssByBrandId(
+      final apiResponse = await brandRepository.fetchCampaignsByBrandId(
         event.page,
-        event.limit,
+        event.size,
         id: event.id,
       );
       emit(BrandCampaignsByIdLoaded(campaignModels: apiResponse!.result));

@@ -15,6 +15,8 @@ import 'package:swallet_mobile/presentation/screens/store_features/transact/tran
 import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 import 'package:swallet_mobile/presentation/screens/splash/onboarding_screen.dart';
 import 'package:swallet_mobile/presentation/screens/splash/splash_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/brand_detail/brand_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/brand_list/brand_list_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign/campaign_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/challenge/challenge_screen.dart';
@@ -181,11 +183,11 @@ class AppRouter {
           storeModel: settings.arguments as StoreModel,
         );
 
-      // case BrandDetailScreen.routeName:
-      //   return BrandDetailScreen.route(id: settings.arguments as String);
+      case BrandDetailScreen.routeName:
+        return BrandDetailScreen.route(id: settings.arguments as String);
 
-      // case BrandListScreen.routeName:
-      //   return BrandListScreen.route();
+      case BrandListScreen.routeName:
+        return BrandListScreen.route();
 
       case BrandDetailStoreScreen.routeName:
         return BrandDetailStoreScreen.route(id: settings.arguments as String);
