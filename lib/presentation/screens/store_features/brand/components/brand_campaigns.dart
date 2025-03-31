@@ -112,38 +112,36 @@ class BrandCampaigns extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 10),
-                      Container(
-                        child: ListView.builder(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: state.campaignModels.length,
-                          itemBuilder: (context, index) {
-                            final campaignModel = state.campaignModels[index];
-                            return GestureDetector(
+                      ListView.builder(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: state.campaignModels.length,
+                        itemBuilder: (context, index) {
+                          final campaignModel = state.campaignModels[index];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                CampaignDetailStudentScreen.routeName,
+                                arguments: campaignModel.id,
+                              );
+                            },
+                            child: CampaignListCard(
+                              fem: fem,
+                              hem: hem,
+                              ffem: ffem,
+                              campaignModel: campaignModel,
                               onTap: () {
                                 Navigator.pushNamed(
                                   context,
-                                  CampaignDetailStudentScreen.routeName,
+                                  CampaignDetailStoreScreen.routeName,
                                   arguments: campaignModel.id,
                                 );
                               },
-                              child: CampaignListCard(
-                                fem: fem,
-                                hem: hem,
-                                ffem: ffem,
-                                campaignModel: campaignModel,
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    CampaignDetailStoreScreen.routeName,
-                                    arguments: campaignModel.id,
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

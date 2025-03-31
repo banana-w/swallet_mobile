@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/brand_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/brand/components/brand_campaigns.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/brand/components/brand_detail_showdal.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/brand/components/detail_shadow_bottom.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/brand/components/infor_card_brand_detail.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/brand_detail/components/brand_campaigns.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/brand_detail/components/brand_detail_showdal.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/brand_detail/components/detail_shadow_bottom.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/brand_detail/components/infor_card_brand_detail.dart';
 import '../../../../config/constants.dart';
 import '../../../../widgets/shimmer_widget.dart';
 
