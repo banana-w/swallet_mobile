@@ -12,7 +12,6 @@ import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher
 import 'package:swallet_mobile/domain/interface_repositories/student_features/campaign_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
-
 class CampaignRepositoryImp implements CampaignRepository {
   final _studentRepository = StudentRepositoryImp();
   String endPoint = '${baseURL}Campaign';
@@ -21,7 +20,7 @@ class CampaignRepositoryImp implements CampaignRepository {
   int limit = 3;
   String? token;
 
- @override
+  @override
   Future<ApiResponse<List<CampaignModel>>?> fecthCampaigns({
     String? searchName,
     int? page,
@@ -44,7 +43,9 @@ class CampaignRepositoryImp implements CampaignRepository {
         'size': size.toString(),
       };
       // Tạo URI với query parameters
-      final uri = Uri.parse('$endPoint/getAll').replace(queryParameters: queryParams);
+      final uri = Uri.parse(
+        '$endPoint/getAll',
+      ).replace(queryParameters: queryParams);
 
       // Gửi yêu cầu HTTP GET
       final response = await http.get(uri, headers: headers);
@@ -64,7 +65,6 @@ class CampaignRepositoryImp implements CampaignRepository {
       throw Exception(e.toString());
     }
   }
-
 
   @override
   Future<CampaignDetailModel?> fecthCampaignById({required String id}) async {
@@ -99,33 +99,41 @@ class CampaignRepositoryImp implements CampaignRepository {
     int? page,
     int? limit, {
     required String id,
+    String? searchName,
   }) async {
     try {
       token = await AuthenLocalDataSource.getToken();
       final Map<String, String> headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
+        'accept': 'text/plain', // Khớp với curl
+        'Authorization': 'Bearer $token', // Giữ Authorization từ code gốc
       };
-      if (page == null) {
-        page = this.page;
-      }
-      if (limit == null) {
-        limit = this.limit;
-      }
-      http.Response response = await http.get(
-        Uri.parse('$endPoint/$id/stores?sort=$sort&page=$page&limit=$limit'),
-        headers: headers,
-      );
+
+      // Gán giá trị mặc định nếu page hoặc size không được truyền
+      page ??= this.page;
+      limit ??= this.limit;
+
+      // Tạo query parameters
+      final queryParams = {
+        if (searchName != null && searchName.isNotEmpty)
+          'searchName': searchName,
+        'page': page.toString(),
+        'size': limit.toString(),
+      };
+
+      // Tạo URI với endpoint và query parameters
+      final uri = Uri.parse(
+        '${baseURL}Store/campaign/$id',
+      ).replace(queryParameters: queryParams);
+
+      // Gửi yêu cầu HTTP GET
+      final response = await http.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
-        ApiResponse<List<CampaignStoreModel>> apiResponse =
-            ApiResponse<List<CampaignStoreModel>>.fromJson(
-              result,
-              (data) =>
-                  data.map((e) => CampaignStoreModel.fromJson(e)).toList(),
-            );
-        print(apiResponse.result);
+        final apiResponse = ApiResponse<List<CampaignStoreModel>>.fromJson(
+          result,
+          (data) => (data).map((e) => CampaignStoreModel.fromJson(e)).toList(),
+        );
         return apiResponse;
       } else {
         return null;
@@ -136,7 +144,7 @@ class CampaignRepositoryImp implements CampaignRepository {
   }
 
   @override
-  Future<ApiResponse<List<CampaignVoucherModel>>?> fecthCampaignVouchersById(
+  Future<List<CampaignVoucherModel>?> fecthCampaignVouchersById(
     int? page,
     int? limit, {
     required String id,
@@ -144,30 +152,36 @@ class CampaignRepositoryImp implements CampaignRepository {
     try {
       token = await AuthenLocalDataSource.getToken();
       final Map<String, String> headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
+        'accept': 'text/plain', // Khớp với curl
+        'Authorization': 'Bearer $token', // Giữ Authorization
       };
-      if (page == null) {
-        page = this.page;
-      }
-      if (limit == null) {
-        limit = this.limit;
-      }
 
-      http.Response response = await http.get(
-        Uri.parse('$endPoint/$id/details?sort=$sort&page=$page&limit=$limit'),
-        headers: headers,
-      );
+      // Gán giá trị mặc định nếu page hoặc limit không được truyền
+      page ??= this.page;
+      limit ??= this.limit;
+
+      // Tạo query parameters (tùy chọn)
+      final queryParams = {'page': page.toString(), 'limit': limit.toString()};
+
+      // Tạo URI với endpoint và query parameters
+      final uri = Uri.parse(
+        '${baseURL}Voucher/campaign-detail/$id',
+      ).replace(queryParameters: queryParams);
+
+      // Gửi yêu cầu HTTP GET
+      final response = await http.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
-        final result = jsonDecode(utf8.decode(response.bodyBytes));
-        ApiResponse<List<CampaignVoucherModel>> apiResponse =
-            ApiResponse<List<CampaignVoucherModel>>.fromJson(
-              result,
-              (data) =>
-                  data.map((e) => CampaignVoucherModel.fromJson(e)).toList(),
-            );
-        return apiResponse;
+        final result =
+            jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>;
+        final vouchers =
+            result
+                .map(
+                  (e) =>
+                      CampaignVoucherModel.fromJson(e as Map<String, dynamic>),
+                )
+                .toList();
+        return vouchers;
       } else {
         return null;
       }
@@ -241,5 +255,4 @@ class CampaignRepositoryImp implements CampaignRepository {
       throw Exception(e.toString());
     }
   }
-  
 }

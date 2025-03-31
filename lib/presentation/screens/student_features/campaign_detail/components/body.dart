@@ -7,10 +7,14 @@ import 'package:intl/intl.dart';
 import 'package:swallet_mobile/data/repositories/student_features/campaign_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/campaign_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/campaign_store/campaign_store_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/components/campaign_detail_showdal.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/components/campaign_store_card.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/components/campaign_voucher_list.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/components/detail_showdal_bottom.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/store_list/store_list_screen.dart';
 
 import '../../../../widgets/shimmer_widget.dart';
 
@@ -35,11 +39,11 @@ class Body extends StatelessWidget {
               campaignRepository: context.read<CampaignRepository>())
             ..add(LoadCampaignById(id: id)),
         ),
-        // BlocProvider(
-        //   create: (context) => CampaignStoreBloc(
-        //       campaignRepository: context.read<CampaignRepository>())
-        //     ..add(LoadCampaignStoreById(id: id)),
-        // ),
+        BlocProvider(
+          create: (context) => CampaignStoreBloc(
+              campaignRepository: context.read<CampaignRepository>())
+            ..add(LoadCampaignStoreById(id: id)),
+        ),
       ],
       child: BlocListener<InternetBloc, InternetState>(
         listener: (context, state) {
@@ -227,107 +231,107 @@ class Body extends StatelessWidget {
                     SizedBox(
                       height: 10 * hem,
                     ),
-                    // Container(
-                    //   margin: EdgeInsets.only(right: 15 * fem, left: 15 * fem),
-                    //   padding: EdgeInsets.only(
-                    //       right: 10 * fem,
-                    //       left: 10 * fem,
-                    //       top: 10 * hem,
-                    //       bottom: 10 * hem),
-                    //   width: MediaQuery.of(context).size.width,
-                    //   decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(10),
-                    //       color: Colors.white),
-                    //   child: BlocBuilder<CampaignStoreBloc, CampaignStoreState>(
-                    //     builder: (context, state) {
-                    //       if (state is CampaignStoreLoading) {
-                    //         return ShimmerWidget.rectangular(
-                    //           height: 120 * hem,
-                    //         );
-                    //       } else if (state is CampaignStoreByIdLoaded) {
-                    //         var numberOfStores = state.campaignStores.length;
+                    Container(
+                      margin: EdgeInsets.only(right: 15 * fem, left: 15 * fem),
+                      padding: EdgeInsets.only(
+                          right: 10 * fem,
+                          left: 10 * fem,
+                          top: 10 * hem,
+                          bottom: 10 * hem),
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
+                      child: BlocBuilder<CampaignStoreBloc, CampaignStoreState>(
+                        builder: (context, state) {
+                          if (state is CampaignStoreLoading) {
+                            return ShimmerWidget.rectangular(
+                              height: 120 * hem,
+                            );
+                          } else if (state is CampaignStoreByIdLoaded) {
+                            var numberOfStores = state.campaignStores.length;
 
-                    //         return Column(
-                    //           mainAxisAlignment: MainAxisAlignment.start,
-                    //           crossAxisAlignment: CrossAxisAlignment.start,
-                    //           children: [
-                    //             Row(
-                    //               mainAxisAlignment:
-                    //                   MainAxisAlignment.spaceBetween,
-                    //               children: [
-                    //                 numberOfStores == 1
-                    //                     ? Text(
-                    //                         'Cửa hàng áp dụng',
-                    //                         style: GoogleFonts.openSans(
-                    //                             textStyle: TextStyle(
-                    //                           fontSize: 16 * ffem,
-                    //                           color: Colors.black,
-                    //                           fontWeight: FontWeight.w700,
-                    //                         )),
-                    //                       )
-                    //                     : Text(
-                    //                         'Cửa hàng áp dụng (${numberOfStores})',
-                    //                         style: GoogleFonts.openSans(
-                    //                             textStyle: TextStyle(
-                    //                           fontSize: 16 * ffem,
-                    //                           color: Colors.black,
-                    //                           fontWeight: FontWeight.w700,
-                    //                         )),
-                    //                       ),
-                    //                 numberOfStores == 1
-                    //                     ? Container()
-                    //                     : GestureDetector(
-                    //                         onTap: () {
-                    //                           Navigator.pushNamed(
-                    //                             context,
-                    //                             StoreListScreen.routeName,
-                    //                             arguments: <dynamic>[
-                    //                               id,
-                    //                               campaignDetailModel
-                    //                             ],
-                    //                           );
-                    //                         },
-                    //                         child: Text(
-                    //                           'Xem tất cả',
-                    //                           style: GoogleFonts.openSans(
-                    //                               textStyle: TextStyle(
-                    //                             fontSize: 12 * ffem,
-                    //                             color: Colors.black,
-                    //                             fontWeight: FontWeight.w700,
-                    //                           )),
-                    //                         ),
-                    //                       ),
-                    //               ],
-                    //             ),
-                    //             SizedBox(
-                    //               height: 10 * hem,
-                    //             ),
-                    //             Container(
-                    //               height: 85 * hem,
-                    //               child: ListView.builder(
-                    //                 physics: NeverScrollableScrollPhysics(),
-                    //                 scrollDirection: Axis.horizontal,
-                    //                 itemCount: state.campaignStores.length,
-                    //                 itemBuilder: (context, index) {
-                    //                   var storeModel =
-                    //                       state.campaignStores[index];
-                    //                   return CampaignStoreCard(
-                    //                       fem: fem,
-                    //                       hem: hem,
-                    //                       campaignDetailModel:
-                    //                           campaignDetailModel,
-                    //                       storeModel: storeModel,
-                    //                       ffem: ffem);
-                    //                 },
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         );
-                    //       }
-                    //       return Container();
-                    //     },
-                    //   ),
-                    // ),
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    numberOfStores == 1
+                                        ? Text(
+                                            'Cửa hàng áp dụng',
+                                            style: GoogleFonts.openSans(
+                                                textStyle: TextStyle(
+                                              fontSize: 16 * ffem,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w700,
+                                            )),
+                                          )
+                                        : Text(
+                                            'Cửa hàng áp dụng (${numberOfStores})',
+                                            style: GoogleFonts.openSans(
+                                                textStyle: TextStyle(
+                                              fontSize: 16 * ffem,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w700,
+                                            )),
+                                          ),
+                                    numberOfStores == 1
+                                        ? Container()
+                                        : GestureDetector(
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                context,
+                                                StoreListScreen.routeName,
+                                                arguments: <dynamic>[
+                                                  id,
+                                                  campaignDetailModel
+                                                ],
+                                              );
+                                            },
+                                            child: Text(
+                                              'Xem tất cả',
+                                              style: GoogleFonts.openSans(
+                                                  textStyle: TextStyle(
+                                                fontSize: 12 * ffem,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w700,
+                                              )),
+                                            ),
+                                          ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10 * hem,
+                                ),
+                                SizedBox(
+                                  height: 85 * hem,
+                                  child: ListView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: state.campaignStores.length,
+                                    itemBuilder: (context, index) {
+                                      var storeModel =
+                                          state.campaignStores[index];
+                                      return CampaignStoreCard(
+                                          fem: fem,
+                                          hem: hem,
+                                          campaignDetailModel:
+                                              campaignDetailModel,
+                                          storeModel: storeModel,
+                                          ffem: ffem);
+                                    },
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          return Container();
+                        },
+                      ),
+                    ),
                     SizedBox(
                       height: 20 * hem,
                     ),
@@ -344,11 +348,11 @@ class Body extends StatelessWidget {
                         )),
                       ),
                     ),
-                    // CampaignVoucherList(
-                    //     fem: fem,
-                    //     hem: hem,
-                    //     ffem: ffem,
-                    //     campaignDetallModeil: state.campaignDetailModel),
+                    CampaignVoucherList(
+                        fem: fem,
+                        hem: hem,
+                        ffem: ffem,
+                        campaignDetallModeil: state.campaignDetailModel),
                     SizedBox(
                       height: 20 * hem,
                     )

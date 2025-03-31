@@ -78,7 +78,7 @@ class Body extends StatelessWidget {
                           width: double.infinity,
                           height: 220 * hem,
                           child: Image.network(
-                            campaignVoucherDetail.voucherImage,
+                            campaignVoucherDetail.image,
                             fit: BoxFit.fill,
                             errorBuilder: (context, error, stackTrace) {
                               return Image.asset(
@@ -101,7 +101,7 @@ class Body extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                campaignVoucherDetail.campaignName,
+                                campaignVoucherDetail.brandName,
                                 textAlign: TextAlign.justify,
                                 softWrap: true,
                                 style: GoogleFonts.openSans(
@@ -198,7 +198,7 @@ class Body extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                'Còn lại: ${campaignVoucherDetail.quantityInStock}',
+                                'Còn lại: ${campaignVoucherDetail.numberOfItemsAvailable}',
                                 style: GoogleFonts.openSans(
                                   textStyle: TextStyle(
                                     fontSize: 15 * ffem,
@@ -257,7 +257,7 @@ class Body extends StatelessWidget {
                                     top: 5 * hem,
                                   ),
                                   child: HtmlWidget(
-                                    campaignVoucherDetail.voucherCondition,
+                                    campaignVoucherDetail.condition,
                                     textStyle: GoogleFonts.openSans(
                                       textStyle: TextStyle(
                                         fontSize: 14 * ffem,

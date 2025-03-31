@@ -20,9 +20,10 @@ abstract class CampaignRepository {
     int? page,
     int? limit, {
     required String id,
+    String? searchName,
   });
 
-  Future<ApiResponse<List<CampaignVoucherModel>>?> fecthCampaignVouchersById(
+  Future<List<CampaignVoucherModel>?> fecthCampaignVouchersById(
     int? page,
     int? limit, {
     required String id,

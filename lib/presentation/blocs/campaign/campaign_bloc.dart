@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/campaign_repository.dart';
@@ -60,10 +60,10 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
     try {
       if (scrollController.position.pixels ==
           scrollController.position.maxScrollExtent) {
-        if ((this.state as CampaignsLoaded).hasReachMax) {
+        if ((state as CampaignsLoaded).hasReachMax) {
           emit(
             CampaignsLoaded(
-              campaigns: List.from((this.state as CampaignsLoaded).campaigns),
+              campaigns: List.from((state as CampaignsLoaded).campaigns),
               hasReachMax: true,
             ),
           );
@@ -77,16 +77,16 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
           if (apiResponse!.result.isEmpty) {
             emit(
               CampaignsLoaded(
-                campaigns: List.from((this.state as CampaignsLoaded).campaigns)
+                campaigns: List.from((state as CampaignsLoaded).campaigns)
                   ..addAll(apiResponse.result),
                 hasReachMax: true,
               ),
             );
-            this.page = 1;
+            page = 1;
           } else {
             emit(
               CampaignsLoaded(
-                campaigns: List.from((this.state as CampaignsLoaded).campaigns)
+                campaigns: List.from((state as CampaignsLoaded).campaigns)
                   ..addAll(apiResponse.result),
               ),
             );

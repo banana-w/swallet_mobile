@@ -50,7 +50,7 @@ class MemberShipCard extends StatelessWidget {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(top: 25 * hem, left: 35 * fem),
-                    child: Container(
+                    child: SizedBox(
                       // color: Colors.red,
                       width: 250 * fem,
                       child: Text(
@@ -103,7 +103,7 @@ class MemberShipCard extends StatelessWidget {
                                         )),
                                       )
                                     : Text(
-                                        '${formatter.format(1)}',
+                                        '${formatter.format(1000)}',
                                         style: GoogleFonts.openSans(
                                             textStyle: TextStyle(
                                           fontSize: 18 * ffem,
@@ -113,51 +113,51 @@ class MemberShipCard extends StatelessWidget {
                                         )),
                                       ),
                                 SvgPicture.asset(
-                                  'assets/icons/green-bean-icon.svg',
+                                  'assets/icons/coin.svg',
                                   width: 25 * fem,
                                   height: 30 * fem,
                                 )
                               ],
                             ),
                           ),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(right: 20 * fem, top: 0 * hem),
-                            child: Row(
-                              children: [
-                                0 == 0
-                                    ? Text(
-                                        '${0.toStringAsFixed(0)}',
-                                        style: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
-                                          fontSize: 18 * ffem,
-                                          height: heightText,
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                      )
-                                    : Text(
-                                        '${formatter.format(1)}',
-                                        style: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
-                                          fontSize: 18 * ffem,
-                                          height: heightText,
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                      ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 2 * fem, bottom: 4 * hem),
-                                  child: SvgPicture.asset(
-                                    'assets/icons/red-bean-icon.svg',
-                                    width: 25 * fem,
-                                    height: 22 * fem,
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
+                          // Padding(
+                          //   padding:
+                          //       EdgeInsets.only(right: 20 * fem, top: 0 * hem),
+                          //   child: Row(
+                          //     children: [
+                          //       0 == 0
+                          //           ? Text(
+                          //               '${0.toStringAsFixed(0)}',
+                          //               style: GoogleFonts.openSans(
+                          //                   textStyle: TextStyle(
+                          //                 fontSize: 18 * ffem,
+                          //                 height: heightText,
+                          //                 color: Colors.red,
+                          //                 fontWeight: FontWeight.bold,
+                          //               )),
+                          //             )
+                          //           : Text(
+                          //               '${formatter.format(1)}',
+                          //               style: GoogleFonts.openSans(
+                          //                   textStyle: TextStyle(
+                          //                 fontSize: 18 * ffem,
+                          //                 height: heightText,
+                          //                 color: Colors.red,
+                          //                 fontWeight: FontWeight.bold,
+                          //               )),
+                          //             ),
+                          //       Padding(
+                          //         padding: EdgeInsets.only(
+                          //             left: 2 * fem, bottom: 4 * hem),
+                          //         child: SvgPicture.asset(
+                          //           'assets/icons/red-bean-icon.svg',
+                          //           width: 25 * fem,
+                          //           height: 22 * fem,
+                          //         ),
+                          //       )
+                          //     ],
+                          //   ),
+                          // )
                         ],
                       )
                     ],
