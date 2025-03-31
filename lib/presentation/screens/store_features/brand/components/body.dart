@@ -137,7 +137,13 @@ class Body extends StatelessWidget {
                       create:
                           (context) => BrandBloc(
                             brandRepository: context.read<BrandRepository>(),
-                          )..add(LoadBrandCampaignsById(id: state.brand.id)),
+                          )..add(
+                            LoadBrandCampaignsById(
+                              id: state.brand.id,
+                              page: 1,
+                              size: 10,
+                            ),
+                          ),
                       child: BrandCampaigns(
                         fem: fem,
                         ffem: ffem,

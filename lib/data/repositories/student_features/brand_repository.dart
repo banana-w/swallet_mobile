@@ -20,22 +20,25 @@ class BrandRepositoryImp implements BrandRepository {
   String? token;
 
   @override
-  Future<ApiResponse<List<BrandModel>>?> fecthBrands({
+  Future<ApiResponse<List<BrandModel>>?> fetchBrands({
     int? page,
-    int? limit,
+    int? size, // Thay limit thành size
+    bool status = true, // Thêm tham số status, mặc định là true
   }) async {
     try {
       final Map<String, String> headers = {'Content-Type': 'application/json'};
-      if (page == null) {
-        page = this.page;
-      }
-      if (limit == null) {
-        limit = this.limit;
-      }
-      http.Response response = await http.get(
-        Uri.parse('$endPoint?state=$state&sort=$sort&page=$page&limit=$limit'),
-        headers: headers,
+
+      // Sử dụng giá trị mặc định nếu page hoặc size không được truyền
+      page ??= this.page;
+      size ??=
+          this.limit; // Nếu bạn đã định nghĩa this.limit, nếu không thì có thể đặt giá trị mặc định như 10
+
+      // Tạo URL với các query parameters page, size, và status
+      final url = Uri.parse(
+        'https://swallet-api.onrender.com/api/Brand?page=$page&size=$size&status=$status',
       );
+
+      http.Response response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
@@ -173,6 +176,52 @@ class BrandRepositoryImp implements BrandRepository {
         } else {
           return null;
         }
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<ApiResponse<List<CampaignModel>>?> fetchCampaignsByBrandId(
+    int? page,
+    int? size, { // Thay limit thành size
+    required String id,
+  }) async {
+    try {
+      token = await AuthenLocalDataSource.getToken();
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization':
+            'Bearer $token', // Thêm token vào header nếu API yêu cầu
+      };
+
+      // Sử dụng giá trị mặc định nếu page hoặc size không được truyền
+      if (page == null) {
+        page = this.page;
+      }
+      if (size == null) {
+        size =
+            this.limit; // Nếu bạn đã định nghĩa this.limit, nếu không thì có thể đặt giá trị mặc định như 10
+      }
+
+      // Tạo URL với các query parameters page và size
+      final url = Uri.parse(
+        'https://swallet-api.onrender.com/api/Campaign/brand/$id?page=$page&size=$size',
+      );
+
+      http.Response response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(utf8.decode(response.bodyBytes));
+        ApiResponse<List<CampaignModel>> apiResponse =
+            ApiResponse<List<CampaignModel>>.fromJson(
+              result,
+              (data) => data.map((e) => CampaignModel.fromJson(e)).toList(),
+            );
+        return apiResponse;
+      } else {
+        return null;
       }
     } catch (e) {
       throw Exception(e.toString());

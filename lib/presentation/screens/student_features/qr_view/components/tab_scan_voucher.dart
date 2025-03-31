@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -38,20 +39,53 @@ class _TabScanVoucherState extends State<TabScanLectureQR> {
     return BlocListener<StudentBloc, StudentState>(
       listener: (context, state) {
         if (state is QRScanFailed) {
-          setState(() {
-            _hasScanned = false; // Cho phép quét lại nếu thất bại
-          });
-          Navigator.pushNamed(
-            context,
-            FailedScanVoucherScreen.routeName,
-            arguments: state.error,
-          );
+          // setState(() {
+          //   _hasScanned = false; // Cho phép quét lại nếu thất bại
+          // });
+          // Navigator.pushNamed(
+          //   context,
+          //   FailedScanVoucherScreen.routeName,
+          //   arguments: state.error,
+          // );
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                elevation: 0,
+                duration: const Duration(milliseconds: 2000),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Thất bại!',
+                  message:
+                      'Mã QR đã được sử dụng trước đó hoặc đã quá hạn!',
+                  contentType: ContentType.success,
+                ),
+              ),
+            );
         } else if (state is QRScanSuccess) {
-          Navigator.pushNamed(
-            context,
-            SuccessScanLectureQRScreen.routeName,
-            arguments: state.response,
-          );
+          // Navigator.pushNamed(
+          //   context,
+          //   SuccessScanLectureQRScreen.routeName,
+          //   arguments: state.response,
+          // );
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                elevation: 0,
+                duration: const Duration(milliseconds: 2000),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title:
+                      'Thành công! Bạn đã nhận được ${state.response.pointsTransferred} từ mã QR.',
+                  message:
+                      'Tài khoản của bạn đã được cập nhật: ${state.response.newBalance}',
+                  contentType: ContentType.success,
+                ),
+              ),
+            );
         }
       },
       child: Stack(
