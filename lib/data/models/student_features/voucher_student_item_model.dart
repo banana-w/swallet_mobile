@@ -1,7 +1,7 @@
 import 'package:swallet_mobile/data/repositories/student_features/voucher_student_item.dart';
 
 class VoucherStudentItemModel extends VoucherStudentItem {
-  VoucherStudentItemModel({
+  const VoucherStudentItemModel({
     required super.id,
     required super.voucherId,
     required super.voucherName,

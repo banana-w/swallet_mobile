@@ -64,7 +64,7 @@ class _InformationCardBrandDetailState
               //avatar
               ClipRRect(
                 borderRadius: BorderRadius.circular(10 * widget.fem),
-                child: Container(
+                child: SizedBox(
                   height: 80 * widget.hem,
                   width: 80 * widget.fem,
                   child: Image.network(

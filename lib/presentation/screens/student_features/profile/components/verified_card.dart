@@ -8,7 +8,6 @@ import 'package:swallet_mobile/presentation/screens/student_features/profile_det
 
 import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/profile_verification_screen.dart';
 
-import '../../../../../../data/models.dart';
 
 class VerifiedCard extends StatelessWidget {
   const VerifiedCard({

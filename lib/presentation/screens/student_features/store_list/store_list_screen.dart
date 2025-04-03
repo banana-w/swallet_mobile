@@ -8,8 +8,6 @@ import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_voucher_list/campaign_voucher_list_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/voucher_list_screen.dart';
 
-import '../../../../data/models.dart';
-import '../../../blocs/blocs.dart';
 import '../../../widgets/shimmer_widget.dart';
 import '../campaign_detail/components/body.dart';
 

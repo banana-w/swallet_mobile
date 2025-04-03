@@ -9,7 +9,6 @@ import 'package:swallet_mobile/data/models/student_features/voucher_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/brand_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
-import '../../models.dart';
 
 class BrandRepositoryImp implements BrandRepository {
   String endPoint = '${baseURL}Brand';
@@ -31,11 +30,11 @@ class BrandRepositoryImp implements BrandRepository {
       // Sử dụng giá trị mặc định nếu page hoặc size không được truyền
       page ??= this.page;
       size ??=
-          this.limit; // Nếu bạn đã định nghĩa this.limit, nếu không thì có thể đặt giá trị mặc định như 10
+          limit; // Nếu bạn đã định nghĩa this.limit, nếu không thì có thể đặt giá trị mặc định như 10
 
       // Tạo URL với các query parameters page, size, và status
       final url = Uri.parse(
-        'https://swallet-api.onrender.com/api/Brand?page=$page&size=$size&status=$status',
+        '${baseURL}Brand?page=$page&size=$size&status=$status',
       );
 
       http.Response response = await http.get(url, headers: headers);
@@ -91,12 +90,8 @@ class BrandRepositoryImp implements BrandRepository {
     try {
       token = await AuthenLocalDataSource.getToken();
       final Map<String, String> headers = {'Content-Type': 'application/json'};
-      if (page == null) {
-        page = this.page;
-      }
-      if (limit == null) {
-        limit = this.limit;
-      }
+      page ??= this.page;
+      limit ??= this.limit;
 
       http.Response response = await http.get(
         Uri.parse(
@@ -130,12 +125,8 @@ class BrandRepositoryImp implements BrandRepository {
     try {
       token = await AuthenLocalDataSource.getToken();
       final Map<String, String> headers = {'Content-Type': 'application/json'};
-      if (page == null) {
-        page = this.page;
-      }
-      if (limit == null) {
-        limit = this.limit;
-      }
+      page ??= this.page;
+      limit ??= this.limit;
       final studentModel = await AuthenLocalDataSource.getStudent();
       if (studentModel == null) {
         http.Response response = await http.get(
@@ -197,17 +188,12 @@ class BrandRepositoryImp implements BrandRepository {
       };
 
       // Sử dụng giá trị mặc định nếu page hoặc size không được truyền
-      if (page == null) {
-        page = this.page;
-      }
-      if (size == null) {
-        size =
-            this.limit; // Nếu bạn đã định nghĩa this.limit, nếu không thì có thể đặt giá trị mặc định như 10
-      }
+      page ??= this.page;
+      size ??= this.limit;
 
       // Tạo URL với các query parameters page và size
       final url = Uri.parse(
-        'https://swallet-api.onrender.com/api/Campaign/brand/$id?page=$page&size=$size',
+        '${baseURL}Campaign/brand/$id?page=$page&size=$size',
       );
 
       http.Response response = await http.get(url, headers: headers);

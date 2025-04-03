@@ -318,8 +318,6 @@ class _FormBody7State extends State<FormBody7> {
     countryController,
     phoneNumberController,
   ) async {
-    final authenModel = await AuthenLocalDataSource.getAuthen();
-    if (authenModel == null) {
       if (context.mounted) {
         print('0${phoneNumberController.text}');
         context
@@ -351,6 +349,6 @@ class _FormBody7State extends State<FormBody7> {
               }
             });
       }
-    } 
+     
   }
 }

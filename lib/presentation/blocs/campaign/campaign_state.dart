@@ -5,14 +5,14 @@ sealed class CampaignState extends Equatable {
 }
 
 final class CampaignInitial extends CampaignState {
-  CampaignInitial();
+  const CampaignInitial();
 
   @override
   List<Object?> get props => [];
 }
 
 final class CampaignLoading extends CampaignState {
-  CampaignLoading();
+  const CampaignLoading();
   @override
   List<Object?> get props => [];
 }
@@ -21,7 +21,7 @@ final class CampaignsLoaded extends CampaignState {
   final List<CampaignModel> campaigns;
   final bool hasReachMax;
 
-  CampaignsLoaded({required this.campaigns, this.hasReachMax = false});
+  const CampaignsLoaded({required this.campaigns, this.hasReachMax = false});
 
   @override
   List<Object?> get props => [campaigns, hasReachMax];
@@ -35,7 +35,7 @@ final class CampaignPaging extends CampaignState {
 final class CampaignsFailed extends CampaignState {
   final String error;
 
-  CampaignsFailed({required this.error});
+  const CampaignsFailed({required this.error});
   @override
   List<Object?> get props => [error];
 }
@@ -58,7 +58,7 @@ final class RedeemVoucherLoading extends CampaignState {
 final class RedeemVoucherSuccess extends CampaignState {
   final String text;
 
-  RedeemVoucherSuccess({required this.text});
+  const RedeemVoucherSuccess({required this.text});
 
   @override
   List<Object?> get props => [text];
@@ -67,7 +67,7 @@ final class RedeemVoucherSuccess extends CampaignState {
 final class RedeemVoucherFailed extends CampaignState {
   final String error;
 
-  RedeemVoucherFailed({required this.error});
+  const RedeemVoucherFailed({required this.error});
 
   @override
   List<Object?> get props => [error];

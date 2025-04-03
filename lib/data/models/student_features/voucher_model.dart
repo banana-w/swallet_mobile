@@ -1,7 +1,7 @@
 import 'package:swallet_mobile/domain/interface_repositories/student_features/voucher.dart';
 
 class VoucherModel extends Voucher {
-  VoucherModel({
+  const VoucherModel({
     required super.id,
     required super.brandId,
     required super.brandName,

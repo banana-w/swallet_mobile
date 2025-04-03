@@ -1,7 +1,7 @@
 import 'package:swallet_mobile/domain/entities/store_features/transaction_store.dart';
 
 class TransactionStoreModel extends TransactionStore {
-  TransactionStoreModel({
+  const TransactionStoreModel({
     required super.id,
     required super.studentId,
     required super.studentName,

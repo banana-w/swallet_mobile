@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/models/student_features/brand_model.dart';
 
-import '../../../../../data/models.dart';
 import '../../../../config/constants.dart';
 
 class BrandDetailShadow extends StatelessWidget {

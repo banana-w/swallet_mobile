@@ -15,7 +15,6 @@ import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/transact/success_transact_screen.dart';
 
-import '../../../../data/models.dart';
 import 'components/form_transact.dart';
 import 'components/information_card_profile.dart';
 

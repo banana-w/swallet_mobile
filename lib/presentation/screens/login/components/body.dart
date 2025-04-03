@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/login/components/form_login.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_screen.dart';
@@ -86,6 +88,7 @@ class Body extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
+                      context.read<RoleAppBloc>().add(RoleAppEnd());
                       Navigator.pushNamed(context, SignUpScreen.routeName);
                       // Navigator.pushNamed(
                       //   context,

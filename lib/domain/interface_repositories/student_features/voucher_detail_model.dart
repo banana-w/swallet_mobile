@@ -4,7 +4,7 @@ import 'package:swallet_mobile/domain/interface_repositories/student_features/vo
 class VoucherDetailModel extends Voucher {
   final List<CampaignModel> campaigns;
   final String brandImage;
-  VoucherDetailModel({
+  const VoucherDetailModel({
     required super.id,
     required super.brandId,
     required super.brandName,

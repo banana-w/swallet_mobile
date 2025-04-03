@@ -12,6 +12,7 @@ class StudentModel extends Student {
     required super.fullName,
     super.studentEmail, // nullable
     super.coinBalance,
+    super.campusName, // nullable
     super.code, // nullable
     super.gender, // nullable
     required super.dateOfBirth,
@@ -36,6 +37,7 @@ class StudentModel extends Student {
       fullName: json['fullName'] as String,
       studentEmail: json['studentEmail'] as String?,
       coinBalance: (json['coinBalance'] as num?)?.toDouble(),
+      campusName: json['campusName'] as String?,
       code: json['code'] as String?,
       gender: json['gender'] as int?,
       dateOfBirth: json['dateOfBirth'] as String,
@@ -60,6 +62,8 @@ class StudentModel extends Student {
     data['fileNameBack'] = fileNameBack;
     data['fullName'] = fullName;
     data['studentEmail'] = studentEmail;
+    data['coinBalance'] = coinBalance;
+    data['campusName'] = campusName;
     data['code'] = code;
     data['gender'] = gender;
     data['dateOfBirth'] = dateOfBirth;

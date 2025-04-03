@@ -27,7 +27,7 @@ class _ContentFrom1State extends State<ContentFrom1> {
   @override
   void initState() {
     super.initState();
-    _getAuthen();
+    // _getAuthen();
   }
 
   @override

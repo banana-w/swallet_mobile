@@ -5,8 +5,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:swallet_mobile/data/repositories/authen_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/lecture_features/lecture_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/store_features/store_repository_imp.dart';
-import 'package:swallet_mobile/data/repositories/student_features/brand_repository.dart';
-import 'package:swallet_mobile/data/repositories/student_features/campaign_repository.dart';
+import 'package:swallet_mobile/data/repositories/student_features/brand_repository_imp.dart';
+import 'package:swallet_mobile/data/repositories/student_features/campaign_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/campus_repository.dart';
 import 'package:swallet_mobile/data/repositories/student_features/lucky_prize_repository.dart';
 import 'package:swallet_mobile/data/repositories/student_features/student_repository_imp.dart';
@@ -23,6 +23,7 @@ import 'package:swallet_mobile/domain/interface_repositories/student_features/va
 import 'package:swallet_mobile/domain/interface_repositories/student_features/verification_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/authentication/authentication_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/campus/campus_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
@@ -169,6 +170,11 @@ class MyApp extends StatelessWidget {
                 (context) =>
                     BrandBloc(brandRepository: BrandRepositoryImp())
                       ..add(LoadBrands(page: 1, size: 10)),
+          ),
+          BlocProvider(
+            create:
+                (context) =>
+                    CampaignBloc(campaignRepository: CampaignRepositoryImp()),
           ),
           BlocProvider(
             create: (context) => LandingScreenBloc(),

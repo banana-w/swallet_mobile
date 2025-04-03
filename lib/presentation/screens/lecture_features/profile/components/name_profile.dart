@@ -18,7 +18,7 @@ class NameProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 190 * fem,
       child: Row(
         children: [
