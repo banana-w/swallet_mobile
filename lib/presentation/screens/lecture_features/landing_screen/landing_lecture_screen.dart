@@ -4,9 +4,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
+import 'package:swallet_mobile/presentation/screens/lecture_features/campus/campus_screen.dart';
+import 'package:swallet_mobile/presentation/screens/lecture_features/qr_history/history_screen.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/landing_screen/components/cus_nav_bar_lecture.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/profile/profile_lecture_screen.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/qr_generate/qr_generate_screen.dart';
+import 'package:swallet_mobile/presentation/widgets/app_bar_campaign.dart';
+
 import 'package:swallet_mobile/presentation/widgets/app_bar_store.dart';
 
 class LandingLectureScreen extends StatelessWidget {
@@ -19,12 +23,20 @@ class LandingLectureScreen extends StatelessWidget {
     double ffem = fem * 0.97;
     double baseHeight = 812;
     double hem = MediaQuery.of(context).size.height / baseHeight;
+
+    final List<Widget> bottomNavScreen = [
+      const CampusScreen(),
+      const ProfileLectureScreen(),
+      const QRCodeHistoryScreen(),
+      const ProfileLectureScreen(),
+    ];
+
     return BlocBuilder<LandingScreenBloc, LandingScreenState>(
       builder: (context, state) {
         if (state.tabIndex == 0 || state.tabIndex == 1) {
           return SafeArea(
             child: Scaffold(
-              appBar: _buildAppbar(state.tabIndex, hem, fem, ffem),
+              appBar: _buildAppbar(state.tabIndex, -hem, fem, ffem),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
               floatingActionButton: Container(
@@ -34,7 +46,7 @@ class LandingLectureScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50 * fem),
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(
+                      color: const Color.fromARGB(
                         255,
                         186,
                         186,
@@ -55,12 +67,19 @@ class LandingLectureScreen extends StatelessWidget {
                     onPressed: () async {
                       final lecture = await AuthenLocalDataSource.getLecture();
                       final lectureId = lecture?.id;
-
-                      Navigator.pushNamed(
-                        context,
-                        QRGenerateScreen.routeName,
-                        arguments: lectureId,
-                      );
+                      if (lectureId != null) {
+                        Navigator.pushNamed(
+                          context,
+                          QRGenerateScreen.routeName,
+                          arguments: lectureId,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Không thể lấy lectureId'),
+                          ),
+                        );
+                      }
                     },
                     child: Container(
                       width: 20 * fem,
@@ -75,7 +94,7 @@ class LandingLectureScreen extends StatelessWidget {
               body: bottomNavScreen.elementAt(state.tabIndex),
               backgroundColor: klighGreyColor,
               extendBody: true,
-              bottomNavigationBar: CusNavLectureBar(),
+              bottomNavigationBar: const CusNavLectureBar(),
             ),
           );
         } else if (state.tabIndex == 2) {
@@ -93,7 +112,7 @@ class LandingLectureScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(50 * fem),
                     boxShadow: [
                       BoxShadow(
-                        color: Color.fromARGB(
+                        color: const Color.fromARGB(
                           255,
                           186,
                           186,
@@ -115,11 +134,19 @@ class LandingLectureScreen extends StatelessWidget {
                         final lecture =
                             await AuthenLocalDataSource.getLecture();
                         final lectureId = lecture?.id;
-                        Navigator.pushNamed(
-                          context,
-                          QRGenerateScreen.routeName,
-                          arguments: lectureId,
-                        );
+                        if (lectureId != null) {
+                          Navigator.pushNamed(
+                            context,
+                            QRGenerateScreen.routeName,
+                            arguments: lectureId,
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Không thể lấy lectureId'),
+                            ),
+                          );
+                        }
                       },
                       child: Container(
                         width: 20 * fem,
@@ -134,7 +161,7 @@ class LandingLectureScreen extends StatelessWidget {
                 body: bottomNavScreen.elementAt(state.tabIndex),
                 backgroundColor: klighGreyColor,
                 extendBody: true,
-                bottomNavigationBar: CusNavLectureBar(),
+                bottomNavigationBar: const CusNavLectureBar(),
               ),
             ),
           );
@@ -150,7 +177,7 @@ class LandingLectureScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50 * fem),
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(
+                      color: const Color.fromARGB(
                         255,
                         186,
                         186,
@@ -171,11 +198,19 @@ class LandingLectureScreen extends StatelessWidget {
                     onPressed: () async {
                       final lecture = await AuthenLocalDataSource.getLecture();
                       final lectureId = lecture?.id;
-                      Navigator.pushNamed(
-                        context,
-                        QRGenerateScreen.routeName,
-                        arguments: lectureId,
-                      );
+                      if (lectureId != null) {
+                        Navigator.pushNamed(
+                          context,
+                          QRGenerateScreen.routeName,
+                          arguments: lectureId,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Không thể lấy lectureId'),
+                          ),
+                        );
+                      }
                     },
                     child: Container(
                       width: 20 * fem,
@@ -190,30 +225,25 @@ class LandingLectureScreen extends StatelessWidget {
               body: bottomNavScreen.elementAt(state.tabIndex),
               backgroundColor: klighGreyColor,
               extendBody: true,
-              bottomNavigationBar: CusNavLectureBar(),
+              bottomNavigationBar: const CusNavLectureBar(),
             ),
           );
         }
       },
     );
   }
-}
 
-List<Widget> bottomNavScreen = [
-  ProfileLectureScreen(),
-  ProfileLectureScreen(),
-  ProfileLectureScreen(),
-  ProfileLectureScreen(),
-];
-
-PreferredSizeWidget? _buildAppbar(
-  int tabIndex,
-  double hem,
-  double fem,
-  double ffem,
-) {
-  if (tabIndex == 0 || tabIndex == 1) {
-    return AppBarStore(hem: hem, ffem: ffem, fem: fem);
-  } else
-    return null;
+  PreferredSizeWidget? _buildAppbar(
+    int tabIndex,
+    double hem,
+    double fem,
+    double ffem,
+  ) {
+    if (tabIndex == 0 || tabIndex == 1) {
+      // return AppBarCampaign(hem: hem, ffem: ffem, fem: fem);
+      return null;
+    } else {
+      return null;
+    }
+  }
 }

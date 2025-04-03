@@ -84,22 +84,24 @@ class _BodyState extends State<Body> {
                   ),
                   child: Padding(
                     padding: EdgeInsets.only(top: 10 * hem),
-                    child: Row(
+                    child: Stack(
                       children: [
-                        IconButton(
-                          icon: Icon(Icons.arrow_back, color: Colors.white),
-                          onPressed: () => Navigator.pop(context),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: IconButton(
+                            icon: Icon(Icons.arrow_back, color: Colors.white),
+                            onPressed: () => Navigator.pop(context),
+                          ),
                         ),
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              'Scan Lecture QR',
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 22 * ffem,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Quét mã QR',
+                            style: GoogleFonts.openSans(
+                              textStyle: TextStyle(
+                                fontSize: 22 * ffem,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.white,
                               ),
                             ),
                           ),

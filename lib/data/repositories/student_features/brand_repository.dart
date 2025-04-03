@@ -35,7 +35,7 @@ class BrandRepositoryImp implements BrandRepository {
 
       // Tạo URL với các query parameters page, size, và status
       final url = Uri.parse(
-        'https://swallet-api.onrender.com/api/Brand?page=$page&size=$size&status=$status',
+        '${baseURL}Brand?page=$page&size=$size&status=$status',
       );
 
       http.Response response = await http.get(url, headers: headers);
@@ -207,7 +207,7 @@ class BrandRepositoryImp implements BrandRepository {
 
       // Tạo URL với các query parameters page và size
       final url = Uri.parse(
-        'https://swallet-api.onrender.com/api/Campaign/brand/$id?page=$page&size=$size',
+        '${baseURL}Campaign/brand/$id?page=$page&size=$size',
       );
 
       http.Response response = await http.get(url, headers: headers);

@@ -115,7 +115,8 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
                   backgroundColor: Colors.transparent,
                   content: AwesomeSnackbarContent(
                     title: 'Thất bại',
-                    message: 'Tạo mã QR thất bại: ${state.message}',
+                    message:
+                        'Tạo mã QR thất bại: Ví của bạn không đủ xu hoặc do kết nối',
                     contentType: ContentType.failure,
                   ),
                 ),
@@ -271,132 +272,192 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
     showDialog(
       context: context,
       builder:
-          (context) => AlertDialog(
-            title: Text(
-              'Nhập thông tin QR',
-              style: GoogleFonts.openSans(
-                textStyle: TextStyle(
-                  fontSize: 18 * ffem,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+          (context) => Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15 * fem),
             ),
-            content: Container(
-              width: 400 * fem, // Tăng chiều rộng của dialog
-              child: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextFormField(
-                        controller: _pointsController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: 'Points',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10 * fem),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    const Color.fromARGB(255, 184, 211, 185),
+                    const Color.fromARGB(255, 134, 207, 138),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(15 * fem),
+              ),
+              padding: EdgeInsets.all(20 * fem),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Nhập thông tin QR',
+                      style: GoogleFonts.openSans(
+                        textStyle: TextStyle(
+                          fontSize: 18 * ffem,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(
+                            255,
+                            0,
+                            0,
+                            0,
+                          ), // Màu chữ trắng để nổi bật trên nền xanh
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20 * hem),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _pointsController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: 'Points',
+                              labelStyle: TextStyle(
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10 * fem),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Vui lòng nhập points';
+                              }
+                              if (int.tryParse(value) == null) {
+                                return 'Points phải là số';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 15 * hem),
+                          TextFormField(
+                            controller: _startOnTimeController,
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              labelText: 'Start On Time (YYYY-MM-DD HH:MM)',
+                              labelStyle: TextStyle(
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10 * fem),
+                              ),
+                              suffixIcon: Icon(
+                                Icons.lock_clock,
+                                size: 20 * ffem,
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Vui lòng nhập start on time';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 15 * hem),
+                          TextFormField(
+                            controller: _availableHoursController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: 'Available Hours',
+                              labelStyle: TextStyle(
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10 * fem),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Vui lòng nhập available hours';
+                              }
+                              if (int.tryParse(value) == null) {
+                                return 'Available hours phải là số nguyên';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20 * hem),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(
+                            'Hủy',
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                            ),
                           ),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Vui lòng nhập points';
-                          }
-                          if (int.tryParse(value) == null) {
-                            return 'Points phải là số';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 15 * hem),
-                      TextFormField(
-                        controller:
-                            _startOnTimeController
-                              ..text = DateFormat(
+                        ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate() &&
+                                _lecturerId != null) {
+                              final startTime = DateTime.parse(
+                                _startOnTimeController.text,
+                              );
+                              final availableHours = int.parse(
+                                _availableHoursController.text,
+                              );
+                              final expirationTime = startTime.add(
+                                Duration(hours: availableHours),
+                              );
+                              final formattedExpirationTime = DateFormat(
                                 'yyyy-MM-dd HH:mm',
-                              ).format(DateTime.now()),
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          labelText: 'Start On Time (YYYY-MM-DD HH:MM)',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10 * fem),
+                              ).format(expirationTime);
+
+                              context.read<LectureBloc>().add(
+                                GenerateQRCodeEvent(
+                                  points: int.parse(_pointsController.text),
+                                  expirationTime: formattedExpirationTime,
+                                  startOnTime: _startOnTimeController.text,
+                                  availableHours: availableHours,
+                                  lecturerId: _lecturerId!,
+                                ),
+                              );
+                              Navigator.pop(context);
+                            } else if (_lecturerId == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Không thể lấy Lecturer ID'),
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(
+                              255,
+                              28,
+                              160,
+                              78,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10 * fem),
+                            ),
                           ),
-                          suffixIcon: Icon(Icons.lock_clock, size: 20 * ffem),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Vui lòng nhập start on time';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 15 * hem),
-                      TextFormField(
-                        controller: _availableHoursController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: 'Available Hours',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10 * fem),
+                          child: Text(
+                            'Tạo',
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                            ),
                           ),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Vui lòng nhập available hours';
-                          }
-                          if (int.tryParse(value) == null) {
-                            return 'Available hours phải là số nguyên';
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('Hủy', style: TextStyle(color: Colors.grey)),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate() &&
-                      _lecturerId != null) {
-                    final startTime = DateTime.parse(
-                      _startOnTimeController.text,
-                    );
-                    final availableHours = int.parse(
-                      _availableHoursController.text,
-                    );
-                    final expirationTime = startTime.add(
-                      Duration(hours: availableHours),
-                    );
-                    final formattedExpirationTime = DateFormat(
-                      'yyyy-MM-dd HH:mm',
-                    ).format(expirationTime);
-
-                    context.read<LectureBloc>().add(
-                      GenerateQRCodeEvent(
-                        points: int.parse(_pointsController.text),
-                        expirationTime: formattedExpirationTime,
-                        startOnTime: _startOnTimeController.text,
-                        availableHours: availableHours,
-                        lecturerId: _lecturerId!,
-                      ),
-                    );
-                    Navigator.pop(context);
-                  } else if (_lecturerId == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Không thể lấy Lecturer ID')),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: kPrimaryColor),
-                child: Text('Tạo', style: TextStyle(color: Colors.white)),
-              ),
-            ],
           ),
     );
   }

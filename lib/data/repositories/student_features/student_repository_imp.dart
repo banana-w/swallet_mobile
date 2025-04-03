@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
-import 'package:swallet_mobile/data/models/lecture_features/qr_response';
+import 'package:swallet_mobile/data/models/lecture_features/qr_response.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
@@ -64,14 +64,14 @@ class StudentRepositoryImp implements StudentRepository {
       };
 
       http.Response response = await http.post(
-        Uri.parse('https://swallet-api.onrender.com/api/Lecturer/scan-qrcode'),
+        Uri.parse('${baseURL}Lecturer/scan-qrcode'),
         headers: headers,
         body: jsonEncode(body),
       );
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
-        print('API Response: $result'); // Log để kiểm tra
+        print('API Response: $result');
         return ScanQRResponse.fromJson(result);
       } else {
         throw Exception(

@@ -126,6 +126,23 @@ class _LuckyWheelViewState extends State<LuckyWheelView> {
               context,
             ).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
           }
+        } else {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                elevation: 0,
+                duration: const Duration(milliseconds: 2000),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Chúc bạn may mắn lần sau!',
+                  message:
+                      'Lần này hong trúng rồi, nhưng không sao, bạn có thể quay lại sau!',
+                  contentType: ContentType.success,
+                ),
+              ),
+            );
         }
 
         // _showResultDialog();
