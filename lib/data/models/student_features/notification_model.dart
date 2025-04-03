@@ -18,9 +18,9 @@ class NotificationModel extends Equatable {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['title'] = this.title;
-    data['body'] = this.body;
-    data['payload'] = this.payload;
+    data['title'] = title;
+    data['body'] = body;
+    data['payload'] = payload;
     return data;
   }
 

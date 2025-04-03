@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -121,9 +123,8 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
     try {
       var result = await campaignRepository.redeemCampaignVoucher(
         campaignId: event.campaignId,
-        campaignVoucherId: event.campaignDetailId,
         studentId: event.studentId,
-        description: event.description,
+        cost: event.cost,
         quantity: event.quantity,
       );
       if (result != null) {

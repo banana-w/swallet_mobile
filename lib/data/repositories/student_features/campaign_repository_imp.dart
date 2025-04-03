@@ -202,10 +202,15 @@ class CampaignRepositoryImp implements CampaignRepository {
         'Authorization': 'Bearer $token',
       };
 
-      http.Response response = await http.get(
-        Uri.parse('$endPoint/$campaignId/details/$campaignVoucherId'),
-        headers: headers,
-      );
+      final queryParams = {'id': campaignVoucherId, 'campaignId': campaignId};
+
+      // Tạo URI với endpoint và query parameters
+      final uri = Uri.parse(
+        '${baseURL}Voucher/withCId',
+      ).replace(queryParameters: queryParams);
+
+      // Gửi yêu cầu HTTP GET
+      final response = await http.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
@@ -223,25 +228,25 @@ class CampaignRepositoryImp implements CampaignRepository {
   @override
   Future<String?> redeemCampaignVoucher({
     required String campaignId,
-    required String campaignVoucherId,
     required String studentId,
     required int quantity,
-    required String description,
+    required double cost,
   }) async {
     try {
       token = await AuthenLocalDataSource.getToken();
       final Map<String, String> headers = {
+        'accept': 'text/plain',
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       };
       Map body = {
+        'campaignId': campaignId,
         'studentId': studentId,
+        'cost': cost,
         'quantity': quantity,
-        'description': description,
-        "state": true,
       };
-      http.Response response = await http.post(
-        Uri.parse('$endPoint/$campaignId/details/$campaignVoucherId'),
+      final response = await http.post(
+        Uri.parse('${baseURL}Activity/RedeemVoucher'),
         body: jsonEncode(body),
         headers: headers,
       );

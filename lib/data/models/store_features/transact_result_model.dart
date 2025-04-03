@@ -15,7 +15,7 @@ class TransactResultModel extends Equatable {
   final bool state;
   final bool status;
 
-  TransactResultModel({
+  const TransactResultModel({
     required this.id,
     required this.brandId,
     required this.brandName,
@@ -50,37 +50,37 @@ class TransactResultModel extends Equatable {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['brandId'] = this.brandId;
-    data['brandName'] = this.brandName;
-    data['storeId'] = this.storeId;
-    data['storeName'] = this.storeName;
-    data['studentId'] = this.studentId;
-    data['studentName'] = this.studentName;
-    data['amount'] = this.amount;
-    data['dateCreated'] = this.dateCreated;
-    data['dateUpdated'] = this.dateUpdated;
-    data['description'] = this.description;
-    data['state'] = this.state;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['brandId'] = brandId;
+    data['brandName'] = brandName;
+    data['storeId'] = storeId;
+    data['storeName'] = storeName;
+    data['studentId'] = studentId;
+    data['studentName'] = studentName;
+    data['amount'] = amount;
+    data['dateCreated'] = dateCreated;
+    data['dateUpdated'] = dateUpdated;
+    data['description'] = description;
+    data['state'] = state;
+    data['status'] = status;
     return data;
   }
 
   @override
   List<Object?> get props => [
-    this.id,
-    this.brandId,
-    this.brandName,
-    this.storeId,
-    this.storeName,
-    this.studentId,
-    this.studentName,
-    this.amount,
-    this.dateCreated,
-    this.dateUpdated,
-    this.description,
-    this.state,
-    this.status,
+    id,
+    brandId,
+    brandName,
+    storeId,
+    storeName,
+    studentId,
+    studentName,
+    amount,
+    dateCreated,
+    dateUpdated,
+    description,
+    state,
+    status,
   ];
 }

@@ -19,6 +19,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/brand_detai
 import 'package:swallet_mobile/presentation/screens/student_features/brand_list/brand_list_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign/campaign_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/campaign_voucher/campaign_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/challenge/challenge_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/landing/landing_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel/lucky_wheel_screen.dart';
@@ -46,7 +47,6 @@ import 'package:swallet_mobile/presentation/screens/student_features/verify_stud
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/verify_email/screens/verifycode_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/welcome/welcome_screen.dart';
-import 'package:swallet_mobile/presentation/screens/success_scan_voucher/success_scan_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
 class AppRouter {
@@ -198,10 +198,6 @@ class AppRouter {
       case BrandDetailStoreScreen.routeName:
         return BrandDetailStoreScreen.route(id: settings.arguments as String);
 
-      //store
-      // case TransactionStoreScreen.routeName:
-      //   return TransactionStoreScreen.route();
-
       case TransactScreen.routeName:
         List<dynamic> args = settings.arguments as List<dynamic>;
         return TransactScreen.route(studentModel: args[0], brandId: args[1]);
@@ -211,16 +207,13 @@ class AppRouter {
           campaginVoucherInformation:
               settings.arguments as CampaignVoucherInformationModel,
         );
+      case CampaignVoucherScreen.routeName:
+        List<dynamic> args = settings.arguments as List<dynamic>;
 
-      // case BonusScreen.routeName:
-      //   return BonusScreen.route(storeModel: settings.arguments as StoreModel);
-
-      // case BonusDetailScreen.routeName:
-      //   return BonusDetailScreen.route(bonusId: settings.arguments as String);
-
-      // case CampaignDetailStoreScreen.routeName:
-      //   return CampaignDetailStoreScreen.route(
-      //       campaignId: settings.arguments as String);
+        return CampaignVoucherScreen.route(
+            campaignDetail: args[0],
+            campaignVoucher: args[1],
+            accountId: args[2]);
       default:
         return _errorRoute();
 

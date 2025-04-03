@@ -10,6 +10,7 @@ class Student extends Equatable {
   final String? fileNameBack; // nullable vì API trả về null
   final String? studentEmail;
   final double? coinBalance; 
+  final String? campusName; // nullable vì API trả về null
   final String fullName;
   final String? code; // nullable vì API trả về null
   final int? gender; // nullable vì API trả về null
@@ -33,6 +34,7 @@ class Student extends Equatable {
     required this.fullName,
     this.studentEmail, // không required vì có thể null
     this.coinBalance, // không required vì có thể null
+    this.campusName, // không required vì có thể null
     this.code, // không required vì có thể null
     this.gender, // không required vì có thể null
     required this.dateOfBirth,
@@ -56,6 +58,8 @@ class Student extends Equatable {
     fileNameBack,
     fullName,
     studentEmail,
+    coinBalance,
+    campusName,
     code,
     gender,
     dateOfBirth,

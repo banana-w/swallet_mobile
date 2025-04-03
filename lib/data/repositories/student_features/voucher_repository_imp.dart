@@ -8,7 +8,6 @@ import 'package:swallet_mobile/domain/interface_repositories/student_features/vo
 import 'package:swallet_mobile/domain/interface_repositories/student_features/voucher_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
-import '../../models.dart';
 
 class VoucherRepositoryImp implements VoucherRepository {
   String endPoint = '${baseURL}vouchers';

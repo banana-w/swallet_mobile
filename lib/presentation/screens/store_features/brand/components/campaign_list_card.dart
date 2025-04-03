@@ -57,7 +57,7 @@ class CampaignListCard extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10 * fem),
-                  child: Container(
+                  child: SizedBox(
                     width: 120 * fem,
                     height: 150 * hem,
                     child: Image.network(
@@ -96,7 +96,7 @@ class CampaignListCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     width: 200 * fem,
                     // height: 45*hem,
                     child: Text(
@@ -113,7 +113,7 @@ class CampaignListCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 2 * hem),
-                  Container(
+                  SizedBox(
                     width: 200 * fem,
                     child: Text(
                       'Thời gian tham gia chiến dịch:',
@@ -127,7 +127,7 @@ class CampaignListCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     width: 200 * fem,
                     child: Text(
                       '${changeFormateDate(campaignModel.startOn)} - ${changeFormateDate(campaignModel.endOn)}',

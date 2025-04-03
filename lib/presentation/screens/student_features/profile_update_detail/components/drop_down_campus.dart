@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/models/student_features/campus_model.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
-import '../../../../../../data/models.dart';
 
 class DropDownCampus extends StatefulWidget {
   final double hem;

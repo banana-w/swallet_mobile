@@ -36,9 +36,8 @@ abstract class CampaignRepository {
 
   Future<String?> redeemCampaignVoucher({
     required String campaignId,
-    required String campaignVoucherId,
     required String studentId,
     required int quantity,
-    required String description,
+    required double cost,
   });
 }

@@ -30,17 +30,17 @@ class AreaModel extends Area {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['areaName'] = this.areaName;
-    data['image'] = this.image;
-    data['fileName'] = this.fileName;
-    data['address'] = this.address;
-    data['dateCreated'] = this.dateCreated;
-    data['dateUpdated'] = this.dateUpdated;
-    data['description'] = this.description;
-    data['state'] = this.state;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['areaName'] = areaName;
+    data['image'] = image;
+    data['fileName'] = fileName;
+    data['address'] = address;
+    data['dateCreated'] = dateCreated;
+    data['dateUpdated'] = dateUpdated;
+    data['description'] = description;
+    data['state'] = state;
+    data['status'] = status;
     return data;
   }
 }

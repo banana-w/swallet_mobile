@@ -65,7 +65,7 @@ class CampaignDetailModel extends CampaignDetail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['brandId'] = brandId;
     data['brandName'] = brandName;

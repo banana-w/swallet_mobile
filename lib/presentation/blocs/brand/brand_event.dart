@@ -22,7 +22,7 @@ final class LoadMoreBrands extends BrandEvent {
 final class LoadBrandById extends BrandEvent {
   final String id;
 
-  LoadBrandById({required this.id});
+  const LoadBrandById({required this.id});
 
   @override
   List<Object?> get props => [id];
@@ -33,7 +33,7 @@ final class LoadBrandVouchersById extends BrandEvent {
   final int limit;
   final String id;
 
-  LoadBrandVouchersById({this.page = 1, this.limit = 5, required this.id});
+  const LoadBrandVouchersById({this.page = 1, this.limit = 5, required this.id});
 
   @override
   List<Object?> get props => [page, limit, id];

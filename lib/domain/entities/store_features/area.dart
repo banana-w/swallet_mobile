@@ -12,7 +12,7 @@ class Area extends Equatable {
   final bool state;
   final bool status;
 
-  Area({
+  const Area({
     required this.id,
     required this.areaName,
     required this.image,
@@ -27,15 +27,15 @@ class Area extends Equatable {
 
   @override
   List<Object?> get props => [
-    this.id,
-    this.areaName,
-    this.image,
-    this.fileName,
-    this.address,
-    this.dateCreated,
-    this.dateUpdated,
-    this.description,
-    this.state,
-    this.status,
+    id,
+    areaName,
+    image,
+    fileName,
+    address,
+    dateCreated,
+    dateUpdated,
+    description,
+    state,
+    status,
   ];
 }

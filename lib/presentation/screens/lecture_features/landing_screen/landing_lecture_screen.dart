@@ -62,7 +62,7 @@ class LandingLectureScreen extends StatelessWidget {
                         arguments: lectureId,
                       );
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 20 * fem,
                       height: 20 * hem,
                       child: SvgPicture.asset(
@@ -121,7 +121,7 @@ class LandingLectureScreen extends StatelessWidget {
                           arguments: lectureId,
                         );
                       },
-                      child: Container(
+                      child: SizedBox(
                         width: 20 * fem,
                         height: 20 * hem,
                         child: SvgPicture.asset(
@@ -177,7 +177,7 @@ class LandingLectureScreen extends StatelessWidget {
                         arguments: lectureId,
                       );
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 20 * fem,
                       height: 20 * hem,
                       child: SvgPicture.asset(
@@ -214,6 +214,7 @@ PreferredSizeWidget? _buildAppbar(
 ) {
   if (tabIndex == 0 || tabIndex == 1) {
     return AppBarStore(hem: hem, ffem: ffem, fem: fem);
-  } else
+  } else {
     return null;
+  }
 }

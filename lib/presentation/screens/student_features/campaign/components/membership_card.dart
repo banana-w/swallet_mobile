@@ -34,17 +34,19 @@ class MemberShipCard extends StatelessWidget {
               width: 330 * fem,
               height: 200 * hem,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20 * fem),
-                  boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 5.0,
-                                offset: Offset(3.0, 2),
-                              ),
-                            ],
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/bg-card-level.png'),
-                      fit: BoxFit.cover)),
+                borderRadius: BorderRadius.circular(20 * fem),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 5.0,
+                    offset: Offset(3.0, 2),
+                  ),
+                ],
+                image: DecorationImage(
+                  image: AssetImage('assets/images/bg-card-level.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -56,12 +58,13 @@ class MemberShipCard extends StatelessWidget {
                       child: Text(
                         'Xin Chào,\n   ${studentModel.fullName}',
                         style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
-                          fontSize: 18 * ffem,
-                          height: heightText,
-                          color: kPrimaryColor,
-                          fontWeight: FontWeight.bold,
-                        )),
+                          textStyle: TextStyle(
+                            fontSize: 18 * ffem,
+                            height: heightText,
+                            color: kPrimaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -74,48 +77,56 @@ class MemberShipCard extends StatelessWidget {
                         child: Text(
                           'Số dư:',
                           style: GoogleFonts.openSans(
-                              textStyle: TextStyle(
-                            fontSize: 18 * ffem,
-                            height: heightText,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          )),
+                            textStyle: TextStyle(
+                              fontSize: 18 * ffem,
+                              height: heightText,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Padding(
-                            padding:
-                                EdgeInsets.only(left: 20 * fem, top: 0 * hem),
+                            padding: EdgeInsets.only(
+                              left: 20 * fem,
+                              top: 0 * hem,
+                            ),
                             child: Row(
                               children: [
                                 studentModel.coinBalance == 0
                                     ? Text(
-                                        '${studentModel.coinBalance?.toStringAsFixed(0)}',
-                                        style: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
+                                      '${studentModel.coinBalance?.toStringAsFixed(0)}',
+                                      style: GoogleFonts.openSans(
+                                        textStyle: TextStyle(
                                           fontSize: 18 * ffem,
                                           height: heightText,
                                           color: kPrimaryColor,
                                           fontWeight: FontWeight.bold,
-                                        )),
-                                      )
-                                    : Text(
-                                        formatter.format(studentModel.coinBalance),
-                                        style: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
-                                          fontSize: 18 * ffem,
-                                          height: heightText,
-                                          color: kPrimaryColor,
-                                          fontWeight: FontWeight.bold,
-                                        )),
+                                        ),
                                       ),
+                                    )
+                                    : Text(
+                                      formatter.format(
+                                        studentModel.coinBalance,
+                                      ),
+                                      style: GoogleFonts.openSans(
+                                        textStyle: TextStyle(
+                                          fontSize: 18 * ffem,
+                                          height: heightText,
+                                          color: kPrimaryColor,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                SizedBox(width: 8 * fem),
                                 SvgPicture.asset(
                                   'assets/icons/coin.svg',
                                   width: 25 * fem,
                                   height: 30 * fem,
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -158,9 +169,9 @@ class MemberShipCard extends StatelessWidget {
                           //   ),
                           // )
                         ],
-                      )
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -171,8 +182,9 @@ class MemberShipCard extends StatelessWidget {
                 width: 100 * fem,
                 height: 40 * fem,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5 * fem),
-                    color: kDarkPrimaryColor),
+                  borderRadius: BorderRadius.circular(5 * fem),
+                  color: kDarkPrimaryColor,
+                ),
                 child: Center(
                   child: Text(
                     'MSSV: ${studentModel.code}',
@@ -192,7 +204,7 @@ class MemberShipCard extends StatelessWidget {
               right: 25 * fem,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(45),
-                child: Container(
+                child: SizedBox(
                   width: 90 * fem,
                   height: 90 * hem,
                   child: Image.network(
