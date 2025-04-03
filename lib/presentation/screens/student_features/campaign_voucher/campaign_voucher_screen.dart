@@ -12,6 +12,7 @@ import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/cubits/counter/counter_cubit.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/redeem_voucher/redeem_voucher_screen.dart';
 
 import '../../../../data/datasource/authen_local_datasource.dart';
 import 'components/body.dart';
@@ -406,20 +407,20 @@ class CampaignVoucherScreen extends StatelessWidget {
                     ),
                   ));
               } else {
-                final studentId = await AuthenLocalDataSource.getStudentId();
+                final student = await AuthenLocalDataSource.getStudent();
 
-                // Navigator.pushNamed(context, RedeemVoucherScreen.routeName,
-                //     arguments: <dynamic>[
-                //       campaignDetailModel.id,
-                //       campaignVoucherModel.id,
-                //       studentId!,
-                //       state.counterValue,
-                //       'string',
-                //       campaignDetailModel.campaignName,
-                //       (campaignVoucherModel.price * state.counterValue),
-                //       campaignVoucherModel.voucherName,
-                //       campaignVoucherModel.price
-                //     ]);
+                Navigator.pushNamed(context, RedeemVoucherScreen.routeName,
+                    arguments: <dynamic>[
+                      campaignDetailModel.id,
+                      campaignVoucherModel.id,
+                      student?.id,
+                      state.counterValue,
+                      'string',
+                      campaignDetailModel.campaignName,
+                      (campaignVoucherModel.price * state.counterValue),
+                      campaignVoucherModel.voucherName,
+                      campaignVoucherModel.price
+                    ]);
               }
             },
             child: Container(

@@ -251,7 +251,7 @@ class CampaignRepositoryImp implements CampaignRepository {
         headers: headers,
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200 && response.body == 'true') {
         return null;
       } else {
         return response.body;
