@@ -3,8 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/models/store_features/area_model.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
-import '../../../../../../data/models.dart';
-
 class DropDownArea extends StatefulWidget {
   final double hem;
   final double fem;

@@ -91,7 +91,7 @@ final class CreateBonusLoading extends StoreState {
 final class CreateBonusSucess extends StoreState {
   final TransactResultModel transactModel;
 
-  CreateBonusSucess({required this.transactModel});
+  const CreateBonusSucess({required this.transactModel});
 
   @override
   List<Object?> get props => [];
@@ -162,7 +162,7 @@ final class StoreCampaignVoucherInforLoading extends StoreState {
 final class StoreCampaigVoucherInforSuccess extends StoreState {
   final CampaignVoucherInformationModel campaignVoucherInformationModel;
 
-  StoreCampaigVoucherInforSuccess({
+  const StoreCampaigVoucherInforSuccess({
     required this.campaignVoucherInformationModel,
   });
 

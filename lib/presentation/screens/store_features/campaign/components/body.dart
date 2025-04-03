@@ -10,7 +10,6 @@ import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
-import '../../../../../../data/models.dart';
 import 'search_bar_custom.dart';
 import 'voucher_card_list.dart';
 

@@ -1,7 +1,7 @@
 import 'package:swallet_mobile/domain/entities/store_features/store.dart';
 
 class StoreModel extends Store {
-  StoreModel({
+  const StoreModel({
     required super.id,
     required super.brandId,
     required super.brandName,

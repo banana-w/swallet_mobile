@@ -18,7 +18,7 @@ final class BrandsLoaded extends BrandState {
   final List<BrandModel> brands;
   final bool hasReachedMax;
 
-  BrandsLoaded({required this.brands, this.hasReachedMax = false});
+  const BrandsLoaded({required this.brands, this.hasReachedMax = false});
   @override
   List<Object?> get props => [brands, hasReachedMax];
 }
@@ -26,7 +26,7 @@ final class BrandsLoaded extends BrandState {
 final class BrandsFailed extends BrandState {
   final String error;
 
-  BrandsFailed({required this.error});
+  const BrandsFailed({required this.error});
   @override
   List<Object?> get props => [error];
 }
@@ -34,7 +34,7 @@ final class BrandsFailed extends BrandState {
 final class BrandByIdLoaded extends BrandState {
   final BrandModel brand;
 
-  BrandByIdLoaded({required this.brand});
+  const BrandByIdLoaded({required this.brand});
   @override
   List<Object?> get props => [brand];
 }
@@ -42,7 +42,7 @@ final class BrandByIdLoaded extends BrandState {
 final class BrandVouchersByIdLoaded extends BrandState {
   final List<VoucherModel> vouchers;
 
-  BrandVouchersByIdLoaded({required this.vouchers});
+  const BrandVouchersByIdLoaded({required this.vouchers});
 
   @override
   List<Object?> get props => [vouchers];

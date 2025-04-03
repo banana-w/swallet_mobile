@@ -34,7 +34,7 @@ class StudentRepositoryImp implements StudentRepository {
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
         StudentModel studentModel = StudentModel.fromJson(result);
-        String studentString = jsonEncode(StudentModel.fromJson(result));
+        String studentString = jsonEncode(studentModel);
         AuthenLocalDataSource.saveStudent(studentString);
         // AuthenLocalDataSource.saveStudentId(studentModel.id);
         return studentModel;

@@ -8,8 +8,6 @@ import 'package:swallet_mobile/domain/interface_repositories/store_features/stor
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 
-import '../../../../../data/models.dart';
-import '../../../../blocs/blocs.dart';
 import 'form_update.dart';
 
 class Body extends StatelessWidget {

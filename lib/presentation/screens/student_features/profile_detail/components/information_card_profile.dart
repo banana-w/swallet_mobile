@@ -131,7 +131,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                     child: BlocBuilder<StudentBloc, StudentState>(
                       builder: (context, state) {
                         if (state is StudentByIdSuccess) {
-                          final student = state.studentMode;
+                           student = state.studentMode;
                           return Stack(
                             children: [
                               ClipRRect(
@@ -139,7 +139,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                                 child:
                                     _selectedAvatar == null
                                         ? Image.network(
-                                          student.studentCardFront,
+                                          student!.studentCardFront,
                                           // 'assets/images/ava_signup.png',
                                           width: 80 * widget.fem,
                                           height: 80 * widget.hem,
@@ -292,7 +292,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                           fem: widget.fem,
                           hem: widget.hem,
                           ffem: widget.ffem,
-                          university: widget.studentModel.campusId ?? '',
+                          university: widget.studentModel.campusName ?? '',
                         ),
                       ],
                     ),

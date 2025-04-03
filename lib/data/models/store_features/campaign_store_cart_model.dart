@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:swallet_mobile/data/models/store_features/campaign_voucher_store_model.dart';
 
-import '../../models.dart';
 
 class CampaignStoreCartModel extends Equatable {
   final List<CampaignVoucherStoreModel> campaignVouchers;

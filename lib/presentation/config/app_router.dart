@@ -20,8 +20,10 @@ import 'package:swallet_mobile/presentation/screens/splash/onboarding_screen.dar
 import 'package:swallet_mobile/presentation/screens/splash/splash_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/brand_detail/brand_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/brand_list/brand_list_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/buy_failed/buy_failed_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign/campaign_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/campaign_voucher/campaign_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/challenge/challenge_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/landing/landing_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel/lucky_wheel_screen.dart';
@@ -35,6 +37,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/qr/qr_scree
 import 'package:swallet_mobile/presentation/screens/student_features/qr/qr_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/qr_view/qr_student_view_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/qr_view/success-scren.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/redeem_voucher/redeem_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_1_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_2_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_3_screen.dart';
@@ -45,11 +48,11 @@ import 'package:swallet_mobile/presentation/screens/student_features/signup/scre
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_9_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/store_list/store_list_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/success_redeem_voucher/success_redeem_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/verify_studentMail/screens/verifycode_student_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/verify_email/screens/verifycode_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/welcome/welcome_screen.dart';
-import 'package:swallet_mobile/presentation/screens/success_scan_voucher/success_scan_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
 class AppRouter {
@@ -159,6 +162,32 @@ class AppRouter {
       case VoucherScreen.routeName:
         return VoucherScreen.route();
 
+      case RedeemVoucherScreen.routeName:
+        List<dynamic> args = settings.arguments as List<dynamic>;
+
+        return RedeemVoucherScreen.route(
+          campignId: args[0],
+          campaignDetailId: args[1],
+          studentId: args[2],
+          quantity: args[3],
+          description: args[4],
+          campaignName: args[5],
+          total: args[6],
+          voucherName: args[7],
+          priceVoucher: args[8],
+        );
+
+      case SuccessRedeemVoucherScreen.routeName:
+        List<dynamic> args = settings.arguments as List<dynamic>;
+        return SuccessRedeemVoucherScreen.route(
+          voucherName: args[0],
+          total: args[1],
+        );
+
+      case FailedBuyScreen.routeName:
+        return FailedBuyScreen.route(
+            failed: settings.arguments as String);
+
       case ProfileDetailScreen.routeName:
         return ProfileDetailScreen.route(
           studentModel: settings.arguments as StudentModel,
@@ -208,10 +237,6 @@ class AppRouter {
       case BrandDetailStoreScreen.routeName:
         return BrandDetailStoreScreen.route(id: settings.arguments as String);
 
-      //store
-      // case TransactionStoreScreen.routeName:
-      //   return TransactionStoreScreen.route();
-
       case TransactScreen.routeName:
         List<dynamic> args = settings.arguments as List<dynamic>;
         return TransactScreen.route(studentModel: args[0], brandId: args[1]);
@@ -221,16 +246,14 @@ class AppRouter {
           campaginVoucherInformation:
               settings.arguments as CampaignVoucherInformationModel,
         );
+      case CampaignVoucherScreen.routeName:
+        List<dynamic> args = settings.arguments as List<dynamic>;
 
-      // case BonusScreen.routeName:
-      //   return BonusScreen.route(storeModel: settings.arguments as StoreModel);
-
-      // case BonusDetailScreen.routeName:
-      //   return BonusDetailScreen.route(bonusId: settings.arguments as String);
-
-      // case CampaignDetailStoreScreen.routeName:
-      //   return CampaignDetailStoreScreen.route(
-      //       campaignId: settings.arguments as String);
+        return CampaignVoucherScreen.route(
+          campaignDetail: args[0],
+          campaignVoucher: args[1],
+          accountId: args[2],
+        );
       default:
         return _errorRoute();
 

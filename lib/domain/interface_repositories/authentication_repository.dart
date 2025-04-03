@@ -1,5 +1,5 @@
-import 'package:swallet_mobile/data/models.dart';
 import 'package:swallet_mobile/data/models/authen_model.dart';
+import 'package:swallet_mobile/data/models/student_features/create_model/create_authen_model.dart';
 
 abstract class AuthenticationRepository {
   const AuthenticationRepository();
