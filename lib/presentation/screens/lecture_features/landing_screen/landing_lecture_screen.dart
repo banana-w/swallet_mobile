@@ -233,7 +233,6 @@ class LandingLectureScreen extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
   PreferredSizeWidget? _buildAppbar(
     int tabIndex,
     double hem,
@@ -246,24 +245,5 @@ class LandingLectureScreen extends StatelessWidget {
     } else {
       return null;
     }
-=======
-List<Widget> bottomNavScreen = [
-  ProfileLectureScreen(),
-  ProfileLectureScreen(),
-  ProfileLectureScreen(),
-  ProfileLectureScreen(),
-];
-
-PreferredSizeWidget? _buildAppbar(
-  int tabIndex,
-  double hem,
-  double fem,
-  double ffem,
-) {
-  if (tabIndex == 0 || tabIndex == 1) {
-    return AppBarStore(hem: hem, ffem: ffem, fem: fem);
-  } else {
-    return null;
->>>>>>> 4299ba2e2410750c954969566a28e4c2f50cc23a
   }
 }
