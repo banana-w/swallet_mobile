@@ -42,16 +42,16 @@ final class StudentTransactionLoading extends StudentState {
   List<Object?> get props => [];
 }
 
-// final class StudentTransactionsLoaded extends StudentState {
-//   final List<TransactionModel> transactions;
-//   final bool hasReachedMax;
+final class StudentTransactionsLoaded extends StudentState {
+  final List<TransactionModel> transactions;
+  final bool hasReachedMax;
 
-//   StudentTransactionsLoaded(
-//       {required this.transactions, this.hasReachedMax = false});
+  const StudentTransactionsLoaded(
+      {required this.transactions, this.hasReachedMax = false});
 
-//   @override
-//   List<Object?> get props => [transactions, hasReachedMax];
-// }
+  @override
+  List<Object?> get props => [transactions, hasReachedMax];
+}
 
 final class StudentOrderLoading extends StudentState {
   @override

@@ -1,6 +1,7 @@
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/lecture_features/qr_response';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
+import 'package:swallet_mobile/data/models/student_features/transaction_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
 
 abstract class StudentRepository {
@@ -22,9 +23,9 @@ abstract class StudentRepository {
     required String id,
   });
 
-  // Future<ApiResponse<List<TransactionModel>>?> fetchTransactionsStudentId(
-  //     int? page, int? limit, int? typeIds,
-  //     {required String id});
+  Future<ApiResponse<List<TransactionModel>>?> fetchTransactionsStudentId(
+      int? page, int? limit, int? typeIds, String? searchName,
+      {required String id});
 
   // Future<ApiResponse<List<OrderModel>>?> fetchOrdersStudentId(
   //     int? page, int? limit,

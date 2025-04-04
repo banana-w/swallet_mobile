@@ -27,6 +27,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel
 import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_list_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_detail/profile_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile_history/profile_trans_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_update_detail/profile_update_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/profile_verification_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/update_verification_screen.dart';
@@ -204,6 +205,12 @@ class AppRouter {
         return ProfileUpdateDetailScreen.route(
           studentModel: settings.arguments as StudentModel,
         );
+
+      case ProfileTransactionHistoryScreen.routeName:
+        return ProfileTransactionHistoryScreen.route(
+          studentId: settings.arguments as String,
+        );
+
       case QRVoucherScreen.routeName:
         return QRVoucherScreen.route(id: settings.arguments as String);
 

@@ -4,8 +4,6 @@ import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/components/step_1/form_1.dart';
 import 'package:swallet_mobile/presentation/widgets/text_form_field_default.dart';
 
-import '../../../../../../../data/datasource/authen_local_datasource.dart';
-
 class ContentFrom1 extends StatefulWidget {
   const ContentFrom1({
     super.key,
@@ -131,15 +129,15 @@ class _ContentFrom1State extends State<ContentFrom1> {
     );
   }
 
-  Future<String> _getAuthen() async {
-    final authen = await AuthenLocalDataSource.getAuthen();
+  // Future<String> _getAuthen() async {
+  //   final authen = await AuthenLocalDataSource.getAuthen();
 
-    if (authen == null) return "";
+  //   if (authen == null) return "";
 
-    setState(() {
-      widget.emailController.text = authen.accountId;
-      readOnly = true;
-    });
-    return authen.accountId;
-  }
+  //   setState(() {
+  //     widget.emailController.text = authen.accountId;
+  //     readOnly = true;
+  //   });
+  //   return authen.accountId;
+  // }
 }

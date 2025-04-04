@@ -1,9 +1,9 @@
 import 'dart:convert';
-
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/lecture_features/qr_response';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
+import 'package:swallet_mobile/data/models/student_features/transaction_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
@@ -157,54 +157,64 @@ class StudentRepositoryImp implements StudentRepository {
     return null;
   }
 
-  // @override
-  // Future<ApiResponse<List<TransactionModel>>?> fetchTransactionsStudentId(
-  //     int? page, int? limit, int? typeIds,
-  //     {required String id}) async {
-  //   try {
-  //     token = await AuthenLocalDataSource.getToken();
-  //     studentId = await AuthenLocalDataSource.getStudentId();
-  //     final Map<String, String> headers = {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer $token'
-  //     };
-  //     if (typeIds == 0) {
-  //       http.Response response = await http.get(
-  //           Uri.parse(
-  //               '$endPoint/$id/histories?state=$state&sort=$sort&page=$page&limit=$limit'),
-  //           headers: headers);
-  //       if (response.statusCode == 200) {
-  //         final result = jsonDecode(utf8.decode(response.bodyBytes));
-  //         ApiResponse<List<TransactionModel>> apiResponse =
-  //             ApiResponse<List<TransactionModel>>.fromJson(
-  //                 result,
-  //                 (data) =>
-  //                     data.map((e) => TransactionModel.fromJson(e)).toList());
-  //         return apiResponse;
-  //       } else {
-  //         return null;
-  //       }
-  //     } else {
-  //       http.Response response = await http.get(
-  //           Uri.parse(
-  //               '$endPoint/$id/histories?state=$state&typeIds=$typeIds&sort=$sort&page=$page&limit=$limit'),
-  //           headers: headers);
-  //       if (response.statusCode == 200) {
-  //         final result = jsonDecode(utf8.decode(response.bodyBytes));
-  //         ApiResponse<List<TransactionModel>> apiResponse =
-  //             ApiResponse<List<TransactionModel>>.fromJson(
-  //                 result,
-  //                 (data) =>
-  //                     data.map((e) => TransactionModel.fromJson(e)).toList());
-  //         return apiResponse;
-  //       } else {
-  //         return null;
-  //       }
-  //     }
-  //   } catch (e) {
-  //     throw Exception(e.toString());
-  //   }
-  // }
+  @override
+  Future<ApiResponse<List<TransactionModel>>?> fetchTransactionsStudentId(
+    int? page,
+    int? limit,
+    int? typeIds,
+    String? searchName, {
+    required String id,
+  }) async {
+    try {
+      token = await AuthenLocalDataSource.getToken();
+      final Map<String, String> headers = {
+        'accept': 'text/plain', // Khớp với curl
+        'Authorization': 'Bearer $token',
+      };
+
+      page ??= 1;
+      limit ??= 10;
+
+      final queryParams = {
+        'studentId': id,
+        'page': page.toString(),
+        'size': limit.toString(),
+      };
+
+      if (searchName != null && searchName.isNotEmpty) {
+        queryParams['searchName'] = searchName;
+      }
+
+      // final baseURL = 'https://10.0.2.2:7137/api/';
+
+      final uri = Uri.parse(
+        '${baseURL}Activity/ActivityTransaction',
+      ).replace(queryParameters: queryParams);
+
+      // final client = http.Client();
+      // final ioClient =
+      //     HttpClient()
+      //       ..badCertificateCallback =
+      //           (X509Certificate cert, String host, int port) =>
+      //               true; // Bỏ qua kiểm tra chứng chỉ
+      // final httpClient = IOClient(ioClient);
+
+      final response = await http.get(uri, headers: headers);
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(utf8.decode(response.bodyBytes));
+        final apiResponse = ApiResponse<List<TransactionModel>>.fromJson(
+          result,
+          (data) => data.map((e) => TransactionModel.fromJson(e)).toList(),
+        );
+        return apiResponse;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 
   @override
   Future<bool?> postChallengeStudentId({
