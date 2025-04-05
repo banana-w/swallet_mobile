@@ -12,6 +12,7 @@ import 'package:swallet_mobile/presentation/blocs/lecture/lecture_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
+import 'package:swallet_mobile/presentation/screens/lecture_features/profile_update_detail/profile_update_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/brand/brand_detail_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/profile_update_detail/profile_update_detail_screen.dart';
@@ -145,17 +146,17 @@ class Body extends StatelessWidget {
                                       widthIcon: 16,
                                       heightIcon: 16,
                                       onPressed: () async {
-                                        // final storeModel =
-                                        //     await AuthenLocalDataSource.getLecture();
-                                        // Navigator.pushNamed(
-                                        //   context,
-                                        //   ProfileUpdateDetailStoreScreen
-                                        //       .routeName,
-                                        //   arguments: storeModel,
-                                        // );
+                                        final lectureModel =
+                                            await AuthenLocalDataSource.getLecture();
+                                        Navigator.pushNamed(
+                                          context,
+                                          ProfileUpdateDetailLectureScreen
+                                              .routeName,
+                                          arguments: lectureModel,
+                                        );
                                       },
                                       svgIcon: 'assets/icons/pen-icon.svg',
-                                      title: 'Cập nhật thông tin',
+                                      title: 'Thông tin chi tiết',
                                     ),
                                     SizedBox(height: 10 * hem),
                                     // ButtonProfile(

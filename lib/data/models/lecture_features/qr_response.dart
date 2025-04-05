@@ -1,7 +1,7 @@
 class ScanQRResponse {
   final String studentId;
   final int pointsTransferred;
-  final double newBalance;
+  final int newBalance;
 
   ScanQRResponse({
     required this.studentId,
@@ -13,7 +13,7 @@ class ScanQRResponse {
     return ScanQRResponse(
       studentId: json['studentId'] as String,
       pointsTransferred: json['pointsTransferred'] as int,
-      newBalance: json['newBalance'] as double,
+      newBalance: json['newBalance'] as int,
     );
   }
 

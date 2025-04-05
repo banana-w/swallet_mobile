@@ -23,52 +23,35 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
   ) : super(RoleAppLoading()) {
     on<RoleAppStart>(_onStartRoleApp);
     on<RoleAppEnd>(_onEndRoleApp);
+    on<RefreshStudentData>(_onRefreshStudentData);
   }
 
-  // Future<void> _onStartRoleApp(
-  //   RoleAppStart event,
-  //   Emitter<RoleAppState> emit,
-  // ) async {
-  //   emit(RoleAppLoading());
-  //   try {
-  //     final authenModel = await AuthenLocalDataSource.getAuthen();
-  //     final isVerifyAfter = await AuthenLocalDataSource.getIsVerified();
+  Future<void> _onRefreshStudentData(
+    RefreshStudentData event,
+    Emitter<RoleAppState> emit,
+  ) async {
+    try {
+      final authenModel = await AuthenLocalDataSource.getAuthen();
+      if (authenModel == null || authenModel.accountId.isEmpty) {
+        emit(RoleAppLoading());
+        return;
+      }
 
-  //     bool isVerify = authenModel!.isVerified;
-  //     String role = authenModel.role;
-  //     String userId = authenModel.accountId;
-  //     if (isVerify || isVerifyAfter == "true") {
-  //       if (userId != '') {
-  //         final student = await studentRepository.fetchStudentById(
-  //           id: authenModel.accountId,
-  //         );
-  //         if (role == 'Sinh viên') {
-  //           if (student?.state == 2) {
-  //             emit(Verified(authenModel: authenModel, studentModel: student!));
-  //           } else {
-  //             emit(
-  //               Unverified(authenModel: authenModel, studentModel: student!),
-  //             );
-  //           }
-  //         } else if (role.contains('Giáo viên')) {
-  //           final lecture = await lectureRepository.fetchLectureById(
-  //             accountId: authenModel.accountId,
-  //           );
-  //           emit(LectureRole(authenModel: authenModel, lectureModel: lecture!));
-  //         } else {
-  //           final store = await storeRepository.fetchStoreById(
-  //             accountId: authenModel.accountId,
-  //           );
-  //           emit(StoreRole(authenModel: authenModel, storeModel: store!));
-  //         }
-  //       } else {
-  //         emit(RoleAppLoading());
-  //       }
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+      if (authenModel.role == 'Sinh viên') {
+        final student = await studentRepository.fetchStudentById(
+          id: authenModel.accountId,
+        );
+        if (student != null) {
+          emit(Verified(authenModel: authenModel, studentModel: student));
+        } else {
+          emit(Unverified(authenModel: authenModel, studentModel: student!));
+        }
+      }
+    } catch (e) {
+      print('Lỗi khi làm mới dữ liệu sinh viên: $e');
+      emit(RoleAppLoading());
+    }
+  }
 
   Future<void> _onStartRoleApp(
     RoleAppStart event,
@@ -135,4 +118,49 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
       print(e);
     }
   }
+
+  // Future<void> _onStartRoleApp(
+  //   RoleAppStart event,
+  //   Emitter<RoleAppState> emit,
+  // ) async {
+  //   emit(RoleAppLoading());
+  //   try {
+  //     final authenModel = await AuthenLocalDataSource.getAuthen();
+  //     final isVerifyAfter = await AuthenLocalDataSource.getIsVerified();
+
+  //     bool isVerify = authenModel!.isVerified;
+  //     String role = authenModel.role;
+  //     String userId = authenModel.accountId;
+  //     if (isVerify || isVerifyAfter == "true") {
+  //       if (userId != '') {
+  //         final student = await studentRepository.fetchStudentById(
+  //           id: authenModel.accountId,
+  //         );
+  //         if (role == 'Sinh viên') {
+  //           if (student?.state == 2) {
+  //             emit(Verified(authenModel: authenModel, studentModel: student!));
+  //           } else {
+  //             emit(
+  //               Unverified(authenModel: authenModel, studentModel: student!),
+  //             );
+  //           }
+  //         } else if (role.contains('Giáo viên')) {
+  //           final lecture = await lectureRepository.fetchLectureById(
+  //             accountId: authenModel.accountId,
+  //           );
+  //           emit(LectureRole(authenModel: authenModel, lectureModel: lecture!));
+  //         } else {
+  //           final store = await storeRepository.fetchStoreById(
+  //             accountId: authenModel.accountId,
+  //           );
+  //           emit(StoreRole(authenModel: authenModel, storeModel: store!));
+  //         }
+  //       } else {
+  //         emit(RoleAppLoading());
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 }

@@ -15,3 +15,9 @@ final class RoleAppEnd extends RoleAppEvent {
   @override
   List<Object?> get props => [];
 }
+
+class RefreshStudentData extends RoleAppEvent {
+  const RefreshStudentData();
+  @override
+  List<Object?> get props => [];
+}
