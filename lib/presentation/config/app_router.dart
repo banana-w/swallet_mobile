@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:swallet_mobile/data/models/lecture_features/qr_response';
+import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
+import 'package:swallet_mobile/data/models/lecture_features/qr_response.dart';
 import 'package:swallet_mobile/data/models/store_features/campaign_voucher_information_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
+import 'package:swallet_mobile/presentation/screens/lecture_features/campus/campus_screen.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/landing_screen/landing_lecture_screen.dart';
+import 'package:swallet_mobile/presentation/screens/lecture_features/profile_update_detail/profile_update_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/qr_generate/qr_generate_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/brand/brand_detail_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_store_screen.dart';
@@ -188,6 +191,11 @@ class AppRouter {
       case ProfileDetailScreen.routeName:
         return ProfileDetailScreen.route(
           studentModel: settings.arguments as StudentModel,
+        );
+
+      case ProfileUpdateDetailLectureScreen.routeName:
+        return ProfileUpdateDetailLectureScreen.route(
+          lectureModel: settings.arguments as LectureModel,
         );
 
       case ProfileVerificationScreen.routeName:

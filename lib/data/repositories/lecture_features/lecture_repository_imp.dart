@@ -68,9 +68,7 @@ class LectureRepositoryImp implements LectureRepository {
       debugPrint('Request body: ${jsonEncode(body)}'); // Log request để debug
 
       http.Response response = await http.post(
-        Uri.parse(
-          'https://swallet-api.onrender.com/api/Lecturer/generate-qrcode',
-        ),
+        Uri.parse('${baseURL}Lecturer/generate-qrcode'),
         headers: headers,
         body: jsonEncode(body),
       );

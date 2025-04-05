@@ -39,9 +39,9 @@ class _TabScanVoucherState extends State<TabScanLectureQR> {
     return BlocListener<StudentBloc, StudentState>(
       listener: (context, state) {
         if (state is QRScanFailed) {
-          // setState(() {
-          //   _hasScanned = false; // Cho phép quét lại nếu thất bại
-          // });
+          setState(() {
+            _hasScanned = false; // Cho phép quét lại nếu thất bại
+          });
           // Navigator.pushNamed(
           //   context,
           //   FailedScanVoucherScreen.routeName,
@@ -78,10 +78,9 @@ class _TabScanVoucherState extends State<TabScanLectureQR> {
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Colors.transparent,
                 content: AwesomeSnackbarContent(
-                  title:
-                      'Thành công! Bạn đã nhận được ${state.response.pointsTransferred} từ mã QR.',
+                  title: 'Thành công!',
                   message:
-                      'Tài khoản của bạn đã được cập nhật: ${state.response.newBalance}',
+                      'Đã thêm ${state.response.pointsTransferred} Xu vào ví của bạn',
                   contentType: ContentType.success,
                 ),
               ),
@@ -139,12 +138,12 @@ class _TabScanVoucherState extends State<TabScanLectureQR> {
             right: 0,
             child: Center(
               child: Text(
-                'Scan QR code from your lecturer',
+                'Quét mã từ Giảng viên để nhận xu!',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  backgroundColor: Colors.black54,
+                  backgroundColor: Colors.transparent,
                 ),
               ),
             ),

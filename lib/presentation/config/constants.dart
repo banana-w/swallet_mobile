@@ -16,7 +16,8 @@ const kErrorTextColor = Color(0xffba1c1c);
 const kbgYellow = Color(0xfffffbe6);
 const kYellow = Color(0xfffaad14);
 //strings
-const String baseURL = 'https://swallet-api-2025-capstoneproject.onrender.com/api/';
+const String baseURL =
+    'https://swallet-api-2025-capstoneproject.onrender.com/api/';
 
 //RegExp
 final RegExp emailValidationRegExp = RegExp(

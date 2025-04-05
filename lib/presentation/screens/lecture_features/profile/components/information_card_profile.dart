@@ -203,7 +203,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                               return SizedBox(
                                 width: 150 * widget.fem,
                                 child: Text(
-                                  '${state.lecture.fullName}',
+                                  '${state.lecture.email}',
                                   maxLines: 1,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
@@ -221,8 +221,8 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                               width: 150 * widget.fem,
                               child: Text(
                                 lecture == null
-                                    ? '${widget.lectureModel.fullName}'
-                                    : lecture!.fullName,
+                                    ? '${widget.lectureModel.email}'
+                                    : lecture!.email,
                                 maxLines: 1,
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,

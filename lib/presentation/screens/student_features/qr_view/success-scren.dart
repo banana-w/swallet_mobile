@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swallet_mobile/data/models/lecture_features/qr_response';
+import 'package:swallet_mobile/data/models/lecture_features/qr_response.dart';
 
 class SuccessScanLectureQRScreen extends StatelessWidget {
   static const String routeName = '/success-scan-voucher';
