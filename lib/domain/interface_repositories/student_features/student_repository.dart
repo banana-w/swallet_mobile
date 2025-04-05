@@ -1,5 +1,4 @@
 import 'package:swallet_mobile/data/models/api_response.dart';
-import 'package:swallet_mobile/data/models/lecture_features/qr_response';
 import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/data/models/student_features/redeemed_voucher_model.dart';
 import 'package:swallet_mobile/data/models/lecture_features/qr_response.dart';

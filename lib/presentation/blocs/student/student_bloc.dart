@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
-import 'package:swallet_mobile/data/models/lecture_features/qr_response';
 import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/data/models/student_features/redeemed_voucher_model.dart';
 import 'package:swallet_mobile/data/models/lecture_features/qr_response.dart';
