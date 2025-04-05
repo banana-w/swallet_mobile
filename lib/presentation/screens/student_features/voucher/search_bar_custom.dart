@@ -35,11 +35,11 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
             viewOnSubmitted: (value) async {
               final studentId = await AuthenLocalDataSource.getStudentId();
               FocusScope.of(context).unfocus();
-              Navigator.pushNamed(
-                context,
-                VoucherListScreen.routeName,
-                arguments: <dynamic>[value, studentId],
-              );
+              // Navigator.pushNamed(
+              //   context,
+              //   VoucherListScreen.routeName,
+              //   arguments: <dynamic>[value, studentId],
+              // );
             },
             builder: (BuildContext context, SearchController controller) {
               return SizedBox(
@@ -98,11 +98,11 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
                           final studentId =
                               await AuthenLocalDataSource.getStudentId();
                           controller.closeView(item);
-                          Navigator.pushNamed(
-                            context,
-                            VoucherListScreen.routeName,
-                            arguments: <dynamic>[item, studentId],
-                          );
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   VoucherListScreen.routeName,
+                          //   arguments: <dynamic>[item, studentId],
+                          // );
                           FocusScope.of(context).unfocus();
                         });
                       },

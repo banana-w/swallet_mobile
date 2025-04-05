@@ -402,7 +402,7 @@ class CampaignVoucherScreen extends StatelessWidget {
                     backgroundColor: Colors.transparent,
                     content: AwesomeSnackbarContent(
                       title: 'Mua thất bại',
-                      message: 'Số đậu xanh của bạn không đủ!',
+                      message: 'Số coin của bạn không đủ!',
                       contentType: ContentType.failure,
                     ),
                   ));

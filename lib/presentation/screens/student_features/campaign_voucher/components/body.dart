@@ -16,7 +16,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/campaign_de
 
 import '../../../../config/constants.dart';
 import '../../../../widgets/shimmer_widget.dart';
-import 'campaign_formation_card.dart';
+import 'campaign_brandInfo_card.dart';
 
 class Body extends StatelessWidget {
   const Body({
@@ -185,12 +185,12 @@ class Body extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${campaignDetail.brandName}',
+                                  '${campaignDetail.campaignName}',
                                   textAlign: TextAlign.justify,
                                   softWrap: true,
                                   style: GoogleFonts.openSans(
                                     textStyle: TextStyle(
-                                      fontSize: 15 * ffem,
+                                      fontSize: 18 * ffem,
                                       color: klowTextGrey,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -207,7 +207,7 @@ class Body extends StatelessWidget {
                                     softWrap: true,
                                     style: GoogleFonts.openSans(
                                       textStyle: TextStyle(
-                                        fontSize: 15 * ffem,
+                                        fontSize: 20 * ffem,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -331,7 +331,7 @@ class Body extends StatelessWidget {
                             hem: hem,
                             fem: fem,
                             ffem: ffem,
-                            campaignDetil: campaignDetail,
+                            campaignDetail: campaignDetail,
                           ),
                           SizedBox(height: 5 * hem),
                           GestureDetector(

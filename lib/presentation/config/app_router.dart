@@ -3,6 +3,7 @@ import 'package:swallet_mobile/data/models/lecture_features/qr_response';
 import 'package:swallet_mobile/data/models/store_features/campaign_voucher_information_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
+import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/landing_screen/landing_lecture_screen.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/qr_generate/qr_generate_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/brand/brand_detail_store_screen.dart';
@@ -50,6 +51,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/success_red
 import 'package:swallet_mobile/presentation/screens/student_features/verify_studentMail/screens/verifycode_student_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/verify_email/screens/verifycode_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/voucher_item_detail/voucher_item_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/welcome/welcome_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
@@ -160,6 +162,13 @@ class AppRouter {
       case VoucherScreen.routeName:
         return VoucherScreen.route();
 
+      case VoucherItemDetailScreen.routeName:
+        final args = settings.arguments as Map<String, String>;
+        return VoucherItemDetailScreen.route(
+          campaignId: args['campaignId']!,
+          voucherId: args['voucherId']!,
+        );
+
       case RedeemVoucherScreen.routeName:
         List<dynamic> args = settings.arguments as List<dynamic>;
 
@@ -183,8 +192,7 @@ class AppRouter {
         );
 
       case FailedBuyScreen.routeName:
-        return FailedBuyScreen.route(
-            failed: settings.arguments as String);
+        return FailedBuyScreen.route(failed: settings.arguments as String);
 
       case ProfileDetailScreen.routeName:
         return ProfileDetailScreen.route(

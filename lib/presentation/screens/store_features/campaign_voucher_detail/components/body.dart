@@ -7,6 +7,7 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/campaign_voucher/components/campaign_brandInfo_card.dart';
 import '../../../../config/constants.dart';
 import '../../../../widgets/shimmer_widget.dart';
 

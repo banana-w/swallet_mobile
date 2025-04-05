@@ -78,7 +78,7 @@ class VoucherScreen extends StatelessWidget {
   ) {
     return BlocBuilder<StudentBloc, StudentState>(
       builder: (context, state) {
-        if (state is StudentVouchersLoaded) {
+        if (state is StudentVouchersLoaded1) {
           return Body(studentId: studentId);
         } else if (state is StudentVoucherLoading) {
           return SafeArea(
