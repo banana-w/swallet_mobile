@@ -182,8 +182,8 @@ class Body extends StatelessWidget {
                                       borderRadius:
                                           BorderRadius.circular(10 * fem),
                                       child: SizedBox(
-                                        height: 35 * hem,
-                                        width: 35 * fem,
+                                        height: 50 * hem,
+                                        width: 50 * fem,
                                         child: Image.network(
                                           state.campaignDetailModel.brandLogo,
                                           // state.campaignDetailModel.image,

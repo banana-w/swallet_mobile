@@ -5,10 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/notification/notification_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_list_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/components/tab_isused_voucher.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/components/tab_voucher.dart';
+import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
 
 class Body extends StatefulWidget {
@@ -119,7 +122,8 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
                 title: Padding(
                   padding: EdgeInsets.only(top: 10 * hem),
                   child: Text(
-                    'UniBean',
+                    'Swallet',
+                    textAlign: TextAlign.center,
                     style: GoogleFonts.openSans(
                       textStyle: TextStyle(
                         fontSize: 22 * ffem,
@@ -129,52 +133,52 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
                     ),
                   ),
                 ),
-                // actions: [
-                //   Padding(
-                //     padding: EdgeInsets.only(top: 5 * hem, right: 20 * fem),
-                //     child: BlocBuilder<NotificationBloc, NotificationState>(
-                //       builder: (context, state) {
-                //         if (state is NewNotification) {
-                //           return IconButton(
-                //             icon: Icon(
-                //               Icons.notifications_active_rounded,
-                //               color: Colors.yellow,
-                //               size: 25 * fem,
-                //             ),
-                //             onPressed: () {
-                //               if (roleState is Unverified) {
-                //                 Navigator.pushNamed(
-                //                     context, UnverifiedScreen.routeName);
-                //               } else {
-                //                 context
-                //                     .read<NotificationBloc>()
-                //                     .add(LoadNotification());
-                //                 Navigator.pushNamed(
-                //                     context, NotificationListScreen.routeName);
-                //               }
-                //             },
-                //           );
-                //         }
-                //         return IconButton(
-                //           icon: Icon(
-                //             Icons.notifications,
-                //             color: Colors.white,
-                //             size: 25 * fem,
-                //           ),
-                //           onPressed: () {
-                //             if (roleState is Unverified) {
-                //               Navigator.pushNamed(
-                //                   context, UnverifiedScreen.routeName);
-                //             } else {
-                //               Navigator.pushNamed(
-                //                   context, NotificationListScreen.routeName);
-                //             }
-                //           },
-                //         );
-                //       },
-                //     ),
-                //   ),
-                // ],
+                actions: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 5 * hem, right: 20 * fem),
+                    child: BlocBuilder<NotificationBloc, NotificationState>(
+                      builder: (context, state) {
+                        if (state is NewNotification) {
+                          return IconButton(
+                            icon: Icon(
+                              Icons.notifications_active_rounded,
+                              color: Colors.yellow,
+                              size: 25 * fem,
+                            ),
+                            onPressed: () {
+                              if (roleState is Unverified) {
+                                Navigator.pushNamed(
+                                    context, UnverifiedScreen.routeName);
+                              } else {
+                                context
+                                    .read<NotificationBloc>()
+                                    .add(LoadNotification());
+                                Navigator.pushNamed(
+                                    context, NotificationListScreen.routeName);
+                              }
+                            },
+                          );
+                        }
+                        return IconButton(
+                          icon: Icon(
+                            Icons.notifications,
+                            color: Colors.white,
+                            size: 25 * fem,
+                          ),
+                          onPressed: () {
+                            if (roleState is Unverified) {
+                              Navigator.pushNamed(
+                                  context, UnverifiedScreen.routeName);
+                            } else {
+                              Navigator.pushNamed(
+                                  context, NotificationListScreen.routeName);
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
                 bottom: TabBar(
                   controller: _controller,
                   indicatorColor: Colors.white,

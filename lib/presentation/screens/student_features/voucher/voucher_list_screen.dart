@@ -267,7 +267,7 @@ class _BodyVoucherListState extends State<BodyVoucherList> {
                                                   child: RotatedBox(
                                                     quarterTurns: 3,
                                                     child: Text(
-                                                      studentVoucher.brandName,
+                                                      studentVoucher.brandName!,
                                                       style:
                                                           GoogleFonts.openSans(
                                                             textStyle: TextStyle(
@@ -390,7 +390,7 @@ class _BodyVoucherListState extends State<BodyVoucherList> {
                                                                     ),
                                                                     Expanded(
                                                                       child: Text(
-                                                                        changeFormateDate(studentVoucher.dateBought),
+                                                                        changeFormateDate(studentVoucher.dateBought!),
                                                                         style: GoogleFonts.openSans(
                                                                           textStyle: TextStyle(
                                                                             fontSize:

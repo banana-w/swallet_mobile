@@ -4,6 +4,7 @@ import 'package:swallet_mobile/data/models/lecture_features/qr_response.dart';
 import 'package:swallet_mobile/data/models/store_features/campaign_voucher_information_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
+import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/campus/campus_screen.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/landing_screen/landing_lecture_screen.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/profile_update_detail/profile_update_detail_screen.dart';
@@ -30,6 +31,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel
 import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_list_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_detail/profile_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile_history/profile_trans_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_update_detail/profile_update_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/profile_verification_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/update_verification_screen.dart';
@@ -52,6 +54,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/success_red
 import 'package:swallet_mobile/presentation/screens/student_features/verify_studentMail/screens/verifycode_student_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/verify_email/screens/verifycode_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/voucher_item_detail/voucher_item_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/welcome/welcome_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
@@ -162,6 +165,13 @@ class AppRouter {
       case VoucherScreen.routeName:
         return VoucherScreen.route();
 
+      case VoucherItemDetailScreen.routeName:
+        final args = settings.arguments as Map<String, String>;
+        return VoucherItemDetailScreen.route(
+          campaignId: args['campaignId']!,
+          voucherId: args['voucherId']!,
+        );
+
       case RedeemVoucherScreen.routeName:
         List<dynamic> args = settings.arguments as List<dynamic>;
 
@@ -185,8 +195,7 @@ class AppRouter {
         );
 
       case FailedBuyScreen.routeName:
-        return FailedBuyScreen.route(
-            failed: settings.arguments as String);
+        return FailedBuyScreen.route(failed: settings.arguments as String);
 
       case ProfileDetailScreen.routeName:
         return ProfileDetailScreen.route(
@@ -212,6 +221,12 @@ class AppRouter {
         return ProfileUpdateDetailScreen.route(
           studentModel: settings.arguments as StudentModel,
         );
+
+      case ProfileTransactionHistoryScreen.routeName:
+        return ProfileTransactionHistoryScreen.route(
+          studentId: settings.arguments as String,
+        );
+
       case QRVoucherScreen.routeName:
         return QRVoucherScreen.route(id: settings.arguments as String);
 

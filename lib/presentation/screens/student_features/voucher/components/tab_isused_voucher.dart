@@ -105,8 +105,8 @@ class _TabIsUsedVoucherState extends State<TabIsUsedVoucher> {
                     SizedBox(height: 15 * fem),
                     BlocBuilder<StudentBloc, StudentState>(
                       builder: (context, state) {
-                        if (state is StudentVouchersLoaded) {
-                          if (state.voucherModels.isEmpty) {
+                        if (state is StudentVouchersLoaded1) {
+                          if (state.brandVoucherModels.isEmpty) {
                             return Container(
                               width: double.infinity,
                               margin: EdgeInsets.only(
@@ -150,7 +150,7 @@ class _TabIsUsedVoucherState extends State<TabIsUsedVoucher> {
                               ),
                             );
                           } else {
-                            final vouchers = state.voucherModels;
+                            final vouchers = state.brandVoucherModels;
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -165,7 +165,7 @@ class _TabIsUsedVoucherState extends State<TabIsUsedVoucher> {
                                             ? vouchers.length
                                             : vouchers.length + 1,
                                     itemBuilder: (context, index) {
-                                      if (index >= state.voucherModels.length) {
+                                      if (index >= state.brandVoucherModels.length) {
                                         return Center(
                                           child: CircularProgressIndicator(
                                             color: kPrimaryColor,
@@ -197,11 +197,11 @@ class _TabIsUsedVoucherState extends State<TabIsUsedVoucher> {
                                             right: 15,
                                           ),
                                           width: double.infinity,
-                                          child: VoucherCard(
-                                            studentVoucher: studentVoucher,
-                                            fem: fem,
-                                            hem: hem,
-                                          ),
+                                          // child: VoucherCard(
+                                          //   studentVoucher: studentVoucher,
+                                          //   fem: fem,
+                                          //   hem: hem,
+                                          // ),
                                         );
                                       }
                                     },
@@ -268,7 +268,7 @@ class VoucherCard extends StatelessWidget {
                     child: RotatedBox(
                       quarterTurns: 3,
                       child: Text(
-                        studentVoucher.brandName,
+                        studentVoucher.brandName!,
                         style: GoogleFonts.openSans(
                           textStyle: TextStyle(
                             fontSize: 13,
@@ -354,7 +354,7 @@ class VoucherCard extends StatelessWidget {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          _formatDatetime(studentVoucher.dateBought),
+                                          _formatDatetime(studentVoucher.dateBought!),
                                           style: GoogleFonts.openSans(
                                             textStyle: TextStyle(
                                               fontSize: 12,

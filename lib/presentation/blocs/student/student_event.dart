@@ -212,13 +212,13 @@ final class UpdateStudent extends StudentEvent {
 }
 
 final class LoadVoucherItem extends StudentEvent {
-  final String studentId;
+  final String campaignId;
   final String voucherId;
 
-  const LoadVoucherItem({required this.studentId, required this.voucherId});
+  const LoadVoucherItem({required this.campaignId, required this.voucherId});
 
   @override
-  List<Object?> get props => [studentId, voucherId];
+  List<Object?> get props => [campaignId, voucherId];
 }
 
 final class LoadStudentById extends StudentEvent {

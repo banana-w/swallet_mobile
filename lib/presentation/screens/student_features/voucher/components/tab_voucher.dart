@@ -6,6 +6,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:intl/intl.dart';
+import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
+import 'package:swallet_mobile/data/models/student_features/redeemed_voucher_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
@@ -110,8 +112,8 @@ class _BodyState extends State<TabVoucher> {
                     SizedBox(height: 10 * fem),
                     BlocBuilder<StudentBloc, StudentState>(
                       builder: (context, state) {
-                        if (state is StudentVouchersLoaded) {
-                          if (state.voucherModels.isEmpty) {
+                        if (state is StudentVouchersLoaded1) {
+                          if (state.brandVoucherModels.isEmpty) {
                             return Container(
                               width: double.infinity,
                               margin: EdgeInsets.only(
@@ -188,62 +190,46 @@ class _BodyState extends State<TabVoucher> {
                               ),
                             );
                           } else {
-                            final vouchers = state.voucherModels;
+                            final vouchers = state.brandVoucherModels;
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 SizedBox(height: 15 * hem),
-                                Container(
-                                  child: ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount:
-                                        state.hasReachedMax
-                                            ? vouchers.length
-                                            : vouchers.length + 1,
-                                    itemBuilder: (context, index) {
-                                      if (index >= state.voucherModels.length) {
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                            color: kPrimaryColor,
+                                ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount:
+                                      vouchers
+                                          .length, // Chỉ hiển thị số lượng voucher thực tế
+                                  itemBuilder: (context, index) {
+                                    var studentVoucher = vouchers[index];
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: const Color(0x0c000000),
+                                            offset: Offset(3 * fem, 2 * fem),
+                                            blurRadius: 5 * fem,
                                           ),
-                                        );
-                                      } else {
-                                        var studentVoucher = vouchers[index];
-                                        return Container(
-                                          decoration: BoxDecoration(
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Color(0x0c000000),
-                                                offset: Offset(
-                                                  3 * fem,
-                                                  2 * fem,
-                                                ),
-                                                blurRadius: 5 * fem,
-                                              ),
-                                            ],
-                                          ),
-                                          height:
-                                              MediaQuery.of(
-                                                context,
-                                              ).size.height *
-                                              0.18,
-                                          margin: EdgeInsets.only(
-                                            bottom: 15,
-                                            left: 15,
-                                            right: 15,
-                                          ),
-                                          width: double.infinity,
-                                          child: VoucherCard(
-                                            studentVoucher: studentVoucher,
-                                            fem: fem,
-                                            hem: hem,
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
+                                        ],
+                                      ),
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                          0.18,
+                                      margin: EdgeInsets.only(
+                                        bottom: 15,
+                                        left: 15,
+                                        right: 15,
+                                      ),
+                                      width: double.infinity,
+                                      child: VoucherCard(
+                                        studentVoucher: studentVoucher,
+                                        fem: fem,
+                                        hem: hem,
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             );
@@ -281,18 +267,27 @@ class VoucherCard extends StatelessWidget {
     required this.hem,
   });
 
-  final VoucherStudentModel studentVoucher;
+  final BrandVoucher studentVoucher;
   final double fem;
   final double hem;
 
   @override
   Widget build(BuildContext context) {
+    // Lấy voucher đầu tiên từ voucherGroups (nếu có)
+    final voucherGroup =
+        studentVoucher.voucherGroups.isNotEmpty
+            ? studentVoucher.voucherGroups.first
+            : null;
+
     return InkWell(
-      onTap: () {
+      onTap: () async {
         Navigator.pushNamed(
           context,
           VoucherItemDetailScreen.routeName,
-          arguments: studentVoucher,
+          arguments: {
+            'campaignId': studentVoucher.voucherGroups.first.campaignId,
+            'voucherId': studentVoucher.voucherGroups.first.voucherId,
+          },
         );
       },
       child: Stack(
@@ -306,9 +301,9 @@ class VoucherCard extends StatelessWidget {
                     child: RotatedBox(
                       quarterTurns: 3,
                       child: Text(
-                        studentVoucher.brandName,
+                        studentVoucher.brandName, // Hiển thị brandName
                         style: GoogleFonts.openSans(
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                             fontSize: 13,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -328,7 +323,8 @@ class VoucherCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        studentVoucher.voucherName,
+                        voucherGroup?.voucherName ??
+                            'Không có voucher', // Hiển thị voucherName
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -350,21 +346,29 @@ class VoucherCard extends StatelessWidget {
                                       child: SizedBox(
                                         width: 130 * fem,
                                         height: 140 * hem,
-                                        child: Image.network(
-                                          studentVoucher.voucherImage,
-                                          fit: BoxFit.fill,
-                                          errorBuilder: (
-                                            context,
-                                            error,
-                                            stackTrace,
-                                          ) {
-                                            return Icon(
-                                              Icons.error_outlined,
-                                              size: 50 * fem,
-                                              color: kPrimaryColor,
-                                            );
-                                          },
-                                        ),
+                                        child:
+                                            voucherGroup != null
+                                                ? Image.network(
+                                                  voucherGroup
+                                                      .voucherImage, // Hiển thị voucherImage
+                                                  fit: BoxFit.fill,
+                                                  errorBuilder: (
+                                                    context,
+                                                    error,
+                                                    stackTrace,
+                                                  ) {
+                                                    return Icon(
+                                                      Icons.error_outlined,
+                                                      size: 50 * fem,
+                                                      color: kPrimaryColor,
+                                                    );
+                                                  },
+                                                )
+                                                : Icon(
+                                                  Icons.image_not_supported,
+                                                  size: 50 * fem,
+                                                  color: kPrimaryColor,
+                                                ),
                                       ),
                                     ),
                                   ),
@@ -381,9 +385,9 @@ class VoucherCard extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        'Ngày mua: ',
+                                        'Số lượng: ',
                                         style: GoogleFonts.openSans(
-                                          textStyle: TextStyle(
+                                          textStyle: const TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.normal,
                                             color: Colors.black,
@@ -392,9 +396,11 @@ class VoucherCard extends StatelessWidget {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          _formatDatetime(studentVoucher.dateBought),
+                                          voucherGroup != null
+                                              ? '${voucherGroup.quantity}'
+                                              : 'N/A',
                                           style: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.normal,
                                               color: Colors.black,
@@ -409,7 +415,7 @@ class VoucherCard extends StatelessWidget {
                                       Text(
                                         'Hạn sử dụng: ',
                                         style: GoogleFonts.openSans(
-                                          textStyle: TextStyle(
+                                          textStyle: const TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.normal,
                                             color: Colors.black,
@@ -418,9 +424,13 @@ class VoucherCard extends StatelessWidget {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          changeFormateDate(studentVoucher.expireOn),
+                                          voucherGroup != null
+                                              ? changeFormateDate(
+                                                voucherGroup.expireOn,
+                                              ) // Định dạng ngày hết hạn
+                                              : 'N/A',
                                           style: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
+                                            textStyle: const TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.normal,
                                               color: Colors.black,
@@ -475,28 +485,20 @@ class VoucherCard extends StatelessWidget {
     );
   }
 
-  String _formatDatetime(String date) {
-    DateTime dateTime = DateTime.parse(date).add(Duration(hours: 7));
-
-    String formattedDatetime = DateFormat("dd/MM/yyyy").format(dateTime);
-    return formattedDatetime;
-  }
-
   Widget buildButtonVoucher(
     double hem,
     double fem,
-    VoucherStudentModel studentVoucher,
-    context,
+    BrandVoucher studentVoucher,
+    BuildContext context,
   ) {
-    if (studentVoucher.isUsed) {
+    final voucherGroup =
+        studentVoucher.voucherGroups.isNotEmpty
+            ? studentVoucher.voucherGroups.first
+            : null;
+
+    if (voucherGroup == null) {
       return ElevatedButton(
-        onPressed: () {
-          Navigator.pushNamed(
-            context,
-            QRVoucherScreen.routeName,
-            arguments: studentVoucher.voucherCode,
-          );
-        },
+        onPressed: null,
         style: ElevatedButton.styleFrom(
           backgroundColor: klighGreyColor,
           shape: const StadiumBorder(
@@ -504,7 +506,7 @@ class VoucherCard extends StatelessWidget {
           ),
         ),
         child: Text(
-          'Đã sử dụng',
+          'Không có voucher',
           style: GoogleFonts.openSans(
             textStyle: TextStyle(
               fontSize: 13,
@@ -514,56 +516,55 @@ class VoucherCard extends StatelessWidget {
           ),
         ),
       );
-    } else if (DateTime.now().isAfter(
-      DateTime.parse(studentVoucher.expireOn),
-    )) {
-      return ElevatedButton(
-        onPressed: () {
+    }
+
+    if (voucherGroup.quantity > 0) {
+      return GestureDetector(
+        onTap: () {
           Navigator.pushNamed(
             context,
             QRVoucherScreen.routeName,
-            arguments: studentVoucher.voucherCode,
+            arguments: voucherGroup.voucherId,
           );
         },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: klighGreyColor,
-          shape: const StadiumBorder(
-            side: BorderSide(width: 1, color: klowTextGrey),
-          ),
-        ),
-        child: Text(
-          'Đã quá hạn',
-          style: GoogleFonts.openSans(
-            textStyle: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: klowTextGrey,
+        child: AbsorbPointer(
+          child: ElevatedButton(
+            onPressed: () {}, // Để null hoặc empty để GestureDetector xử lý
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              shape: const StadiumBorder(
+                side: BorderSide(width: 1, color: klightPrimaryColor),
+              ),
+            ),
+            child: Text(
+              'Mã QR',
+              style: GoogleFonts.openSans(
+                textStyle: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: kPrimaryColor,
+                ),
+              ),
             ),
           ),
         ),
       );
     } else {
       return ElevatedButton(
-        onPressed: () {
-          Navigator.pushNamed(
-            context,
-            QRVoucherScreen.routeName,
-            arguments: studentVoucher.voucherCode,
-          );
-        },
+        onPressed: null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
+          backgroundColor: klighGreyColor,
           shape: const StadiumBorder(
-            side: BorderSide(width: 1, color: klightPrimaryColor),
+            side: BorderSide(width: 1, color: klowTextGrey),
           ),
         ),
         child: Text(
-          'Mã QR',
+          'Hết voucher',
           style: GoogleFonts.openSans(
             textStyle: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: kPrimaryColor,
+              color: klowTextGrey,
             ),
           ),
         ),

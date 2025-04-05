@@ -1,7 +1,12 @@
 import 'package:swallet_mobile/data/models/api_response.dart';
+import 'package:swallet_mobile/data/models/lecture_features/qr_response';
+import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
+import 'package:swallet_mobile/data/models/student_features/redeemed_voucher_model.dart';
 import 'package:swallet_mobile/data/models/lecture_features/qr_response.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
+import 'package:swallet_mobile/data/models/student_features/transaction_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
+import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
 
 abstract class StudentRepository {
   const StudentRepository();
@@ -22,9 +27,21 @@ abstract class StudentRepository {
     required String id,
   });
 
-  // Future<ApiResponse<List<TransactionModel>>?> fetchTransactionsStudentId(
-  //     int? page, int? limit, int? typeIds,
-  //     {required String id});
+  Future<ApiResponse<List<BrandVoucher>>?> fetchVoucherByStudentId(
+    int? page,
+    int? limit,
+    String? search,
+    bool? isUsed, {
+    required String id,
+  });
+
+  Future<ApiResponse<List<TransactionModel>>?> fetchTransactionsStudentId(
+    int? page,
+    int? limit,
+    int? typeIds,
+    String? searchName, {
+    required String id,
+  });
 
   // Future<ApiResponse<List<OrderModel>>?> fetchOrdersStudentId(
   //     int? page, int? limit,
@@ -46,8 +63,12 @@ abstract class StudentRepository {
     required String address,
   });
 
-  // Future<VoucherStudentItemModel?> fetchVoucherItemByStudentId(
-  //     {required String studentId, required String voucherId});
+  Future<CampaignVoucherDetailModel?> fetchVoucherItemByStudentId({
+    required String campaignId,
+    required String voucherId,
+  });
+  
+  Future<CampaignDetailModel?> fecthCampaignById({required String id});
 
   Future<List<String>?> fetchWishListByStudentId();
 

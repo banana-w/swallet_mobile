@@ -87,36 +87,61 @@ class CampaignStoreCard extends StatelessWidget {
               SizedBox(height: 2 * hem),
               SizedBox(
                 width: 250 * fem,
-                // height: 45*hem,
-                child: Text(
-                  ' ${formatTime(storeModel.openingHours ?? '00:00')} am - ${formatTime(storeModel.closingHours ?? '00:00')} pm',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                      fontSize: 13 * ffem,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.access_time, 
+                      size: 16 * ffem,
                       color: klowTextGrey,
-                      fontWeight: FontWeight.normal,
                     ),
-                  ),
+                    SizedBox(width: 5 * fem), // Khoảng cách giữa icon và text
+                    Expanded(
+                      child: Text(
+                        ' ${formatTime(storeModel.openingHours ?? '00:00')} am - ${formatTime(storeModel.closingHours ?? '00:00')} pm',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.openSans(
+                          textStyle: TextStyle(
+                            fontSize: 13 * ffem,
+                            color: klowTextGrey,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: 2 * hem),
               SizedBox(
                 width: 220 * fem,
                 // height: 45*hem,
-                child: Text(
-                  storeModel.address,
-                  maxLines: 2,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                      fontSize: 13 * ffem,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      size: 16 * ffem,
                       color: klowTextGrey,
-                      fontWeight: FontWeight.normal,
                     ),
-                  ),
+                    SizedBox(width: 5 * fem), // Khoảng cách giữa icon và text
+                    Expanded(
+                      child: Text(
+                        storeModel.address,
+                        maxLines: 2,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.openSans(
+                          textStyle: TextStyle(
+                            fontSize: 13 * ffem,
+                            color: klowTextGrey,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

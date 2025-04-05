@@ -7,29 +7,27 @@ class VoucherStudentModel extends VoucherStudent {
     required super.voucherName,
     required super.voucherImage,
     required super.voucherCode,
-    required super.index,
-    required super.typeId,
+    super.typeId,
     required super.typeName,
-    required super.typeImage,
+    super.typeImage,
     required super.studentId,
     required super.studentName,
-    required super.brandId,
-    required super.brandName,
-    required super.brandImage,
+    super.brandId,
+    super.brandName,
+    super.brandImage,
     required super.campaignDetailId,
     required super.campaignId,
     required super.campaignName,
     required super.price,
-    required super.rate,
     required super.isLocked,
     required super.isBought,
     required super.isUsed,
     required super.validOn,
     required super.expireOn,
-    required super.dateCreated,
-    required super.dateLocked,
-    required super.dateBought,
-    required super.dateUsed,
+    super.dateCreated,
+    super.dateLocked,
+    super.dateBought,
+    super.dateUsed,
     required super.description,
     required super.state,
     required super.status,
@@ -37,37 +35,35 @@ class VoucherStudentModel extends VoucherStudent {
 
   factory VoucherStudentModel.fromJson(Map<String, dynamic> json) {
     return VoucherStudentModel(
-      id: json['id'],
-      voucherId: json['voucherId'] ?? '',
-      voucherName: json['voucherName'] ?? '',
-      voucherImage: json['voucherImage'] ?? '',
-      voucherCode: json['voucherCode'] ?? '',
-      index: json['index'],
-      typeId: json['typeId'],
-      typeName: json['typeName'],
-      typeImage: json['typeImage'],
-      studentId: json['studentId'],
-      studentName: json['studentName'],
-      brandId: json['brandId'],
-      brandName: json['brandName'],
-      brandImage: json['brandImage'],
-      campaignDetailId: json['campaignDetailId'],
-      campaignId: json['campaignId'],
-      campaignName: json['campaignName'],
-      price: json['price'],
-      rate: json['rate'],
-      isLocked: json['isLocked'],
-      isBought: json['isBought'],
-      isUsed: json['isUsed'],
-      validOn: json['validOn'] ?? '',
-      expireOn: json['expireOn'] ?? '',
-      dateCreated: json['dateCreated'] ?? '',
-      dateLocked: json['dateLocked'] ?? '',
-      dateBought: json['dateBought'] ?? '',
-      dateUsed: json['dateUsed'] ?? '',
-      description: json['description'] ?? '',
-      state: json['state'],
-      status: json['status'],
+      id: json['id'] as String,
+      voucherId: json['voucherId'] as String,
+      voucherName: json['voucherName'] as String,
+      voucherImage: json['voucherImage'] as String,
+      voucherCode: json['voucherCode'] as String,
+      typeId: json['typeId'] as String?,
+      typeName: json['typeName'] as String,
+      typeImage: json['typeImage'] as String?,
+      studentId: json['studentId'] as String,
+      studentName: json['studentName'] as String,
+      brandId: json['brandId'] as String?,
+      brandName: json['brandName'] as String?,
+      brandImage: json['brandImage'] as String?,
+      campaignDetailId: json['campaignDetailId'] as String,
+      campaignId: json['campaignId'] as String,
+      campaignName: json['campaignName'] as String,
+      price: (json['price'] as num).toDouble(),
+      isLocked: json['isLocked'] as bool,
+      isBought: json['isBought'] as bool,
+      isUsed: json['isUsed'] as bool,
+      validOn: json['validOn'] as String,
+      expireOn: json['expireOn'] as String,
+      dateCreated: json['dateCreated'] as String?,
+      dateLocked: json['dateLocked'] as String?,
+      dateBought: json['dateBought'] as String?,
+      dateUsed: json['dateUsed'] as String?,
+      description: json['description'] as String,
+      state: json['state'] as bool,
+      status: json['status'] as bool,
     );
   }
 
@@ -78,7 +74,6 @@ class VoucherStudentModel extends VoucherStudent {
     data['voucherName'] = voucherName;
     data['voucherImage'] = voucherImage;
     data['voucherCode'] = voucherCode;
-    data['index'] = index;
     data['typeId'] = typeId;
     data['typeName'] = typeName;
     data['typeImage'] = typeImage;
@@ -91,7 +86,6 @@ class VoucherStudentModel extends VoucherStudent {
     data['campaignId'] = campaignId;
     data['campaignName'] = campaignName;
     data['price'] = price;
-    data['rate'] = rate;
     data['isLocked'] = isLocked;
     data['isBought'] = isBought;
     data['isUsed'] = isUsed;

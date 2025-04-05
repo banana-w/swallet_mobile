@@ -140,6 +140,7 @@ class MyApp extends StatelessWidget {
                     VerificationCubit(VerificationRepositoryImp())
                       ..loadingVerification(),
           ),
+          
           BlocProvider(
             create:
                 (context) =>
