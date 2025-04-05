@@ -7,13 +7,11 @@ import 'package:swallet_mobile/data/models/student_features/campaign_detail_mode
 import 'package:swallet_mobile/data/models/student_features/campaign_model.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_store_model.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_voucher_model.dart';
-import 'package:swallet_mobile/data/repositories/student_features/student_repository_imp.dart';
 import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/campaign_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
 class CampaignRepositoryImp implements CampaignRepository {
-  final _studentRepository = StudentRepositoryImp();
   String endPoint = '${baseURL}Campaign';
   String sort = 'Id%2Cdesc';
   int page = 1;

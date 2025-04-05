@@ -10,13 +10,13 @@ class BrandInformationCard extends StatelessWidget {
     required this.hem,
     required this.fem,
     required this.ffem,
-    required this.campaignDetil,
+    required this.campaignDetail,
   });
 
   final double hem;
   final double fem;
   final double ffem;
-  final CampaignDetailModel campaignDetil;
+  final CampaignDetailModel campaignDetail;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ class BrandInformationCard extends StatelessWidget {
                     width: 50 * fem,
                     height: 50 * hem,
                     child: Image.network(
-                      campaignDetil.brandLogo,
+                      campaignDetail.brandLogo,
                       fit: BoxFit.fill,
                       errorBuilder: (context, error, stackTrace) {
                         return Image.asset(
@@ -78,7 +78,7 @@ class BrandInformationCard extends StatelessWidget {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(top: 5 * hem),
-                    child: Text(campaignDetil.brandName.toUpperCase(),
+                    child: Text(campaignDetail.brandName.toUpperCase(),
                         softWrap: true,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -92,7 +92,7 @@ class BrandInformationCard extends StatelessWidget {
                   SizedBox(
                     width: 200 * fem,
                     // height: 45*hem,
-                    child: Text(campaignDetil.brandAcronym,
+                    child: Text(campaignDetail.brandAcronym,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.openSans(

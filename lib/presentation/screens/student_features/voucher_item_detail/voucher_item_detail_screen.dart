@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
 import 'components/body.dart';
@@ -8,16 +7,19 @@ import 'components/body.dart';
 class VoucherItemDetailScreen extends StatelessWidget {
   static const String routeName = '/voucher-item-detail-student';
 
-  static Route route({required VoucherStudentModel voucherStudent}) {
+  static Route route({required String campaignId, required String voucherId}) {
     return MaterialPageRoute(
-      builder: (_) => VoucherItemDetailScreen(voucherStudent: voucherStudent),
-      settings: const RouteSettings(arguments: routeName),
+      builder: (_) => VoucherItemDetailScreen(campaignId: campaignId, voucherId: voucherId),
+      settings: RouteSettings(arguments: {'campaignId': campaignId, 'voucherId': voucherId}),
     );
   }
 
-  const VoucherItemDetailScreen({super.key, required this.voucherStudent});
+  const VoucherItemDetailScreen({super.key, required this.voucherId,
+    required this.campaignId,
+  });
 
-  final VoucherStudentModel voucherStudent;
+  final String voucherId;
+  final String campaignId;
   @override
   Widget build(BuildContext context) {
     double baseWidth = 375;
@@ -77,7 +79,7 @@ class VoucherItemDetailScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: Body(voucherStudentModel: voucherStudent),
+        body: Body(campaignId: campaignId, voucherId: voucherId,),
       ),
     );
   }

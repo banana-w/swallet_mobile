@@ -8,7 +8,6 @@ import 'package:swallet_mobile/presentation/blocs/campaign_voucher/campaign_vouc
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_voucher/campaign_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/empty_widget.dart';
 
-import '../../../../blocs/blocs.dart';
 import '../../../../config/constants.dart';
 import '../../../../widgets/shimmer_widget.dart';
 
@@ -76,7 +75,7 @@ class CampaignVoucherList extends StatelessWidget {
                                   color: Colors.white,
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Color(0xFF757575).withOpacity(0.3),
+                                      color: Color(0xFF757575).withValues(alpha: .3),
                                       blurRadius: 10.0, // soften the shadow
                                       spreadRadius: 1.0, //extend the shadow
                                       offset: const Offset(
@@ -162,7 +161,7 @@ class CampaignVoucherList extends StatelessWidget {
                                               top: 2 * hem,
                                               bottom: 0 * hem),
                                           child: SvgPicture.asset(
-                                            'assets/icons/green-bean-icon.svg',
+                                            'assets/icons/coin.svg',
                                             width: 22 * fem,
                                             height: 20 * fem,
                                           ),

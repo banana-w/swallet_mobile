@@ -7,7 +7,6 @@ class VoucherStudentItemModel extends VoucherStudentItem {
     required super.voucherName,
     required super.voucherImage,
     required super.voucherCode,
-    required super.index,
     required super.typeId,
     required super.typeName,
     required super.typeImage,
@@ -25,7 +24,6 @@ class VoucherStudentItemModel extends VoucherStudentItem {
     required super.campaignStateName,
     required super.usedAt,
     required super.price,
-    required super.rate,
     required super.isLocked,
     required super.isBought,
     required super.isUsed,
@@ -47,7 +45,6 @@ class VoucherStudentItemModel extends VoucherStudentItem {
       voucherName: json['voucherName'],
       voucherImage: json['voucherImage'],
       voucherCode: json['voucherCode'],
-      index: json['index'],
       typeId: json['typeId'],
       typeName: json['typeName'],
       typeImage: json['typeImage'],
@@ -65,7 +62,6 @@ class VoucherStudentItemModel extends VoucherStudentItem {
       campaignStateName: json['campaignStateName'],
       usedAt: json['usedAt'] ?? '',
       price: json['price'],
-      rate: json['rate'],
       isLocked: json['isLocked'],
       isBought: json['isBought'],
       isUsed: json['isUsed'],
@@ -89,7 +85,6 @@ class VoucherStudentItemModel extends VoucherStudentItem {
     data['voucherName'] = voucherName;
     data['voucherImage'] = voucherImage;
     data['voucherCode'] = voucherCode;
-    data['index'] = index;
     data['typeId'] = typeId;
     data['typeName'] = typeName;
     data['typeImage'] = typeImage;
@@ -107,7 +102,6 @@ class VoucherStudentItemModel extends VoucherStudentItem {
     data['campaignStateName'] = campaignStateName;
     data['usedAt'] = usedAt;
     data['price'] = price;
-    data['rate'] = rate;
     data['isLocked'] = isLocked;
     data['isBought'] = isBought;
     data['isUsed'] = isUsed;

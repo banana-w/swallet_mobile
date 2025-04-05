@@ -13,6 +13,7 @@ import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile/components/name_profile.dart';
 import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel/lucky_wheel_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/profile_history/profile_trans_screen.dart';
 // import 'package:swallet_mobile/presentation/screens/student_features/profile/components/pending_card.dart';
 // import 'package:swallet_mobile/presentation/screens/student_features/profile/components/rejected_card.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
@@ -506,12 +507,12 @@ class Body extends StatelessWidget {
                                             widthIcon: 20,
                                             heightIcon: 20,
                                             onPressed: () {
-                                              // Navigator.pushNamed(
-                                              //     context,
-                                              //     ProfileTransactionHistoryScreen
-                                              //         .routeName,
-                                              //     arguments: stateRole
-                                              //         .studentModel.id);
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  ProfileTransactionHistoryScreen
+                                                      .routeName,
+                                                  arguments: stateRole
+                                                      .studentModel.id);
                                             },
                                             svgIcon:
                                                 'assets/icons/transaction-icon.svg',

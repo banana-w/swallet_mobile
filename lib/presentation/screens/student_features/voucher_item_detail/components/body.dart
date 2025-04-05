@@ -4,18 +4,22 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_item_model.dart';
-import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
+import 'package:swallet_mobile/domain/entities/student_features/campaign_detail.dart';
+import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/brand_detail/brand_detail_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/shimmer_widget.dart';
 
 
 class Body extends StatelessWidget {
-  const Body({super.key, required this.voucherStudentModel});
+  const Body({super.key, required this.campaignId, required this.voucherId});
 
-  final VoucherStudentModel voucherStudentModel;
+  final String campaignId;
+  final String voucherId;
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +34,8 @@ class Body extends StatelessWidget {
               StudentBloc(studentRepository: context.read<StudentRepository>())
                 ..add(
                   LoadVoucherItem(
-                    studentId: voucherStudentModel.studentId,
-                    voucherId: voucherStudentModel.id,
+                    campaignId: campaignId,
+                    voucherId: voucherId,
                   ),
                 ),
       child: BlocBuilder<StudentBloc, StudentState>(
@@ -40,6 +44,7 @@ class Body extends StatelessWidget {
             return buildCampaignVoucherShimmer(fem, hem);
           } else if (state is StudentVoucherItemLoaded) {
             var voucherItem = state.voucherStudentItemModel;
+            var campainDetail = state.campaignDetailModel;
             return CustomScrollView(
               slivers: [
                 SliverList(
@@ -51,7 +56,7 @@ class Body extends StatelessWidget {
                           width: double.infinity,
                           height: 220 * hem,
                           child: Image.network(
-                            voucherItem.voucherImage,
+                            voucherItem.image,
                             fit: BoxFit.fill,
                             errorBuilder: (context, error, stackTrace) {
                               return Image.asset(
@@ -74,7 +79,7 @@ class Body extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                voucherItem.campaignName,
+                                campainDetail.campaignName,
                                 textAlign: TextAlign.justify,
                                 softWrap: true,
                                 style: GoogleFonts.openSans(
@@ -119,55 +124,55 @@ class Body extends StatelessWidget {
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(
-                                          left: 0 * fem,
-                                          top: 4 * hem,
+                                          left: 5 * fem,
+                                          top: 2 * hem,
                                           bottom: 0 * hem,
                                         ),
                                         child: SvgPicture.asset(
-                                          'assets/icons/green-bean-icon.svg',
-                                          width: 32 * fem,
-                                          height: 32 * fem,
+                                          'assets/icons/coin.svg',
+                                          width: 25 * fem,
+                                          height: 25 * fem,
                                         ),
                                       ),
                                     ],
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.only(
-                                      left: 10 * fem,
-                                      right: 10 * fem,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white,
-                                      border: Border.all(color: Colors.red),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'x${voucherItem.rate.toStringAsFixed(0)}',
-                                          style: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
-                                              fontSize: 18 * ffem,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            left: 5 * fem,
-                                            top: 4 * hem,
-                                            bottom: 0 * hem,
-                                          ),
-                                          child: SvgPicture.asset(
-                                            'assets/icons/red-bean-icon.svg',
-                                            width: 25 * fem,
-                                            height: 25 * fem,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  // Container(
+                                  //   padding: EdgeInsets.only(
+                                  //     left: 10 * fem,
+                                  //     right: 10 * fem,
+                                  //   ),
+                                  //   decoration: BoxDecoration(
+                                  //     borderRadius: BorderRadius.circular(10),
+                                  //     color: Colors.white,
+                                  //     border: Border.all(color: Colors.red),
+                                  //   ),
+                                    // child: Row(
+                                    //   children: [
+                                    //     Text(
+                                    //       'x${voucherItem.price.toStringAsFixed(0)}',
+                                    //       style: GoogleFonts.openSans(
+                                    //         textStyle: TextStyle(
+                                    //           fontSize: 18 * ffem,
+                                    //           color: Colors.black,
+                                    //           fontWeight: FontWeight.w600,
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    //     Padding(
+                                    //       padding: EdgeInsets.only(
+                                    //         left: 5 * fem,
+                                    //         top: 4 * hem,
+                                    //         bottom: 0 * hem,
+                                    //       ),
+                                    //       child: SvgPicture.asset(
+                                    //         'assets/icons/red-bean-icon.svg',
+                                    //         width: 25 * fem,
+                                    //         height: 25 * fem,
+                                    //       ),
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                  // ),
                                 ],
                               ),
                             ],
@@ -190,7 +195,7 @@ class Body extends StatelessWidget {
                               ),
                               SizedBox(width: 10 * fem),
                               Text(
-                                'Hạn sử dụng: ${changeFormateDate(voucherItem.expireOn)}',
+                                'Hạn sử dụng: ${changeFormateDate(campainDetail.endOn)}',
                                 style: GoogleFonts.openSans(
                                   textStyle: TextStyle(
                                     fontSize: 15 * ffem,
@@ -253,7 +258,7 @@ class Body extends StatelessWidget {
                                             width: 50 * fem,
                                             height: 50 * hem,
                                             child: Image.network(
-                                              voucherItem.brandImage,
+                                              campainDetail.brandLogo,
                                               fit: BoxFit.fill,
                                               errorBuilder: (
                                                 context,
@@ -299,9 +304,9 @@ class Body extends StatelessWidget {
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      // Navigator.pushNamed(
-                                      //     context, BrandDetailScreen.routeName,
-                                      //     arguments: voucherItem.brandId);
+                                      Navigator.pushNamed(
+                                          context, BrandDetailScreen.routeName,
+                                          arguments: voucherItem.brandId);
                                     },
                                     child: Container(
                                       height: 30 * hem,
@@ -338,7 +343,7 @@ class Body extends StatelessWidget {
                         SizedBox(height: 5 * hem),
                         GestureDetector(
                           onTap: () {
-                            _detailModelBottomSheet(context, voucherItem);
+                            _detailModelBottomSheet(context, voucherItem, campainDetail);
                           },
                           // onTap: () {
                           //   checkLength(campaignDetailModel.condition);
@@ -463,7 +468,7 @@ class Body extends StatelessWidget {
                                 width: 300 * fem,
                                 height: 300 * hem,
                                 child: QrImageView(
-                                  data: voucherItem.voucherCode,
+                                  data: voucherItem.id, // Xem lai cai nay duoc khong
                                   padding: EdgeInsets.all(20 * fem),
                                   version: QrVersions.auto,
                                   backgroundColor: Colors.white,
@@ -504,7 +509,7 @@ Duration getDuration(String endOn) {
   return duration;
 }
 
-void _detailModelBottomSheet(context, VoucherStudentItemModel voucherItem) {
+void _detailModelBottomSheet(context, CampaignVoucherDetailModel voucherItem, CampaignDetailModel campaignDetail) {
   double baseWidth = 375;
   double fem = MediaQuery.of(context).size.width / baseWidth;
   double ffem = fem * 0.97;
@@ -583,7 +588,7 @@ void _detailModelBottomSheet(context, VoucherStudentItemModel voucherItem) {
                               right: 15 * fem,
                             ),
                             child: Text(
-                              '${changeFormateDate(voucherItem.validOn)} - ${changeFormateDate(voucherItem.expireOn)}',
+                              '${changeFormateDate(campaignDetail.startOn)} - ${changeFormateDate(campaignDetail.endOn)}',
                               textAlign: TextAlign.justify,
                               softWrap: true,
                               style: GoogleFonts.openSans(

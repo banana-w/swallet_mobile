@@ -1,10 +1,14 @@
 import 'dart:convert';
-
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
+import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
+import 'package:swallet_mobile/data/models/student_features/redeemed_voucher_model.dart';
 import 'package:swallet_mobile/data/models/lecture_features/qr_response.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
+import 'package:swallet_mobile/data/models/student_features/transaction_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
+import 'package:swallet_mobile/data/repositories/student_features/campaign_repository_imp.dart';
+import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:http/http.dart' as http;
@@ -17,6 +21,7 @@ class StudentRepositoryImp implements StudentRepository {
   int page = 1;
   int limit = 10;
   bool state = true;
+  final campaignRepoImp = CampaignRepositoryImp();
   @override
   Future<StudentModel?> fetchStudentById({required String id}) async {
     try {
@@ -106,105 +111,160 @@ class StudentRepositoryImp implements StudentRepository {
   }) async {
     try {
       token = await AuthenLocalDataSource.getToken();
-      studentId = await AuthenLocalDataSource.getStudentId();
       final Map<String, String> headers = {
-        'Content-Type': 'application/json',
+        'accept': 'text/plain',
         'Authorization': 'Bearer $token',
       };
 
-      if (search != null) {
-        http.Response response = await http.get(
-          Uri.parse(
-            '$endPoint/$id/vouchers?isUsed=$isUsed&state=$state&sort=$sort&search=$search&page=$page&limit=$limit',
-          ),
-          headers: headers,
+      page ??= 1;
+      limit ??= 10;
+      isUsed ??= false;
+
+      final queryParams = {
+        'studentId': id,
+        'isUsed': isUsed.toString(),
+        'page': page.toString(),
+        'size': limit.toString(),
+      };
+
+      if (search != null && search.isNotEmpty) {
+        queryParams['searchName'] = search;
+      }
+
+      // final baseURL = 'https://10.0.2.2:7137/api/';
+
+      final uri = Uri.parse(
+        '${baseURL}Activity/RedeemedVouchersByStudent',
+      ).replace(queryParameters: queryParams);
+
+      final response = await http.get(uri, headers: headers);
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(utf8.decode(response.bodyBytes));
+        final apiResponse = ApiResponse<List<VoucherStudentModel>>.fromJson(
+          result,
+          (data) => data.map((e) => VoucherStudentModel.fromJson(e)).toList(),
         );
-        if (response.statusCode == 200) {
-          final result = jsonDecode(utf8.decode(response.bodyBytes));
-          ApiResponse<List<VoucherStudentModel>> apiResponse =
-              ApiResponse<List<VoucherStudentModel>>.fromJson(
-                result,
-                (data) =>
-                    data.map((e) => VoucherStudentModel.fromJson(e)).toList(),
-              );
-          return apiResponse;
-        } else {
-          return null;
-        }
-      } else if (search == null || search == '') {
-        http.Response response = await http.get(
-          Uri.parse(
-            '$endPoint/$id/vouchers?sort=$sort&page=$page&limit=$limit',
-          ),
-          headers: headers,
-        );
-        if (response.statusCode == 200) {
-          final result = jsonDecode(utf8.decode(response.bodyBytes));
-          ApiResponse<List<VoucherStudentModel>> apiResponse =
-              ApiResponse<List<VoucherStudentModel>>.fromJson(
-                result,
-                (data) =>
-                    data.map((e) => VoucherStudentModel.fromJson(e)).toList(),
-              );
-          return apiResponse;
-        } else {
-          return null;
-        }
+        return apiResponse;
+      } else {
+        return null;
       }
     } catch (e) {
       throw Exception(e.toString());
     }
-    return null;
   }
 
-  // @override
-  // Future<ApiResponse<List<TransactionModel>>?> fetchTransactionsStudentId(
-  //     int? page, int? limit, int? typeIds,
-  //     {required String id}) async {
-  //   try {
-  //     token = await AuthenLocalDataSource.getToken();
-  //     studentId = await AuthenLocalDataSource.getStudentId();
-  //     final Map<String, String> headers = {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer $token'
-  //     };
-  //     if (typeIds == 0) {
-  //       http.Response response = await http.get(
-  //           Uri.parse(
-  //               '$endPoint/$id/histories?state=$state&sort=$sort&page=$page&limit=$limit'),
-  //           headers: headers);
-  //       if (response.statusCode == 200) {
-  //         final result = jsonDecode(utf8.decode(response.bodyBytes));
-  //         ApiResponse<List<TransactionModel>> apiResponse =
-  //             ApiResponse<List<TransactionModel>>.fromJson(
-  //                 result,
-  //                 (data) =>
-  //                     data.map((e) => TransactionModel.fromJson(e)).toList());
-  //         return apiResponse;
-  //       } else {
-  //         return null;
-  //       }
-  //     } else {
-  //       http.Response response = await http.get(
-  //           Uri.parse(
-  //               '$endPoint/$id/histories?state=$state&typeIds=$typeIds&sort=$sort&page=$page&limit=$limit'),
-  //           headers: headers);
-  //       if (response.statusCode == 200) {
-  //         final result = jsonDecode(utf8.decode(response.bodyBytes));
-  //         ApiResponse<List<TransactionModel>> apiResponse =
-  //             ApiResponse<List<TransactionModel>>.fromJson(
-  //                 result,
-  //                 (data) =>
-  //                     data.map((e) => TransactionModel.fromJson(e)).toList());
-  //         return apiResponse;
-  //       } else {
-  //         return null;
-  //       }
-  //     }
-  //   } catch (e) {
-  //     throw Exception(e.toString());
-  //   }
-  // }
+  @override
+  Future<ApiResponse<List<BrandVoucher>>?> fetchVoucherByStudentId(
+    int? page,
+    int? limit,
+    String? search,
+    bool? isUsed, {
+    required String id,
+  }) async {
+    try {
+      token = await AuthenLocalDataSource.getToken();
+      final Map<String, String> headers = {
+        'accept': 'text/plain',
+        'Authorization': 'Bearer $token',
+      };
+
+      page ??= 1;
+      limit ??= 10;
+      isUsed ??= false;
+
+      final queryParams = {
+        'studentId': id,
+        'isUsed': isUsed.toString(),
+        'page': page.toString(),
+        'size': limit.toString(),
+      };
+
+      if (search != null && search.isNotEmpty) {
+        queryParams['searchName'] = search;
+      }
+
+      // final baseURL = 'https://10.0.2.2:7137/api/';
+
+      final uri = Uri.parse(
+        '${baseURL}Activity/RedeemedVouchersGroupByStudent',
+      ).replace(queryParameters: queryParams);
+
+      final response = await http.get(uri, headers: headers);
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(utf8.decode(response.bodyBytes));
+        final apiResponse = ApiResponse<List<BrandVoucher>>.fromJson(
+          result,
+          (data) => data.map((e) => BrandVoucher.fromJson(e)).toList(),
+        );
+        return apiResponse;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<ApiResponse<List<TransactionModel>>?> fetchTransactionsStudentId(
+    int? page,
+    int? limit,
+    int? typeIds,
+    String? searchName, {
+    required String id,
+  }) async {
+    try {
+      token = await AuthenLocalDataSource.getToken();
+      final Map<String, String> headers = {
+        'accept': 'text/plain', // Khớp với curl
+        'Authorization': 'Bearer $token',
+      };
+
+      page ??= 1;
+      limit ??= 10;
+
+      final queryParams = {
+        'studentId': id,
+        'page': page.toString(),
+        'size': limit.toString(),
+      };
+
+      if (searchName != null && searchName.isNotEmpty) {
+        queryParams['searchName'] = searchName;
+      }
+
+      // final baseURL = 'https://10.0.2.2:7137/api/';
+
+      final uri = Uri.parse(
+        '${baseURL}Activity/ActivityTransaction',
+      ).replace(queryParameters: queryParams);
+
+      // final client = http.Client();
+      // final ioClient =
+      //     HttpClient()
+      //       ..badCertificateCallback =
+      //           (X509Certificate cert, String host, int port) =>
+      //               true; // Bỏ qua kiểm tra chứng chỉ
+      // final httpClient = IOClient(ioClient);
+
+      final response = await http.get(uri, headers: headers);
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(utf8.decode(response.bodyBytes));
+        final apiResponse = ApiResponse<List<TransactionModel>>.fromJson(
+          result,
+          (data) => data.map((e) => TransactionModel.fromJson(e)).toList(),
+        );
+        return apiResponse;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 
   @override
   Future<bool?> postChallengeStudentId({
@@ -298,32 +358,46 @@ class StudentRepositoryImp implements StudentRepository {
     }
   }
 
-  // @override
-  // Future<VoucherStudentItemModel?> fetchVoucherItemByStudentId(
-  //     {required String studentId, required String voucherId}) async {
-  //   try {
-  //     token = await AuthenLocalDataSource.getToken();
-  //     studentId = (await AuthenLocalDataSource.getStudentId())!;
-  //     final Map<String, String> headers = {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer $token'
-  //     };
-  //     http.Response response = await http.get(
-  //         Uri.parse('$endPoint/$studentId/vouchers/$voucherId'),
-  //         headers: headers);
+  @override
+  Future<CampaignVoucherDetailModel?> fetchVoucherItemByStudentId({
+    required String campaignId,
+    required String voucherId,
+  }) async {
+    try {
+      token = await AuthenLocalDataSource.getToken();
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
 
-  //     if (response.statusCode == 200) {
-  //       final result = jsonDecode(utf8.decode(response.bodyBytes));
-  //       VoucherStudentItemModel apiResponse =
-  //           VoucherStudentItemModel.fromJson(result);
-  //       return apiResponse;
-  //     } else {
-  //       return null;
-  //     }
-  //   } catch (e) {
-  //     throw Exception(e.toString());
-  //   }
-  // }
+      final queryParams = {'id': voucherId, 'campaignId': campaignId};
+
+      // Tạo URI với endpoint và query parameters
+      final uri = Uri.parse(
+        '${baseURL}Voucher/withCId',
+      ).replace(queryParameters: queryParams);
+
+      // Gửi yêu cầu HTTP GET
+      final response = await http.get(uri, headers: headers);
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(utf8.decode(response.bodyBytes));
+        CampaignVoucherDetailModel campaignVoucherDetailModel =
+            CampaignVoucherDetailModel.fromJson(result);
+        return campaignVoucherDetailModel;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<CampaignDetailModel?> fecthCampaignById({required String id}) async {
+    var campaignDetailModel = campaignRepoImp.fecthCampaignById(id: id);
+    return campaignDetailModel;
+  }
 
   @override
   Future<List<String>?> fetchWishListByStudentId() async {
