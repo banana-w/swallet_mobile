@@ -21,7 +21,7 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   StudentBloc({required this.studentRepository}) : super(StudentInitial()) {
     on<LoadStudentVouchers>(_onLoadStudentVouchers1);
     on<ScanLectureQR>(_onScanLectureQR);
-    // on<LoadMoreStudentVouchers>(_onLoadMoreVouchers);
+    on<LoadMoreStudentVouchers>(_onLoadMoreVouchers);
     on<LoadStudentTransactions>(_onLoadStudentTransactions);
     // on<LoadStudentOrders>(_onLoadStudentOrder);
     on<LoadMoreTransactions>(_onLoadMoreTransactions);
@@ -134,44 +134,44 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   //   }
   // }
 
-  // Future<void> _onLoadMoreVouchers(
-  //     LoadMoreStudentVouchers event, Emitter<StudentState> emit) async {
-  //   try {
-  //     if (event.scrollController.position.pixels ==
-  //         event.scrollController.position.maxScrollExtent) {
-  //       if ((state as StudentVouchersLoaded).hasReachedMax) {
-  //         List<VoucherStudentModel> vouchers =
-  //             List.from((state as StudentVouchersLoaded).voucherModels);
-  //         emit(StudentVouchersLoaded(
-  //             voucherModels: vouchers, hasReachedMax: true));
-  //       } else {
-  //         isLoadingMore = true;
-  //         pageVouchers++;
-  //         var apiResponse = await studentRepository.fetchVoucherStudentId(
-  //             pageVouchers,
-  //             event.limit,
-  //             event.search,
-  //             id: event.id,
-  //             event.isUsed);
-  //         if (apiResponse!.result.isEmpty) {
-  //           List<VoucherStudentModel> vouchers =
-  //               List.from((state as StudentVouchersLoaded).voucherModels)
-  //                 ..addAll(apiResponse.result);
-  //           emit(StudentVouchersLoaded(
-  //               voucherModels: vouchers, hasReachedMax: true));
-  //           pageVouchers = 1;
-  //         } else {
-  //           List<VoucherStudentModel> vouchers =
-  //               List.from((state as StudentVouchersLoaded).voucherModels)
-  //                 ..addAll(apiResponse.result);
-  //           emit(StudentVouchersLoaded(voucherModels: vouchers));
-  //         }
-  //       }
-  //     }
-  //   } catch (e) {
-  //     emit(StudentFaled(error: e.toString()));
-  //   }
-  // }
+  Future<void> _onLoadMoreVouchers(
+      LoadMoreStudentVouchers event, Emitter<StudentState> emit) async {
+    try {
+      if (event.scrollController.position.pixels ==
+          event.scrollController.position.maxScrollExtent) {
+        if ((state as StudentVouchersLoaded).hasReachedMax) {
+          List<VoucherStudentModel> vouchers =
+              List.from((state as StudentVouchersLoaded).voucherModels);
+          emit(StudentVouchersLoaded(
+              voucherModels: vouchers, hasReachedMax: true));
+        } else {
+          isLoadingMore = true;
+          pageVouchers++;
+          var apiResponse = await studentRepository.fetchVoucherStudentId(
+              pageVouchers,
+              event.limit,
+              event.search,
+              id: event.id,
+              event.isUsed);
+          if (apiResponse!.result.isEmpty) {
+            List<VoucherStudentModel> vouchers =
+                List.from((state as StudentVouchersLoaded).voucherModels)
+                  ..addAll(apiResponse.result);
+            emit(StudentVouchersLoaded(
+                voucherModels: vouchers, hasReachedMax: true));
+            pageVouchers = 1;
+          } else {
+            List<VoucherStudentModel> vouchers =
+                List.from((state as StudentVouchersLoaded).voucherModels)
+                  ..addAll(apiResponse.result);
+            emit(StudentVouchersLoaded(voucherModels: vouchers));
+          }
+        }
+      }
+    } catch (e) {
+      emit(StudentFaled(error: e.toString()));
+    }
+  }
 
   Future<void> _onLoadStudentTransactions(
     LoadStudentTransactions event,
