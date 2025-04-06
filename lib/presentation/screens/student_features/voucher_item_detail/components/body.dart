@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_item_model.dart';
 import 'package:swallet_mobile/domain/entities/student_features/campaign_detail.dart';
@@ -13,7 +16,6 @@ import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/brand_detail/brand_detail_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/shimmer_widget.dart';
-
 
 class Body extends StatelessWidget {
   const Body({super.key, required this.campaignId, required this.voucherId});
@@ -30,14 +32,9 @@ class Body extends StatelessWidget {
     double hem = MediaQuery.of(context).size.height / baseHeight;
     return BlocProvider(
       create:
-          (context) =>
-              StudentBloc(studentRepository: context.read<StudentRepository>())
-                ..add(
-                  LoadVoucherItem(
-                    campaignId: campaignId,
-                    voucherId: voucherId,
-                  ),
-                ),
+          (context) => StudentBloc(
+            studentRepository: context.read<StudentRepository>(),
+          )..add(LoadVoucherItem(campaignId: campaignId, voucherId: voucherId)),
       child: BlocBuilder<StudentBloc, StudentState>(
         builder: (context, state) {
           if (state is StudentVoucherItemLoading) {
@@ -146,32 +143,32 @@ class Body extends StatelessWidget {
                                   //     color: Colors.white,
                                   //     border: Border.all(color: Colors.red),
                                   //   ),
-                                    // child: Row(
-                                    //   children: [
-                                    //     Text(
-                                    //       'x${voucherItem.price.toStringAsFixed(0)}',
-                                    //       style: GoogleFonts.openSans(
-                                    //         textStyle: TextStyle(
-                                    //           fontSize: 18 * ffem,
-                                    //           color: Colors.black,
-                                    //           fontWeight: FontWeight.w600,
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //     Padding(
-                                    //       padding: EdgeInsets.only(
-                                    //         left: 5 * fem,
-                                    //         top: 4 * hem,
-                                    //         bottom: 0 * hem,
-                                    //       ),
-                                    //       child: SvgPicture.asset(
-                                    //         'assets/icons/red-bean-icon.svg',
-                                    //         width: 25 * fem,
-                                    //         height: 25 * fem,
-                                    //       ),
-                                    //     ),
-                                    //   ],
-                                    // ),
+                                  // child: Row(
+                                  //   children: [
+                                  //     Text(
+                                  //       'x${voucherItem.price.toStringAsFixed(0)}',
+                                  //       style: GoogleFonts.openSans(
+                                  //         textStyle: TextStyle(
+                                  //           fontSize: 18 * ffem,
+                                  //           color: Colors.black,
+                                  //           fontWeight: FontWeight.w600,
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //     Padding(
+                                  //       padding: EdgeInsets.only(
+                                  //         left: 5 * fem,
+                                  //         top: 4 * hem,
+                                  //         bottom: 0 * hem,
+                                  //       ),
+                                  //       child: SvgPicture.asset(
+                                  //         'assets/icons/red-bean-icon.svg',
+                                  //         width: 25 * fem,
+                                  //         height: 25 * fem,
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
                                   // ),
                                 ],
                               ),
@@ -305,8 +302,10 @@ class Body extends StatelessWidget {
                                   InkWell(
                                     onTap: () {
                                       Navigator.pushNamed(
-                                          context, BrandDetailScreen.routeName,
-                                          arguments: voucherItem.brandId);
+                                        context,
+                                        BrandDetailScreen.routeName,
+                                        arguments: voucherItem.brandId,
+                                      );
                                     },
                                     child: Container(
                                       height: 30 * hem,
@@ -343,7 +342,11 @@ class Body extends StatelessWidget {
                         SizedBox(height: 5 * hem),
                         GestureDetector(
                           onTap: () {
-                            _detailModelBottomSheet(context, voucherItem, campainDetail);
+                            _detailModelBottomSheet(
+                              context,
+                              voucherItem,
+                              campainDetail,
+                            );
                           },
                           // onTap: () {
                           //   checkLength(campaignDetailModel.condition);
@@ -468,7 +471,10 @@ class Body extends StatelessWidget {
                                 width: 300 * fem,
                                 height: 300 * hem,
                                 child: QrImageView(
-                                  data: voucherItem.id, // Xem lai cai nay duoc khong
+                                  data: jsonEncode({
+                                    'voucherId': voucherItem.id,
+                                    'studentId': state.studentId,
+                                  }),                                               // Xem lai cai nay duoc khong
                                   padding: EdgeInsets.all(20 * fem),
                                   version: QrVersions.auto,
                                   backgroundColor: Colors.white,
@@ -500,16 +506,20 @@ class Body extends StatelessWidget {
   }
 }
 
-Duration getDuration(String endOn) {
-  DateTime dateStartOn = DateTime.parse(endOn);
-  Duration duration = dateStartOn.difference(DateTime.now());
-  print(DateTime.now());
-  print(duration);
-  print(dateStartOn);
-  return duration;
-}
+// Duration getDuration(String endOn) {
+//   DateTime dateStartOn = DateTime.parse(endOn);
+//   Duration duration = dateStartOn.difference(DateTime.now());
+//   print(DateTime.now());
+//   print(duration);
+//   print(dateStartOn);
+//   return duration;
+// }
 
-void _detailModelBottomSheet(context, CampaignVoucherDetailModel voucherItem, CampaignDetailModel campaignDetail) {
+void _detailModelBottomSheet(
+  context,
+  CampaignVoucherDetailModel voucherItem,
+  CampaignDetailModel campaignDetail,
+) {
   double baseWidth = 375;
   double fem = MediaQuery.of(context).size.width / baseWidth;
   double ffem = fem * 0.97;

@@ -17,7 +17,7 @@ class TransactionModel extends Transaction {
       id: json['id'] as String,
       voucherName: json['voucherName'] as String,
       activityId: json['activityId'] as String,
-      walletId: json['walletId'] as String,
+      walletId: (json['walletId'] ?? '') as String,
       amount: (json['amount'] as num).toDouble(),
       description: json['description'] as String,
       createdAt: json['createdAt'] as String,

@@ -5,9 +5,11 @@ import 'package:timeline_tile/timeline_tile.dart';
 const kAnimationDuration = Duration(milliseconds: 200);
 
 //colors
-const kPrimaryColor = Color(0xff2ecc71);
-const klightPrimaryColor = Color(0xff83f28f);
-const kDarkPrimaryColor = Color(0xff1d4d4f);
+// const kPrimaryColor = Color(0xff2ecc71);
+const kPrimaryColor = Color(0xFFFF914D);
+// const klightPrimaryColor = Color(0xff83f28f);
+const klightPrimaryColor = Color(0xFFFFB88C);
+const kDarkPrimaryColor = Color(0xFFE67636);
 const kLowTextColor = Color(0xff989da3);
 const klowTextGrey = Color(0xfff4b5563);
 const kbgWhiteColor = Color.fromARGB(255, 246, 242, 250);
