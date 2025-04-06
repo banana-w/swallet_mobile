@@ -16,7 +16,7 @@ part 'store_state.dart';
 class StoreBloc extends Bloc<StoreEvent, StoreState> {
   final StoreRepository storeRepository;
   StoreBloc({required this.storeRepository}) : super(StoreInitial()) {
-    // on<LoadStoreCampaignVouchers>(_onLoadStoreCampaignVouchers);
+    on<LoadStoreCampaignVouchers>(_onLoadStoreCampaignVouchers);
     on<LoadStoreTransactions>(_onLoadStoreTransactions);
     on<LoadMoreTransactionStore>(_onLoadMoreTransactions);
     // on<ScanVoucherCode>(_onScanVoucherCode);
@@ -226,104 +226,113 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       emit(StoreFailed(error: e.toString()));
     }
   }
-}
-//   Future<void> _onLoadStoreCampaignVouchers(
-//       LoadStoreCampaignVouchers event, Emitter<StoreState> emit) async {
-//     emit(StoreCampaignVoucherLoading());
-//     try {
-//       var apiResponse = await storeRepository.fetchCampaignVoucherStoreId(
-//           event.page, event.limit, event.search);
-//       // bool hasReachedMax = false;
 
-//       emit(StoreCampaignVoucherLoaded(
-//           campaignStoreCart:
-//               CampaignStoreCartModel(campaignVouchers: apiResponse!.result)));
-//     } catch (e) {
-//       emit(StoreFailed(error: e.toString()));
-//     }
-//   }
+  Future<void> _onLoadStoreCampaignVouchers(
+    LoadStoreCampaignVouchers event,
+    Emitter<StoreState> emit,
+  ) async {
+    emit(StoreCampaignVoucherLoading());
+    try {
+      var apiResponse = await storeRepository.fetchCampaignVoucherStoreId(
+        event.page,
+        event.limit,
+        event.search,
+      );
+      // bool hasReachedMax = false;
 
-//   Future<void> _onScanVoucherCode(
-//       ScanVoucherCode event, Emitter<StoreState> emit) async {
-//     emit(ScanVoucherLoading());
-//     try {
-//       var apiResponse = await storeRepository.postScanVoucherCode(
-//           storeId: event.storeId,
-//           voucherCode: event.voucherCode,
-//           description: event.description,
-//           state: true);
-//       var check = apiResponse.keys.first;
-//       if (check) {
-//         String result = apiResponse.values.first;
-//         emit(ScanVoucherSuccess(result: result));
-//       } else {
-//         String error = apiResponse.values.first;
-//         if(error == '["Khuyến mãi không hợp lệ"]'){
-//              emit(ScanVoucherFailed(error: 'Khuyến mãi không hợp lệ'));
-//         }else{
-//         emit(ScanVoucherFailed(error: error));
-//         }
-//       }
-//     } catch (e) {
-//       emit(StoreFailed(error: e.toString()));
-//     }
-//   }
+      emit(
+        StoreCampaignVoucherLoaded(
+          campaignStoreCart: CampaignStoreCartModel(
+            campaignVouchers: apiResponse!.result,
+          ),
+        ),
+      );
+    } catch (e) {
+      emit(StoreFailed(error: e.toString()));
+    }
+  }
 
-//   Future<void> _onCreateBonus(
-//       CreateBonus event, Emitter<StoreState> emit) async {
-//     emit(CreateBonusLoading());
-//     try {
-//       var apiResponse = await storeRepository.createBonus(
-//           storeId: event.storeId,
-//           studentId: event.studentId,
-//           amount: event.amount,
-//           description: event.description,
-//           state: event.state);
+  //   Future<void> _onScanVoucherCode(
+  //       ScanVoucherCode event, Emitter<StoreState> emit) async {
+  //     emit(ScanVoucherLoading());
+  //     try {
+  //       var apiResponse = await storeRepository.postScanVoucherCode(
+  //           storeId: event.storeId,
+  //           voucherCode: event.voucherCode,
+  //           description: event.description,
+  //           state: true);
+  //       var check = apiResponse.keys.first;
+  //       if (check) {
+  //         String result = apiResponse.values.first;
+  //         emit(ScanVoucherSuccess(result: result));
+  //       } else {
+  //         String error = apiResponse.values.first;
+  //         if(error == '["Khuyến mãi không hợp lệ"]'){
+  //              emit(ScanVoucherFailed(error: 'Khuyến mãi không hợp lệ'));
+  //         }else{
+  //         emit(ScanVoucherFailed(error: error));
+  //         }
+  //       }
+  //     } catch (e) {
+  //       emit(StoreFailed(error: e.toString()));
+  //     }
+  //   }
 
-//       emit(CreateBonusSucess(transactModel: apiResponse!));
-//     } catch (e) {
-//       emit(CreateBonusFailed(error: e.toString()));
-//     }
-//   }
+  //   Future<void> _onCreateBonus(
+  //       CreateBonus event, Emitter<StoreState> emit) async {
+  //     emit(CreateBonusLoading());
+  //     try {
+  //       var apiResponse = await storeRepository.createBonus(
+  //           storeId: event.storeId,
+  //           studentId: event.studentId,
+  //           amount: event.amount,
+  //           description: event.description,
+  //           state: event.state);
 
-//   Future<void> _onLoadCampaignVoucherDetail(
-//       LoadCampaignVoucherDetail event, Emitter<StoreState> emit) async {
-//     emit(StoreCampaignVoucherDetailLoading());
-//     try {
-//       var apiResponse = await storeRepository.fetchCampaignVoucherDetail(
-//           storeId: event.storeId,
-//           campaignVoucherDetailId: event.campaignVoucherId);
+  //       emit(CreateBonusSucess(transactModel: apiResponse!));
+  //     } catch (e) {
+  //       emit(CreateBonusFailed(error: e.toString()));
+  //     }
+  //   }
 
-//       emit(StoreCampaignVoucherDetailLoaded(
-//           campaignVoucherDetailModel: apiResponse!));
-//     } catch (e) {
-//       emit(StoreCampaignVoucherDetailFailed(error: e.toString()));
-//     }
-//   }
+  //   Future<void> _onLoadCampaignVoucherDetail(
+  //       LoadCampaignVoucherDetail event, Emitter<StoreState> emit) async {
+  //     emit(StoreCampaignVoucherDetailLoading());
+  //     try {
+  //       var apiResponse = await storeRepository.fetchCampaignVoucherDetail(
+  //           storeId: event.storeId,
+  //           campaignVoucherDetailId: event.campaignVoucherId);
 
-//   Future<void> _onUpdateStore(
-//       UpdateStore event, Emitter<StoreState> emit) async {
-//     emit(StoreUpding());
-//     try {
-//       var apiResponse = await storeRepository.updateStore(
-//           areaId: event.areaId,
-//           storeName: event.storeName,
-//           address: event.address,
-//           avatar: event.avatar,
-//           openHours: event.openHours,
-//           closeHours: event.closeHours,
-//           description: event.description,
-//           storeId: event.storeId,
-//           state: event.state);
-//       if (apiResponse == null) {
-//         emit(StoreUpdateFailed(error: 'Cập nhật thất bại'));
-//       } else {
-//         emit(StoreUpdateSuccess(storeModel: apiResponse));
-//       }
-//     } catch (e) {
-//       emit(StoreUpdateFailed(error: e.toString()));
-//     }
-//   }
+  //       emit(StoreCampaignVoucherDetailLoaded(
+  //           campaignVoucherDetailModel: apiResponse!));
+  //     } catch (e) {
+  //       emit(StoreCampaignVoucherDetailFailed(error: e.toString()));
+  //     }
+  //   }
+
+  //   Future<void> _onUpdateStore(
+  //       UpdateStore event, Emitter<StoreState> emit) async {
+  //     emit(StoreUpding());
+  //     try {
+  //       var apiResponse = await storeRepository.updateStore(
+  //           areaId: event.areaId,
+  //           storeName: event.storeName,
+  //           address: event.address,
+  //           avatar: event.avatar,
+  //           openHours: event.openHours,
+  //           closeHours: event.closeHours,
+  //           description: event.description,
+  //           storeId: event.storeId,
+  //           state: event.state);
+  //       if (apiResponse == null) {
+  //         emit(StoreUpdateFailed(error: 'Cập nhật thất bại'));
+  //       } else {
+  //         emit(StoreUpdateSuccess(storeModel: apiResponse));
+  //       }
+  //     } catch (e) {
+  //       emit(StoreUpdateFailed(error: e.toString()));
+  //     }
+  //   }
 
   // Future<void> _onLoadCampaignVoucherInformation(
   //     LoadCampaignVoucherInformation event, Emitter<StoreState> emit) async {
@@ -349,4 +358,5 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   //   }
   // }
 
-// }
+  // }
+}

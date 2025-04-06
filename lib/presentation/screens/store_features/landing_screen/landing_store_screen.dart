@@ -200,7 +200,8 @@ class LandingStoreScreen extends StatelessWidget {
 }
 
 List<Widget> bottomNavScreen = [
-  ProfileStoreScreen(),
+  CampaignStoreScreen(),
+  // DashBoardScreen(),
   ProfileStoreScreen(),
   ProfileStoreScreen(),
   ProfileStoreScreen(),
