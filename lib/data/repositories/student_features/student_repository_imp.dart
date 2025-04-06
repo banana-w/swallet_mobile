@@ -1,4 +1,5 @@
 import 'dart:convert';
+// import 'dart:io';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
@@ -12,6 +13,7 @@ import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:http/http.dart' as http;
+// import 'package:http/io_client.dart';
 
 class StudentRepositoryImp implements StudentRepository {
   String endPoint = '${baseURL}Student';
@@ -253,6 +255,59 @@ class StudentRepositoryImp implements StudentRepository {
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
+        final apiResponse = ApiResponse<List<TransactionModel>>.fromJson(
+          result,
+          (data) => data.map((e) => TransactionModel.fromJson(e)).toList(),
+        );
+        return apiResponse;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<ApiResponse<List<TransactionModel>>?> fetchVoucherTransactionsByStudentId(
+    int? page,
+    int? limit,
+    int? typeIds,
+    String? searchName, {
+    required String id,
+  }) async {
+    try {
+      token = await AuthenLocalDataSource.getToken();
+      final Map<String, String> headers = {
+        'accept': 'text/plain', // Khớp với curl
+        'Authorization': 'Bearer $token',
+      };
+
+      page ??= 1;
+      limit ??= 10;
+
+      final queryParams = {
+        'studentId': id,
+        'page': page.toString(),
+        'size': limit.toString(),
+      };
+
+      if (searchName != null && searchName.isNotEmpty) {
+        queryParams['searchName'] = searchName;
+      }
+
+      // final baseURL = 'https://10.0.2.2:7137/api/';
+
+      final uri = Uri.parse(
+        '${baseURL}Activity/UseVoucherTransaction',
+      ).replace(queryParameters: queryParams);
+
+
+      final response = await http.get(uri, headers: headers);
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(utf8.decode(response.bodyBytes));
+
         final apiResponse = ApiResponse<List<TransactionModel>>.fromJson(
           result,
           (data) => data.map((e) => TransactionModel.fromJson(e)).toList(),

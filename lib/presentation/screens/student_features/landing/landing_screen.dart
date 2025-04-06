@@ -79,7 +79,7 @@ class LandingScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(50 * fem),
         boxShadow: [
           BoxShadow(
-            color: const Color.fromARGB(255, 186, 186, 186).withOpacity(0.35),
+            color: const Color.fromARGB(255, 186, 186, 186).withValues(alpha: .35),
             spreadRadius: 8,
             blurRadius: 8,
             offset: const Offset(0, 1),
@@ -95,16 +95,12 @@ class LandingScreen extends StatelessWidget {
           onPressed: () async {
             final student = await AuthenLocalDataSource.getStudent();
             final studentId = student!.id;
-            if (studentId != null) {
-              Navigator.pushNamed(
-                context,
-                QrStudentViewScreen.routeName,
-                arguments: studentId,
-              );
-            } else {
-              Navigator.pushNamed(context, UnverifiedScreen.routeName);
-            }
-          },
+            Navigator.pushNamed(
+              context,
+              QrStudentViewScreen.routeName,
+              arguments: studentId,
+            );
+                    },
           child: SizedBox(
             width: 20 * fem,
             height: 20 * hem,
