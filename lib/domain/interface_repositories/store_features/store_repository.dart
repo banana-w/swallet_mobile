@@ -1,10 +1,15 @@
 import 'package:swallet_mobile/data/models/api_response.dart';
+import 'package:swallet_mobile/data/models/store_features/campagin_ranking_model.dart';
 import 'package:swallet_mobile/data/models/store_features/campaign_voucher_store_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/store_features/transaction_store_model.dart';
+import 'package:swallet_mobile/data/models/student_features/student_ranking_model.dart';
 
 abstract class StoreRepository {
   const StoreRepository();
+
+  Future<List<CampaignRankingModel>?> fecthCampaignRanking();
+  Future<List<StudentRankingModel>?> fecthStudentRanking();
 
   Future<StoreModel?> fetchStoreById({required String accountId});
 

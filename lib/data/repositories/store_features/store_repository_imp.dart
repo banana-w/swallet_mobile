@@ -5,9 +5,11 @@ import 'dart:convert';
 // import 'package:swallet_mobile/data/models/store_features/campaign_voucher_information_model.dart';
 // import 'package:swallet_mobile/data/models/store_features/campaign_voucher_store_model.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
+import 'package:swallet_mobile/data/models/store_features/campagin_ranking_model.dart';
 import 'package:swallet_mobile/data/models/store_features/campaign_voucher_store_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/store_features/transaction_store_model.dart';
+import 'package:swallet_mobile/data/models/student_features/student_ranking_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
 // import 'package:swallet_mobile/data/models/store_features/student_ranking_model.dart';
 // import 'package:swallet_mobile/data/models/store_features/transact_result_model.dart';
@@ -78,6 +80,60 @@ class StoreRepositoryImp extends StoreRepository {
         } else {
           return null;
         }
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<List<CampaignRankingModel>?> fecthCampaignRanking() async {
+    try {
+      final token = await AuthenLocalDataSource.getToken();
+      final storeId = await AuthenLocalDataSource.getStoreId();
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+      http.Response response = await http.get(
+        Uri.parse('$endPoint/$storeId/campaign-ranking'),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final List result = jsonDecode(utf8.decode(response.bodyBytes));
+        List<CampaignRankingModel> apiResponse =
+            result.map((e) => CampaignRankingModel.fromJson(e)).toList();
+        return apiResponse;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<List<StudentRankingModel>?> fecthStudentRanking() async {
+    try {
+      final token = await AuthenLocalDataSource.getToken();
+      final storeId = await AuthenLocalDataSource.getStoreId();
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+      http.Response response = await http.get(
+        Uri.parse('$endPoint/$storeId/student-ranking'),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final List result = jsonDecode(utf8.decode(response.bodyBytes));
+        List<StudentRankingModel> apiResponse =
+            result.map((e) => StudentRankingModel.fromJson(e)).toList();
+        return apiResponse;
+      } else {
+        return null;
       }
     } catch (e) {
       throw Exception(e.toString());
