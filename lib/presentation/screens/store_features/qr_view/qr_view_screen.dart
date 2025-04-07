@@ -21,7 +21,7 @@ class QrViewScreen extends StatefulWidget {
     );
   }
 
-  QrViewScreen({super.key, required this.storeId});
+  const QrViewScreen({super.key, required this.storeId});
   final String storeId;
 
   @override
@@ -34,7 +34,7 @@ class _QrViewScreenState extends State<QrViewScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 1,
       child: SafeArea(child: Scaffold(body: Body(id: widget.storeId))),
     );
   }

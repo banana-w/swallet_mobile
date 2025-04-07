@@ -53,19 +53,18 @@ final class LoadStoreCampaignVouchers extends StoreEvent {
 
 final class ScanVoucherCode extends StoreEvent {
   final String storeId;
-  final String voucherCode;
-  final String description;
-  final bool state;
+  final String voucherId;
+  final String studentId;
+ 
 
   const ScanVoucherCode({
     required this.storeId,
-    required this.voucherCode,
-    required this.description,
-    required this.state,
+    required this.voucherId,
+    required this.studentId,
   });
 
   @override
-  List<Object?> get props => [storeId, voucherCode, description, state];
+  List<Object?> get props => [storeId, voucherId, studentId];
 }
 
 final class CreateBonus extends StoreEvent {
@@ -138,15 +137,13 @@ final class UpdateStore extends StoreEvent {
 }
 
 final class LoadCampaignVoucherInformation extends StoreEvent {
-  final String storeId;
   final String voucherCode;
 
   const LoadCampaignVoucherInformation({
-    required this.storeId,
     required this.voucherCode,
   });
   @override
-  List<Object?> get props => [storeId, voucherCode];
+  List<Object?> get props => [voucherCode];
 }
 
 final class LoadStoreById extends StoreEvent {

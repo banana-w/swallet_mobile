@@ -41,7 +41,7 @@ class LandingStoreScreen extends StatelessWidget {
                         186,
                         186,
                         186,
-                      ).withOpacity(0.35),
+                      ).withValues(alpha: .35),
                       spreadRadius: 8,
                       blurRadius: 8,
                       offset: const Offset(0, 1),
@@ -64,11 +64,13 @@ class LandingStoreScreen extends StatelessWidget {
                         arguments: storeId,
                       );
                     },
-                    child: Container(
-                      width: 20 * fem,
-                      height: 20 * hem,
-                      child: SvgPicture.asset(
-                        'assets/icons/qr-unbean-icon.svg',
+                    child: SizedBox(
+                      width: 30 * fem,
+                      height: 30 * hem,
+                      child: Icon(
+                        Icons.qr_code_scanner,
+                        color: Colors.white,
+                        size: 30 * fem,
                       ),
                     ),
                   ),
@@ -100,7 +102,7 @@ class LandingStoreScreen extends StatelessWidget {
                           186,
                           186,
                           186,
-                        ).withOpacity(0.35),
+                        ).withValues(alpha: .35),
                         spreadRadius: 8,
                         blurRadius: 8,
                         offset: const Offset(0, 1),
@@ -122,11 +124,13 @@ class LandingStoreScreen extends StatelessWidget {
                           arguments: storeId,
                         );
                       },
-                      child: Container(
+                      child: SizedBox(
                         width: 20 * fem,
                         height: 20 * hem,
-                        child: SvgPicture.asset(
-                          'assets/icons/qr-unbean-icon.svg',
+                        child: Icon(
+                          Icons.qr_code_scanner,
+                          color: Colors.white,
+                          size: 20 * fem,
                         ),
                       ),
                     ),
@@ -156,7 +160,7 @@ class LandingStoreScreen extends StatelessWidget {
                         186,
                         186,
                         186,
-                      ).withOpacity(0.35),
+                      ).withValues(alpha: .35),
                       spreadRadius: 8,
                       blurRadius: 8,
                       offset: const Offset(0, 1),
@@ -178,11 +182,13 @@ class LandingStoreScreen extends StatelessWidget {
                         arguments: storeId,
                       );
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 20 * fem,
                       height: 20 * hem,
-                      child: SvgPicture.asset(
-                        'assets/icons/qr-unbean-icon.svg',
+                      child: Icon(
+                        Icons.qr_code_scanner,
+                        color: Colors.white,
+                        size: 20 * fem,
                       ),
                     ),
                   ),

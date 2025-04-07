@@ -7,9 +7,7 @@ import 'package:swallet_mobile/data/models/student_features/redeemed_voucher_mod
 import 'package:swallet_mobile/data/models/lecture_features/qr_response.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/data/models/student_features/transaction_model.dart';
-import 'package:swallet_mobile/data/models/student_features/voucher_student_item_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
-import 'package:swallet_mobile/domain/entities/student_features/campaign_detail.dart';
 import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
 part 'student_event.dart';
@@ -64,7 +62,7 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
         qrCode: event.qrCode,
         studentId: event.studentId,
       );
-      emit(QRScanSuccess(response as ScanQRResponse));
+      emit(QRScanSuccess(response));
     } catch (e) {
       emit(QRScanFailed(e.toString()));
     }

@@ -6,10 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
-import 'package:swallet_mobile/data/models/student_features/voucher_student_item_model.dart';
-import 'package:swallet_mobile/domain/entities/student_features/campaign_detail.dart';
 import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
@@ -40,8 +37,8 @@ class Body extends StatelessWidget {
           if (state is StudentVoucherItemLoading) {
             return buildCampaignVoucherShimmer(fem, hem);
           } else if (state is StudentVoucherItemLoaded) {
-            var voucherItem = state.voucherStudentItemModel;
-            var campainDetail = state.campaignDetailModel;
+            var voucher = state.voucherStudentItemModel;
+            var campaign = state.campaignDetailModel;
             return CustomScrollView(
               slivers: [
                 SliverList(
@@ -53,7 +50,7 @@ class Body extends StatelessWidget {
                           width: double.infinity,
                           height: 220 * hem,
                           child: Image.network(
-                            voucherItem.image,
+                            voucher.image,
                             fit: BoxFit.fill,
                             errorBuilder: (context, error, stackTrace) {
                               return Image.asset(
@@ -76,7 +73,7 @@ class Body extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                campainDetail.campaignName,
+                                campaign.campaignName,
                                 textAlign: TextAlign.justify,
                                 softWrap: true,
                                 style: GoogleFonts.openSans(
@@ -93,7 +90,7 @@ class Body extends StatelessWidget {
                                   bottom: 5 * hem,
                                 ),
                                 child: Text(
-                                  voucherItem.voucherName,
+                                  voucher.voucherName,
                                   textAlign: TextAlign.justify,
                                   softWrap: true,
                                   style: GoogleFonts.openSans(
@@ -110,7 +107,7 @@ class Body extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        formatter.format((voucherItem.price)),
+                                        formatter.format((voucher.price)),
                                         style: GoogleFonts.openSans(
                                           textStyle: TextStyle(
                                             fontSize: 22 * ffem,
@@ -192,7 +189,7 @@ class Body extends StatelessWidget {
                               ),
                               SizedBox(width: 10 * fem),
                               Text(
-                                'Hạn sử dụng: ${changeFormateDate(campainDetail.endOn)}',
+                                'Hạn sử dụng: ${changeFormateDate(campaign.endOn)}',
                                 style: GoogleFonts.openSans(
                                   textStyle: TextStyle(
                                     fontSize: 15 * ffem,
@@ -255,7 +252,7 @@ class Body extends StatelessWidget {
                                             width: 50 * fem,
                                             height: 50 * hem,
                                             child: Image.network(
-                                              campainDetail.brandLogo,
+                                              campaign.brandLogo,
                                               fit: BoxFit.fill,
                                               errorBuilder: (
                                                 context,
@@ -281,7 +278,7 @@ class Body extends StatelessWidget {
                                               bottom: 5 * hem,
                                             ),
                                             child: Text(
-                                              voucherItem.brandName
+                                              voucher.brandName
                                                   .toUpperCase(),
                                               softWrap: true,
                                               maxLines: 2,
@@ -304,7 +301,7 @@ class Body extends StatelessWidget {
                                       Navigator.pushNamed(
                                         context,
                                         BrandDetailScreen.routeName,
-                                        arguments: voucherItem.brandId,
+                                        arguments: voucher.brandId,
                                       );
                                     },
                                     child: Container(
@@ -344,8 +341,8 @@ class Body extends StatelessWidget {
                           onTap: () {
                             _detailModelBottomSheet(
                               context,
-                              voucherItem,
-                              campainDetail,
+                              voucher,
+                              campaign,
                             );
                           },
                           // onTap: () {
@@ -383,7 +380,7 @@ class Body extends StatelessWidget {
                                     top: 5 * hem,
                                   ),
                                   child: HtmlWidget(
-                                    voucherItem.condition,
+                                    voucher.condition,
                                     textStyle: GoogleFonts.openSans(
                                       textStyle: TextStyle(
                                         fontSize: 14 * ffem,
@@ -471,10 +468,7 @@ class Body extends StatelessWidget {
                                 width: 300 * fem,
                                 height: 300 * hem,
                                 child: QrImageView(
-                                  data: jsonEncode({
-                                    'voucherId': voucherItem.id,
-                                    'studentId': state.studentId,
-                                  }),                                               // Xem lai cai nay duoc khong
+                                  data:  '${voucher.id},${state.studentId},${campaign.id}',                                                                               // Xem lai cai nay duoc khong
                                   padding: EdgeInsets.all(20 * fem),
                                   version: QrVersions.auto,
                                   backgroundColor: Colors.white,

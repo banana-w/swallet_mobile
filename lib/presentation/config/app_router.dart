@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
 import 'package:swallet_mobile/data/models/lecture_features/qr_response.dart';
-import 'package:swallet_mobile/data/models/store_features/campaign_voucher_information_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
-import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
-import 'package:swallet_mobile/presentation/screens/lecture_features/campus/campus_screen.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/landing_screen/landing_lecture_screen.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/profile_update_detail/profile_update_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/qr_generate/qr_generate_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/brand/brand_detail_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_store_screen.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/campaign_voucher_information/campaign_vouher_information_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/campaign_voucher_detail/campaign_voucher_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/landing_screen/landing_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/profile_update_detail/profile_update_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/qr_view/qr_view_screen.dart';
@@ -57,6 +54,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/verify_emai
 import 'package:swallet_mobile/presentation/screens/student_features/voucher_history/voucher_history.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher_item_detail/voucher_item_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/welcome/welcome_screen.dart';
+import 'package:swallet_mobile/presentation/screens/success_scan_voucher/success_scan_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
 class AppRouter {
@@ -162,7 +160,12 @@ class AppRouter {
         return CampaignDetailStudentScreen.route(
           campaignId: settings.arguments as String,
         );
-
+      case CampaignVoucherDetailStoreScreen.routeName:
+        List<dynamic> args = settings.arguments as List<dynamic>;
+        return CampaignVoucherDetailStoreScreen.route(
+          campaignId: args[0],
+          campaignVoucherId: args[1],
+        );
       case VoucherScreen.routeName:
         return VoucherScreen.route();
 
@@ -260,10 +263,14 @@ class AppRouter {
         List<dynamic> args = settings.arguments as List<dynamic>;
         return TransactScreen.route(studentModel: args[0], brandId: args[1]);
 
-      case CampaignVoucherInformationScreen.routeName:
-        return CampaignVoucherInformationScreen.route(
-          campaginVoucherInformation:
-              settings.arguments as CampaignVoucherInformationModel,
+      // case CampaignVoucherInformationScreen.routeName:
+      //   return CampaignVoucherInformationScreen.route(
+      //     campaginVoucherInformation:
+      //         settings.arguments as CampaignVoucherInformationModel,
+      //   );
+      case SuccessScanVoucherScreen.routeName:
+        return SuccessScanVoucherScreen.route(
+          success: settings.arguments as String,
         );
       case CampaignVoucherScreen.routeName:
         List<dynamic> args = settings.arguments as List<dynamic>;

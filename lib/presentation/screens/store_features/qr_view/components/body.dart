@@ -5,13 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/brand_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
-import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
-import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
-import '../../../../blocs/blocs.dart';
 import 'tab_scan_voucher.dart';
 
 class Body extends StatefulWidget {
@@ -86,7 +81,7 @@ class _BodyState extends State<Body> {
             return NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) {
                 return [
-                  new SliverAppBar(
+                  SliverAppBar(
                     pinned: true,
                     floating: true,
                     elevation: 0,
@@ -150,7 +145,6 @@ class _BodyState extends State<Body> {
                       ),
                       tabs: [
                         Tab(text: 'Quét ưu đãi'),
-                        // Tab(text: 'Tặng đậu xanh'),
                       ],
                     ),
                   ),
@@ -198,7 +192,7 @@ class _BodyState extends State<Body> {
             return NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) {
                 return [
-                  new SliverAppBar(
+                  SliverAppBar(
                     pinned: true,
                     floating: true,
                     elevation: 0,
@@ -262,7 +256,6 @@ class _BodyState extends State<Body> {
                       ),
                       tabs: [
                         Tab(text: 'Quét ưu đãi'),
-                        // Tab(text: 'Tặng đậu xanh'),
                       ],
                     ),
                   ),

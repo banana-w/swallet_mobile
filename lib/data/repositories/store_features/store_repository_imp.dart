@@ -1,21 +1,15 @@
 import 'dart:convert';
-
-// import 'package:swallet_mobile/data/models/api_response.dart';
-// import 'package:swallet_mobile/data/models/store_features/campagin_ranking_model.dart';
-// import 'package:swallet_mobile/data/models/store_features/campaign_voucher_information_model.dart';
-// import 'package:swallet_mobile/data/models/store_features/campaign_voucher_store_model.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/store_features/campagin_ranking_model.dart';
 import 'package:swallet_mobile/data/models/store_features/campaign_voucher_store_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/store_features/transaction_store_model.dart';
+import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_ranking_model.dart';
+import 'package:swallet_mobile/data/repositories/student_features/campaign_repository_imp.dart';
+import 'package:swallet_mobile/data/repositories/student_features/student_repository_imp.dart';
+import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
-// import 'package:swallet_mobile/data/models/store_features/student_ranking_model.dart';
-// import 'package:swallet_mobile/data/models/store_features/transact_result_model.dart';
-
-// import 'package:swallet_mobile/data/models/store_features/transaction_store_model.dart';
-// import 'package:swallet_mobile/data/models/student_features/campaign_voucher_detail_model.dart';
 
 import '../../../presentation/config/constants.dart';
 import '../../datasource/authen_local_datasource.dart';
@@ -27,7 +21,8 @@ class StoreRepositoryImp extends StoreRepository {
   int page = 1;
   int limit = 10;
   bool state = true;
-
+  final campaignRepoImp = CampaignRepositoryImp();
+  final studentRepo = StudentRepositoryImp();
   @override
   Future<ApiResponse<List<TransactionStoreModel>>?> fetchTransactionsStoreId(
     int? page,
@@ -173,66 +168,60 @@ class StoreRepositoryImp extends StoreRepository {
   fetchCampaignVoucherStoreId(int? page, int? limit, String? search) async {
     try {
       final token = await AuthenLocalDataSource.getToken();
-      final storeId = await AuthenLocalDataSource.getStoreId();
+      final store = await AuthenLocalDataSource.getStore();
       final Map<String, String> headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
+        'accept': 'text/plain', // Thêm header accept theo API
       };
-      if (search != null) {
-        http.Response response = await http.get(
-          Uri.parse(
-            '$endPoint/$storeId/campaign-details?state=$state&sort=$sort&search=$search&page=$page&limit=$limit',
-          ),
-          headers: headers,
-        );
-        if (response.statusCode == 200) {
-          final result = jsonDecode(utf8.decode(response.bodyBytes));
-          ApiResponse<List<CampaignVoucherStoreModel>> apiResponse =
-              ApiResponse<List<CampaignVoucherStoreModel>>.fromJson(
-                result,
-                (data) =>
-                    data
-                        .map((e) => CampaignVoucherStoreModel.fromJson(e))
-                        .toList(),
-              );
-          return apiResponse;
-        } else {
-          return null;
-        }
-      } else if (search == null || search == '') {
-        http.Response response = await http.get(
-          Uri.parse(
-            '$endPoint/$storeId/campaign-details?sort=$sort&page=$page&limit=$limit',
-          ),
-          headers: headers,
-        );
-        if (response.statusCode == 200) {
-          final result = jsonDecode(utf8.decode(response.bodyBytes));
-          ApiResponse<List<CampaignVoucherStoreModel>> apiResponse =
-              ApiResponse<List<CampaignVoucherStoreModel>>.fromJson(
-                result,
-                (data) =>
-                    data
-                        .map((e) => CampaignVoucherStoreModel.fromJson(e))
-                        .toList(),
-              );
-          return apiResponse;
-        } else {
-          return null;
-        }
+
+      // Định nghĩa endpoint cơ bản
+      const String endPoint =
+          '${baseURL}CampaignDetail/get-all-campaign-detail-by-storeId';
+
+      // Xây dựng URL với query parameters
+      final Map<String, String> queryParams = {
+        'storeId': store!.id,
+        'page': page?.toString() ?? '1',
+        'size': limit?.toString() ?? '10',
+      };
+
+      // Nếu có search, thêm searchName vào query parameters
+      if (search != null && search.isNotEmpty) {
+        queryParams['searchName'] = search;
+      }
+
+      // Tạo URI với query parameters
+      final Uri uri = Uri.parse(endPoint).replace(queryParameters: queryParams);
+
+      // Gửi request
+      http.Response response = await http.get(uri, headers: headers);
+
+      // Xử lý response
+      if (response.statusCode == 200) {
+        final result = jsonDecode(utf8.decode(response.bodyBytes));
+        ApiResponse<List<CampaignVoucherStoreModel>> apiResponse =
+            ApiResponse<List<CampaignVoucherStoreModel>>.fromJson(
+              result,
+              (data) =>
+                  data
+                      .map((e) => CampaignVoucherStoreModel.fromJson(e))
+                      .toList(),
+            );
+        return apiResponse;
+      } else {
+        return null;
       }
     } catch (e) {
       throw Exception(e.toString());
     }
-    return null;
   }
 
   @override
   Future<Map<bool, String>> postScanVoucherCode({
     required String storeId,
-    required String voucherCode,
-    required String description,
-    required bool state,
+    required String voucherId,
+    required String studentId,
   }) async {
     try {
       final token = await AuthenLocalDataSource.getToken();
@@ -240,27 +229,34 @@ class StoreRepositoryImp extends StoreRepository {
       final Map<String, String> headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
+        'accept': 'text/plain',
       };
 
-      Map<String, dynamic> body = {'description': description, 'state': true};
+      Map<String, dynamic> body = {
+        'studentId': studentId,
+        'voucherId': voucherId,
+        'storeId': storeId,
+      };
 
-      http.Response response = await http.post(
-        Uri.parse('$endPoint/$storeId/campaign-details/$voucherCode'),
+      const String endPoint = '${baseURL}Activity/UseVoucher';
+
+      // Gửi request POST
+      var response = await http.post(
+        Uri.parse(endPoint),
         headers: headers,
         body: jsonEncode(body),
       );
+
       Map<bool, String> mapResult = {};
 
-      if (response.statusCode == 201) {
-        var result = utf8.decode(response.bodyBytes);
-        mapResult[true] = result;
+      if (response.statusCode == 200) {
+        mapResult[true] = "QR code hợp lệ";
+        return mapResult;
+      } else {
+        mapResult[false] = "Lỗi QR code không hợp lệ";
         return mapResult;
       }
-      var error = utf8.decode(response.bodyBytes);
-      mapResult[false] = error;
-      return mapResult;
     } catch (e) {
-      print(e);
       throw Exception(e.toString());
     }
   }
@@ -423,15 +419,6 @@ class StoreRepositoryImp extends StoreRepository {
     }
   }
 
-  @override
-  Future<Map<bool, dynamic>> fecthCampaignVoucherInformation({
-    required String storeId,
-    required String voucherCode,
-  }) {
-    // TODO: implement fecthCampaignVoucherInformation
-    throw UnimplementedError();
-  }
-
   // @override
   // Future<List<StudentRankingModel>?> fecthStudentRanking() async {
   //   try {
@@ -458,35 +445,21 @@ class StoreRepositoryImp extends StoreRepository {
   //   }
   // }
 
-  // @override
-  // Future<Map<bool, dynamic>> fecthCampaignVoucherInformation(
-  //     {required String storeId, required String voucherCode}) async {
-  //   try {
-  //     final token = await AuthenLocalDataSource.getToken();
+  @override
+  Future<CampaignDetailModel?> fecthCampaignById({required String id}) async {
+    var campaignDetailModel = campaignRepoImp.fecthCampaignById(id: id);
+    return campaignDetailModel;
+  }
 
-  //     final Map<String, String> headers = {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer $token'
-  //     };
-  //     http.Response response = await http.get(
-  //         Uri.parse(
-  //             '$endPoint/$storeId/campaign-details/$voucherCode/information'),
-  //         headers: headers);
-  //     Map<bool, dynamic> mapResult = {};
-  //     if (response.statusCode == 200) {
-  //       final result = jsonDecode(utf8.decode(response.bodyBytes));
-  //       CampaignVoucherInformationModel campaignVoucherDetail =
-  //           CampaignVoucherInformationModel.fromJson(result);
-
-  //       mapResult[true] = campaignVoucherDetail;
-  //       return mapResult;
-  //     } else {
-  //       final result = response.body;
-  //       mapResult[false] = result;
-  //       return mapResult;
-  //     }
-  //   } catch (e) {
-  //     throw Exception(e.toString());
-  //   }
-  // }
+  @override
+  Future<CampaignVoucherDetailModel?> fetchVoucherItemByStudentId({
+    required String campaignId,
+    required String voucherId,
+  }) {
+    var voucherItem = studentRepo.fetchVoucherItemByStudentId(
+      campaignId: campaignId,
+      voucherId: voucherId,
+    );
+    return voucherItem;
+  }
 }
