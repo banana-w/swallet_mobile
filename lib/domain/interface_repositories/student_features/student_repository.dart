@@ -42,6 +42,14 @@ abstract class StudentRepository {
     required String id,
   });
 
+  Future<ApiResponse<List<TransactionModel>>?> fetchVoucherTransactionsByStudentId(
+    int? page,
+    int? limit,
+    int? typeIds,
+    String? searchName, {
+    required String id,
+  });
+
   // Future<ApiResponse<List<OrderModel>>?> fetchOrdersStudentId(
   //     int? page, int? limit,
   //     {required String id});
