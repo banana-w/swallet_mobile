@@ -45,7 +45,7 @@ class Body extends StatelessWidget {
                 elevation: 0,
                 duration: const Duration(milliseconds: 2000),
                 behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
+                backgroundColor: const Color.fromARGB(0, 223, 14, 14),
                 content: AwesomeSnackbarContent(
                   title: 'Đã kết nối internet',
                   message: 'Đã kết nối internet!',
@@ -508,11 +508,12 @@ class Body extends StatelessWidget {
                                             heightIcon: 20,
                                             onPressed: () {
                                               Navigator.pushNamed(
-                                                  context,
-                                                  ProfileTransactionHistoryScreen
-                                                      .routeName,
-                                                  arguments: stateRole
-                                                      .studentModel.id);
+                                                context,
+                                                ProfileTransactionHistoryScreen
+                                                    .routeName,
+                                                arguments:
+                                                    stateRole.studentModel.id,
+                                              );
                                             },
                                             svgIcon:
                                                 'assets/icons/transaction-icon.svg',

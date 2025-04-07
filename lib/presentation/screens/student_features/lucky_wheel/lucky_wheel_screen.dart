@@ -11,6 +11,7 @@ import 'package:swallet_mobile/domain/interface_repositories/student_features/st
 import 'package:swallet_mobile/presentation/blocs/lucky/lucky_wheel_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/lucky/lucky_wheel_event.dart';
 import 'package:swallet_mobile/presentation/blocs/lucky/lucky_wheel_state.dart';
+import 'package:swallet_mobile/presentation/config/constants.dart';
 
 class LuckyWheelScreen extends StatelessWidget {
   const LuckyWheelScreen({super.key});
@@ -212,7 +213,7 @@ class _LuckyWheelViewState extends State<LuckyWheelView> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: kPrimaryColor,
         elevation: 0,
         centerTitle: true,
         title: Text(
@@ -229,7 +230,7 @@ class _LuckyWheelViewState extends State<LuckyWheelView> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.green, Colors.white],
+            colors: [kPrimaryColor, Colors.white],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
