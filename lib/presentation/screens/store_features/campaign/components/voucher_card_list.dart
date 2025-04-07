@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/store_features/campaign_voucher_store_model.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_voucher_detail/campaign_voucher_detail_screen.dart';
@@ -24,11 +23,10 @@ class VoucherCardList extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        final storeId = await AuthenLocalDataSource.getStoreId();
         Navigator.pushNamed(
           context,
-          CampaignVoucherDetailScreen.routeName,
-          arguments: <dynamic>[storeId, voucher.id],
+          CampaignVoucherDetailStoreScreen.routeName,
+          arguments: <dynamic>[voucher.campaignId, voucher.voucherId],
         );
       },
       child: Stack(
@@ -123,11 +121,10 @@ class VoucherCardList extends StatelessWidget {
             right: 20 * fem,
             child: InkWell(
               onTap: () async {
-                final storeId = await AuthenLocalDataSource.getStoreId();
                 Navigator.pushNamed(
                   context,
-                  CampaignVoucherDetailScreen.routeName,
-                  arguments: <dynamic>[storeId, voucher.id],
+                  CampaignVoucherDetailStoreScreen.routeName,
+                  arguments: <dynamic>[voucher.campaignId, voucher.voucherId],
                 );
               },
               child: Container(

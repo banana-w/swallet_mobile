@@ -17,7 +17,7 @@ class Body extends StatelessWidget {
     double ffem = fem * 0.97;
     double hem = MediaQuery.of(context).size.height / baseHeight;
     return SingleChildScrollView(
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -34,15 +34,13 @@ class Body extends StatelessWidget {
                     repeat: false,
                   ),
                 ),
-                Container(
-                  child: Text(
-                    'Quét mã thành công',
-                    style: GoogleFonts.openSans(
-                      textStyle: TextStyle(
-                        fontSize: 18 * ffem,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                Text(
+                  'Quét mã thành công',
+                  style: GoogleFonts.openSans(
+                    textStyle: TextStyle(
+                      fontSize: 18 * ffem,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -67,7 +65,7 @@ class Body extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
+                  SizedBox(
                     height: 50 * hem,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,7 +94,7 @@ class Body extends StatelessWidget {
                     ),
                   ),
 
-                  Container(
+                  SizedBox(
                     height: 50 * hem,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

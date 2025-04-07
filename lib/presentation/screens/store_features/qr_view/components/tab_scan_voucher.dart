@@ -37,7 +37,7 @@ class TabScanVoucher extends StatelessWidget {
             builder: (BuildContext context) {
               Future.delayed(Duration(seconds: 5));
               return AlertDialog(
-                content: Container(
+                content: SizedBox(
                   width: 250,
                   height: 250,
                   child: Center(
@@ -48,11 +48,15 @@ class TabScanVoucher extends StatelessWidget {
             },
           );
         } else if (state is StoreCampaigVoucherInforSuccess) {
-          Navigator.pushNamedAndRemoveUntil(
+          Navigator.pushAndRemoveUntil(
             context,
-            CampaignVoucherInformationScreen.routeName,
+            CampaignVoucherInformationScreen.route(
+              campaignModel: state.campaignDetailModel,
+              voucherModel: state.campaignVoucherDetailModel,
+              studentId: state.studentId,
+              storeId: widget.id,
+            ),
             (Route<dynamic> route) => false,
-            arguments: state.campaignVoucherInformationModel,
           );
         }
       },
@@ -64,7 +68,7 @@ class TabScanVoucher extends StatelessWidget {
             controller: cameraController,
             onDetect: (capture) {
               final List<Barcode> barcodes = capture.barcodes;
-              String? value = null;
+              String? value;
               for (final barcode in barcodes) {
                 print('Barcode found! ${barcode.rawValue}');
                 value = barcode.rawValue;
@@ -74,10 +78,7 @@ class TabScanVoucher extends StatelessWidget {
               }
               if (value != null) {
                 context.read<StoreBloc>().add(
-                  LoadCampaignVoucherInformation(
-                    storeId: widget.id,
-                    voucherCode: value,
-                  ),
+                  LoadCampaignVoucherInformation(voucherCode: value),
                 );
               }
             },

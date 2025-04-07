@@ -160,14 +160,22 @@ final class StoreCampaignVoucherInforLoading extends StoreState {
 }
 
 final class StoreCampaigVoucherInforSuccess extends StoreState {
-  final CampaignVoucherInformationModel campaignVoucherInformationModel;
+  final CampaignDetailModel campaignDetailModel;
+  final CampaignVoucherDetailModel campaignVoucherDetailModel;
+  final String studentId;
 
   const StoreCampaigVoucherInforSuccess({
-    required this.campaignVoucherInformationModel,
+    required this.campaignDetailModel,
+    required this.campaignVoucherDetailModel,
+    required this.studentId,
   });
 
   @override
-  List<Object?> get props => [campaignVoucherInformationModel];
+  List<Object?> get props => [
+    campaignDetailModel,
+    campaignVoucherDetailModel,
+    studentId,
+  ];
 }
 
 final class StoreCampaignVoucherInforFailed extends StoreState {

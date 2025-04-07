@@ -3,7 +3,9 @@ import 'package:swallet_mobile/data/models/store_features/campagin_ranking_model
 import 'package:swallet_mobile/data/models/store_features/campaign_voucher_store_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/store_features/transaction_store_model.dart';
+import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_ranking_model.dart';
+import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
 
 abstract class StoreRepository {
   const StoreRepository();
@@ -23,11 +25,11 @@ abstract class StoreRepository {
   Future<ApiResponse<List<CampaignVoucherStoreModel>>?>
   fetchCampaignVoucherStoreId(int? page, int? limit, String? search);
 
-  // Future<Map<bool, String>> postScanVoucherCode(
-  //     {required String storeId,
-  //     required String voucherCode,
-  //     required String description,
-  //     required bool state});
+  Future<Map<bool, String>> postScanVoucherCode({
+    required String storeId,
+    required String voucherId,
+    required String studentId,
+  });
 
   // Future<List<CampaignRankingModel>?> fecthCampaignRanking();
   // Future<List<StudentRankingModel>?> fecthStudentRanking();
@@ -55,8 +57,14 @@ abstract class StoreRepository {
     required bool state,
   });
 
-  Future<Map<bool, dynamic>> fecthCampaignVoucherInformation({
-    required String storeId,
-    required String voucherCode,
+  // Future<Map<bool, dynamic>> fecthCampaignVoucherInformation({
+  //   required String storeId,
+  //   required String voucherCode,
+  // });
+
+  Future<CampaignDetailModel?> fecthCampaignById({required String id});
+  Future<CampaignVoucherDetailModel?> fetchVoucherItemByStudentId({
+    required String campaignId,
+    required String voucherId,
   });
 }

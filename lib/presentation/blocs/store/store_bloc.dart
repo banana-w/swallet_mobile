@@ -2,10 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/models/store_features/campaign_store_cart_model.dart';
-import 'package:swallet_mobile/data/models/store_features/campaign_voucher_information_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/store_features/transact_result_model.dart';
 import 'package:swallet_mobile/data/models/store_features/transaction_store_model.dart';
+import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
 import '../../../data/datasource/authen_local_datasource.dart';
@@ -19,11 +19,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
     on<LoadStoreCampaignVouchers>(_onLoadStoreCampaignVouchers);
     on<LoadStoreTransactions>(_onLoadStoreTransactions);
     on<LoadMoreTransactionStore>(_onLoadMoreTransactions);
-    // on<ScanVoucherCode>(_onScanVoucherCode);
+    on<ScanVoucherCode>(_onScanVoucherCode);
     // on<CreateBonus>(_onCreateBonus);
     // on<LoadCampaignVoucherDetail>(_onLoadCampaignVoucherDetail);
     // on<UpdateStore>(_onUpdateStore);
-    // on<LoadCampaignVoucherInformation>(_onLoadCampaignVoucherInformation);
+    on<LoadCampaignVoucherInformation>(_onLoadCampaignVoucherInformation);
     on<LoadStoreById>(_onLoadStoreById);
   }
   var isLoadingMore = false;
@@ -252,31 +252,31 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
     }
   }
 
-  //   Future<void> _onScanVoucherCode(
-  //       ScanVoucherCode event, Emitter<StoreState> emit) async {
-  //     emit(ScanVoucherLoading());
-  //     try {
-  //       var apiResponse = await storeRepository.postScanVoucherCode(
-  //           storeId: event.storeId,
-  //           voucherCode: event.voucherCode,
-  //           description: event.description,
-  //           state: true);
-  //       var check = apiResponse.keys.first;
-  //       if (check) {
-  //         String result = apiResponse.values.first;
-  //         emit(ScanVoucherSuccess(result: result));
-  //       } else {
-  //         String error = apiResponse.values.first;
-  //         if(error == '["Khuyến mãi không hợp lệ"]'){
-  //              emit(ScanVoucherFailed(error: 'Khuyến mãi không hợp lệ'));
-  //         }else{
-  //         emit(ScanVoucherFailed(error: error));
-  //         }
-  //       }
-  //     } catch (e) {
-  //       emit(StoreFailed(error: e.toString()));
-  //     }
-  //   }
+    Future<void> _onScanVoucherCode(
+        ScanVoucherCode event, Emitter<StoreState> emit) async {
+      emit(ScanVoucherLoading());
+      try {
+        var apiResponse = await storeRepository.postScanVoucherCode(
+            storeId: event.storeId,
+          voucherId: event.voucherId,
+          studentId: event.studentId,
+        );
+        var check = apiResponse.keys.first;
+        if (check) {
+          String result = apiResponse.values.first;
+          emit(ScanVoucherSuccess(result: result));
+        } else {
+          String error = apiResponse.values.first;
+          if(error == '["Khuyến mãi không hợp lệ"]'){
+               emit(ScanVoucherFailed(error: 'Khuyến mãi không hợp lệ'));
+          }else{
+          emit(ScanVoucherFailed(error: error));
+          }
+        }
+      } catch (e) {
+        emit(StoreFailed(error: e.toString()));
+      }
+    }
 
   //   Future<void> _onCreateBonus(
   //       CreateBonus event, Emitter<StoreState> emit) async {
@@ -334,29 +334,40 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   //     }
   //   }
 
-  // Future<void> _onLoadCampaignVoucherInformation(
-  //     LoadCampaignVoucherInformation event, Emitter<StoreState> emit) async {
-  //   emit(StoreCampaignVoucherInforLoading());
-  //   try {
-  //     var apiResponse = await storeRepository.fecthCampaignVoucherInformation(
-  //         storeId: event.storeId, voucherCode: event.voucherCode);
-  //     var check = apiResponse.keys.first;
-  //     if (check) {
-  //       var result = apiResponse.values.first;
-  //       emit(StoreCampaigVoucherInforSuccess(
-  //           campaignVoucherInformationModel: result!));
-  //     } else {
-  //       String error = apiResponse.values.first;
-  //       if(error == '["Khuyến mãi không hợp lệ"]'){
-  //            emit(StoreCampaignVoucherInforFailed(error: 'Khuyến mãi không hợp lệ'));
-  //       }else{
-  //       emit(StoreCampaignVoucherInforFailed(error: error));
-  //       }
-  //     }
-  //   } catch (e) {
-  //     emit(StoreCampaignVoucherInforFailed(error: e.toString()));
-  //   }
-  // }
+  Future<void> _onLoadCampaignVoucherInformation(
+    LoadCampaignVoucherInformation event,
+    Emitter<StoreState> emit,
+  ) async {
+    emit(StoreCampaignVoucherInforLoading());
+    try {
+      final List<String> parts = event.voucherCode.split(',');
+      final String voucherId = parts[0];
+      final String studentId = parts[1];
+      final String campaignId = parts[2];
+
+      var voucher = await storeRepository.fetchVoucherItemByStudentId(
+        campaignId: campaignId,
+        voucherId: voucherId,
+      );
+      var campaignDetail = await storeRepository.fecthCampaignById(
+        id: campaignId,
+      );
+
+      if (voucher != null && campaignDetail != null) {
+        emit(
+          StoreCampaigVoucherInforSuccess(
+            campaignDetailModel: campaignDetail,
+            campaignVoucherDetailModel: voucher,
+            studentId: studentId,
+          ),
+        );
+      } else {
+        emit(StoreCampaignVoucherInforFailed(error: 'Khuyến mãi không hợp lệ'));
+      }
+    } catch (e) {
+      emit(StoreCampaignVoucherInforFailed(error: e.toString()));
+    }
+  }
 
   // }
 }

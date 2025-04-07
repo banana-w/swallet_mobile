@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
-import 'package:swallet_mobile/data/models/store_features/campaign_voucher_information_model.dart';
+import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
+import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
@@ -17,7 +17,10 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
   static const String routeName = '/campaign-voucher-information-store';
 
   static Route route({
-    required CampaignVoucherInformationModel campaginVoucherInformation,
+    required CampaignDetailModel campaignModel,
+    required CampaignVoucherDetailModel voucherModel,
+    required String studentId,
+    required String storeId,
   }) {
     return PageRouteBuilder(
       pageBuilder:
@@ -26,7 +29,10 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                 (context) =>
                     StoreBloc(storeRepository: context.read<StoreRepository>()),
             child: CampaignVoucherInformationScreen(
-              campaginVoucherInformation: campaginVoucherInformation,
+              campaignModel: campaignModel,
+              voucherModel: voucherModel,
+              studentId: studentId,
+              storeId: storeId,
             ),
           ),
       transitionDuration: Duration(milliseconds: 400),
@@ -44,10 +50,16 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
 
   const CampaignVoucherInformationScreen({
     super.key,
-    required this.campaginVoucherInformation,
+    required this.campaignModel,
+    required this.voucherModel,
+    required this.studentId,
+    required this.storeId,
   });
 
-  final CampaignVoucherInformationModel campaginVoucherInformation;
+  final CampaignDetailModel campaignModel;
+  final CampaignVoucherDetailModel voucherModel;
+  final String studentId;
+  final String storeId;
   @override
   Widget build(BuildContext context) {
     double baseWidth = 375;
@@ -105,13 +117,11 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
           elevation: 5,
           child: GestureDetector(
             onTap: () async {
-              final storeId = await AuthenLocalDataSource.getStoreId();
               context.read<StoreBloc>().add(
                 ScanVoucherCode(
-                  storeId: storeId!,
-                  voucherCode: campaginVoucherInformation.voucherCode,
-                  description: '',
-                  state: true,
+                  voucherId: voucherModel.id,
+                  studentId: studentId,
+                  storeId: storeId,             
                 ),
               );
             },
@@ -160,7 +170,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                 builder: (BuildContext context) {
                   Future.delayed(Duration(seconds: 5));
                   return AlertDialog(
-                    content: Container(
+                    content: SizedBox(
                       width: 250,
                       height: 250,
                       child: Center(
@@ -190,7 +200,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                         width: double.infinity,
                         height: 220 * hem,
                         child: Image.network(
-                          campaginVoucherInformation.voucherImage,
+                          voucherModel.image,
                           fit: BoxFit.fill,
                           errorBuilder: (context, error, stackTrace) {
                             return Image.asset(
@@ -213,7 +223,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${campaginVoucherInformation.campaignName}',
+                              '${campaignModel.campaignName}',
                               textAlign: TextAlign.justify,
                               softWrap: true,
                               style: GoogleFonts.openSans(
@@ -230,7 +240,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                 bottom: 5 * hem,
                               ),
                               child: Text(
-                                '${campaginVoucherInformation.voucherName}',
+                                '${voucherModel.voucherName}',
                                 textAlign: TextAlign.justify,
                                 softWrap: true,
                                 style: GoogleFonts.openSans(
@@ -247,7 +257,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      '${formatter.format((campaginVoucherInformation.price))}',
+                                      '${formatter.format((voucherModel.price))}',
                                       style: GoogleFonts.openSans(
                                         textStyle: TextStyle(
                                           fontSize: 22 * ffem,
@@ -258,55 +268,19 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(
-                                        left: 0 * fem,
-                                        top: 4 * hem,
+                                        left: 5 * fem,
+                                        top: 2 * hem,
                                         bottom: 0 * hem,
                                       ),
                                       child: SvgPicture.asset(
-                                        'assets/icons/green-bean-icon.svg',
-                                        width: 32 * fem,
-                                        height: 32 * fem,
+                                        'assets/icons/coin.svg',
+                                        width: 25 * fem,
+                                        height: 25 * fem,
                                       ),
                                     ),
                                   ],
                                 ),
-                                Container(
-                                  padding: EdgeInsets.only(
-                                    left: 10 * fem,
-                                    right: 10 * fem,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white,
-                                    border: Border.all(color: Colors.red),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'x${campaginVoucherInformation.rate.toStringAsFixed(0)}',
-                                        style: GoogleFonts.openSans(
-                                          textStyle: TextStyle(
-                                            fontSize: 18 * ffem,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          left: 5 * fem,
-                                          top: 4 * hem,
-                                          bottom: 0 * hem,
-                                        ),
-                                        child: SvgPicture.asset(
-                                          'assets/icons/red-bean-icon.svg',
-                                          width: 25 * fem,
-                                          height: 25 * fem,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                
                               ],
                             ),
                           ],
@@ -329,7 +303,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                             ),
                             SizedBox(width: 10 * fem),
                             Text(
-                              'Hạn sử dụng: ${changeFormateDate(campaginVoucherInformation.expireOn)}',
+                              'Hạn sử dụng: ${changeFormateDate(campaignModel.endOn)}',
                               style: GoogleFonts.openSans(
                                 textStyle: TextStyle(
                                   fontSize: 15 * ffem,
@@ -373,11 +347,11 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                 SizedBox(width: 15 * fem),
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(15),
-                                  child: Container(
+                                  child: SizedBox(
                                     width: 120 * fem,
                                     height: 120 * hem,
                                     child: Image.network(
-                                      campaginVoucherInformation.campaignImage,
+                                      campaignModel.image,
                                       fit: BoxFit.fill,
                                       errorBuilder: (
                                         context,
@@ -401,7 +375,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                       child: Container(
                                         width: 200 * fem,
                                         child: Text(
-                                          campaginVoucherInformation
+                                          campaignModel
                                               .campaignName
                                               .toUpperCase(),
                                           softWrap: true,
@@ -462,7 +436,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                   top: 5 * hem,
                                 ),
                                 child: HtmlWidget(
-                                  '${campaginVoucherInformation.condition}',
+                                  '${voucherModel.condition}',
                                   textStyle: GoogleFonts.openSans(
                                     textStyle: TextStyle(
                                       fontSize: 14 * ffem,
@@ -492,7 +466,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                   top: 5 * hem,
                                 ),
                                 child: HtmlWidget(
-                                  '${campaginVoucherInformation.description}',
+                                  '${voucherModel.description}',
                                   textStyle: GoogleFonts.openSans(
                                     textStyle: TextStyle(
                                       fontSize: 14 * ffem,

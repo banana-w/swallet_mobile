@@ -1,35 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
-import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
+import 'package:swallet_mobile/domain/interface_repositories/student_features/campaign_repository.dart';
+import 'package:swallet_mobile/presentation/blocs/campaign_voucher/campaign_voucher_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
 import 'components/body.dart';
 
-class CampaignVoucherDetailScreen extends StatelessWidget {
+class CampaignVoucherDetailStoreScreen extends StatelessWidget {
   static const String routeName = '/campaign-voucher-detail-store';
 
   static Route route({
-    required String storeId,
+    required String campaignId,
     required String campaignVoucherId,
   }) {
     return MaterialPageRoute(
       builder:
-          (_) => CampaignVoucherDetailScreen(
-            storeId: storeId,
+          (_) => CampaignVoucherDetailStoreScreen(
+            campaignId: campaignId,
             campaignVoucherId: campaignVoucherId,
           ),
       settings: const RouteSettings(arguments: routeName),
     );
   }
 
-  const CampaignVoucherDetailScreen({
+  const CampaignVoucherDetailStoreScreen({
     super.key,
-    required this.storeId,
+    required this.campaignId,
     required this.campaignVoucherId,
   });
-  final String storeId;
+  final String campaignId;
   final String campaignVoucherId;
 
   @override
@@ -42,9 +42,10 @@ class CampaignVoucherDetailScreen extends StatelessWidget {
     return BlocProvider(
       create:
           (context) =>
-              StoreBloc(storeRepository: context.read<StoreRepository>())..add(
-                LoadCampaignVoucherDetail(
-                  storeId: storeId,
+              CampaignVoucherBloc(
+            campaignRepository: context.read<CampaignRepository>())..add(
+                LoadCampaignVoucherById(
+                  campaignId: campaignId,
                   campaignVoucherId: campaignVoucherId,
                 ),
               ),
