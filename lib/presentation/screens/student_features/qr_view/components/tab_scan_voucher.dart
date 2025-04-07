@@ -39,9 +39,10 @@ class _TabScanVoucherState extends State<TabScanLectureQR> {
     return BlocListener<StudentBloc, StudentState>(
       listener: (context, state) {
         if (state is QRScanFailed) {
-          setState(() {
-            _hasScanned = false; // Cho phép quét lại nếu thất bại
-          });
+          // setState(() {
+          //   _hasScanned = false; // Cho phép quét lại nếu thất bại
+          // });
+
           // Navigator.pushNamed(
           //   context,
           //   FailedScanVoucherScreen.routeName,

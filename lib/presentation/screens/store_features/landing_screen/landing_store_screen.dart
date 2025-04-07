@@ -5,6 +5,7 @@ import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign/campaign_store_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/dashboard/dashboard_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/profile/profile_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/qr_view/qr_view_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/app_bar_store.dart';
@@ -201,8 +202,7 @@ class LandingStoreScreen extends StatelessWidget {
 
 List<Widget> bottomNavScreen = [
   CampaignStoreScreen(),
-  // DashBoardScreen(),
-  ProfileStoreScreen(),
+  DashboardScreen(),
   ProfileStoreScreen(),
   ProfileStoreScreen(),
 ];
