@@ -29,6 +29,7 @@ import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/lecture/lecture_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/notification/notification_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/ranking/ranking_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/config/app_router.dart';
@@ -140,7 +141,7 @@ class MyApp extends StatelessWidget {
                     VerificationCubit(VerificationRepositoryImp())
                       ..loadingVerification(),
           ),
-          
+
           BlocProvider(
             create:
                 (context) =>
@@ -160,6 +161,12 @@ class MyApp extends StatelessWidget {
                 (context) =>
                     StoreBloc(storeRepository: StoreRepositoryImp())
                       ..add(LoadStoreCampaignVouchers()),
+          ),
+          BlocProvider(
+            create:
+                (context) =>
+                    RankingBloc(storeRepository: StoreRepositoryImp())
+                      ..add(LoadCampaignRanking()),
           ),
           BlocProvider(
             create:
