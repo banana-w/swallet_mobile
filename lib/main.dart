@@ -168,6 +168,7 @@ class MyApp extends StatelessWidget {
                     RankingBloc(storeRepository: StoreRepositoryImp())
                       ..add(LoadCampaignRanking()),
           ),
+
           BlocProvider(
             create:
                 (context) =>

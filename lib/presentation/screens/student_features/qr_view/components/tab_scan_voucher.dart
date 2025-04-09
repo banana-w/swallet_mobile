@@ -39,9 +39,9 @@ class _TabScanVoucherState extends State<TabScanLectureQR> {
     return BlocListener<StudentBloc, StudentState>(
       listener: (context, state) {
         if (state is QRScanFailed) {
-          // setState(() {
-          //   _hasScanned = false; // Cho phép quét lại nếu thất bại
-          // });
+          setState(() {
+            _hasScanned = true; // Cho phép quét lại nếu thất bại
+          });
 
           // Navigator.pushNamed(
           //   context,
@@ -110,11 +110,29 @@ class _TabScanVoucherState extends State<TabScanLectureQR> {
                       ),
                     );
                   } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Định dạng QR code không hợp lệ: $e'),
-                      ),
-                    );
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(
+                    //     content: Text('Định dạng QR code không hợp lệ: $e'),
+                    //   ),
+                    // );
+                    setState(() {
+                      _hasScanned = true; // Đánh dấu đã quét
+                    });
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          elevation: 0,
+                          duration: const Duration(milliseconds: 2000),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: 'Thất bại!',
+                            message: 'Định dạng QR code không hợp lệ',
+                            contentType: ContentType.success,
+                          ),
+                        ),
+                      );
                   }
                   break;
                 }
