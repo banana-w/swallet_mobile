@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/failed_scan_voucher/failed_scan_voucher_screen.dart';
@@ -91,6 +92,8 @@ class _TabScanVoucherState extends State<TabScanLectureQR> {
       child: Stack(
         children: [
           MobileScanner(
+            startDelay: true,
+            overlay: Lottie.asset('assets/animations/scanning.json'),
             controller: widget.cameraController,
             onDetect: (capture) {
               if (_hasScanned) return; // Nếu đã quét, không xử lý tiếp

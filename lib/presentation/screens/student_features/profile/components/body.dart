@@ -497,7 +497,7 @@ class Body extends StatelessWidget {
                                               );
                                             },
                                             svgIcon:
-                                                'assets/icons/change-bean-icon.svg',
+                                                'assets/icons/wheel-icon.svg',
                                             title: 'Lucky Wheel',
                                           ),
                                           SizedBox(height: 10 * hem),
@@ -524,8 +524,8 @@ class Body extends StatelessWidget {
                                             hem: hem,
                                             ffem: ffem,
                                             svgIcon:
-                                                'assets/icons/order-history-icon.svg',
-                                            title: 'Checkin',
+                                                'assets/icons/qr-unbean-icon.svg',
+                                            title: 'Check-in hằng ngày',
                                             onPressed: () async {
                                               Navigator.pushNamed(
                                                 context,

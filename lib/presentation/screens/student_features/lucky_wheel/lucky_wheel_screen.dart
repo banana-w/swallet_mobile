@@ -92,7 +92,6 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
   Future<void> _spinWheel(List<LuckyPrize> prizes) async {
     if (_isSpinning) return;
 
-    // Lấy studentId từ AuthenLocalDataSource
     final student = await AuthenLocalDataSource.getStudent();
     final studentId = student?.id;
 
@@ -103,17 +102,17 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
       return;
     }
 
-    // Kiểm tra số lượt quay trong ngày
     final today = DateTime.now();
     try {
       final spinCount = await context
           .read<SpinHistoryRepository>()
-          .getSpinCount(
-            studentId,
-            DateTime(today.year, today.month, today.day),
-          );
+          .getSpinCount(studentId, today);
+      final bonusSpins = await context
+          .read<SpinHistoryRepository>()
+          .getBonusSpins(studentId, today);
+      final maxSpins = 3 + bonusSpins; // Tổng số lượt tối đa = 3 + bonus
 
-      if (spinCount >= 3) {
+      if (spinCount >= maxSpins) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(
@@ -133,14 +132,12 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
         return;
       }
 
-      // Tiến hành quay
       setState(() {
         _isSpinning = true;
         _selectedPrize = '';
         _selectedLuckyPrize = null;
       });
 
-      // Tính toán xác suất để chọn phần thưởng
       final randomIndex = _selectPrizeIndex(prizes);
       _controller.add(randomIndex);
 
@@ -152,19 +149,11 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
           _isSpinning = false;
         });
 
-        // Cập nhật số lượt quay
-        try {
-          await context.read<SpinHistoryRepository>().incrementSpinCount(
-            studentId,
-            DateTime(today.year, today.month, today.day),
-          );
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Lỗi khi cập nhật lượt quay: $e')),
-          );
-        }
+        await context.read<SpinHistoryRepository>().incrementSpinCount(
+          studentId,
+          today,
+        );
 
-        // Cập nhật quantity trong database
         if (selectedPrize.quantity > 0) {
           await context.read<LuckyPrizeRepository>().updatePrizeQuantity(
             selectedPrize.id,
@@ -172,7 +161,6 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
           );
         }
 
-        // Nếu phần thưởng có value > 0 (dạng "XXX Xu"), gọi API để cộng điểm
         if (selectedPrize.value > 0) {
           try {
             await context.read<StudentRepository>().updateWalletByStudentId(
@@ -212,7 +200,7 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
                 content: AwesomeSnackbarContent(
                   title: 'Chúc bạn may mắn lần sau!',
                   message:
-                      'Lần này không trúng rồi, nhưng không sao, bạn có thể quay lại sau!',
+                      'Lần này không trúng rồi, nhưng bạn có thể quay lại sau!',
                   contentType: ContentType.success,
                 ),
               ),
@@ -223,7 +211,6 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Lỗi khi kiểm tra lượt quay: $e')));
-      return;
     }
   }
 
@@ -409,9 +396,14 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
                             await AuthenLocalDataSource.getStudent();
                         final studentId = student?.id;
                         if (studentId == null) return 0;
-                        return context
+                        final spinCount = await context
                             .read<SpinHistoryRepository>()
                             .getSpinCount(studentId, DateTime.now());
+                        final bonusSpins = await context
+                            .read<SpinHistoryRepository>()
+                            .getBonusSpins(studentId, DateTime.now());
+                        final maxSpins = 3 + bonusSpins;
+                        return maxSpins - spinCount; // Số lượt còn lại
                       }(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
@@ -426,8 +418,7 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
                             ),
                           );
                         } else {
-                          final spinCount = snapshot.data ?? 0;
-                          final remainingSpins = 3 - spinCount;
+                          final remainingSpins = snapshot.data ?? 0;
                           return Text(
                             'Bạn còn $remainingSpins lượt quay hôm nay',
                             style: GoogleFonts.openSans(
