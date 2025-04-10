@@ -242,19 +242,19 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
       // Lấy vị trí GPS hiện tại
       Position position = await _determinePosition();
 
-            final baseURL = 'https://10.0.2.2:7137/api/';
-            final client = http.Client();
-      final ioClient =
-          HttpClient()
-            ..badCertificateCallback =
-                (X509Certificate cert, String host, int port) =>
-                    true; // Bỏ qua kiểm tra chứng chỉ
-      final httpClient = IOClient(ioClient);
+      //       final baseURL = 'https://10.0.2.2:7137/api/';
+      //       final client = http.Client();
+      // final ioClient =
+      //     HttpClient()
+      //       ..badCertificateCallback =
+      //           (X509Certificate cert, String host, int port) =>
+      //               true; // Bỏ qua kiểm tra chứng chỉ
+      // final httpClient = IOClient(ioClient);
 
 
       // Gửi yêu cầu check-in với GPS
-      final response = await httpClient.post(
-        Uri.parse('${baseURL}CheckIn/qr'),
+      final response = await http.post(
+        Uri.parse('${baseUrl}CheckIn/qr'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'studentId': studentId,
