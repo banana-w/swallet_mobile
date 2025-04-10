@@ -607,22 +607,22 @@ class Body extends StatelessWidget {
 
                                       child: Column(
                                         children: [
-                                          ButtonProfile(
-                                            fem: fem,
-                                            hem: hem,
-                                            ffem: ffem,
-                                            widthIcon: 16,
-                                            heightIcon: 16,
-                                            onPressed: () {
-                                              Navigator.pushNamed(
-                                                context,
-                                                UnverifiedScreen.routeName,
-                                              );
-                                            },
-                                            svgIcon:
-                                                'assets/icons/change-bean-icon.svg',
-                                            title: 'Đổi đậu lấy quà',
-                                          ),
+                                          // ButtonProfile(
+                                          //   fem: fem,
+                                          //   hem: hem,
+                                          //   ffem: ffem,
+                                          //   widthIcon: 16,
+                                          //   heightIcon: 16,
+                                          //   onPressed: () {
+                                          //     Navigator.pushNamed(
+                                          //       context,
+                                          //       UnverifiedScreen.routeName,
+                                          //     );
+                                          //   },
+                                          //   svgIcon:
+                                          //       'assets/icons/change-bean-icon.svg',
+                                          //   title: 'Đổi đậu lấy quà',
+                                          // ),
                                           SizedBox(height: 10 * hem),
                                           ButtonProfile(
                                             fem: fem,
@@ -647,7 +647,7 @@ class Body extends StatelessWidget {
                                             ffem: ffem,
                                             svgIcon:
                                                 'assets/icons/order-history-icon.svg',
-                                            title: 'Đơn hàng của bạn',
+                                            title: 'Check-in hằng ngày',
                                             onPressed: () async {
                                               Navigator.pushNamed(
                                                 context,

@@ -10,7 +10,7 @@ class Challenge extends Equatable {
   final String studentId;
   final String studentName;
   final double amount;
-  final double current;
+  final int current;
   final double condition;
   final bool isCompleted;
   final bool isClaimed;

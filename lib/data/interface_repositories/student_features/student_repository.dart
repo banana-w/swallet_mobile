@@ -57,6 +57,7 @@ abstract class StudentRepository {
   Future<bool?> postChallengeStudentId({
     required String studentId,
     required String challengeId,
+    required int type,
   });
 
   Future<StudentModel?> putStudent({

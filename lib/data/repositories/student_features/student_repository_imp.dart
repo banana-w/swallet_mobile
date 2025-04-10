@@ -277,7 +277,8 @@ class StudentRepositoryImp implements StudentRepository {
   }
 
   @override
-  Future<ApiResponse<List<TransactionModel>>?> fetchVoucherTransactionsByStudentId(
+  Future<ApiResponse<List<TransactionModel>>?>
+  fetchVoucherTransactionsByStudentId(
     int? page,
     int? limit,
     int? typeIds,
@@ -310,7 +311,6 @@ class StudentRepositoryImp implements StudentRepository {
         '${baseURL}Activity/UseVoucherTransaction',
       ).replace(queryParameters: queryParams);
 
-
       final response = await http.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
@@ -333,25 +333,34 @@ class StudentRepositoryImp implements StudentRepository {
   Future<bool?> postChallengeStudentId({
     required String studentId,
     required String challengeId,
+    required int type,
   }) async {
     try {
-      token = await AuthenLocalDataSource.getToken();
-      studentId = (await AuthenLocalDataSource.getStudentId())!;
+      final token = await AuthenLocalDataSource.getToken();
+
       final Map<String, String> headers = {
-        'Content-Type': 'application/json',
+        'accept': 'text/plain',
         'Authorization': 'Bearer $token',
       };
 
-      http.Response response = await http.post(
-        Uri.parse('$endPoint/$studentId/challenges/$challengeId'),
-        headers: headers,
-      );
+      final baseURL = 'https://10.0.2.2:7137/api/';
 
-      if (response.statusCode == 201) {
+      final uri = Uri.parse(
+        '${baseURL}Challenge/reward?challengeId=$challengeId&studentId=$studentId&type=$type',
+      );
+       final client = http.Client();
+      final ioClient =
+          HttpClient()
+            ..badCertificateCallback =
+                (X509Certificate cert, String host, int port) =>
+                    true; // Bỏ qua kiểm tra chứng chỉ
+      final httpClient = IOClient(ioClient);
+
+      final http.Response response = await httpClient.post(uri, headers: headers);
+
+      if (response.statusCode == 200) {
         return true;
-      } else if (response.statusCode == 400) {
-        return false;
-      } else if (response.statusCode == 404) {
+      } else if (response.statusCode == 400 || response.statusCode == 404) {
         return false;
       } else {
         return false;

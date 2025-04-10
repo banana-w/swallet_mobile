@@ -33,8 +33,9 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   @override
   void initState() {
     super.initState();
+    context.read<ChallengeBloc>().add(LoadChallenge());
     context.read<RoleAppBloc>().add(
-      RefreshStudentData(),
+      RoleAppStart(),
     ); // Đổi thành sự kiện bạn đang dùng
   }
 

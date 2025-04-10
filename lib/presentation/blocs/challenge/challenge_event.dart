@@ -23,3 +23,14 @@ final class ClaimChallengeStudentId extends ChallengeEvent {
   @override
   List<Object?> get props => [studentId, challengeId];
 }
+
+
+final class ClaimChallengeStudentIdDaily extends ChallengeEvent {
+  final String studentId;
+  final String challengeId;
+
+  const ClaimChallengeStudentIdDaily({required this.studentId, required this.challengeId});
+
+  @override
+  List<Object?> get props => [studentId, challengeId];
+}
