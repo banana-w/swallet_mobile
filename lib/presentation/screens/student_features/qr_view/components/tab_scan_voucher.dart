@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/failed_scan_voucher/failed_scan_voucher_screen.dart';
@@ -39,9 +40,9 @@ class _TabScanVoucherState extends State<TabScanLectureQR> {
     return BlocListener<StudentBloc, StudentState>(
       listener: (context, state) {
         if (state is QRScanFailed) {
-          // setState(() {
-          //   _hasScanned = false; // Cho phép quét lại nếu thất bại
-          // });
+          setState(() {
+            _hasScanned = true; // Cho phép quét lại nếu thất bại
+          });
 
           // Navigator.pushNamed(
           //   context,
@@ -91,6 +92,8 @@ class _TabScanVoucherState extends State<TabScanLectureQR> {
       child: Stack(
         children: [
           MobileScanner(
+            startDelay: true,
+            overlay: Lottie.asset('assets/animations/scanning.json'),
             controller: widget.cameraController,
             onDetect: (capture) {
               if (_hasScanned) return; // Nếu đã quét, không xử lý tiếp
@@ -110,11 +113,29 @@ class _TabScanVoucherState extends State<TabScanLectureQR> {
                       ),
                     );
                   } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Định dạng QR code không hợp lệ: $e'),
-                      ),
-                    );
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(
+                    //     content: Text('Định dạng QR code không hợp lệ: $e'),
+                    //   ),
+                    // );
+                    setState(() {
+                      _hasScanned = true; // Đánh dấu đã quét
+                    });
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          elevation: 0,
+                          duration: const Duration(milliseconds: 2000),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: 'Thất bại!',
+                            message: 'Định dạng QR code không hợp lệ',
+                            contentType: ContentType.success,
+                          ),
+                        ),
+                      );
                   }
                   break;
                 }

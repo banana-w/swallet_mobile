@@ -85,7 +85,8 @@ class StoreRepositoryImp extends StoreRepository {
   Future<List<CampaignRankingModel>?> fecthCampaignRanking() async {
     try {
       final token = await AuthenLocalDataSource.getToken();
-      final storeId = await AuthenLocalDataSource.getStoreId();
+      final store = await AuthenLocalDataSource.getStore();
+      final storeId = store?.id;
       final Map<String, String> headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -112,7 +113,8 @@ class StoreRepositoryImp extends StoreRepository {
   Future<List<StudentRankingModel>?> fecthStudentRanking() async {
     try {
       final token = await AuthenLocalDataSource.getToken();
-      final storeId = await AuthenLocalDataSource.getStoreId();
+      final store = await AuthenLocalDataSource.getStore();
+      final storeId = store?.id;
       final Map<String, String> headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',

@@ -10,6 +10,7 @@ import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/check_in/check_in_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile/components/name_profile.dart';
 import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel/lucky_wheel_screen.dart';
@@ -496,7 +497,7 @@ class Body extends StatelessWidget {
                                               );
                                             },
                                             svgIcon:
-                                                'assets/icons/change-bean-icon.svg',
+                                                'assets/icons/wheel-icon.svg',
                                             title: 'Lucky Wheel',
                                           ),
                                           SizedBox(height: 10 * hem),
@@ -506,13 +507,10 @@ class Body extends StatelessWidget {
                                             ffem: ffem,
                                             widthIcon: 20,
                                             heightIcon: 20,
-                                            onPressed: () {
+                                            onPressed: () async {
                                               Navigator.pushNamed(
                                                 context,
-                                                ProfileTransactionHistoryScreen
-                                                    .routeName,
-                                                arguments:
-                                                    stateRole.studentModel.id,
+                                                LuckyWheelScreen.routeName,
                                               );
                                             },
                                             svgIcon:
@@ -520,25 +518,21 @@ class Body extends StatelessWidget {
                                             title: 'Lịch sử giao dịch',
                                           ),
 
-                                          // SizedBox(height: 10 * hem),
-                                          // ButtonProfile(
-                                          //   fem: fem,
-                                          //   hem: hem,
-                                          //   ffem: ffem,
-                                          //   svgIcon:
-                                          //       'assets/icons/order-history-icon.svg',
-                                          //   title: 'Đơn hàng của bạn',
-                                          //   onPressed: () async {
-                                          //     // var id =
-                                          //     //     await AuthenLocalDataSource
-                                          //     //         .getStudentId();
-                                          //     // Navigator.pushNamed(
-                                          //     //     context,
-                                          //     //     ProfileOrderScreen
-                                          //     //         .routeName,
-                                          //     //     arguments: id);
-                                          //   },
-                                          // ),
+                                          SizedBox(height: 10 * hem),
+                                          ButtonProfile(
+                                            fem: fem,
+                                            hem: hem,
+                                            ffem: ffem,
+                                            svgIcon:
+                                                'assets/icons/qr-unbean-icon.svg',
+                                            title: 'Check-in hằng ngày',
+                                            onPressed: () async {
+                                              Navigator.pushNamed(
+                                                context,
+                                                CheckInScreen.routeName,
+                                              );
+                                            },
+                                          ),
                                           SizedBox(height: 10 * hem),
                                           //button logout
                                           ButtonProfile(
