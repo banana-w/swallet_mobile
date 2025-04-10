@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/check_in_repository.dart';
 import 'package:swallet_mobile/data/repositories/authen_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/lecture_features/lecture_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/store_features/store_repository_imp.dart';
@@ -9,6 +10,7 @@ import 'package:swallet_mobile/data/repositories/student_features/brand_reposito
 import 'package:swallet_mobile/data/repositories/student_features/campaign_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/campus_repository.dart';
 import 'package:swallet_mobile/data/repositories/student_features/challenge_repository_imp.dart';
+import 'package:swallet_mobile/data/repositories/student_features/check_in_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/lucky_prize_repository.dart';
 import 'package:swallet_mobile/data/repositories/student_features/student_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/validation_repository_imp.dart';
@@ -55,11 +57,14 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-  statusBarColor: Colors.transparent, // Trong suốt để hiển thị nội dung phía sau
-  statusBarIconBrightness: Brightness.dark, // Biểu tượng màu tối (đen)
-  statusBarBrightness: Brightness.light, // Dành cho iOS
-));
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor:
+          Colors.transparent, // Trong suốt để hiển thị nội dung phía sau
+      statusBarIconBrightness: Brightness.dark, // Biểu tượng màu tối (đen)
+      statusBarBrightness: Brightness.light, // Dành cho iOS
+    ),
+  );
   await Future.delayed(const Duration(seconds: 2));
 
   try {
@@ -124,6 +129,9 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<SpinHistoryRepository>(
           create: (_) => SpinHistoryRepositoryImpl(),
         ),
+        RepositoryProvider<CheckInRepository>(
+          create: (_) => CheckInRepositoryImpl(),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -159,10 +167,11 @@ class MyApp extends StatelessWidget {
                       ..loadingVerification(),
           ),
           BlocProvider(
-            create: (context) => ChallengeBloc(
-                challengeRepository: ChallengeRepositoryImp(),
-                studentRepository: StudentRepositoryImp())
-              ..add(LoadChallenge()),
+            create:
+                (context) => ChallengeBloc(
+                  challengeRepository: ChallengeRepositoryImp(),
+                  studentRepository: StudentRepositoryImp(),
+                )..add(LoadChallenge()),
           ),
           BlocProvider(
             create:
