@@ -632,7 +632,7 @@ class _BodyState extends State<CampaignScreenBody>
                               builder: (context, state) {
                                 if (state is BrandsLoaded) {
                                   return SizedBox(
-                                    height: 140 * hem,
+                                    height: 160 * hem,
                                     width: MediaQuery.of(context).size.width,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,

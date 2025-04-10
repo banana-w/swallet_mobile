@@ -14,6 +14,7 @@ import 'package:swallet_mobile/data/repositories/student_features/student_reposi
 import 'package:swallet_mobile/data/repositories/student_features/validation_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/verification_repository_imp.dart';
 import 'package:swallet_mobile/domain/entities/student_features/challenge.dart';
+import 'package:swallet_mobile/data/repositories/student_features/wheel_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/authentication_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/lecture_features/lecture_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
@@ -24,6 +25,7 @@ import 'package:swallet_mobile/domain/interface_repositories/student_features/ch
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/validation_repository.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/verification_repository.dart';
+import 'package:swallet_mobile/domain/interface_repositories/student_features/wheel_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/authentication/authentication_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
@@ -119,6 +121,9 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<BrandRepository>(
           create: (_) => BrandRepositoryImp(),
         ),
+        RepositoryProvider<SpinHistoryRepository>(
+          create: (_) => SpinHistoryRepositoryImpl(),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -185,6 +190,7 @@ class MyApp extends StatelessWidget {
                     RankingBloc(storeRepository: StoreRepositoryImp())
                       ..add(LoadCampaignRanking()),
           ),
+
           BlocProvider(
             create:
                 (context) =>

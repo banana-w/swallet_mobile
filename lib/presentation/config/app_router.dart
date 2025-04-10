@@ -25,6 +25,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/campaign_de
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_voucher/campaign_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/challenge/challenge_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/challenge_daily/challenge_daily_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/check_in/check_in_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/landing/landing_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel/lucky_wheel_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_list_screen.dart';
@@ -82,6 +83,9 @@ class AppRouter {
 
       case WelcomeScreen.routeName:
         return WelcomeScreen.route();
+
+      case CheckInScreen.routeName:
+        return CheckInScreen.route();
 
       case LoginScreen.routeName:
         return LoginScreen.route();

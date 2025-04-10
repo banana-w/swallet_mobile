@@ -423,7 +423,7 @@ class VoucherCard extends StatelessWidget {
                                         'Hạn sử dụng: ',
                                         style: GoogleFonts.openSans(
                                           textStyle: const TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 10,
                                             fontWeight: FontWeight.normal,
                                             color: Colors.black,
                                           ),
@@ -436,7 +436,7 @@ class VoucherCard extends StatelessWidget {
                                           ), // Định dạng ngày hết hạn
                                           style: GoogleFonts.openSans(
                                             textStyle: const TextStyle(
-                                              fontSize: 12,
+                                              fontSize: 10,
                                               fontWeight: FontWeight.normal,
                                               color: Colors.black,
                                             ),

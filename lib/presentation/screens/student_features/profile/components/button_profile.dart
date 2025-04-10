@@ -81,7 +81,7 @@ class ButtonProfile extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: 10 * hem, left: 20 * fem),
               child: SizedBox(
-                width: 130 * fem,
+                width: 134 * fem,
                 child: Text(
                   title,
                   style: GoogleFonts.openSans(

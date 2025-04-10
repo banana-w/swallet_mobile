@@ -297,7 +297,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                                             2,
                                                                       ),
                                                                       child: SvgPicture.asset(
-                                                                        'assets/icons/green-bean-icon.svg',
+                                                                        'assets/icons/coin.svg',
                                                                         width:
                                                                             24,
                                                                         height:
