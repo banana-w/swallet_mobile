@@ -405,7 +405,7 @@ class VoucherCard extends StatelessWidget {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          '${voucherGroup.quantity}',
+                                          '${voucherGroup.totalQuantity}',
                                           style: GoogleFonts.openSans(
                                             textStyle: const TextStyle(
                                               fontSize: 12,

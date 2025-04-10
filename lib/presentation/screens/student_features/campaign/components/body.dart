@@ -22,8 +22,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/brand_list/
 import 'package:swallet_mobile/presentation/screens/student_features/campaign/components/campaign_carousel.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign/components/membership_card.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
-import 'package:hive/hive.dart';
-import 'package:flutter/animation.dart';
+
 
 import '../../../../config/constants.dart';
 import '../../../../widgets/card_for_unverified.dart';
@@ -200,7 +199,7 @@ class _BodyState extends State<CampaignScreenBody>
                                 if (state is CheckInLoaded &&
                                     !state.canCheckInToday) {
                                   context.read<RoleAppBloc>().add(
-                                    RefreshStudentData(),
+                                    RoleAppStart(),
                                   );
                                   final previousState =
                                       context.read<CheckInBloc>().state;

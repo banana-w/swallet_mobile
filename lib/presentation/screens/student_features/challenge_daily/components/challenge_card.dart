@@ -13,12 +13,13 @@ import 'is_claimed/is_claimed_button.dart';
 import 'is_completed/is_completed_button.dart';
 
 class ChallengeCard extends StatelessWidget {
-  const ChallengeCard(
-      {super.key,
-      required this.fem,
-      required this.hem,
-      required this.ffem,
-      required this.challengeModel});
+  const ChallengeCard({
+    super.key,
+    required this.fem,
+    required this.hem,
+    required this.ffem,
+    required this.challengeModel,
+  });
 
   final double fem;
   final double hem;
@@ -33,10 +34,15 @@ class ChallengeCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          constraints:
-              BoxConstraints(maxWidth: 330 * fem, maxHeight: double.infinity),
-          margin:
-              EdgeInsets.only(top: 15 * hem, left: 15 * fem, right: 15 * fem),
+          constraints: BoxConstraints(
+            maxWidth: 330 * fem,
+            maxHeight: double.infinity,
+          ),
+          margin: EdgeInsets.only(
+            top: 15 * hem,
+            left: 15 * fem,
+            right: 15 * fem,
+          ),
           padding: EdgeInsets.only(left: 20 * fem, right: 15 * fem),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15 * fem),
@@ -46,14 +52,12 @@ class ChallengeCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 15 * hem,
-              ),
+              SizedBox(height: 15 * hem),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start, // đổi từ center để căn top
                 children: [
                   ClipRRect(
-                    // borderRadius: BorderRadius.circular(10 * fem),
                     child: SizedBox(
                       width: 30 * fem,
                       height: 30 * hem,
@@ -73,22 +77,39 @@ class ChallengeCard extends StatelessWidget {
                   Container(
                     width: 250 * fem,
                     padding: EdgeInsets.only(left: 10 * fem),
-                    child: Text(
-                      challengeModel.description,
-                      textAlign: TextAlign.justify,
-                      style: GoogleFonts.openSans(
-                        fontSize: 16 * ffem,
-                        height: 1.3625 * ffem / fem,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          challengeModel.challengeName,
+                          textAlign: TextAlign.justify,
+                          style: GoogleFonts.openSans(
+                            fontSize: 16 * ffem,
+                            height: 1.3625 * ffem / fem,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 4 * hem,
+                        ), // khoảng cách nhỏ giữa 2 dòng
+                        Text(
+                          challengeModel.description,
+                          textAlign: TextAlign.justify,
+                          style: GoogleFonts.openSans(
+                            fontSize: 12 * ffem,
+                            height: 1.3,
+                            color: Colors.grey[700],
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-              SizedBox(
-                height: 20 * hem,
-              ),
+              SizedBox(height: 20 * hem),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,32 +128,31 @@ class ChallengeCard extends StatelessWidget {
                     padding: EdgeInsets.only(right: 10 * fem),
                     child: RichText(
                       text: TextSpan(
-                          text: '${challengeModel.current.toStringAsFixed(0)}',
-                          style: GoogleFonts.openSans(
-                            fontSize: 17 * ffem,
-                            height: 1.3625 * ffem / fem,
-                            fontWeight: FontWeight.bold,
-                            color: kPrimaryColor,
-                          ),
-                          children: [
-                            TextSpan(
-                              text:
-                                  '/${challengeModel.condition.toStringAsFixed(0)}',
-                              style: GoogleFonts.openSans(
-                                fontSize: 17 * ffem,
-                                height: 1.3625 * ffem / fem,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                        text: '${challengeModel.current.toStringAsFixed(0)}',
+                        style: GoogleFonts.openSans(
+                          fontSize: 17 * ffem,
+                          height: 1.3625 * ffem / fem,
+                          fontWeight: FontWeight.bold,
+                          color: kPrimaryColor,
+                        ),
+                        children: [
+                          TextSpan(
+                            text:
+                                '/${challengeModel.condition.toStringAsFixed(0)}',
+                            style: GoogleFonts.openSans(
+                              fontSize: 17 * ffem,
+                              height: 1.3625 * ffem / fem,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
-                          ]),
+                          ),
+                        ],
+                      ),
                     ),
-                  )
+                  ),
                 ],
               ),
-              SizedBox(
-                height: 5 * hem,
-              ),
+              SizedBox(height: 5 * hem),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,29 +179,23 @@ class ChallengeCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(
-                        width: 5 * fem,
-                      ),
+                      SizedBox(width: 5 * fem),
                       SvgPicture.asset(
                         'assets/icons/coin.svg',
                         width: 20 * fem,
                         height: 25 * fem,
-                      )
+                      ),
                     ],
                   ),
                 ],
               ),
-              SizedBox(
-                height: 5 * hem,
-              ),
+              SizedBox(height: 5 * hem),
               Row(
                 children: [
-                  SizedBox(
-                    width: 190 * fem,
-                  ),
-                  _checkCondition(challengeModel, fem, hem, context)
+                  SizedBox(width: 190 * fem),
+                  _checkCondition(challengeModel, fem, hem, context),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -191,7 +205,11 @@ class ChallengeCard extends StatelessWidget {
 }
 
 Widget _checkCondition(
-    ChallengeModel challenge, fem, hem, BuildContext context) {
+  ChallengeModel challenge,
+  fem,
+  hem,
+  BuildContext context,
+) {
   if (challenge.isCompleted && challenge.isClaimed) {
     return IsClaimedButton(fem: fem, hem: hem);
   } else if (challenge.isCompleted && challenge.isClaimed == false) {
@@ -199,9 +217,14 @@ Widget _checkCondition(
       fem: fem,
       hem: hem,
       onPressed: () async {
-        final studentId = await AuthenLocalDataSource.getStudentId();
-        context.read<ChallengeBloc>().add(ClaimChallengeStudentId(
-            studentId: studentId!, challengeId: challenge.id));
+        final student = await AuthenLocalDataSource.getStudent();
+        
+        context.read<ChallengeBloc>().add(
+          ClaimChallengeStudentIdDaily(
+            studentId: student!.id,
+            challengeId: challenge.id,
+          ),
+        );
       },
     );
   }

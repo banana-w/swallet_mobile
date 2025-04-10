@@ -167,11 +167,10 @@ class MyApp extends StatelessWidget {
                       ..loadingVerification(),
           ),
           BlocProvider(
-            create:
-                (context) => ChallengeBloc(
-                  challengeRepository: ChallengeRepositoryImp(),
-                  studentRepository: StudentRepositoryImp(),
-                )..add(LoadChallenge()),
+
+            create: (context) => ChallengeBloc(
+                challengeRepository: ChallengeRepositoryImp(),
+                studentRepository: StudentRepositoryImp())
           ),
           BlocProvider(
             create:

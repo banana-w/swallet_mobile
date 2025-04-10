@@ -37,7 +37,7 @@ class ChallengeModel extends Challenge {
       isCompleted: json['isCompleted'],
       isClaimed: json['isClaimed'],
       dateCreated: json['dateCreated'],
-      dateUpdated: json['dateUpdated'],
+      dateUpdated: json['dateUpdated'] ?? '',
       description: json['description'],
       status: json['status'],
     );
@@ -75,7 +75,7 @@ class ChallengeModel extends Challenge {
     String? studentId,
     String? studentName,
     double? amount,
-    double? current,
+    int? current,
     double? condition,
     bool? isCompleted,
     bool? isClaimed,
