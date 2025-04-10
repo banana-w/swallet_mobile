@@ -13,6 +13,7 @@ class CheckInLoaded extends CheckInState {
   final int points; // Tổng điểm thưởng
   final bool canCheckInToday; // Có thể điểm danh hôm nay không
   final int currentDayIndex; // Index của ngày hiện tại trong chuỗi 7 ngày
+  final int rewardPoints; // Phần thưởng nhận được hôm nay
 
   CheckInLoaded({
     required this.checkInHistory,
@@ -20,6 +21,7 @@ class CheckInLoaded extends CheckInState {
     required this.points,
     required this.canCheckInToday,
     required this.currentDayIndex,
+    required this.rewardPoints, // Thêm rewardPoints
   });
 
   @override
@@ -29,6 +31,7 @@ class CheckInLoaded extends CheckInState {
     points,
     canCheckInToday,
     currentDayIndex,
+    rewardPoints, // Thêm vào props
   ];
 }
 

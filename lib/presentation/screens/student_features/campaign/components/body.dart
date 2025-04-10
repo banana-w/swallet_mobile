@@ -10,6 +10,7 @@ import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/brand_repository.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
+import 'package:swallet_mobile/data/repositories/student_features/check_in_repository_imp.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/checkin_bloc/check_in_bloc.dart';
@@ -187,11 +188,12 @@ class _BodyState extends State<CampaignScreenBody>
                             ),
                           ),
                           SizedBox(height: 10 * hem),
+
                           BlocProvider(
                             create:
-                                (context) => CheckInBloc(
-                                  context.read<StudentRepository>(),
-                                )..add(LoadCheckInData()),
+                                (context) =>
+                                    CheckInBloc(CheckInRepositoryImpl())
+                                      ..add(LoadCheckInData()),
                             child: BlocListener<CheckInBloc, CheckInState>(
                               listener: (context, state) {
                                 if (state is CheckInLoaded &&
@@ -202,7 +204,15 @@ class _BodyState extends State<CampaignScreenBody>
                                   final previousState =
                                       context.read<CheckInBloc>().state;
                                   if (previousState is CheckInLoaded &&
-                                      previousState.canCheckInToday) {
+                                      !previousState.canCheckInToday) {
+                                    String message;
+                                    if (state.streak >= 7) {
+                                      message =
+                                          'Bạn đã đạt chuỗi 7 ngày! Nhận 70 điểm mỗi ngày nếu giữ chuỗi!';
+                                    } else {
+                                      message =
+                                          'Bạn nhận được ${state.rewardPoints} điểm!'; // Sử dụng rewardPoints
+                                    }
                                     ScaffoldMessenger.of(context)
                                       ..hideCurrentSnackBar()
                                       ..showSnackBar(
@@ -215,15 +225,13 @@ class _BodyState extends State<CampaignScreenBody>
                                           backgroundColor: Colors.transparent,
                                           content: AwesomeSnackbarContent(
                                             title: 'Điểm danh thành công',
-                                            message:
-                                                'Bạn nhận được ${state.streak * 10 + 10} điểm!',
+                                            message: message,
                                             contentType: ContentType.success,
                                           ),
                                         ),
                                       );
                                   }
                                 } else if (state is CheckInError) {
-                                  // Hiển thị thông báo lỗi nếu có lỗi xảy ra
                                   ScaffoldMessenger.of(context)
                                     ..hideCurrentSnackBar()
                                     ..showSnackBar(
@@ -261,50 +269,53 @@ class _BodyState extends State<CampaignScreenBody>
 
                                             return GestureDetector(
                                               onTap:
-                                                  isToday &&
-                                                          state.canCheckInToday
+                                                  isToday
                                                       ? () {
-                                                        // Gửi sự kiện CheckIn
-                                                        context
-                                                            .read<CheckInBloc>()
-                                                            .add(CheckIn());
-
-                                                        // Hiển thị thông báo đang xử lý
-                                                        ScaffoldMessenger.of(
-                                                            context,
-                                                          )
-                                                          ..hideCurrentSnackBar()
-                                                          ..showSnackBar(
-                                                            SnackBar(
-                                                              elevation: 0,
-                                                              duration:
-                                                                  const Duration(
-                                                                    milliseconds:
-                                                                        2000,
-                                                                  ),
-                                                              behavior:
-                                                                  SnackBarBehavior
-                                                                      .floating,
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              content: AwesomeSnackbarContent(
-                                                                title:
-                                                                    'Điểm danh thành công',
-                                                                message:
-                                                                    'Bạn nhận được ${state.streak * 10 + 10} điểm!',
-                                                                contentType:
-                                                                    ContentType
-                                                                        .success,
+                                                        if (state
+                                                            .canCheckInToday) {
+                                                          _animationController
+                                                              .forward(from: 0);
+                                                          context
+                                                              .read<
+                                                                CheckInBloc
+                                                              >()
+                                                              .add(CheckIn());
+                                                        } else {
+                                                          ScaffoldMessenger.of(
+                                                              context,
+                                                            )
+                                                            ..hideCurrentSnackBar()
+                                                            ..showSnackBar(
+                                                              SnackBar(
+                                                                elevation: 0,
+                                                                duration:
+                                                                    const Duration(
+                                                                      milliseconds:
+                                                                          2000,
+                                                                    ),
+                                                                behavior:
+                                                                    SnackBarBehavior
+                                                                        .floating,
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                content: AwesomeSnackbarContent(
+                                                                  title:
+                                                                      'Thông báo',
+                                                                  message:
+                                                                      'Bạn đã điểm danh hôm nay rồi!',
+                                                                  contentType:
+                                                                      ContentType
+                                                                          .warning,
+                                                                ),
                                                               ),
-                                                            ),
-                                                          );
+                                                            );
+                                                        }
                                                       }
                                                       : null,
                                               child: AnimatedBuilder(
                                                 animation: _animationController,
                                                 builder: (context, child) {
-                                                  // Chỉ áp dụng hiệu ứng nếu là ngày hôm nay và chưa được nhận
                                                   double offset =
                                                       (isToday && !isChecked)
                                                           ? -_animationController
@@ -332,12 +343,28 @@ class _BodyState extends State<CampaignScreenBody>
                                                                   2,
                                                                 ),
                                                               ),
+                                                              if (isToday &&
+                                                                  state
+                                                                      .canCheckInToday)
+                                                                BoxShadow(
+                                                                  color: Colors
+                                                                      .yellow
+                                                                      .withOpacity(
+                                                                        0.5,
+                                                                      ),
+                                                                  blurRadius:
+                                                                      10,
+                                                                  spreadRadius:
+                                                                      2,
+                                                                ),
                                                             ],
                                                           ),
                                                           child: SvgPicture.asset(
                                                             isChecked
                                                                 ? 'assets/images/gift_checked.svg'
-                                                                : (isToday
+                                                                : (isToday &&
+                                                                        state
+                                                                            .canCheckInToday
                                                                     ? 'assets/images/gift_checked.svg'
                                                                     : 'assets/images/gift_unchecked.svg'),
                                                             width: 40 * fem,
@@ -352,14 +379,15 @@ class _BodyState extends State<CampaignScreenBody>
                                                             style: GoogleFonts.openSans(
                                                               textStyle: TextStyle(
                                                                 fontSize:
-                                                                    10 * ffem,
+                                                                    9 * ffem,
                                                                 color:
-                                                                    isChecked ||
-                                                                            isToday
+                                                                    isChecked
                                                                         ? Colors
                                                                             .white
-                                                                        : Colors
-                                                                            .black,
+                                                                        : (isToday &&
+                                                                                state.canCheckInToday
+                                                                            ? Colors.white
+                                                                            : Colors.grey),
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w900,
@@ -394,68 +422,28 @@ class _BodyState extends State<CampaignScreenBody>
                                             );
                                           }),
                                         ),
-                                        //---------------------------------------- Nút reset điểm danh (chỉ để test) -------------------------------------------------
-                                        // ElevatedButton(
-                                        //   onPressed: () async {
-                                        //     var box = await Hive.openBox(
-                                        //       'checkInBox',
-                                        //     );
-                                        //     // Thiết lập trạng thái: đã điểm danh ngày 1, 2, 3, 4
-                                        //     await box.put('checkInHistory', [
-                                        //       true,
-                                        //       true,
-                                        //       true,
-                                        //       true,
-                                        //       false,
-                                        //       false,
-                                        //       false,
-                                        //     ]);
-                                        //     await box.put(
-                                        //       'streak',
-                                        //       4,
-                                        //     ); // Chuỗi 4 ngày
-                                        //     await box.put(
-                                        //       'points',
-                                        //       100,
-                                        //     ); // Tổng điểm: 10 + 20 + 30 + 40 = 100
-                                        //     // Đặt ngày điểm danh cuối cùng là hôm qua để có thể điểm danh hôm nay
-                                        //     DateTime yesterday = DateTime.now()
-                                        //         .subtract(Duration(days: 1));
-                                        //     await box.put(
-                                        //       'lastCheckInDate',
-                                        //       yesterday.toIso8601String(),
-                                        //     );
-                                        //     // Tải lại dữ liệu
-                                        //     context.read<CheckInBloc>().add(
-                                        //       LoadCheckInData(),
-                                        //     );
-                                        //   },
-                                        //   style: ElevatedButton.styleFrom(
-                                        //     backgroundColor: Colors.orange,
-                                        //     shape: RoundedRectangleBorder(
-                                        //       borderRadius:
-                                        //           BorderRadius.circular(
-                                        //             20 * fem,
-                                        //           ),
-                                        //     ),
-                                        //     padding: EdgeInsets.symmetric(
-                                        //       horizontal: 30 * fem,
-                                        //       vertical: 10 * hem,
-                                        //     ),
-                                        //   ),
-                                        //   child: Text(
-                                        //     'Mô phỏng Ngày 5',
-                                        //     style: GoogleFonts.openSans(
-                                        //       textStyle: TextStyle(
-                                        //         fontSize: 16 * ffem,
-                                        //         color: Colors.white,
-                                        //         fontWeight: FontWeight.w600,
-                                        //       ),
-                                        //     ),
-                                        //   ),
-                                        // ),
-
-                                        //---------------------------------------- Nút reset điểm danh (chỉ để test) -------------------------------------------------
+                                        SizedBox(height: 10 * hem),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 10 * hem,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                'Chuỗi: ${state.streak} ngày',
+                                                style: GoogleFonts.openSans(
+                                                  textStyle: TextStyle(
+                                                    fontSize: 12 * ffem,
+                                                    color: kPrimaryColor,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ],
                                     );
                                   }
@@ -472,6 +460,7 @@ class _BodyState extends State<CampaignScreenBody>
                         ],
                       ),
                     ),
+
                     SizedBox(height: 5 * hem),
 
                     // Hôm nay có gì

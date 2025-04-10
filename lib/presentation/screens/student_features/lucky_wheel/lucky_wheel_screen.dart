@@ -58,9 +58,8 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
   final StreamController<int> _controller = StreamController<int>();
   String _selectedPrize = '';
   bool _isSpinning = false;
-  LuckyPrize? _selectedLuckyPrize; // Lưu phần thưởng được chọn
+  LuckyPrize? _selectedLuckyPrize;
 
-  // Animation cho bóng đèn
   late AnimationController _lightAnimationController;
   late Animation<double> _lightAnimation;
 
@@ -68,7 +67,6 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
   void initState() {
     super.initState();
 
-    // Khởi tạo AnimationController cho hiệu ứng nhấp nháy
     _lightAnimationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -90,6 +88,7 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
   }
 
   Future<void> _spinWheel(List<LuckyPrize> prizes) async {
+    // Nếu đang quay thì không cho phép thực hiện tiếp
     if (_isSpinning) return;
 
     final student = await AuthenLocalDataSource.getStudent();
@@ -103,16 +102,69 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
     }
 
     final today = DateTime.now();
-    try {
-      final spinCount = await context
-          .read<SpinHistoryRepository>()
-          .getSpinCount(studentId, today);
-      final bonusSpins = await context
-          .read<SpinHistoryRepository>()
-          .getBonusSpins(studentId, today);
-      final maxSpins = 3 + bonusSpins; // Tổng số lượt tối đa = 3 + bonus
+    final spinCount = await context.read<SpinHistoryRepository>().getSpinCount(
+      studentId,
+      today,
+    );
+    final bonusSpins = await context
+        .read<SpinHistoryRepository>()
+        .getBonusSpins(studentId, today);
+    final maxSpins = 3 + bonusSpins;
 
-      if (spinCount >= maxSpins) {
+    // Kiểm tra số lượt quay còn lại trước khi quay
+    if (spinCount >= maxSpins) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            elevation: 0,
+            duration: const Duration(milliseconds: 2000),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: 'Hết lượt quay!',
+              message:
+                  'Bạn đã hết lượt quay hôm nay. Hãy quay lại vào ngày mai!',
+              contentType: ContentType.warning,
+            ),
+          ),
+        );
+      return;
+    }
+
+    // Đặt trạng thái đang quay và cập nhật giao diện
+    setState(() {
+      _isSpinning = true;
+      _selectedPrize = '';
+      _selectedLuckyPrize = null;
+    });
+
+    final randomIndex = _selectPrizeIndex(prizes);
+    _controller.add(randomIndex);
+
+    // Chờ animation hoàn tất (4 giây)
+    await Future.delayed(const Duration(seconds: 4));
+
+    // Xử lý kết quả sau khi quay xong
+    final selectedPrize = prizes[randomIndex];
+    await context.read<SpinHistoryRepository>().incrementSpinCount(
+      studentId,
+      today,
+    );
+
+    if (selectedPrize.quantity > 0) {
+      await context.read<LuckyPrizeRepository>().updatePrizeQuantity(
+        selectedPrize.id,
+        selectedPrize.quantity - 1,
+      );
+    }
+
+    if (selectedPrize.value > 0) {
+      try {
+        await context.read<StudentRepository>().updateWalletByStudentId(
+          studentId,
+          selectedPrize.value,
+        );
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(
@@ -122,96 +174,42 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
               behavior: SnackBarBehavior.floating,
               backgroundColor: Colors.transparent,
               content: AwesomeSnackbarContent(
-                title: 'Hết lượt quay!',
-                message:
-                    'Bạn đã hết lượt quay hôm nay. Hãy quay lại vào ngày mai!',
-                contentType: ContentType.warning,
+                title: 'Xin chúc mừng!',
+                message: 'Đã cộng ${selectedPrize.value} Xu vào ví của bạn!',
+                contentType: ContentType.success,
               ),
             ),
           );
-        return;
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
       }
-
-      setState(() {
-        _isSpinning = true;
-        _selectedPrize = '';
-        _selectedLuckyPrize = null;
-      });
-
-      final randomIndex = _selectPrizeIndex(prizes);
-      _controller.add(randomIndex);
-
-      Future.delayed(const Duration(seconds: 4), () async {
-        final selectedPrize = prizes[randomIndex];
-        setState(() {
-          _selectedPrize = selectedPrize.prizeName;
-          _selectedLuckyPrize = selectedPrize;
-          _isSpinning = false;
-        });
-
-        await context.read<SpinHistoryRepository>().incrementSpinCount(
-          studentId,
-          today,
+    } else {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            elevation: 0,
+            duration: const Duration(milliseconds: 2000),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: 'Chúc bạn may mắn lần sau!',
+              message:
+                  'Lần này không trúng rồi, nhưng bạn có thể quay lại sau!',
+              contentType: ContentType.success,
+            ),
+          ),
         );
-
-        if (selectedPrize.quantity > 0) {
-          await context.read<LuckyPrizeRepository>().updatePrizeQuantity(
-            selectedPrize.id,
-            selectedPrize.quantity - 1,
-          );
-        }
-
-        if (selectedPrize.value > 0) {
-          try {
-            await context.read<StudentRepository>().updateWalletByStudentId(
-              studentId,
-              selectedPrize.value,
-            );
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  elevation: 0,
-                  duration: const Duration(milliseconds: 2000),
-                  behavior: SnackBarBehavior.floating,
-                  backgroundColor: Colors.transparent,
-                  content: AwesomeSnackbarContent(
-                    title: 'Xin chúc mừng!',
-                    message:
-                        'Đã cộng ${selectedPrize.value} Xu vào ví của bạn!',
-                    contentType: ContentType.success,
-                  ),
-                ),
-              );
-          } catch (e) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
-          }
-        } else {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                elevation: 0,
-                duration: const Duration(milliseconds: 2000),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Chúc bạn may mắn lần sau!',
-                  message:
-                      'Lần này không trúng rồi, nhưng bạn có thể quay lại sau!',
-                  contentType: ContentType.success,
-                ),
-              ),
-            );
-        }
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Lỗi khi kiểm tra lượt quay: $e')));
     }
+
+    // Cập nhật trạng thái sau khi quay xong
+    setState(() {
+      _selectedPrize = selectedPrize.prizeName;
+      _selectedLuckyPrize = selectedPrize;
+      _isSpinning = false;
+    });
   }
 
   int _selectPrizeIndex(List<LuckyPrize> prizes) {
@@ -279,13 +277,10 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Thêm khoảng cách phía trên để vòng quay nằm cao hơn
-                    SizedBox(height: 0 * hem), // Điều chỉnh khoảng cách nếu cần
-                    // Sử dụng Stack để đặt bóng đèn xung quanh vòng quay
+                    SizedBox(height: 0 * hem),
                     Stack(
                       alignment: Alignment.center,
                       children: [
-                        // Viền ngoài cho vòng quay
                         Container(
                           width: 340 * fem,
                           height: 340 * fem,
@@ -301,7 +296,6 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
                             ],
                           ),
                         ),
-                        // Vòng quay
                         SizedBox(
                           width: 300 * fem,
                           height: 300 * fem,
@@ -333,63 +327,47 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
                                     )
                                     .toList(),
                             onAnimationEnd: () {
-                              setState(() {
-                                _isSpinning = false;
-                              });
+                              // Đã được xử lý trong _spinWheel
                             },
                           ),
                         ),
-                        // Vòng tròn bóng đèn xung quanh
-                        ...List.generate(
-                          20, // Tăng số lượng bóng đèn để bao quanh hoàn chỉnh
-                          (index) {
-                            final angle =
-                                2 * math.pi * index / 20; // Góc của bóng đèn
-                            final radius =
-                                158 * fem; // Bán kính vòng tròn bóng đèn
-                            return Positioned(
-                              left:
-                                  radius * math.cos(angle) +
-                                  170 * fem -
-                                  12 * fem,
-                              top:
-                                  radius * math.sin(angle) +
-                                  170 * fem -
-                                  12 * fem,
-                              child: AnimatedBuilder(
-                                animation: _lightAnimation,
-                                builder: (context, child) {
-                                  return Container(
-                                    width: 23 * fem, // Giảm kích thước bóng đèn
-                                    height: 23 * fem,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.yellow,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.yellow.withOpacity(0.9),
-                                          blurRadius: _lightAnimation.value,
-                                          spreadRadius:
-                                              _lightAnimation.value / 2,
-                                        ),
-                                      ],
-                                      border: Border.all(
-                                        color: Colors.white,
-                                        width: 2 * fem,
+                        ...List.generate(20, (index) {
+                          final angle = 2 * math.pi * index / 20;
+                          final radius = 158 * fem;
+                          return Positioned(
+                            left:
+                                radius * math.cos(angle) + 170 * fem - 12 * fem,
+                            top:
+                                radius * math.sin(angle) + 170 * fem - 12 * fem,
+                            child: AnimatedBuilder(
+                              animation: _lightAnimation,
+                              builder: (context, child) {
+                                return Container(
+                                  width: 23 * fem,
+                                  height: 23 * fem,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.yellow,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.yellow.withOpacity(0.9),
+                                        blurRadius: _lightAnimation.value,
+                                        spreadRadius: _lightAnimation.value / 2,
                                       ),
+                                    ],
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 2 * fem,
                                     ),
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        }),
                       ],
                     ),
-                    SizedBox(
-                      height: 40 * hem,
-                    ), // Khoảng cách giữa vòng quay và số lượt quay
-                    // Hiển thị số lượt quay còn lại
+                    SizedBox(height: 40 * hem),
                     FutureBuilder<int>(
                       future: () async {
                         final student =
@@ -403,7 +381,7 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
                             .read<SpinHistoryRepository>()
                             .getBonusSpins(studentId, DateTime.now());
                         final maxSpins = 3 + bonusSpins;
-                        return maxSpins - spinCount; // Số lượt còn lại
+                        return maxSpins - spinCount;
                       }(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
@@ -430,9 +408,7 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
                         }
                       },
                     ),
-                    SizedBox(
-                      height: 40 * hem,
-                    ), // Khoảng cách giữa số lượt quay và nút "QUAY"
+                    SizedBox(height: 40 * hem),
                     ElevatedButton(
                       onPressed: _isSpinning ? null : () => _spinWheel(prizes),
                       style: ElevatedButton.styleFrom(

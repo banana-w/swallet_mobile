@@ -251,7 +251,6 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
       //               true; // Bỏ qua kiểm tra chứng chỉ
       // final httpClient = IOClient(ioClient);
 
-
       // Gửi yêu cầu check-in với GPS
       final response = await http.post(
         Uri.parse('${baseUrl}CheckIn/qr'),
