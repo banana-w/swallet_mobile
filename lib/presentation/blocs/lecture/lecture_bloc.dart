@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/lecture_features/lecture_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/lecture_features/lecture_repository.dart';
 
 part 'lecture_event.dart';
 part 'lecture_state.dart';

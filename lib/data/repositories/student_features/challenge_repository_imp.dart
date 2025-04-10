@@ -5,7 +5,7 @@ import 'package:http/io_client.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/challenge_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/challenge_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/challenge_repository.dart';
 
 import '../../../presentation/config/constants.dart';
 

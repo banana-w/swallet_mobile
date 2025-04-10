@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:swallet_mobile/domain/interface_repositories/lecture_features/lecture_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/campaign_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/lecture_features/lecture_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/store_features/store_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/campaign_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign/components/body.dart';

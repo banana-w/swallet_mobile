@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/models/student_features/challenge_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/challenge_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/challenge_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
 part 'challenge_event.dart';
 part 'challenge_state.dart';
 

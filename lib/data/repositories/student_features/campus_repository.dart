@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/campus_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/campus_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/campus_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
 class CampusRepositoryImp implements CampusRepository {

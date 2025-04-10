@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/campus_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/campus_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/campus_repository.dart';
 
 part 'campus_event.dart';
 part 'campus_state.dart';

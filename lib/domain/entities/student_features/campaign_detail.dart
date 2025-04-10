@@ -1,4 +1,4 @@
-import 'package:swallet_mobile/domain/interface_repositories/student_features/campaign.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/campaign.dart';
 
 class CampaignDetail extends Campaign {
   // final String brandLogo;

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/verification_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/verification_repository.dart';
 
 part 'verification_state.dart';
 

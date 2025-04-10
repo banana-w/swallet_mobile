@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/validation_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/validation_repository.dart';
 
 
 part 'validation_state.dart';

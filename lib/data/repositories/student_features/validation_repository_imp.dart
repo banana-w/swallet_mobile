@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:swallet_mobile/domain/interface_repositories/student_features/validation_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/validation_repository.dart';
 
 import '../../../presentation/config/constants.dart';
 import 'package:http/http.dart' as http;

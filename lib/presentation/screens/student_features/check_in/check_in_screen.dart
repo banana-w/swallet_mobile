@@ -1,15 +1,17 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/wheel_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/wheel_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/qr_view/components/qr_scanner_overlay.dart';
@@ -240,9 +242,19 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
       // Lấy vị trí GPS hiện tại
       Position position = await _determinePosition();
 
+            final baseURL = 'https://10.0.2.2:7137/api/';
+            final client = http.Client();
+      final ioClient =
+          HttpClient()
+            ..badCertificateCallback =
+                (X509Certificate cert, String host, int port) =>
+                    true; // Bỏ qua kiểm tra chứng chỉ
+      final httpClient = IOClient(ioClient);
+
+
       // Gửi yêu cầu check-in với GPS
-      final response = await http.post(
-        Uri.parse('${baseUrl}CheckIn/qr'),
+      final response = await httpClient.post(
+        Uri.parse('${baseURL}CheckIn/qr'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'studentId': studentId,

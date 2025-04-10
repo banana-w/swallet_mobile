@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:swallet_mobile/domain/interface_repositories/student_features/verification_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/verification_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
 class VerificationRepositoryImp extends VerificationRepository {

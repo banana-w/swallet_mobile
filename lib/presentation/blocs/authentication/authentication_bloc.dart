@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/models/student_features/create_model/create_authen_model.dart';
 import 'package:swallet_mobile/data/models/student_features/verify_authen_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/authentication_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/authentication_repository.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';

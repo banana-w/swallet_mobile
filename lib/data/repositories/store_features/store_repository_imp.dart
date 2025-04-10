@@ -9,7 +9,7 @@ import 'package:swallet_mobile/data/models/student_features/student_ranking_mode
 import 'package:swallet_mobile/data/repositories/student_features/campaign_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/student_repository_imp.dart';
 import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/store_features/store_repository.dart';
 
 import '../../../presentation/config/constants.dart';
 import '../../datasource/authen_local_datasource.dart';

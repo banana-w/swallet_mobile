@@ -1,6 +1,6 @@
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/voucher_detail_model.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/voucher_detail_model.dart';
 
 abstract class VoucherRepository {
   const VoucherRepository();

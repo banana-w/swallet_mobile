@@ -6,7 +6,7 @@ import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/brand_model.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/brand_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/brand_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
 
