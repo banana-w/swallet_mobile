@@ -17,13 +17,14 @@ class InProcessChallenge extends StatelessWidget {
     double ffem = fem * 0.97;
     double baseHeight = 812;
     double hem = MediaQuery.of(context).size.height / baseHeight;
+
     return BlocListener<ChallengeBloc, ChallengeState>(
       listener: (context, state) {
-        if (state is ChallengesLoaded) {
-          if (state.isClaimed) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(
+        if (state is ChallengesLoaded && state.isClaimed) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
                 elevation: 0,
                 duration: const Duration(milliseconds: 2000),
                 behavior: SnackBarBehavior.floating,
@@ -33,21 +34,28 @@ class InProcessChallenge extends StatelessWidget {
                   message: 'Nhận thưởng thành công!',
                   contentType: ContentType.success,
                 ),
-              ));
-          }
+              ),
+            );
         } else if (state is ClaimLoading) {
           showDialog<String>(
-              context: context,
-              builder: (BuildContext context) {
-                Future.delayed(Duration(seconds: 5));
-                return AlertDialog(
-                    content: SizedBox(
-                        width: 250,
-                        height: 250,
-                        child: Center(
-                            child: CircularProgressIndicator(
-                                color: kPrimaryColor))));
-              });
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: SizedBox(
+                  width: 250,
+                  height: 250,
+                  child: Center(
+                    child: CircularProgressIndicator(color: kPrimaryColor)
+                  ),
+                ),
+              );
+            },
+          ).then((_) {
+            // Đóng dialog sau 5 giây nếu cần
+            Future.delayed(Duration(seconds: 5), () {
+              Navigator.of(context).pop();
+            });
+          });
         }
       },
       child: RefreshIndicator(

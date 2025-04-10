@@ -162,7 +162,6 @@ class MyApp extends StatelessWidget {
             create: (context) => ChallengeBloc(
                 challengeRepository: ChallengeRepositoryImp(),
                 studentRepository: StudentRepositoryImp())
-              ..add(LoadChallenge()),
           ),
           BlocProvider(
             create:
