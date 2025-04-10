@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:swallet_mobile/domain/interface_repositories/student_features/wheel_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/wheel_repository.dart';
 
 class SpinHistoryRepositoryImpl implements SpinHistoryRepository {
   final String baseUrl =

@@ -1,4 +1,4 @@
-import 'package:swallet_mobile/domain/interface_repositories/student_features/voucher.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/voucher.dart';
 
 class VoucherModel extends Voucher {
   const VoucherModel({

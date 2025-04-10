@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:swallet_mobile/data/models/authen_model.dart';
 import 'package:swallet_mobile/data/models/student_features/create_model/create_authen_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/authentication_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/authentication_repository.dart';
 
 import '../../presentation/config/constants.dart';
 import '../datasource/authen_local_datasource.dart';

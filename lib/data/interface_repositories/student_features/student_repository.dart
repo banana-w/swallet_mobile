@@ -54,10 +54,10 @@ abstract class StudentRepository {
   //     int? page, int? limit,
   //     {required String id});
 
-  // Future<bool?> postChallengeStudentId({
-  //   required String studentId,
-  //   required String challengeId,
-  // });
+  Future<bool?> postChallengeStudentId({
+    required String studentId,
+    required String challengeId,
+  });
 
   Future<StudentModel?> putStudent({
     required String studentId,

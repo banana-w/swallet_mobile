@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:swallet_mobile/data/models/store_features/campagin_ranking_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_ranking_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/store_features/store_repository.dart';
 
 part 'ranking_event.dart';
 part 'ranking_state.dart';

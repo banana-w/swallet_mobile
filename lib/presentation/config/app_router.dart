@@ -9,6 +9,7 @@ import 'package:swallet_mobile/presentation/screens/lecture_features/qr_generate
 import 'package:swallet_mobile/presentation/screens/store_features/brand/brand_detail_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_voucher_detail/campaign_voucher_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/failed_scan_voucher/failed_scan_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/landing_screen/landing_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/profile_update_detail/profile_update_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/qr_view/qr_view_screen.dart';
@@ -23,6 +24,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/campaign/ca
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_voucher/campaign_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/challenge/challenge_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/challenge_daily/challenge_daily_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/check_in/check_in_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/landing/landing_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel/lucky_wheel_screen.dart';
@@ -152,6 +154,9 @@ class AppRouter {
 
       case ChallengeScreen.routeName:
         return ChallengeScreen.route();
+      
+      case ChallengeDailyScreen.routeName:
+        return ChallengeDailyScreen.route();
 
       case CampaignScreen.routeName:
         return CampaignScreen.route();
@@ -276,6 +281,12 @@ class AppRouter {
         return SuccessScanVoucherScreen.route(
           success: settings.arguments as String,
         );
+
+      case FailedScanVoucherScreen.routeName:
+        return FailedScanVoucherScreen.route(
+          failed: settings.arguments as String,
+        );
+        
       case CampaignVoucherScreen.routeName:
         List<dynamic> args = settings.arguments as List<dynamic>;
 

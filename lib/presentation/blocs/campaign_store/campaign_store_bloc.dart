@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_store_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/campaign_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/campaign_repository.dart';
 
 part 'campaign_store_event.dart';
 part 'campaign_store_state.dart';

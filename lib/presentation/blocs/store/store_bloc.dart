@@ -7,7 +7,7 @@ import 'package:swallet_mobile/data/models/store_features/transact_result_model.
 import 'package:swallet_mobile/data/models/store_features/transaction_store_model.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/store_features/store_repository.dart';
 import '../../../data/datasource/authen_local_datasource.dart';
 
 part 'store_event.dart';

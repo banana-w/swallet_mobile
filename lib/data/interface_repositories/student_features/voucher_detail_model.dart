@@ -1,5 +1,5 @@
 import 'package:swallet_mobile/data/models/student_features/campaign_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/voucher.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/voucher.dart';
 
 class VoucherDetailModel extends Voucher {
   final List<CampaignModel> campaigns;

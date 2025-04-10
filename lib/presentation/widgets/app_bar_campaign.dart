@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:swallet_mobile/presentation/blocs/challenge/challenge_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/notification/notification_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/challenge_daily/challenge_daily_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_list_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
@@ -43,8 +45,49 @@ class AppBarCampaign extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
+      leading: Padding(
+        padding: EdgeInsets.only(left: 20 * fem),
+        child: BlocBuilder<ChallengeBloc, ChallengeState>(
+          builder: (context, state) {
+            // Giả sử ChallengeState có trạng thái tương tự Notification
+            // if (state is NewChallenge) {
+            //   return IconButton(
+            //     icon: Icon(
+            //       Icons.task_alt_rounded, // Icon nhiệm vụ
+            //       color: Colors.yellow,
+            //       size: 25 * fem,
+            //     ),
+            //     onPressed: () {
+            //       if (roleState is Unverified) {
+            //         Navigator.pushNamed(context, UnverifiedScreen.routeName);
+            //       } else if (roleState is StoreRole) {
+            //         // Có thể thêm logic cho StoreRole nếu cần
+            //       } else {
+            //         context.read<ChallengeBloc>().add(LoadChallenges());
+            //         Navigator.pushNamed(context, ChallengeListScreen.routeName);
+            //       }
+            //     },
+            //   );
+            // }
+            return IconButton(
+              icon: Icon(
+                Icons.task, // Icon nhiệm vụ mặc định
+                color: Colors.white,
+                size: 25 * fem,
+              ),
+              onPressed: () {
+                if (roleState is Unverified) {
+                  Navigator.pushNamed(context, UnverifiedScreen.routeName);
+                } else if (roleState is StoreRole) {
+                } else {
+                  Navigator.pushNamed(context, ChallengeDailyScreen.routeName);
+                }
+              },
+            );
+          },
+        ),
+      ),
       actions: [
-        // SvgPicture.asset('assets/icons/notification-icon.svg')
         Padding(
           padding: EdgeInsets.only(right: 20 * fem),
           child: BlocBuilder<NotificationBloc, NotificationState>(

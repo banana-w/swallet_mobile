@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/campaign_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/campaign_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign_voucher/campaign_voucher_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 

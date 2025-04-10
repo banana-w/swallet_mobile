@@ -9,7 +9,7 @@ import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/data/models/student_features/transaction_model.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
 import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
 part 'student_event.dart';
 part 'student_state.dart';
 
@@ -108,12 +108,15 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
         event.isUsed,
         id: event.id,
       );
-      if (apiResponse!.totalPages == apiResponse.result.length) {
+      bool hasReachedMax = apiResponse!.result.length < event.limit ||
+        event.page >= apiResponse.totalPages;
+
+      if (hasReachedMax) {
         var vouchers = apiResponse.result.toList();
         emit(
           StudentVouchersLoaded1(
             brandVoucherModels: vouchers,
-            hasReachedMax: true,
+            hasReachedMax: hasReachedMax,
           ),
         );
       } else {
@@ -144,17 +147,17 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     try {
       if (event.scrollController.position.pixels ==
           event.scrollController.position.maxScrollExtent) {
-        if ((state as StudentVouchersLoaded).hasReachedMax) {
-          List<VoucherStudentModel> vouchers = List.from(
-            (state as StudentVouchersLoaded).voucherModels,
+        if ((state as StudentVouchersLoaded1).hasReachedMax) {
+          List<BrandVoucher> vouchers = List.from(
+            (state as StudentVouchersLoaded1).brandVoucherModels,
           );
           emit(
-            StudentVouchersLoaded(voucherModels: vouchers, hasReachedMax: true),
+            StudentVouchersLoaded1(brandVoucherModels: vouchers, hasReachedMax: true),
           );
         } else {
           isLoadingMore = true;
           pageVouchers++;
-          var apiResponse = await studentRepository.fetchVoucherStudentId(
+          var apiResponse = await studentRepository.fetchVoucherByStudentId(
             pageVouchers,
             event.limit,
             event.search,
@@ -162,21 +165,21 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
             event.isUsed,
           );
           if (apiResponse!.result.isEmpty) {
-            List<VoucherStudentModel> vouchers = List.from(
-              (state as StudentVouchersLoaded).voucherModels,
+            List<BrandVoucher> vouchers = List.from(
+              (state as StudentVouchersLoaded1).brandVoucherModels,
             )..addAll(apiResponse.result);
             emit(
-              StudentVouchersLoaded(
-                voucherModels: vouchers,
+              StudentVouchersLoaded1(
+                brandVoucherModels: vouchers,
                 hasReachedMax: true,
               ),
             );
             pageVouchers = 1;
           } else {
-            List<VoucherStudentModel> vouchers = List.from(
-              (state as StudentVouchersLoaded).voucherModels,
+            List<BrandVoucher> vouchers = List.from(
+              (state as StudentVouchersLoaded1).brandVoucherModels,
             )..addAll(apiResponse.result);
-            emit(StudentVouchersLoaded(voucherModels: vouchers));
+            emit(StudentVouchersLoaded1(brandVoucherModels: vouchers));
           }
         }
       }

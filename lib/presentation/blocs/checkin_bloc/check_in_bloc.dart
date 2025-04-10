@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:equatable/equatable.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
 
 part 'check_in_state.dart';
 part 'check_in_event.dart';

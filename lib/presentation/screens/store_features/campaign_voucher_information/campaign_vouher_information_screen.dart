@@ -5,7 +5,7 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/store_features/store_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/failed_scan_voucher/failed_scan_voucher_screen.dart';

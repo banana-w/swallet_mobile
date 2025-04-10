@@ -8,25 +8,29 @@ import 'package:swallet_mobile/data/repositories/store_features/store_repository
 import 'package:swallet_mobile/data/repositories/student_features/brand_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/campaign_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/campus_repository.dart';
+import 'package:swallet_mobile/data/repositories/student_features/challenge_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/lucky_prize_repository.dart';
 import 'package:swallet_mobile/data/repositories/student_features/student_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/validation_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/verification_repository_imp.dart';
+import 'package:swallet_mobile/domain/entities/student_features/challenge.dart';
 import 'package:swallet_mobile/data/repositories/student_features/wheel_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/authentication_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/lecture_features/lecture_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/brand_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/campaign_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/campus_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/validation_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/verification_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/wheel_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/authentication_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/lecture_features/lecture_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/store_features/store_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/brand_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/campaign_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/campus_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/challenge_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/validation_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/verification_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/wheel_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/authentication/authentication_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/campus/campus_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/challenge/challenge_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/lecture/lecture_bloc.dart';
@@ -51,6 +55,11 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+  statusBarColor: Colors.transparent, // Trong suốt để hiển thị nội dung phía sau
+  statusBarIconBrightness: Brightness.dark, // Biểu tượng màu tối (đen)
+  statusBarBrightness: Brightness.light, // Dành cho iOS
+));
   await Future.delayed(const Duration(seconds: 2));
 
   try {
@@ -103,6 +112,9 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<BrandRepository>(
           create: (_) => BrandRepositoryImp(),
         ),
+        RepositoryProvider<ChallengeRepository>(
+          create: (_) => ChallengeRepositoryImp(),
+        ),
         RepositoryProvider<LectureRepository>(
           create: (_) => LectureRepositoryImp(),
         ),
@@ -146,7 +158,12 @@ class MyApp extends StatelessWidget {
                     VerificationCubit(VerificationRepositoryImp())
                       ..loadingVerification(),
           ),
-
+          BlocProvider(
+            create: (context) => ChallengeBloc(
+                challengeRepository: ChallengeRepositoryImp(),
+                studentRepository: StudentRepositoryImp())
+              ..add(LoadChallenge()),
+          ),
           BlocProvider(
             create:
                 (context) =>

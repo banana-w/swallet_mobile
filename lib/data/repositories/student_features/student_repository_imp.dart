@@ -1,5 +1,4 @@
 import 'dart:convert';
-// import 'dart:io';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
@@ -10,10 +9,11 @@ import 'package:swallet_mobile/data/models/student_features/transaction_model.da
 import 'package:swallet_mobile/data/models/student_features/voucher_student_model.dart';
 import 'package:swallet_mobile/data/repositories/student_features/campaign_repository_imp.dart';
 import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:http/http.dart' as http;
-// import 'package:http/io_client.dart';
+import 'dart:io';
+import 'package:http/io_client.dart';
 
 class StudentRepositoryImp implements StudentRepository {
   String endPoint = '${baseURL}Student';
@@ -191,6 +191,14 @@ class StudentRepositoryImp implements StudentRepository {
       final uri = Uri.parse(
         '${baseURL}Activity/RedeemedVouchersGroupByStudent',
       ).replace(queryParameters: queryParams);
+
+      // final client = http.Client();
+      // final ioClient =
+      //     HttpClient()
+      //       ..badCertificateCallback =
+      //           (X509Certificate cert, String host, int port) =>
+      //               true; // Bỏ qua kiểm tra chứng chỉ
+      // final httpClient = IOClient(ioClient);
 
       final response = await http.get(uri, headers: headers);
 

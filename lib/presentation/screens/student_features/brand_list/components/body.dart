@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:swallet_mobile/data/models/student_features/brand_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/brand_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/brand_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/brand_detail/brand_detail_screen.dart';
 

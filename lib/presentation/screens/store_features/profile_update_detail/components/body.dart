@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/store_features/store_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 

@@ -101,6 +101,11 @@ final class StudentVoucherItemLoading extends StudentState {
   List<Object?> get props => [];
 }
 
+final class StudentVoucherLoadingMore extends StudentState {
+  @override
+  List<Object?> get props => [];
+}
+
 final class StudentVoucherItemLoaded extends StudentState {
   final CampaignVoucherDetailModel voucherStudentItemModel;
   final CampaignDetailModel campaignDetailModel;

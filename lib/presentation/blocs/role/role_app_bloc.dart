@@ -5,9 +5,9 @@ import 'package:swallet_mobile/data/models/authen_model.dart';
 import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/lecture_features/lecture_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/store_features/store_repository.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/lecture_features/lecture_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/store_features/store_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
 
 part 'role_app_event.dart';
 part 'role_app_state.dart';
@@ -30,11 +30,11 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
     RefreshStudentData event,
     Emitter<RoleAppState> emit,
   ) async {
+    emit(RoleAppLoading());
     try {
       final authenModel = await AuthenLocalDataSource.getAuthen();
       if (authenModel == null || authenModel.accountId.isEmpty) {
-        emit(RoleAppLoading());
-        return;
+        return emit(RoleAppLoading());
       }
 
       if (authenModel.role == 'Sinh viên') {
@@ -48,7 +48,6 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
         }
       }
     } catch (e) {
-      print('Lỗi khi làm mới dữ liệu sinh viên: $e');
       emit(RoleAppLoading());
     }
   }

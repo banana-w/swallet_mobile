@@ -9,7 +9,7 @@ import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_voucher_model.dart';
 import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
-import 'package:swallet_mobile/domain/interface_repositories/student_features/campaign_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/campaign_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign_voucher/campaign_voucher_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/components/campaign_voucher_list.dart';
