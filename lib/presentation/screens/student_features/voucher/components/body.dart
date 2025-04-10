@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/domain/interface_repositories/student_features/student_repository.dart';
+import 'package:swallet_mobile/presentation/blocs/challenge/challenge_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/notification/notification_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/challenge_daily/challenge_daily_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_list_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/components/tab_isused_voucher.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/components/tab_voucher.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
-
 
 class Body extends StatefulWidget {
   const Body({super.key, required this.studentId});
@@ -133,6 +134,57 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
                     ),
                   ),
                 ),
+                leading: Padding(
+                  padding: EdgeInsets.only(left: 20 * fem),
+                  child: BlocBuilder<ChallengeBloc, ChallengeState>(
+                    builder: (context, state) {
+                      // if (state is NewChallenge) {
+                      //   return IconButton(
+                      //     icon: Icon(
+                      //       Icons
+                      //           .task_alt_rounded, // Icon nhiệm vụ khi có nhiệm vụ mới
+                      //       color: Colors.yellow,
+                      //       size: 25 * fem,
+                      //     ),
+                      //     onPressed: () {
+                      //       if (roleState is Unverified) {
+                      //         Navigator.pushNamed(
+                      //           context,
+                      //           UnverifiedScreen.routeName,
+                      //         );
+                      //       } else {
+                      //         context.read<ChallengeBloc>().add(LoadChallenges());
+                      //         Navigator.pushNamed(
+                      //           context,
+                      //           ChallengeDailyScreen.routeName,
+                      //         );
+                      //       }
+                      //     },
+                      //   );
+                      // }
+                      return IconButton(
+                        icon: Icon(
+                          Icons.task, // Icon nhiệm vụ mặc định
+                          color: Colors.white,
+                          size: 25 * fem,
+                        ),
+                        onPressed: () {
+                          if (roleState is Unverified) {
+                            Navigator.pushNamed(
+                              context,
+                              UnverifiedScreen.routeName,
+                            );
+                          } else {
+                            Navigator.pushNamed(
+                              context,
+                              ChallengeDailyScreen.routeName,
+                            );
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ),
                 actions: [
                   Padding(
                     padding: EdgeInsets.only(top: 5 * hem, right: 20 * fem),
@@ -148,13 +200,17 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
                             onPressed: () {
                               if (roleState is Unverified) {
                                 Navigator.pushNamed(
-                                    context, UnverifiedScreen.routeName);
+                                  context,
+                                  UnverifiedScreen.routeName,
+                                );
                               } else {
-                                context
-                                    .read<NotificationBloc>()
-                                    .add(LoadNotification());
+                                context.read<NotificationBloc>().add(
+                                  LoadNotification(),
+                                );
                                 Navigator.pushNamed(
-                                    context, NotificationListScreen.routeName);
+                                  context,
+                                  NotificationListScreen.routeName,
+                                );
                               }
                             },
                           );
@@ -168,10 +224,14 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
                           onPressed: () {
                             if (roleState is Unverified) {
                               Navigator.pushNamed(
-                                  context, UnverifiedScreen.routeName);
+                                context,
+                                UnverifiedScreen.routeName,
+                              );
                             } else {
                               Navigator.pushNamed(
-                                  context, NotificationListScreen.routeName);
+                                context,
+                                NotificationListScreen.routeName,
+                              );
                             }
                           },
                         );

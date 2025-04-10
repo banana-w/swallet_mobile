@@ -210,173 +210,186 @@ class _BodyVoucherListState extends State<BodyVoucherList> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(height: 15),
-                        Container(
-                          child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount:
-                                state.hasReachedMax
-                                    ? vouchers.length
-                                    : vouchers.length + 1,
-                            itemBuilder: (context, index) {
-                              if (index >= state.voucherModels.length) {
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    color: kPrimaryColor,
-                                  ),
-                                );
-                              } else {
-                                var studentVoucher = vouchers[index];
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Color(0x0c000000),
-                                        offset: Offset(
-                                          3 * widget.fem,
-                                          2 * widget.fem,
-                                        ),
-                                        blurRadius: 5 * widget.fem,
+                        ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount:
+                              state.hasReachedMax
+                                  ? vouchers.length
+                                  : vouchers.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index >= state.voucherModels.length) {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: kPrimaryColor,
+                                ),
+                              );
+                            } else {
+                              var studentVoucher = vouchers[index];
+                              return Container(
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0x0c000000),
+                                      offset: Offset(
+                                        3 * widget.fem,
+                                        2 * widget.fem,
                                       ),
-                                    ],
-                                  ),
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.18,
-                                  margin: EdgeInsets.only(
-                                    bottom: 15,
-                                    left: 15,
-                                    right: 15,
-                                  ),
-                                  width: double.infinity,
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        VoucherItemDetailScreen.routeName,
-                                        arguments: studentVoucher,
-                                      );
-                                    },
-                                    child: Stack(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Container(
-                                                color: kPrimaryColor,
-                                                child: Center(
-                                                  child: RotatedBox(
-                                                    quarterTurns: 3,
-                                                    child: Text(
-                                                      studentVoucher.brandName!,
-                                                      style:
-                                                          GoogleFonts.openSans(
-                                                            textStyle: TextStyle(
-                                                              fontSize: 13,
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
+                                      blurRadius: 5 * widget.fem,
+                                    ),
+                                  ],
+                                ),
+                                height:
+                                    MediaQuery.of(context).size.height * 0.18,
+                                margin: EdgeInsets.only(
+                                  bottom: 15,
+                                  left: 15,
+                                  right: 15,
+                                ),
+                                width: double.infinity,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      VoucherItemDetailScreen.routeName,
+                                      arguments: studentVoucher,
+                                    );
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              color: kPrimaryColor,
+                                              child: Center(
+                                                child: RotatedBox(
+                                                  quarterTurns: 3,
+                                                  child: Text(
+                                                    studentVoucher.brandName!,
+                                                    style:
+                                                        GoogleFonts.openSans(
+                                                          textStyle: TextStyle(
+                                                            fontSize: 13,
+                                                            color:
+                                                                Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold,
                                                           ),
-                                                    ),
+                                                        ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                            Expanded(
-                                              flex: 5,
-                                              child: Container(
-                                                color: Colors.white,
-                                                padding: const EdgeInsets.all(
-                                                  10,
-                                                ),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      studentVoucher.voucherName,
-                                                      style: const TextStyle(
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
+                                          ),
+                                          Expanded(
+                                            flex: 5,
+                                            child: Container(
+                                              color: Colors.white,
+                                              padding: const EdgeInsets.all(
+                                                10,
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    studentVoucher.voucherName,
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                     ),
-                                                    const SizedBox(height: 5),
-                                                    Expanded(
-                                                      child: Row(
-                                                        children: [
-                                                          SizedBox(
-                                                            height:
-                                                                MediaQuery.of(
-                                                                  context,
-                                                                ).size.height,
-                                                            width:
-                                                                MediaQuery.of(
-                                                                  context,
-                                                                ).size.width *
-                                                                0.3,
-                                                            child: Column(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 2,
-                                                                  child: ClipRRect(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                          10,
-                                                                        ),
-                                                                    child: SizedBox(
-                                                                      width:
-                                                                          130 *
-                                                                          widget
-                                                                              .fem,
-                                                                      height:
-                                                                          140 *
-                                                                          widget
-                                                                              .hem,
-                                                                      child: Image.network(
-                                                                        studentVoucher
-                                                                            .voucherImage,
-                                                                        fit:
-                                                                            BoxFit.fill,
-                                                                        errorBuilder: (
-                                                                          context,
-                                                                          error,
-                                                                          stackTrace,
-                                                                        ) {
-                                                                          return Icon(
-                                                                            Icons.error_outlined,
-                                                                            size:
-                                                                                50 *
-                                                                                widget.fem,
-                                                                            color:
-                                                                                kPrimaryColor,
-                                                                          );
-                                                                        },
+                                                  ),
+                                                  const SizedBox(height: 5),
+                                                  Expanded(
+                                                    child: Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          height:
+                                                              MediaQuery.of(
+                                                                context,
+                                                              ).size.height,
+                                                          width:
+                                                              MediaQuery.of(
+                                                                context,
+                                                              ).size.width *
+                                                              0.3,
+                                                          child: Column(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 2,
+                                                                child: ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        10,
                                                                       ),
+                                                                  child: SizedBox(
+                                                                    width:
+                                                                        130 *
+                                                                        widget
+                                                                            .fem,
+                                                                    height:
+                                                                        140 *
+                                                                        widget
+                                                                            .hem,
+                                                                    child: Image.network(
+                                                                      studentVoucher
+                                                                          .voucherImage,
+                                                                      fit:
+                                                                          BoxFit.fill,
+                                                                      errorBuilder: (
+                                                                        context,
+                                                                        error,
+                                                                        stackTrace,
+                                                                      ) {
+                                                                        return Icon(
+                                                                          Icons.error_outlined,
+                                                                          size:
+                                                                              50 *
+                                                                              widget.fem,
+                                                                          color:
+                                                                              kPrimaryColor,
+                                                                        );
+                                                                      },
                                                                     ),
                                                                   ),
                                                                 ),
-                                                                const SizedBox(
-                                                                  height: 2,
-                                                                ),
-                                                              ],
-                                                            ),
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 2,
+                                                              ),
+                                                            ],
                                                           ),
-                                                          const SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Expanded(
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Row(
-                                                                  children: [
-                                                                    Text(
-                                                                      'Ngày mua: ',
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Expanded(
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  Text(
+                                                                    'Ngày mua: ',
+                                                                    style: GoogleFonts.openSans(
+                                                                      textStyle: TextStyle(
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                        color:
+                                                                            Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      changeFormateDate(studentVoucher.dateBought!),
                                                                       style: GoogleFonts.openSans(
                                                                         textStyle: TextStyle(
                                                                           fontSize:
@@ -388,27 +401,27 @@ class _BodyVoucherListState extends State<BodyVoucherList> {
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                    Expanded(
-                                                                      child: Text(
-                                                                        changeFormateDate(studentVoucher.dateBought!),
-                                                                        style: GoogleFonts.openSans(
-                                                                          textStyle: TextStyle(
-                                                                            fontSize:
-                                                                                12,
-                                                                            fontWeight:
-                                                                                FontWeight.normal,
-                                                                            color:
-                                                                                Colors.black,
-                                                                          ),
-                                                                        ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Row(
+                                                                children: [
+                                                                  Text(
+                                                                    'Hạn sử dụng: ',
+                                                                    style: GoogleFonts.openSans(
+                                                                      textStyle: TextStyle(
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                        color:
+                                                                            Colors.black,
                                                                       ),
                                                                     ),
-                                                                  ],
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    Text(
-                                                                      'Hạn sử dụng: ',
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      changeFormateDate(studentVoucher.expireOn),
                                                                       style: GoogleFonts.openSans(
                                                                         textStyle: TextStyle(
                                                                           fontSize:
@@ -420,84 +433,69 @@ class _BodyVoucherListState extends State<BodyVoucherList> {
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                    Expanded(
-                                                                      child: Text(
-                                                                        changeFormateDate(studentVoucher.expireOn),
-                                                                        style: GoogleFonts.openSans(
-                                                                          textStyle: TextStyle(
-                                                                            fontSize:
-                                                                                12,
-                                                                            fontWeight:
-                                                                                FontWeight.normal,
-                                                                            color:
-                                                                                Colors.black,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                const SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                buildButtonVoucher(
-                                                                  widget.hem,
-                                                                  widget.fem,
-                                                                  studentVoucher,
-                                                                  context,
-                                                                ),
-                                                              ],
-                                                            ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                              buildButtonVoucher(
+                                                                widget.hem,
+                                                                widget.fem,
+                                                                studentVoucher,
+                                                                context,
+                                                              ),
+                                                            ],
                                                           ),
-                                                        ],
-                                                      ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                        CustomPaint(
-                                          painter: SideCutsDesign(),
-                                          child: SizedBox(
-                                            height:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).size.height *
-                                                0.25,
-                                            width: double.infinity,
                                           ),
+                                        ],
+                                      ),
+                                      CustomPaint(
+                                        painter: SideCutsDesign(),
+                                        child: SizedBox(
+                                          height:
+                                              MediaQuery.of(
+                                                context,
+                                              ).size.height *
+                                              0.25,
+                                          width: double.infinity,
                                         ),
-                                        CustomPaint(
-                                          painter: DottedInitialPath(),
-                                          child: SizedBox(
-                                            height:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).size.height *
-                                                0.25,
-                                            width: double.infinity,
-                                          ),
+                                      ),
+                                      CustomPaint(
+                                        painter: DottedInitialPath(),
+                                        child: SizedBox(
+                                          height:
+                                              MediaQuery.of(
+                                                context,
+                                              ).size.height *
+                                              0.25,
+                                          width: double.infinity,
                                         ),
-                                        CustomPaint(
-                                          painter: DottedMiddlePath(),
-                                          child: SizedBox(
-                                            height:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).size.height *
-                                                0.25,
-                                            width: double.infinity,
-                                          ),
+                                      ),
+                                      CustomPaint(
+                                        painter: DottedMiddlePath(),
+                                        child: SizedBox(
+                                          height:
+                                              MediaQuery.of(
+                                                context,
+                                              ).size.height *
+                                              0.25,
+                                          width: double.infinity,
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              }
-                            },
-                          ),
+                                ),
+                              );
+                            }
+                          },
                         ),
                       ],
                     );

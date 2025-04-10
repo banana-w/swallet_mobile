@@ -23,7 +23,7 @@ final class LoadStudentVouchers extends StudentEvent {
 
   const LoadStudentVouchers({
     this.page = 1,
-    this.limit = 10,
+    this.limit = 3,
     required this.id,
     this.search = '',
     required this.isUsed,
@@ -53,7 +53,7 @@ final class LoadMoreStudentVouchers extends StudentEvent {
     this.scrollController, {
     required this.id,
     this.page = 1,
-    this.limit = 10,
+    this.limit = 3,
     required this.isUsed,
     this.search = '',
   });

@@ -8,7 +8,6 @@ import 'package:swallet_mobile/presentation/screens/student_features/profile_det
 
 import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/profile_verification_screen.dart';
 
-
 class VerifiedCard extends StatelessWidget {
   const VerifiedCard({
     super.key,
@@ -105,27 +104,35 @@ class VerifiedCard extends StatelessWidget {
                           bottom: 5 * hem,
                         ),
                         child: Container(
-                          padding: EdgeInsets.only(
-                            right: 5 * fem,
-                            left: 5 * fem,
-                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 5 * fem),
                           height: 30 * hem,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Color(0xfffb7eb8f)),
-                            color: Color(0xffff6ffed),
+                            border: Border.all(color: Color(0xFF28A745)),
+                            color: Color(0xFFE6F4EA),
                           ),
                           child: Center(
-                            child: Text(
-                              'Đã xác minh',
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 13 * ffem,
-                                  height: 1.3625 * ffem / fem,
-                                  fontWeight: FontWeight.w600,
-                                  color: kPrimaryColor,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.verified, 
+                                  color: Color(0xFF28A745),
+                                  size: 16 * fem,
                                 ),
-                              ),
+                                SizedBox(width: 5 * fem),
+                                Text(
+                                  'Đã xác minh',
+                                  style: GoogleFonts.openSans(
+                                    textStyle: TextStyle(
+                                      fontSize: 13 * ffem,
+                                      height: 1.3625 * ffem / fem,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF28A745),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),

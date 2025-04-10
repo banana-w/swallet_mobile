@@ -52,7 +52,7 @@ class InProcessChallenge extends StatelessWidget {
       },
       child: RefreshIndicator(
         onRefresh: () async {
-          context.read<ChallengeBloc>().add(LoadChallenge());
+          context.read<ChallengeBloc>().add(LoadDailyChallenge());
         },
         child: CustomScrollView(
           slivers: [

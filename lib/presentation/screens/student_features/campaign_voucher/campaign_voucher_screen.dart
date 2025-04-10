@@ -112,9 +112,9 @@ class CampaignVoucherScreen extends StatelessWidget {
           bottomNavigationBar: BlocBuilder<CampaignBloc, CampaignState>(
             builder: (context, state) {
               if (state is CampaignsLoaded) {
-                var containCampaign =
-                    state.campaigns.where((c) => c.id == campaignDetailModel.id).toList();
-                if (containCampaign.isNotEmpty) {
+                // var containCampaign =
+                //     state.campaigns.where((c) => c.id == campaignDetailModel.id).toList(); containCampaign.isNotEmpty
+                if (true) {
                   return MultiBlocProvider(
                     providers: [
                       BlocProvider(

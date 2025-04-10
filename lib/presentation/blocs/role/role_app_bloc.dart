@@ -30,11 +30,11 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
     RefreshStudentData event,
     Emitter<RoleAppState> emit,
   ) async {
+    emit(RoleAppLoading());
     try {
       final authenModel = await AuthenLocalDataSource.getAuthen();
       if (authenModel == null || authenModel.accountId.isEmpty) {
-        emit(RoleAppLoading());
-        return;
+        return emit(RoleAppLoading());
       }
 
       if (authenModel.role == 'Sinh viên') {
@@ -48,7 +48,6 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
         }
       }
     } catch (e) {
-      print('Lỗi khi làm mới dữ liệu sinh viên: $e');
       emit(RoleAppLoading());
     }
   }

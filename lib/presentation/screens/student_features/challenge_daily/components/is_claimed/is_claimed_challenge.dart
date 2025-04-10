@@ -19,7 +19,7 @@ class IsClaimedChallenge extends StatelessWidget {
     double hem = MediaQuery.of(context).size.height / baseHeight;
     return RefreshIndicator(
       onRefresh: () async {
-        context.read<ChallengeBloc>().add(LoadChallenge());
+        context.read<ChallengeBloc>().add(LoadDailyChallenge());
       },
       child: CustomScrollView(
         slivers: [
