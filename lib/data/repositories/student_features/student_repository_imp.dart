@@ -343,20 +343,20 @@ class StudentRepositoryImp implements StudentRepository {
         'Authorization': 'Bearer $token',
       };
 
-      final baseURL = 'https://10.0.2.2:7137/api/';
+      // final baseURL = 'https://10.0.2.2:7137/api/';
 
       final uri = Uri.parse(
         '${baseURL}Challenge/reward?challengeId=$challengeId&studentId=$studentId&type=$type',
       );
-       final client = http.Client();
-      final ioClient =
-          HttpClient()
-            ..badCertificateCallback =
-                (X509Certificate cert, String host, int port) =>
-                    true; // Bỏ qua kiểm tra chứng chỉ
-      final httpClient = IOClient(ioClient);
+      //  final client = http.Client();
+      // final ioClient =
+      //     HttpClient()
+      //       ..badCertificateCallback =
+      //           (X509Certificate cert, String host, int port) =>
+      //               true; // Bỏ qua kiểm tra chứng chỉ
+      // final httpClient = IOClient(ioClient);
 
-      final http.Response response = await httpClient.post(uri, headers: headers);
+      final http.Response response = await http.post(uri, headers: headers);
 
       if (response.statusCode == 200) {
         return true;
