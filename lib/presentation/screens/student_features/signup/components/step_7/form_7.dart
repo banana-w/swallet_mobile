@@ -248,7 +248,9 @@ class _FormBody7State extends State<FormBody7> {
                   context: context,
                   builder: (BuildContext context) {
                     Future.delayed(Duration(seconds: 20), () {
-                      Navigator.pop(context);
+                      if(context.mounted) {
+                        Navigator.pop(context);
+                      }
                     });
                     return AlertDialog(
                       content: SizedBox(
@@ -319,7 +321,6 @@ class _FormBody7State extends State<FormBody7> {
     phoneNumberController,
   ) async {
       if (context.mounted) {
-        print('0${phoneNumberController.text}');
         context
             .read<ValidationCubit>()
             .validatePhoneNumber('0${phoneNumberController.text}')
@@ -332,7 +333,6 @@ class _FormBody7State extends State<FormBody7> {
                     '0${phoneNumberController.text}';
                     
                 String createAuthenString = jsonEncode(createAuthenModel);
-                print(createAuthenString);
                 // AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
 
                 if (context.mounted) {

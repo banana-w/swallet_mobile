@@ -34,7 +34,7 @@ class CampaignCard extends StatelessWidget {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Color(0xFF757575).withOpacity(0.3),
+                    color: Color(0xFF757575).withValues(alpha: .3),
                     blurRadius: 10.0, // soften the shadow
                     spreadRadius: 1.0, //extend the shadow
                     offset: const Offset(
@@ -54,7 +54,7 @@ class CampaignCard extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10 * fem),
                         topRight: Radius.circular(10 * fem)),
-                    child: Container(
+                    child: SizedBox(
                       height: 150 * hem,
                       width: 180 * fem,
                       child: Image.network(
@@ -67,7 +67,7 @@ class CampaignCard extends StatelessWidget {
                           return ShimmerWidget.rectangular(height: 150 * hem);
                         },
                         errorBuilder: (context, error, stackTrace) {
-                          return Container(
+                          return SizedBox(
                             width: 170 * fem,
                             height: 180 * hem,
                             child: Image.asset(

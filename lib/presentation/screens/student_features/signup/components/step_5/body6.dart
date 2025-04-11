@@ -58,7 +58,7 @@ class Body6 extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.only(left: 15 * fem, right: 15 * fem),
                       child: Text(
-                        'Hãy tải lên mặt trước \nvà mặt sau của thẻ sinh viên',
+                        'Hãy tải lên mặt trước \ncủa thẻ sinh viên',
                         textAlign: TextAlign.center,
                         style: GoogleFonts.openSans(
                           fontSize: 15 * ffem,

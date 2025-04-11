@@ -98,53 +98,53 @@ class _FormBody6State extends State<FormBody6> {
                         ),
                       ],
                     ),
-                SizedBox(
-                  width: 280 * widget.fem,
-                  child: Divider(
-                    thickness: 1 * widget.fem,
-                    color: const Color.fromARGB(255, 225, 223, 223),
-                  ),
-                ),
-                _selectedBackCard != null
-                    ? InkWell(
-                      onTap: () {
-                        _imageModelBottomSheet(context, _selectedBackCard);
-                      },
-                      child: Container(
-                        width: 150 * widget.fem,
-                        height: 150 * widget.hem,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: FileImage(_selectedBackCard!),
-                          ),
-                        ),
-                      ),
-                    )
-                    : Column(
-                      children: [
-                        Text(
-                          'Tải hình mặt sau của thẻ',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14 * widget.ffem,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10 * widget.hem),
-                        UpLoadBackCard(
-                          fem: widget.fem,
-                          hem: widget.hem,
-                          ffem: widget.ffem,
-                          onPressed: () {
-                            _imageModelBottomSheet(context, _selectedBackCard);
-                          },
-                        ),
-                      ],
-                    ),
+                // SizedBox(
+                //   width: 280 * widget.fem,
+                //   child: Divider(
+                //     thickness: 1 * widget.fem,
+                //     color: const Color.fromARGB(255, 225, 223, 223),
+                //   ),
+                // ),
+                // _selectedBackCard != null
+                //     ? InkWell(
+                //       onTap: () {
+                //         _imageModelBottomSheet(context, _selectedBackCard);
+                //       },
+                //       child: Container(
+                //         width: 150 * widget.fem,
+                //         height: 150 * widget.hem,
+                //         decoration: BoxDecoration(
+                //           image: DecorationImage(
+                //             fit: BoxFit.fill,
+                //             image: FileImage(_selectedBackCard!),
+                //           ),
+                //         ),
+                //       ),
+                //     )
+                //     : Column(
+                //       children: [
+                //         Text(
+                //           'Tải hình mặt sau của thẻ',
+                //           textAlign: TextAlign.center,
+                //           style: GoogleFonts.openSans(
+                //             textStyle: TextStyle(
+                //               color: Colors.black,
+                //               fontSize: 14 * widget.ffem,
+                //               fontWeight: FontWeight.w700,
+                //             ),
+                //           ),
+                //         ),
+                //         SizedBox(height: 10 * widget.hem),
+                //         UpLoadBackCard(
+                //           fem: widget.fem,
+                //           hem: widget.hem,
+                //           ffem: widget.ffem,
+                //           onPressed: () {
+                //             _imageModelBottomSheet(context, _selectedBackCard);
+                //           },
+                //         ),
+                //       ],
+                //     ),
               ],
             ),
           ),
@@ -185,7 +185,7 @@ class _FormBody6State extends State<FormBody6> {
   ) async {
     final authenModel = await AuthenLocalDataSource.getAuthen();
     if (authenModel == null) {
-      if (selectedBackCard == null || selectedFrontCard == null) {
+      if (selectedFrontCard == null) {
         setState(() {
           errorCard = 'Thẻ sinh viên không được bỏ trống';
         });
@@ -197,8 +197,9 @@ class _FormBody6State extends State<FormBody6> {
         AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
         Navigator.pushNamed(context, SignUp6Screen.routeName);
       }
-    } else {
-      if (selectedBackCard == null || selectedFrontCard == null) {
+    } 
+    else {
+      if (selectedFrontCard == null) {
         setState(() {
           errorCard = 'Thẻ sinh viên không được bỏ trống';
         });

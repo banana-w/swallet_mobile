@@ -204,7 +204,7 @@ class _BodyState extends State<CampaignScreenBody>
                                   final previousState =
                                       context.read<CheckInBloc>().state;
                                   if (previousState is CheckInLoaded &&
-                                      !previousState.canCheckInToday) {
+                                      previousState.canCheckInToday) {
                                     String message;
                                     if (state.streak >= 7) {
                                       message =
