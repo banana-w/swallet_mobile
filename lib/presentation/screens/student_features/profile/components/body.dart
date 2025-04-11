@@ -508,7 +508,10 @@ class Body extends StatelessWidget {
                                             onPressed: () async {
                                               Navigator.pushNamed(
                                                 context,
-                                                LuckyWheelScreen.routeName,
+                                                ProfileTransactionHistoryScreen
+                                                    .routeName,
+                                                arguments:
+                                                    stateRole.studentModel.id,
                                               );
                                             },
                                             svgIcon:
