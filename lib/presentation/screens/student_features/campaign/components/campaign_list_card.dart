@@ -36,7 +36,7 @@ class CampaignListCard extends StatelessWidget {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Color(0xFF757575).withOpacity(0.3),
+                  color: Color(0xFF757575).withValues(alpha: .3),
                   blurRadius: 10.0, // soften the shadow
                   spreadRadius: 1.0, //extend the shadow
                   offset: const Offset(
@@ -54,7 +54,7 @@ class CampaignListCard extends StatelessWidget {
                     top: 5 * hem, left: 5 * fem, bottom: 5 * hem),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10 * fem),
-                  child: Container(
+                  child: SizedBox(
                     width: 120 * fem,
                     height: 150 * hem,
                     child: Image.network(
@@ -94,7 +94,7 @@ class CampaignListCard extends StatelessWidget {
                           fontWeight: FontWeight.normal,
                         ))),
                   ),
-                  Container(
+                  SizedBox(
                     width: 200 * fem,
                     // height: 45*hem,
                     child: Text(campaignModel.campaignName,
@@ -110,7 +110,7 @@ class CampaignListCard extends StatelessWidget {
                   SizedBox(
                     height: 2 * hem,
                   ),
-                  Container(
+                  SizedBox(
                     width: 200 * fem,
                     child: Text('Thời gian tham gia chiến dịch:',
                         softWrap: true,
@@ -121,7 +121,7 @@ class CampaignListCard extends StatelessWidget {
                           fontWeight: FontWeight.normal,
                         ))),
                   ),
-                  Container(
+                  SizedBox(
                     width: 200 * fem,
                     child: Text(
                         '${changeFormateDate(campaignModel.startOn)} - ${changeFormateDate(campaignModel.endOn)}',

@@ -42,7 +42,7 @@ class Body9 extends StatelessWidget {
             ),
             SizedBox(height: 10 * hem),
             Text(
-              'Cảm ơn bạn đã đăng ký/xác minh thành công.\n Giờ đây, bạn có thể tham gia vào các sự kiện\n yêu thích, các kênh thông tin để tích lũy\n những ưu đãi hấp dẫn. ',
+              'Cảm ơn bạn đã đăng ký thành công.\n Giờ đây, bạn có thể tham gia vào các sự kiện\n yêu thích, các kênh thông tin để tích lũy\n những ưu đãi hấp dẫn. ',
               textAlign: TextAlign.center,
               style: GoogleFonts.openSans(
                 textStyle: TextStyle(

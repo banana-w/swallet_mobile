@@ -15,7 +15,6 @@ import 'package:swallet_mobile/data/repositories/student_features/lucky_prize_re
 import 'package:swallet_mobile/data/repositories/student_features/student_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/validation_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/student_features/verification_repository_imp.dart';
-import 'package:swallet_mobile/domain/entities/student_features/challenge.dart';
 import 'package:swallet_mobile/data/repositories/student_features/wheel_repository.dart';
 import 'package:swallet_mobile/data/interface_repositories/authentication_repository.dart';
 import 'package:swallet_mobile/data/interface_repositories/lecture_features/lecture_repository.dart';
