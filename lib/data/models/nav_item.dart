@@ -13,44 +13,44 @@ class NavItem {
     NavItem(
       SvgPicture.asset(
         'assets/icons/campaign-navbar-icon.svg',
-        colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kNauVang, BlendMode.srcIn),
       ),
       SvgPicture.asset(
         'assets/icons/campaign-navbar-icon.svg',
-        colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
       "Chiến Dịch",
     ),
     NavItem(
       SvgPicture.asset(
         'assets/icons/voucher-navbar-icon.svg',
-        colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kNauVang, BlendMode.srcIn),
       ),
       SvgPicture.asset(
         'assets/icons/voucher-navbar-icon.svg',
-        colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
       "Kho Ưu Đãi",
     ),
     NavItem(
       SvgPicture.asset(
         'assets/icons/reward-navbar-icon.svg',
-        colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kNauVang, BlendMode.srcIn),
       ),
       SvgPicture.asset(
         'assets/icons/reward-navbar-icon.svg',
-        colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
       "Thành Tựu",
     ),
     NavItem(
       SvgPicture.asset(
         'assets/icons/profile-navbar-icon.svg',
-        colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kNauVang, BlendMode.srcIn),
       ),
       SvgPicture.asset(
         'assets/icons/profile-navbar-icon.svg',
-        colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
       "Cá nhân",
     ),

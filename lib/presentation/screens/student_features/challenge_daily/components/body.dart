@@ -125,6 +125,7 @@ class _BodyState extends State<ChallengeDailyBody> with SingleTickerProviderStat
               pinned: true,
               floating: true,
               elevation: 0,
+              iconTheme: IconThemeData(color: Colors.white), // <-- đổi màu mũi tên tại đây
               flexibleSpace: Container(
                 decoration: const BoxDecoration(
                     image: DecorationImage(

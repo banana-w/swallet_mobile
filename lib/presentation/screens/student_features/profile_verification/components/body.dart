@@ -207,7 +207,7 @@ class Body extends StatelessWidget {
 
                           SizedBox(height: 20),
                           Text(
-                            'MẶT TRƯỚC',
+                            'MẶT TRƯỚC THẺ SINH VIÊN',
                             style: GoogleFonts.openSans(
                               textStyle: TextStyle(
                                 fontSize: 13 * ffem,

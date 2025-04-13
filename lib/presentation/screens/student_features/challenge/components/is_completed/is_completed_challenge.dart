@@ -43,7 +43,7 @@ class IsCompletedChallenge extends StatelessWidget {
               builder: (BuildContext context) {
                 Future.delayed(Duration(seconds: 5));
                 return AlertDialog(
-                    content: Container(
+                    content: SizedBox(
                         width: 250,
                         height: 250,
                         child: Center(

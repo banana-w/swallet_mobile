@@ -83,9 +83,7 @@ class _ChallengeScreenState extends State<ChallengeDailyScreen> {
               if (challengeState is ChallengesLoaded) {
                 return ChallengeDailyBody();
               }
-
-              // Trường hợp mặc định hoặc lỗi
-              return const Center(child: Text('Something went wrong'));
+              return ChallengeDailyBody();
             },
           );
         }

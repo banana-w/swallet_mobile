@@ -64,7 +64,7 @@ class NavPainter extends CustomPainter {
       // Close the path
       ..close();
 
-    final Paint paint = Paint()..color = Colors.white;
+    final Paint paint = Paint()..color = Color(0xFF0E4B5A);
 
     //draw shadow
     canvas.drawShadow(Path.combine(PathOperation.intersect, path, pathRec),

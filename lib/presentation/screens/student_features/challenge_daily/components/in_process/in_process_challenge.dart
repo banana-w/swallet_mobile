@@ -1,7 +1,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 import 'package:swallet_mobile/presentation/blocs/challenge/challenge_bloc.dart';
 import 'package:swallet_mobile/presentation/widgets/empty_widget.dart';
 import '../../../../../config/constants.dart';
@@ -20,41 +20,50 @@ class InProcessChallenge extends StatelessWidget {
 
     return BlocListener<ChallengeBloc, ChallengeState>(
       listener: (context, state) {
-        if (state is ChallengesLoaded && state.isClaimed) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                elevation: 0,
-                duration: const Duration(milliseconds: 2000),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Nhận thưởng',
-                  message: 'Nhận thưởng thành công!',
-                  contentType: ContentType.success,
-                ),
-              ),
+        if (state is ClaimLoading) {
+          // Sử dụng addPostFrameCallback để tránh build trong frame hiện tại
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            showDialog<String>(
+              context: context,
+              barrierDismissible: false, // Prevent dialog from being dismissed
+              builder: (BuildContext context) {
+                return PopScope(
+                  canPop:
+                      false, // Prevent back button/gesture from closing dialog
+                  child: AlertDialog(
+                    content: const SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: Center(
+                        child: CircularProgressIndicator(color: kPrimaryColor),
+                      ),
+                    ),
+                  ),
+                );
+              },
             );
-        } else if (state is ClaimLoading) {
-          showDialog<String>(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: SizedBox(
-                  width: 250,
-                  height: 250,
-                  child: Center(
-                    child: CircularProgressIndicator(color: kPrimaryColor)
+          });
+        } else if (state is ChallengesLoaded && state.isClaimed) {
+          // Đóng dialog loading nếu đang mở
+          Navigator.of(context).pop();
+
+          // Show success message
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  elevation: 0,
+                  duration: const Duration(milliseconds: 2000),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.transparent,
+                  content: AwesomeSnackbarContent(
+                    title: 'Nhận thưởng',
+                    message: 'Nhận thưởng thành công!',
+                    contentType: ContentType.success,
                   ),
                 ),
               );
-            },
-          ).then((_) {
-            // Đóng dialog sau 5 giây nếu cần
-            Future.delayed(Duration(seconds: 5), () {
-              Navigator.of(context).pop();
-            });
           });
         }
       },
@@ -74,42 +83,50 @@ class InProcessChallenge extends StatelessWidget {
                       BlocBuilder<ChallengeBloc, ChallengeState>(
                         builder: (context, state) {
                           if (state is ChallengeLoading) {
-                            return Center(
-                              child: Lottie.asset(
-                                  'assets/animations/loading-screen.dart'),
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                color: kPrimaryColor,
+                              ),
                             );
                           } else if (state is ChallengesLoaded) {
-                            final challenges = state.challenge
-                                .where((c) => (c.isClaimed == false))
-                                .toList();
+                            final challenges =
+                                state.challenge
+                                    .where((c) => !c.isClaimed)
+                                    .toList()
+                                  ..sort((a, b) {
+                                    if (a.isClaimed != b.isClaimed) {
+                                      return a.isClaimed ? 1 : -1;
+                                    }
+                                    return b.isCompleted ? 1 : -1;
+                                  });
+
                             if (challenges.isEmpty) {
-                              return EmptyWidget(text: 'Không có thử thách');
-                            } else {
-                              challenges.sort((a, b) => b.isCompleted ? 1 : -1);
-                              challenges.sort((a, b) => a.isClaimed ? 1 : -1);
-                              return ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: challenges.length,
-                                itemBuilder: (context, index) {
-                                  return ChallengeCard(
+                              return const EmptyWidget(
+                                text: 'Không có thử thách',
+                              );
+                            }
+
+                            return ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: challenges.length,
+                              itemBuilder:
+                                  (context, index) => ChallengeCard(
                                     fem: fem,
                                     hem: hem,
                                     ffem: ffem,
                                     challengeModel: challenges[index],
-                                  );
-                                },
-                              );
-                            }
+                                  ),
+                            );
                           }
-                          return Container();
+                          return const SizedBox();
                         },
                       ),
                     ],
                   ),
-                )
+                ),
               ]),
-            )
+            ),
           ],
         ),
       ),
