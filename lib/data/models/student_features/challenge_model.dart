@@ -1,25 +1,25 @@
-
 import 'package:swallet_mobile/domain/entities/student_features/challenge.dart';
 
 class ChallengeModel extends Challenge {
-  const ChallengeModel(
-      {required super.id,
-      required super.challengeId,
-      required super.challengeType,
-      required super.challengeTypeName,
-      required super.challengeName,
-      required super.challengeImage,
-      required super.studentId,
-      required super.studentName,
-      required super.amount,
-      required super.current,
-      required super.condition,
-      required super.isCompleted,
-      required super.isClaimed,
-      required super.dateCreated,
-      required super.dateUpdated,
-      required super.description,
-      required super.status});
+  const ChallengeModel({
+    required super.id,
+    required super.challengeId,
+    required super.challengeType,
+    required super.challengeTypeName,
+    required super.challengeName,
+    required super.challengeImage,
+    required super.studentId,
+    required super.studentName,
+    required super.amount,
+    required super.current,
+    required super.condition,
+    required super.isCompleted,
+    required super.isClaimed,
+    required super.dateCreated,
+    required super.dateUpdated,
+    required super.description,
+    required super.status,
+  });
 
   factory ChallengeModel.fromJson(Map<String, dynamic> json) {
     return ChallengeModel(
@@ -31,9 +31,10 @@ class ChallengeModel extends Challenge {
       challengeImage: json['challengeImage'],
       studentId: json['studentId'],
       studentName: json['studentName'],
-      amount: json['amount'],
-      current: json['current'],
-      condition: json['condition'],
+      amount: (json['amount'] as num?)?.toDouble() ?? 0.0, // Chuyển sang double
+      current: (json['current'] as num?)?.toInt() ?? 0, // Chuyển sang int
+      condition:
+          (json['condition'] as num?)?.toDouble() ?? 0.0, // Chuyển sang double
       isCompleted: json['isCompleted'],
       isClaimed: json['isClaimed'],
       dateCreated: json['dateCreated'],
@@ -86,22 +87,23 @@ class ChallengeModel extends Challenge {
     bool? status,
   }) {
     return ChallengeModel(
-        id: id ?? this.id,
-        challengeId: challengeId ?? this.challengeId,
-        challengeType: challengeType ?? this.challengeType,
-        challengeTypeName: challengeTypeName ?? this.challengeTypeName,
-        challengeName: challengeName ?? this.challengeName,
-        challengeImage: challengeImage ?? this.challengeImage,
-        studentId: studentId ?? this.studentId,
-        studentName: studentName ?? this.studentName,
-        amount: amount ?? this.amount,
-        current: current ?? this.current,
-        condition: condition ?? this.condition,
-        isCompleted: isCompleted ?? this.isCompleted,
-        isClaimed: isClaimed ?? this.isClaimed,
-        dateCreated: dateCreated ?? this.dateCreated,
-        dateUpdated: dateUpdated ?? this.dateUpdated,
-        description: description ?? this.description,
-        status: status ?? this.status);
+      id: id ?? this.id,
+      challengeId: challengeId ?? this.challengeId,
+      challengeType: challengeType ?? this.challengeType,
+      challengeTypeName: challengeTypeName ?? this.challengeTypeName,
+      challengeName: challengeName ?? this.challengeName,
+      challengeImage: challengeImage ?? this.challengeImage,
+      studentId: studentId ?? this.studentId,
+      studentName: studentName ?? this.studentName,
+      amount: amount ?? this.amount,
+      current: current ?? this.current,
+      condition: condition ?? this.condition,
+      isCompleted: isCompleted ?? this.isCompleted,
+      isClaimed: isClaimed ?? this.isClaimed,
+      dateCreated: dateCreated ?? this.dateCreated,
+      dateUpdated: dateUpdated ?? this.dateUpdated,
+      description: description ?? this.description,
+      status: status ?? this.status,
+    );
   }
 }

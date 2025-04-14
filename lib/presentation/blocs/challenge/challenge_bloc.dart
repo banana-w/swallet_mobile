@@ -63,7 +63,7 @@ class ChallengeBloc extends Bloc<ChallengeEvent, ChallengeState> {
           ChallengesLoaded(
             challenge: apiResponse!.result.toList(),
             isClaimed: true,
-          )
+          ),
         );
       } else {
         emit(ChallengeFailed(error: 'Failed'));
@@ -79,21 +79,25 @@ class ChallengeBloc extends Bloc<ChallengeEvent, ChallengeState> {
   ) async {
     emit(ClaimLoading());
     try {
-      var isSuccess = await studentRepository.postChallengeStudentId(
+      final isSuccess = await studentRepository.postChallengeStudentId(
         challengeId: event.challengeId,
         studentId: event.studentId,
         type: 1,
       );
-      if (isSuccess!) {
-        var apiResponse = await challengeRepository.fecthDailyChallenges();
-        emit(
-          ChallengesLoaded(
-            challenge: apiResponse!.result.toList(),
-            isClaimed: true,
-          ),
-        );
+
+      if (isSuccess == true) {
+        // Explicit comparison
+        final apiResponse = await challengeRepository.fecthDailyChallenges();
+        if (apiResponse?.result != null) {
+          emit(
+            ChallengesLoaded(
+              challenge: apiResponse!.result.toList(),
+              isClaimed: true, // Make sure this is set to true
+            ),
+          );
+        }
       } else {
-        emit(ChallengeFailed(error: 'Failed'));
+        emit(const ChallengeFailed(error: 'Claim failed'));
       }
     } catch (e) {
       emit(ChallengeFailed(error: e.toString()));

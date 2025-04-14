@@ -78,7 +78,6 @@ class StudentRepositoryImp implements StudentRepository {
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
-        print('API Response: $result');
         return ScanQRResponse.fromJson(result);
       } else {
         throw Exception(
