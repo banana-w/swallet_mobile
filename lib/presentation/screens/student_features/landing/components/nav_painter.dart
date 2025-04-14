@@ -12,14 +12,14 @@ class NavPainter extends CustomPainter {
 
     //path clipper
     final path = Path()
-      ..lineTo(w5 - 80, 0)
-      ..cubicTo(w5 - 30, 0, w5 - 50, h5 + 10, w5 - 3, h6 + 5)
+      ..lineTo(w5 - 70, 0)
+      ..cubicTo(w5 - 50, 0, w5 - 50, h5 + 5, w5 - 3, h6 + 5) // Adjusted for rounder curve
       ..lineTo(w5, h)
       ..lineTo(w, h)
       ..lineTo(w, 0)
-      ..lineTo(w5 + 80, 0)
-      ..cubicTo(w5 + 30, 0, w5 + 50, h5 + 10, w5 + 3, h6 + 5)
-      ..lineTo(w5 - 3, h6 + 5)
+      ..lineTo(w5 + 70, 0)
+      ..cubicTo(w5 + 50, 0, w5 + 50, h5+ 5, w5 + 3, h6 + 5) // Adjusted for rounder curve
+      ..lineTo(w5 -3, h6 + 5)
       ..lineTo(w5, h)
       ..lineTo(0, h);
 

@@ -7,122 +7,78 @@ import 'package:swallet_mobile/presentation/widgets/empty_widget.dart';
 import '../../../../../config/constants.dart';
 import '../challenge_card.dart';
 
-class InProcessChallenge extends StatelessWidget {
+class InProcessChallenge extends StatefulWidget {
   const InProcessChallenge({super.key});
 
   @override
+  State<InProcessChallenge> createState() => _InProcessChallengeState();
+}
+
+class _InProcessChallengeState extends State<InProcessChallenge> {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+  bool _isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
-    double baseHeight = 812;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
+    // Cache MediaQuery values once
+    final size = MediaQuery.of(context).size;
+    final fem = size.width / 375;
+    final ffem = fem * 0.97;
+    final hem = size.height / 812;
 
     return BlocListener<ChallengeBloc, ChallengeState>(
       listener: (context, state) {
         if (state is ClaimLoading) {
-          // Sử dụng addPostFrameCallback để tránh build trong frame hiện tại
-          SchedulerBinding.instance.addPostFrameCallback((_) {
-            showDialog<String>(
-              context: context,
-              barrierDismissible: false, // Prevent dialog from being dismissed
-              builder: (BuildContext context) {
-                return PopScope(
-                  canPop:
-                      false, // Prevent back button/gesture from closing dialog
-                  child: AlertDialog(
-                    content: const SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Center(
-                        child: CircularProgressIndicator(color: kPrimaryColor),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          });
+          _showLoadingDialog(context);
         } else if (state is ChallengesLoaded && state.isClaimed) {
-          // Đóng dialog loading nếu đang mở
-          Navigator.of(context).pop();
-
-          // Show success message
+          _hideLoadingDialog(context);
+          _showSuccessMessage(context);
+          
           SchedulerBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  elevation: 0,
-                  duration: const Duration(milliseconds: 2000),
-                  behavior: SnackBarBehavior.floating,
-                  backgroundColor: Colors.transparent,
-                  content: AwesomeSnackbarContent(
-                    title: 'Nhận thưởng',
-                    message: 'Nhận thưởng thành công!',
-                    contentType: ContentType.success,
-                  ),
-                ),
-              );
+            if (mounted) {
+              context.read<ChallengeBloc>().add(LoadDailyChallenge());
+            }
           });
         }
       },
       child: RefreshIndicator(
+        key: _refreshIndicatorKey,
         onRefresh: () async {
-          context.read<ChallengeBloc>().add(LoadDailyChallenge());
+          if (_isLoading) return;
+          
+          try {
+            await Future.sync(() { 
+              context.read<ChallengeBloc>().add(LoadDailyChallenge());
+            });
+            await Future.delayed(const Duration(milliseconds: 500));
+          } finally {
+            if (mounted) {
+              setState(() => _isLoading = false);
+            }
+          }
         },
         child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             SliverList(
               delegate: SliverChildListDelegate([
                 SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      BlocBuilder<ChallengeBloc, ChallengeState>(
-                        builder: (context, state) {
-                          if (state is ChallengeLoading) {
-                            return const Center(
-                              child: CircularProgressIndicator(
-                                color: kPrimaryColor,
-                              ),
-                            );
-                          } else if (state is ChallengesLoaded) {
-                            final challenges =
-                                state.challenge
-                                    .where((c) => !c.isClaimed)
-                                    .toList()
-                                  ..sort((a, b) {
-                                    if (a.isClaimed != b.isClaimed) {
-                                      return a.isClaimed ? 1 : -1;
-                                    }
-                                    return b.isCompleted ? 1 : -1;
-                                  });
-
-                            if (challenges.isEmpty) {
-                              return const EmptyWidget(
-                                text: 'Không có thử thách',
-                              );
-                            }
-
-                            return ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: challenges.length,
-                              itemBuilder:
-                                  (context, index) => ChallengeCard(
-                                    fem: fem,
-                                    hem: hem,
-                                    ffem: ffem,
-                                    challengeModel: challenges[index],
-                                  ),
-                            );
-                          }
-                          return const SizedBox();
-                        },
-                      ),
-                    ],
+                  width: size.width,
+                  child: BlocBuilder<ChallengeBloc, ChallengeState>(
+                    buildWhen: (previous, current) => previous != current,
+                    builder: (context, state) {
+                      if (_isLoading || state is ChallengeLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(color: kPrimaryColor),
+                        );
+                      }
+                      
+                      if (state is ChallengesLoaded) {
+                        return _buildChallengesList(state, fem, hem, ffem);
+                      }
+                      
+                      return const SizedBox();
+                    },
                   ),
                 ),
               ]),
@@ -131,5 +87,76 @@ class InProcessChallenge extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildChallengesList(ChallengesLoaded state, double fem, double hem, double ffem) {
+    final challenges = state.challenge
+        .where((c) => !c.isClaimed)
+        .toList()
+      ..sort((a, b) {
+        if (a.isClaimed != b.isClaimed) {
+          return a.isClaimed ? 1 : -1;
+        }
+        return b.isCompleted ? 1 : -1;
+      });
+
+    if (challenges.isEmpty) {
+      return const EmptyWidget(text: 'Không có thử thách');
+    }
+
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: challenges.length,
+      itemBuilder: (context, index) => ChallengeCard(
+        fem: fem,
+        hem: hem,
+        ffem: ffem,
+        challengeModel: challenges[index],
+      ),
+    );
+  }
+
+  void _showLoadingDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return PopScope(
+          canPop: false,
+          child: const AlertDialog(
+            content: SizedBox(
+              width: 100,
+              height: 100,
+              child: Center(
+                child: CircularProgressIndicator(color: kPrimaryColor),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _hideLoadingDialog(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
+  void _showSuccessMessage(BuildContext context) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          elevation: 0,
+          duration: const Duration(milliseconds: 2000),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'Nhận thưởng',
+            message: 'Nhận thưởng thành công!',
+            contentType: ContentType.success,
+          ),
+        ),
+      );
   }
 }

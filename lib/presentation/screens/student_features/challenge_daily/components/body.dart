@@ -13,62 +13,129 @@ import 'in_process/in_process_challenge.dart';
 import 'is_claimed/is_claimed_challenge.dart';
 import 'is_completed/is_completed_challenge.dart';
 
-class ChallengeDailyBody extends StatefulWidget {
+class ChallengeDailyBody extends StatelessWidget {
   const ChallengeDailyBody({super.key});
 
-  @override
-  State<ChallengeDailyBody> createState() => _BodyState();
-}
+  List<Widget> _buildTabs() {
+    return [
+      const Tab(text: 'Đang thực hiện'),
+      BlocBuilder<ChallengeBloc, ChallengeState>(
+        builder: (context, state) {
+          if (state is ChallengesLoaded) {
+            final hasUnclaimedCompletedChallenges = state.challenge
+                .any((c) => c.isCompleted && !c.isClaimed);
 
-class _BodyState extends State<ChallengeDailyBody> with SingleTickerProviderStateMixin {
-  late TabController _controller;
-
-  List<Widget> list = [
-    Tab(
-      text: 'Đang thực hiện',
-    ),
-    BlocBuilder<ChallengeBloc, ChallengeState>(
-      builder: (context, state) {
-        if (state is ChallengesLoaded) {
-          final challenges = state.challenge
-              .where((c) => (c.isCompleted && !c.isClaimed))
-              .toList();
-          if (challenges.isNotEmpty) {
-            return Stack(
-              children: [
-                Tab(text: 'Nhận thưởng'),
-                Positioned(
-                  top: 10,
-                  right: 0,
-                  child: Container(
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
+            if (hasUnclaimedCompletedChallenges) {
+              return Stack(
+                children: [
+                  const Tab(text: 'Nhận thưởng'),
+                  Positioned(
+                    top: 10,
+                    right: 0,
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
                         color: Colors.red,
-                        borderRadius: BorderRadius.circular(50)),
-                  ),
-                )
-              ],
-            );
-          } else {
-            return Tab(text: 'Nhận thưởng');
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                  )
+                ],
+              );
+            }
           }
-        }
-        return Tab(text: 'Nhận thưởng');
+          return const Tab(text: 'Nhận thưởng');
+        },
+      ),
+      const Tab(text: 'Đã hoàn thành'),
+    ];
+  }
+
+  Widget _buildAppBar(BuildContext context, {
+    required double hem,
+    required double fem,
+    required double ffem,
+  }) {
+    final roleState = context.read<RoleAppBloc>().state;
+    
+    return SliverAppBar(
+      pinned: true,
+      floating: true,
+      elevation: 0,
+      iconTheme: const IconThemeData(color: Colors.white),
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/background_splash.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+      toolbarHeight: 40 * hem,
+      centerTitle: true,
+      title: Padding(
+        padding: EdgeInsets.only(top: 10 * hem),
+        child: Text(
+          'Nhiệm vụ ngày',
+          style: GoogleFonts.openSans(
+            fontSize: 22 * ffem,
+            fontWeight: FontWeight.w900,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      actions: [
+        Padding(
+          padding: EdgeInsets.only(top: 5 * fem, right: 20 * fem),
+          child: _buildNotificationButton(context, fem, roleState),
+        ),
+      ],
+      bottom: TabBar(
+        indicatorColor: Colors.white,
+        indicatorSize: TabBarIndicatorSize.tab,
+        indicatorWeight: 3,
+        labelColor: Colors.white,
+        labelStyle: GoogleFonts.openSans(
+          fontSize: 12 * ffem,
+          height: 1.3625 * ffem / fem,
+          fontWeight: FontWeight.w700,
+        ),
+        unselectedLabelColor: Colors.white60,
+        unselectedLabelStyle: GoogleFonts.openSans(
+          fontSize: 12 * ffem,
+          fontWeight: FontWeight.w700,
+        ),
+        tabs: _buildTabs(),
+      ),
+    );
+  }
+
+  Widget _buildNotificationButton(BuildContext context, double fem, RoleAppState roleState) {
+    return BlocBuilder<NotificationBloc, NotificationState>(
+      builder: (context, state) {
+        final bool isNewNotification = state is NewNotification;
+        return IconButton(
+          icon: Icon(
+            isNewNotification ? Icons.notifications_active_rounded : Icons.notifications,
+            color: isNewNotification ? Colors.yellow : Colors.white,
+            size: 25 * fem,
+          ),
+          onPressed: () => _handleNotificationPress(context, roleState, isNewNotification),
+        );
       },
-    ),
-    Tab(text: 'Đã hoàn thành'),
-  ];
+    );
+  }
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = TabController(length: list.length, vsync: this);
-
-    _controller.addListener(() {
-      setState(() {
-      });
-    });
+  void _handleNotificationPress(BuildContext context, RoleAppState roleState, bool isNewNotification) {
+    if (roleState is Unverified) {
+      Navigator.pushNamed(context, UnverifiedScreen.routeName);
+    } else {
+      if (isNewNotification) {
+        context.read<NotificationBloc>().add(LoadNotification());
+      }
+      Navigator.pushNamed(context, NotificationListScreen.routeName);
+    }
   }
 
   @override
@@ -78,156 +145,65 @@ class _BodyState extends State<ChallengeDailyBody> with SingleTickerProviderStat
     double ffem = fem * 0.97;
     double baseHeight = 812;
     double hem = MediaQuery.of(context).size.height / baseHeight;
-    final roleState = context.read<RoleAppBloc>().state;
+
     return BlocListener<InternetBloc, InternetState>(
-      listener: (context, state) {
-        if (state is Connected) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-              elevation: 0,
-              duration: const Duration(milliseconds: 2000),
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.transparent,
-              content: AwesomeSnackbarContent(
-                title: 'Đã kết nối internet',
-                message: 'Đã kết nối internet!',
-                contentType: ContentType.success,
-              ),
-            ));
-        } else if (state is NotConnected) {
-          showCupertinoDialog(
-            context: context,
-            builder: (context) {
-              return CupertinoAlertDialog(
-                title: const Text('Không kết nối Internet'),
-                content: Text('Vui lòng kết nối Internet'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        final stateInternet =
-                            context.read<InternetBloc>().state;
-                        if (stateInternet is Connected) {
-                          Navigator.pop(context);
-                        } else {}
-                      },
-                      child: const Text('Đồng ý'))
-                ],
-              );
-            },
-          );
-        }
-      },
+      listener: _handleInternetState,
       child: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-             SliverAppBar(
-              pinned: true,
-              floating: true,
-              elevation: 0,
-              iconTheme: IconThemeData(color: Colors.white), // <-- đổi màu mũi tên tại đây
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image:
-                            AssetImage('assets/images/background_splash.png'),
-                        fit: BoxFit.cover)),
-              ),
-              toolbarHeight: 40 * hem,
-              centerTitle: true,
-              title: Padding(
-                padding: EdgeInsets.only(top: 10 * hem),
-                child: Text(
-                  'Nhiệm vụ ngày',
-                  style: GoogleFonts.openSans(
-                      textStyle: TextStyle(
-                          fontSize: 22 * ffem,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white)),
-                ),
-              ),
-              actions: [
-                Padding(
-                  padding: EdgeInsets.only(top: 5*fem, right: 20 * fem),
-                  child: BlocBuilder<NotificationBloc, NotificationState>(
-                    builder: (context, state) {
-                      if (state is NewNotification) {
-                        return IconButton(
-                          icon: Icon(
-                            Icons.notifications_active_rounded,
-                            color: Colors.yellow,
-                            size: 25 * fem,
-                          ),
-                          onPressed: () {
-                            if (roleState is Unverified) {
-                              Navigator.pushNamed(
-                                  context, UnverifiedScreen.routeName);
-                            } else {
-                              context
-                                  .read<NotificationBloc>()
-                                  .add(LoadNotification());
-                              Navigator.pushNamed(
-                                  context, NotificationListScreen.routeName);
-                            }
-                          },
-                        );
-                      }
-                      return IconButton(
-                        icon: Icon(
-                          Icons.notifications,
-                          color: Colors.white,
-                          size: 25 * fem,
-                        ),
-                        onPressed: () {
-                          if (roleState is Unverified) {
-                            Navigator.pushNamed(
-                                context, UnverifiedScreen.routeName);
-                          } else {
-                            Navigator.pushNamed(
-                                context, NotificationListScreen.routeName);
-                          }
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
-              bottom: TabBar(
-                  controller: _controller,
-                  indicatorColor: Colors.white,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  indicatorWeight: 3,
-                  // indicatorPadding: EdgeInsets.only(bottom: 1 * fem),
-                  labelColor: Colors.white,
-                  labelStyle: GoogleFonts.openSans(
-                      textStyle: TextStyle(
-                    fontSize: 12 * ffem,
-                    height: 1.3625 * ffem / fem,
-                    fontWeight: FontWeight.w700,
-                  )),
-                  unselectedLabelColor: Colors.white60,
-                  unselectedLabelStyle: GoogleFonts.openSans(
-                      textStyle: TextStyle(
-                    fontSize: 12 * ffem,
-                    fontWeight: FontWeight.w700,
-                  )),
-                  tabs: list),
-            )
-          ];
-        },
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          _buildAppBar(context, hem: hem, fem: fem, ffem: ffem),
+        ],
         body: TabBarView(
-          controller: _controller,
-          children: [
-            //In process Challenge
+          children: const [
             InProcessChallenge(),
-
-            //complete Challenge
             IsCompletedChallenge(),
-
-            //completed Challenge
-            IsClaimedChallenge()
+            IsClaimedChallenge(),
           ],
         ),
+      ),
+    );
+  }
+
+  void _handleInternetState(BuildContext context, InternetState state) {
+    if (state is Connected) {
+      _showConnectedSnackBar(context);
+    } else if (state is NotConnected) {
+      _showNoInternetDialog(context);
+    }
+  }
+
+  void _showConnectedSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        elevation: 0,
+        duration: const Duration(milliseconds: 2000),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Đã kết nối internet',
+          message: 'Đã kết nối internet!',
+          contentType: ContentType.success,
+        ),
+      ));
+  }
+
+  void _showNoInternetDialog(BuildContext context) {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: const Text('Không kết nối Internet'),
+        content: const Text('Vui lòng kết nối Internet'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              final stateInternet = context.read<InternetBloc>().state;
+              if (stateInternet is Connected) {
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Đồng ý'),
+          ),
+        ],
       ),
     );
   }
