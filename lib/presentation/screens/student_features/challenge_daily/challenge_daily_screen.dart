@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/challenge_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/challenge/challenge_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/challenge_daily/components/body.dart';
@@ -34,9 +36,7 @@ class _ChallengeScreenState extends State<ChallengeDailyScreen> {
   @override
   void initState() {
     super.initState();
-    // Load dữ liệu challenge khi màn hình được khởi tạo
-    context.read<ChallengeBloc>().add(LoadDailyChallenge());
-    context.read<RoleAppBloc>().add(RefreshStudentData());
+    context.read<RoleAppBloc>().add(RoleAppStart());
   }
 
   @override
@@ -49,11 +49,11 @@ class _ChallengeScreenState extends State<ChallengeDailyScreen> {
     hem = MediaQuery.of(context).size.height / baseHeight;
 
     return SafeArea(
-    child: Scaffold(
-      backgroundColor: klighGreyColor,
-      body: _buildBody(context),
-    ),
-  );
+      child: Scaffold(
+        backgroundColor: klighGreyColor,
+        body: _buildBody(context),
+      ),
+    );
   }
 
   Widget _buildBody(BuildContext context) {
@@ -72,21 +72,19 @@ class _ChallengeScreenState extends State<ChallengeDailyScreen> {
         }
 
         if (roleState is Verified) {
-          return BlocBuilder<ChallengeBloc, ChallengeState>(
-            builder: (context, challengeState) {
-              if (challengeState is ChallengeLoading) {
-                return Center(
-                  child: Lottie.asset('assets/animations/loading-screen.json'),
-                );
-              }
-
-              if (challengeState is ChallengesLoaded) {
-                return ChallengeDailyBody();
-              }
-
-              // Trường hợp mặc định hoặc lỗi
-              return const Center(child: Text('Something went wrong'));
-            },
+          return BlocProvider(
+            create:
+                (context) => ChallengeBloc(challengeRepository: context.read<ChallengeRepository>(), studentRepository: context.read<StudentRepository>())
+                ..add(LoadDailyChallenge()),
+            child: SafeArea(
+              child: DefaultTabController(
+                length: 3,
+                child: Scaffold(
+                  backgroundColor: klighGreyColor,
+                  body: ChallengeDailyBody(),
+                ),
+              ),
+            ),
           );
         }
         return Center(child: CardForUnVerified(fem: fem, hem: hem, ffem: ffem));

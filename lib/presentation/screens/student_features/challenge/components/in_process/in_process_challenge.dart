@@ -42,8 +42,8 @@ class InProcessChallenge extends StatelessWidget {
                 Future.delayed(Duration(seconds: 5));
                 return AlertDialog(
                     content: SizedBox(
-                        width: 250,
-                        height: 250,
+                        width: 100,
+                        height: 100,
                         child: Center(
                             child: CircularProgressIndicator(
                                 color: kPrimaryColor))));

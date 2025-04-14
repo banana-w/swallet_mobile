@@ -74,7 +74,7 @@ class ButtonProfile extends StatelessWidget {
                   svgIcon,
                   height: heightIcon * hem,
                   width: widthIcon * fem,
-                  colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
                 ),
               ),
             ),

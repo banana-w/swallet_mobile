@@ -6,10 +6,12 @@ const kAnimationDuration = Duration(milliseconds: 200);
 
 //colors
 // const kPrimaryColor = Color(0xff2ecc71);
-const kPrimaryColor = Color(0xFFFF914D);
+const kPrimaryColor = Color(0xFF0E4B5A);
 // const klightPrimaryColor = Color(0xff83f28f);
-const klightPrimaryColor = Color(0xFFFFB88C);
-const kDarkPrimaryColor = Color(0xFFE67636);
+const klightPrimaryColor = Color(0xFF3E6C81);
+const kDarkPrimaryColor = Color(0xFF083D52);
+const kIconColor = Color(0xfffbfbfb);
+const kNauVang = Color(0xFFC89A6D);
 const kLowTextColor = Color(0xff989da3);
 const klowTextGrey = Color(0xfff4b5563);
 const kbgWhiteColor = Color.fromARGB(255, 246, 242, 250);

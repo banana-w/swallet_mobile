@@ -486,8 +486,8 @@ class Body extends StatelessWidget {
                                             fem: fem,
                                             hem: hem,
                                             ffem: ffem,
-                                            widthIcon: 16,
-                                            heightIcon: 16,
+                                            widthIcon: 30,
+                                            heightIcon: 30,
                                             onPressed: () async {
                                               Navigator.pushNamed(
                                                 context,
@@ -503,8 +503,8 @@ class Body extends StatelessWidget {
                                             fem: fem,
                                             hem: hem,
                                             ffem: ffem,
-                                            widthIcon: 20,
-                                            heightIcon: 20,
+                                            widthIcon: 25,
+                                            heightIcon: 25,
                                             onPressed: () async {
                                               Navigator.pushNamed(
                                                 context,
