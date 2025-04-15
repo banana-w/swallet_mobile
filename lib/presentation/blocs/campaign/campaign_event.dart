@@ -8,7 +8,7 @@ final class LoadCampaigns extends CampaignEvent {
   final int page;
   final int limit;
 
-  const LoadCampaigns({this.page = 1, this.limit = 3});
+  const LoadCampaigns({this.page = 1, this.limit = 20});
   @override
   List<Object?> get props => [page, limit];
 }

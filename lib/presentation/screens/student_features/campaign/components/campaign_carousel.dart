@@ -28,11 +28,12 @@ class _CampaignCarouselState extends State<CampaignCarousel> {
   late List<CampaignModel> camps;
   @override
   void initState() {
-    // if (widget.campaigns.length >= 3) {
-    //   camps = [widget.campaigns[0], widget.campaigns[1], widget.campaigns[2]];
-    // } else if (widget.campaigns.length < 3) {
+    if (widget.campaigns.length >= 6) {
+      camps = [widget.campaigns[0], widget.campaigns[1], widget.campaigns[2], 
+        widget.campaigns[3], widget.campaigns[4], widget.campaigns[5]];
+    } else if (widget.campaigns.length < 6) {
       camps = widget.campaigns;
-    // }
+    }
     super.initState();
   }
 
