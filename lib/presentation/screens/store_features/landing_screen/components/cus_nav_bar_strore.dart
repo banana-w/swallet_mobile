@@ -39,7 +39,7 @@ class CusNavStoreBar extends StatelessWidget {
                               width: 3 * fem,
                               color:
                                   state.tabIndex == index
-                                      ? kPrimaryColor
+                                      ? kNauVang
                                       : Colors.white10,
                             ),
                           ),
@@ -71,8 +71,8 @@ class CusNavStoreBar extends StatelessWidget {
                                       height: 1.3625 * ffem / fem,
                                       color:
                                           state.tabIndex == index
-                                              ? kPrimaryColor
-                                              : kLowTextColor,
+                                              ? kNauVang
+                                              : kIconColor,
                                     ),
                                   ),
                                 ),
@@ -92,7 +92,7 @@ class CusNavStoreBar extends StatelessWidget {
                               width: 3 * fem,
                               color:
                                   state.tabIndex == index
-                                      ? kPrimaryColor
+                                      ? kNauVang
                                       : Colors.white10,
                             ),
                           ),
@@ -124,8 +124,8 @@ class CusNavStoreBar extends StatelessWidget {
                                       height: 1.3625 * ffem / fem,
                                       color:
                                           state.tabIndex == index
-                                              ? kPrimaryColor
-                                              : kLowTextColor,
+                                              ? kNauVang
+                                              : kIconColor,
                                     ),
                                   ),
                                 ),
@@ -149,7 +149,7 @@ class CusNavStoreBar extends StatelessWidget {
                             width: 3 * fem,
                             color:
                                 state.tabIndex == index
-                                    ? kPrimaryColor
+                                    ? kNauVang
                                     : Colors.white10,
                           ),
                         ),
@@ -181,8 +181,8 @@ class CusNavStoreBar extends StatelessWidget {
                                     height: 1.3625 * ffem / fem,
                                     color:
                                         state.tabIndex == index
-                                            ? kPrimaryColor
-                                            : kLowTextColor,
+                                            ? kNauVang
+                                            : kIconColor,
                                   ),
                                 ),
                               ),

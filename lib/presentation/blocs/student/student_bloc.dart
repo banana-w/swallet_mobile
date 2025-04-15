@@ -108,8 +108,9 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
         event.isUsed,
         id: event.id,
       );
-      bool hasReachedMax = apiResponse!.result.length < event.limit ||
-        event.page >= apiResponse.totalPages;
+      bool hasReachedMax =
+          apiResponse!.result.length < event.limit ||
+          event.page >= apiResponse.totalPages;
 
       if (hasReachedMax) {
         var vouchers = apiResponse.result.toList();
@@ -152,7 +153,10 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
             (state as StudentVouchersLoaded1).brandVoucherModels,
           );
           emit(
-            StudentVouchersLoaded1(brandVoucherModels: vouchers, hasReachedMax: true),
+            StudentVouchersLoaded1(
+              brandVoucherModels: vouchers,
+              hasReachedMax: true,
+            ),
           );
         } else {
           isLoadingMore = true;
@@ -550,11 +554,17 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
       );
       var student = await AuthenLocalDataSource.getStudent();
 
+      var voucherItemId = await studentRepository.fetchVoucherItemAvailable(
+        voucherId: event.voucherId,
+        studentId: student!.id,
+      );
+
       emit(
         StudentVoucherItemLoaded(
           voucherStudentItemModel: apiResponse!,
           campaignDetailModel: campaignDetail!,
-          studentId: student!.id,
+          studentId: student.id,
+          voucherItemId: voucherItemId ?? "code",
         ),
       );
     } catch (e) {

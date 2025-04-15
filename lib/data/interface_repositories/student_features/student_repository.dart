@@ -76,6 +76,11 @@ abstract class StudentRepository {
     required String voucherId,
   });
   
+  Future<String?> fetchVoucherItemAvailable({
+    required String voucherId,
+    required String studentId,
+  });
+
   Future<CampaignDetailModel?> fecthCampaignById({required String id});
 
   Future<List<String>?> fetchWishListByStudentId();
