@@ -551,4 +551,30 @@ class StudentRepositoryImp implements StudentRepository {
       throw Exception(e.toString());
     }
   }
+  
+  @override
+  Future<String?> fetchVoucherItemAvailable({
+    required String voucherId,
+    required String studentId,
+  }) async {
+    final url = Uri.parse('${baseURL}VoucherItem/viId?voucherId=$voucherId&studentId=$studentId');
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'accept': 'text/plain',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
 }
+

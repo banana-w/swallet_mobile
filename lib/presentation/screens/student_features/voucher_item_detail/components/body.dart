@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -39,6 +40,7 @@ class Body extends StatelessWidget {
           } else if (state is StudentVoucherItemLoaded) {
             var voucher = state.voucherStudentItemModel;
             var campaign = state.campaignDetailModel;
+            var voucherItemId = state.voucherItemId;
             return CustomScrollView(
               slivers: [
                 SliverList(
@@ -278,8 +280,7 @@ class Body extends StatelessWidget {
                                               bottom: 5 * hem,
                                             ),
                                             child: Text(
-                                              voucher.brandName
-                                                  .toUpperCase(),
+                                              voucher.brandName.toUpperCase(),
                                               softWrap: true,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
@@ -339,11 +340,7 @@ class Body extends StatelessWidget {
                         SizedBox(height: 5 * hem),
                         GestureDetector(
                           onTap: () {
-                            _detailModelBottomSheet(
-                              context,
-                              voucher,
-                              campaign,
-                            );
+                            _detailModelBottomSheet(context, voucher, campaign);
                           },
                           // onTap: () {
                           //   checkLength(campaignDetailModel.condition);
@@ -468,7 +465,8 @@ class Body extends StatelessWidget {
                                 width: 300 * fem,
                                 height: 300 * hem,
                                 child: QrImageView(
-                                  data:  '${voucher.id},${state.studentId},${campaign.id}',                                                                               // Xem lai cai nay duoc khong
+                                  data:
+                                      '${voucher.id},${state.studentId},${campaign.id}', // Xem lai cai nay duoc khong
                                   padding: EdgeInsets.all(20 * fem),
                                   version: QrVersions.auto,
                                   backgroundColor: Colors.white,
@@ -485,6 +483,34 @@ class Body extends StatelessWidget {
                               SizedBox(height: 15 * hem),
                             ],
                           ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              voucherItemId,
+                              style: GoogleFonts.openSans(
+                                fontSize: 15 * ffem,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(width: 5),
+                            IconButton(
+                              onPressed: () {
+                                Clipboard.setData(
+                                  ClipboardData(text: voucherItemId),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Đã sao chép mã voucher'),
+                                  ),
+                                );
+                              },
+                              icon: Icon(Icons.copy, size: 20),
+                              tooltip: 'Sao chép mã',
+                            ),
+                          ],
                         ),
                       ],
                     ),

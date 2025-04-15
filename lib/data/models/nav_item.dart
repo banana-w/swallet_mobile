@@ -68,44 +68,44 @@ class NavItemStore {
     NavItemStore(
       SvgPicture.asset(
         'assets/icons/voucher-navbar-icon.svg',
-        colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kNauVang, BlendMode.srcIn),
       ),
       SvgPicture.asset(
         'assets/icons/voucher-navbar-icon.svg',
-        colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
       "Ưu đãi",
     ),
     NavItemStore(
       SvgPicture.asset(
         'assets/icons/dashboard-icon.svg',
-        colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kNauVang, BlendMode.srcIn),
       ),
       SvgPicture.asset(
         'assets/icons/dashboard-icon.svg',
-        colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
       "Thống kê",
     ),
     NavItemStore(
       SvgPicture.asset(
         'assets/icons/transaction-icon.svg',
-        colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kNauVang, BlendMode.srcIn),
       ),
       SvgPicture.asset(
         'assets/icons/transaction-icon.svg',
-        colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
       "Giao dịch",
     ),
     NavItemStore(
       SvgPicture.asset(
         'assets/icons/profile-navbar-icon.svg',
-        colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kNauVang, BlendMode.srcIn),
       ),
       SvgPicture.asset(
         'assets/icons/profile-navbar-icon.svg',
-        colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
       "Cá nhân",
     ),
@@ -123,44 +123,44 @@ class NavItemLecturer {
     NavItemLecturer(
       SvgPicture.asset(
         'assets/icons/university.svg',
-        colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kNauVang, BlendMode.srcIn),
       ),
       SvgPicture.asset(
         'assets/icons/university.svg',
-        colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
       "Campus",
     ),
     NavItemLecturer(
       SvgPicture.asset(
         'assets/icons/dashboard-icon.svg',
-        colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kNauVang, BlendMode.srcIn),
       ),
       SvgPicture.asset(
         'assets/icons/dashboard-icon.svg',
-        colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
       "Thống kê",
     ),
     NavItemLecturer(
       SvgPicture.asset(
         'assets/icons/transaction-icon.svg',
-        colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kNauVang, BlendMode.srcIn),
       ),
       SvgPicture.asset(
         'assets/icons/transaction-icon.svg',
-        colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
       "Giao dịch",
     ),
     NavItemLecturer(
       SvgPicture.asset(
         'assets/icons/profile-navbar-icon.svg',
-        colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kNauVang, BlendMode.srcIn),
       ),
       SvgPicture.asset(
         'assets/icons/profile-navbar-icon.svg',
-        colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
       "Cá nhân",
     ),

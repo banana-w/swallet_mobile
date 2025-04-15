@@ -13,6 +13,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/challenge_d
 import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_list_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/components/tab_isused_voucher.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/components/tab_voucher.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/voucher_history/components/body_voucher_history.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
 class Body extends StatefulWidget {
@@ -281,10 +282,8 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
                 create:
                     (context) => StudentBloc(
                       studentRepository: context.read<StudentRepository>(),
-                    )..add(
-                      LoadStudentVouchers(id: widget.studentId, isUsed: true),
                     ),
-                child: TabIsUsedVoucher(studentId: widget.studentId),
+                child: BodyVoucherHistory(studentId: widget.studentId),
               ),
             ],
           ),

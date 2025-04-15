@@ -110,9 +110,10 @@ final class StudentVoucherItemLoaded extends StudentState {
   final CampaignVoucherDetailModel voucherStudentItemModel;
   final CampaignDetailModel campaignDetailModel;
   final String studentId;
+  final String voucherItemId;
 
   const StudentVoucherItemLoaded({required this.voucherStudentItemModel, 
-    required this.campaignDetailModel, required this.studentId});
+    required this.campaignDetailModel, required this.studentId, this.voucherItemId = ''});
 
   @override
   List<Object?> get props => [voucherStudentItemModel, campaignDetailModel, studentId];
