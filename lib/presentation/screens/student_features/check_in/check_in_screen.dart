@@ -15,6 +15,8 @@ import 'package:swallet_mobile/data/interface_repositories/student_features/whee
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/qr_view/components/qr_scanner_overlay.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/check_in/check_in_failed.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/check_in/check_in_success.dart';
 
 const String baseUrl =
     "https://swallet-api-2025-capstoneproject.onrender.com/api/";
@@ -234,24 +236,101 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
     return await Geolocator.getCurrentPosition();
   }
 
+  // Future<void> _checkInWithQR(String qrCode) async {
+  //   final student = await AuthenLocalDataSource.getStudent();
+  //   final studentId = student?.id;
+
+  //   try {
+  //     // Lấy vị trí GPS hiện tại
+  //     Position position = await _determinePosition();
+
+  //     //       final baseURL = 'https://10.0.2.2:7137/api/';
+  //     //       final client = http.Client();
+  //     // final ioClient =
+  //     //     HttpClient()
+  //     //       ..badCertificateCallback =
+  //     //           (X509Certificate cert, String host, int port) =>
+  //     //               true; // Bỏ qua kiểm tra chứng chỉ
+  //     // final httpClient = IOClient(ioClient);
+
+  //     // Gửi yêu cầu check-in với GPS
+  //     final response = await http.post(
+  //       Uri.parse('${baseUrl}CheckIn/qr'),
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: jsonEncode({
+  //         'studentId': studentId,
+  //         'qrCode': qrCode,
+  //         'latitude': position.latitude,
+  //         'longitude': position.longitude,
+  //       }),
+  //     );
+
+  //     var data = jsonDecode(response.body);
+  //     if (response.statusCode == 200) {
+  //       await context.read<SpinHistoryRepository>().incrementBonusSpins(
+  //         studentId!,
+  //         DateTime.now(),
+  //       );
+
+  //       ScaffoldMessenger.of(context)
+  //         ..hideCurrentSnackBar()
+  //         ..showSnackBar(
+  //           SnackBar(
+  //             elevation: 0,
+  //             duration: const Duration(milliseconds: 2000),
+  //             behavior: SnackBarBehavior.floating,
+  //             backgroundColor: Colors.transparent,
+  //             content: AwesomeSnackbarContent(
+  //               title: 'Thành công!',
+  //               message:
+  //                   'Check-in thành công, bạn nhận được ${data['pointsAwarded'] ?? 10} xu và 1 lượt quay Lucky Wheel!',
+  //               contentType: ContentType.success,
+  //             ),
+  //           ),
+  //         );
+  //     } else {
+  //       throw Exception(data['message'] ?? 'Check-in thất bại');
+  //     }
+  //   } catch (e) {
+  //     String errorMessage;
+  //     if (e.toString().contains("Bạn không ở gần địa điểm này để check-in")) {
+  //       errorMessage = 'Bạn không ở gần địa điểm này để check-in';
+  //     } else if (e.toString().contains(
+  //       "Bạn đã check-in tại địa điểm này hôm nay",
+  //     )) {
+  //       errorMessage = 'Bạn đã check-in tại địa điểm này hôm nay';
+  //     } else {
+  //       errorMessage = e.toString().replaceFirst(
+  //         'Exception: ',
+  //         '',
+  //       ); // Hiển thị lỗi khác nếu có
+  //     }
+
+  //     ScaffoldMessenger.of(context)
+  //       ..hideCurrentSnackBar()
+  //       ..showSnackBar(
+  //         SnackBar(
+  //           elevation: 0,
+  //           duration: const Duration(milliseconds: 2000),
+  //           behavior: SnackBarBehavior.floating,
+  //           backgroundColor: Colors.transparent,
+  //           content: AwesomeSnackbarContent(
+  //             title: 'Lỗi!',
+  //             message: errorMessage,
+  //             contentType: ContentType.failure,
+  //           ),
+  //         ),
+  //       );
+  //   }
+  // }
+
   Future<void> _checkInWithQR(String qrCode) async {
     final student = await AuthenLocalDataSource.getStudent();
     final studentId = student?.id;
 
     try {
-      // Lấy vị trí GPS hiện tại
       Position position = await _determinePosition();
 
-      //       final baseURL = 'https://10.0.2.2:7137/api/';
-      //       final client = http.Client();
-      // final ioClient =
-      //     HttpClient()
-      //       ..badCertificateCallback =
-      //           (X509Certificate cert, String host, int port) =>
-      //               true; // Bỏ qua kiểm tra chứng chỉ
-      // final httpClient = IOClient(ioClient);
-
-      // Gửi yêu cầu check-in với GPS
       final response = await http.post(
         Uri.parse('${baseUrl}CheckIn/qr'),
         headers: {'Content-Type': 'application/json'},
@@ -270,22 +349,13 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
           DateTime.now(),
         );
 
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            SnackBar(
-              elevation: 0,
-              duration: const Duration(milliseconds: 2000),
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.transparent,
-              content: AwesomeSnackbarContent(
-                title: 'Thành công!',
-                message:
-                    'Check-in thành công, bạn nhận được ${data['pointsAwarded'] ?? 10} xu và 1 lượt quay Lucky Wheel!',
-                contentType: ContentType.success,
-              ),
-            ),
-          );
+        // Điều hướng đến CheckInSuccessScreen
+        Navigator.pushReplacement(
+          context,
+          CheckInSuccessScreen.route(
+            pointsAwarded: data['pointsAwarded'] ?? 10,
+          ),
+        );
       } else {
         throw Exception(data['message'] ?? 'Check-in thất bại');
       }
@@ -298,27 +368,14 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
       )) {
         errorMessage = 'Bạn đã check-in tại địa điểm này hôm nay';
       } else {
-        errorMessage = e.toString().replaceFirst(
-          'Exception: ',
-          '',
-        ); // Hiển thị lỗi khác nếu có
+        errorMessage = e.toString().replaceFirst('Exception: ', '');
       }
 
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(
-            elevation: 0,
-            duration: const Duration(milliseconds: 2000),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.transparent,
-            content: AwesomeSnackbarContent(
-              title: 'Lỗi!',
-              message: errorMessage,
-              contentType: ContentType.failure,
-            ),
-          ),
-        );
+      // Điều hướng đến CheckInFailedScreen
+      Navigator.pushReplacement(
+        context,
+        CheckInFailedScreen.route(failedReason: errorMessage),
+      );
     }
   }
 
