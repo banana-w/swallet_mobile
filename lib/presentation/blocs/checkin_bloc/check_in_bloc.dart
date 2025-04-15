@@ -63,6 +63,9 @@ class CheckInBloc extends Bloc<CheckInEvent, CheckInState> {
       final checkInData = await checkInRepository.checkIn(studentId);
 
       emit(
+        CheckInSuccess(),
+      );
+      emit(
         CheckInLoaded(
           checkInHistory: checkInData.checkInHistory,
           streak: checkInData.streak,

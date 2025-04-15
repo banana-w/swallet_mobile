@@ -7,6 +7,9 @@ class CheckInState extends Equatable {
 
 class CheckInLoading extends CheckInState {}
 
+class CheckInSuccess extends CheckInState {}
+
+
 class CheckInLoaded extends CheckInState {
   final List<bool> checkInHistory; // Lịch sử điểm danh (7 ngày)
   final int streak; // Chuỗi điểm danh liên tục
