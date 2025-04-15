@@ -222,6 +222,11 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
         1000 *
         totalProbability;
 
+    // Duyệt qua từng phần thưởng trong danh sách prizes:
+    // Cộng probability của phần thưởng hiện tại vào cumulativeProbability.
+    // Nếu randomValue nhỏ hơn hoặc bằng cumulativeProbability, trả về chỉ số i của phần thưởng đó.
+    // Nếu không phần thưởng nào được chọn (do lỗi làm tròn hoặc trường hợp đặc biệt), trả về chỉ số của phần thưởng cuối cùng (prizes.length - 1).
+
     double cumulativeProbability = 0;
     for (int i = 0; i < prizes.length; i++) {
       cumulativeProbability += prizes[i].probability;
