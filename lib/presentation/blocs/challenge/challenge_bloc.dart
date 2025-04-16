@@ -50,7 +50,7 @@ class ChallengeBloc extends Bloc<ChallengeEvent, ChallengeState> {
     ClaimChallengeStudentId event,
     Emitter<ChallengeState> emit,
   ) async {
-    emit(ClaimLoading());
+    emit(ClaimAchieveLoading());
     try {
       var isSuccess = await studentRepository.postChallengeStudentId(
         challengeId: event.challengeId,
@@ -60,7 +60,7 @@ class ChallengeBloc extends Bloc<ChallengeEvent, ChallengeState> {
       if (isSuccess!) {
         var apiResponse = await challengeRepository.fecthChallenges();
         emit(
-          ChallengesLoaded(
+          ChallengesAchieveLoaded(
             challenge: apiResponse!.result.toList(),
             isClaimed: true,
           ),

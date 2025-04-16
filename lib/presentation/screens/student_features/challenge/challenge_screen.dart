@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/challenge_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/challenge/challenge_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/challenge/components/body.dart';
@@ -33,77 +35,60 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<ChallengeBloc>().add(LoadChallenge());
-    context.read<RoleAppBloc>().add(
-      RoleAppStart(),
-    ); // Đổi thành sự kiện bạn đang dùng
+    context.read<RoleAppBloc>().add(RoleAppStart());
   }
 
   @override
   Widget build(BuildContext context) {
+    // Tính toán các giá trị responsive
     double baseWidth = 375;
     fem = MediaQuery.of(context).size.width / baseWidth;
     ffem = fem * 0.97;
     double baseHeight = 812;
     hem = MediaQuery.of(context).size.height / baseHeight;
 
-    final roleState = context.watch<RoleAppBloc>().state;
-    return authenScreen(roleState, fem, hem, ffem, context);
-  }
-
-  Widget authenScreen(
-    roleState,
-    double fem,
-    double hem,
-    double ffem,
-    BuildContext context,
-  ) {
-    if (roleState is RoleAppLoading) {
-      return SafeArea(
-        child: Scaffold(
-          backgroundColor: klighGreyColor,
-          appBar: AppBarCampaign(hem: hem, ffem: ffem, fem: fem),
-          body: Center(
-            child: Lottie.asset('assets/animations/loading-screen.json'),
-          ),
-        ),
-      );
-    } else if (roleState is Unverified) {
-      return _buildUnverified(fem, hem, ffem);
-    } else if (roleState is Verified) {
-      return _buildVerifiedStudent(fem, hem, ffem);
-    }
-    return _buildUnverified(fem, hem, ffem);
-  }
-
-  Widget _buildUnverified(double fem, double hem, double ffem) {
-    return Scaffold(
-      appBar: AppBarCampaign(hem: hem, ffem: ffem, fem: fem),
-      body: Container(
-        color: klighGreyColor,
-        child: Center(child: CardForUnVerified(fem: fem, hem: hem, ffem: ffem)),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: klighGreyColor,
+        body: _buildBody(context),
       ),
     );
   }
 
-  Widget _buildVerifiedStudent(double fem, double hem, double ffem) {
-    return BlocBuilder<ChallengeBloc, ChallengeState>(
-      builder: (context, state) {
-        if (state is ChallengeLoading) {
-          return SafeArea(
-            child: Scaffold(
-              backgroundColor: klighGreyColor,
-              appBar: AppBarCampaign(hem: hem, ffem: ffem, fem: fem),
-              body: Center(
-                child: Lottie.asset('assets/animations/loading-screen.json'),
+  Widget _buildBody(BuildContext context) {
+    return BlocBuilder<RoleAppBloc, RoleAppState>(
+      builder: (context, roleState) {
+        if (roleState is RoleAppLoading) {
+          return Center(
+            child: Lottie.asset('assets/animations/loading-screen.json'),
+          );
+        }
+
+        if (roleState is Unverified) {
+          return Center(
+            child: CardForUnVerified(fem: fem, hem: hem, ffem: ffem),
+          );
+        }
+
+        if (roleState is Verified) {
+          return BlocProvider(
+            create:
+                (context) => ChallengeBloc(challengeRepository: context.read<ChallengeRepository>(), studentRepository: context.read<StudentRepository>())
+                ..add(LoadChallenge()),
+            child: SafeArea(
+              child: DefaultTabController(
+                length: 3,
+                child: Scaffold(
+                  backgroundColor: klighGreyColor,
+                  body: ChallengeBody(),
+                ),
               ),
             ),
           );
-        } else if (state is ChallengesLoaded) {
-          return ChallengeBody();
         }
-        return ChallengeBody();
+        return Center(child: CardForUnVerified(fem: fem, hem: hem, ffem: ffem));
       },
     );
   }
 }
+
