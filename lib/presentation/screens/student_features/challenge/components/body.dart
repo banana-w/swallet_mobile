@@ -21,55 +21,45 @@ class ChallengeBody extends StatefulWidget {
   State<ChallengeBody> createState() => _BodyState();
 }
 
-class _BodyState extends State<ChallengeBody>
-    with SingleTickerProviderStateMixin {
-  late TabController _controller;
+class _BodyState extends State<ChallengeBody> {
+  // Không cần TabController vì đã có DefaultTabController ở widget cha
 
-  List<Widget> list = [
-    Tab(text: 'Đang thực hiện'),
-    BlocBuilder<ChallengeBloc, ChallengeState>(
-      builder: (context, state) {
-        if (state is ChallengesLoaded) {
-          final challenges =
-              state.challenge
-                  .where((c) => (c.isCompleted && !c.isClaimed))
-                  .toList();
-          if (challenges.isNotEmpty) {
-            return Stack(
-              children: [
-                Tab(text: 'Nhận thưởng'),
-                Positioned(
-                  top: 10,
-                  right: 0,
-                  child: Container(
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(50),
+  // Định nghĩa danh sách Tab
+  List<Widget> _buildTabList() {
+    return [
+      Tab(text: 'Đang thực hiện'),
+      BlocBuilder<ChallengeBloc, ChallengeState>(
+        builder: (context, state) {
+          if (state is ChallengesLoaded) {
+            final challenges =
+                state.challenge
+                    .where((c) => (c.isCompleted && !c.isClaimed))
+                    .toList();
+            if (challenges.isNotEmpty) {
+              return Stack(
+                children: [
+                  Tab(text: 'Nhận thưởng'),
+                  Positioned(
+                    top: 10,
+                    right: 0,
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            );
-          } else {
-            return Tab(text: 'Nhận thưởng');
+                ],
+              );
+            }
           }
-        }
-        return Tab(text: 'Nhận thưởng');
-      },
-    ),
-    Tab(text: 'Đã hoàn thành'),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TabController(length: list.length, vsync: this);
-
-    _controller.addListener(() {
-      setState(() {});
-    });
+          return Tab(text: 'Nhận thưởng');
+        },
+      ),
+      Tab(text: 'Đã hoàn thành'),
+    ];
   }
 
   @override
@@ -80,6 +70,7 @@ class _BodyState extends State<ChallengeBody>
     double baseHeight = 812;
     double hem = MediaQuery.of(context).size.height / baseHeight;
     final roleState = context.read<RoleAppBloc>().state;
+    
     return BlocListener<InternetBloc, InternetState>(
       listener: (context, state) {
         if (state is Connected) {
@@ -111,7 +102,7 @@ class _BodyState extends State<ChallengeBody>
                       final stateInternet = context.read<InternetBloc>().state;
                       if (stateInternet is Connected) {
                         Navigator.pop(context);
-                      } else {}
+                      }
                     },
                     child: const Text('Đồng ý'),
                   ),
@@ -121,180 +112,167 @@ class _BodyState extends State<ChallengeBody>
           );
         }
       },
-      child: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-              pinned: true,
-              floating: true,
-              elevation: 0,
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/background_splash.png'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              toolbarHeight: 40 * hem,
-              centerTitle: true,
-              title: Padding(
-                padding: EdgeInsets.only(top: 10 * hem),
-                child: Text(
-                  'Swallet',
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                      fontSize: 22 * ffem,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              leading: Padding(
-                padding: EdgeInsets.only(left: 20 * fem),
-                child: BlocBuilder<ChallengeBloc, ChallengeState>(
-                  builder: (context, state) {
-                    // if (state is NewChallenge) {
-                    //   return IconButton(
-                    //     icon: Icon(
-                    //       Icons
-                    //           .task_alt_rounded, // Icon nhiệm vụ khi có nhiệm vụ mới
-                    //       color: Colors.yellow,
-                    //       size: 25 * fem,
-                    //     ),
-                    //     onPressed: () {
-                    //       if (roleState is Unverified) {
-                    //         Navigator.pushNamed(
-                    //           context,
-                    //           UnverifiedScreen.routeName,
-                    //         );
-                    //       } else {
-                    //         context.read<ChallengeBloc>().add(LoadChallenges());
-                    //         Navigator.pushNamed(
-                    //           context,
-                    //           ChallengeDailyScreen.routeName,
-                    //         );
-                    //       }
-                    //     },
-                    //   );
-                    // }
-                    return IconButton(
-                      icon: Icon(
-                        Icons.task, // Icon nhiệm vụ mặc định
-                        color: Colors.white,
-                        size: 25 * fem,
-                      ),
-                      onPressed: () {
-                        if (roleState is Unverified) {
-                          Navigator.pushNamed(
-                            context,
-                            UnverifiedScreen.routeName,
-                          );
-                        } else {
-                          Navigator.pushNamed(
-                            context,
-                            ChallengeDailyScreen.routeName,
-                          );
-                        }
-                      },
-                    );
-                  },
-                ),
-              ),
-              actions: [
-                Padding(
-                  padding: EdgeInsets.only(top: 5 * fem, right: 20 * fem),
-                  child: BlocBuilder<NotificationBloc, NotificationState>(
-                    builder: (context, state) {
-                      if (state is NewNotification) {
-                        return IconButton(
-                          icon: Icon(
-                            Icons.notifications_active_rounded,
-                            color: Colors.yellow,
-                            size: 25 * fem,
-                          ),
-                          onPressed: () {
-                            if (roleState is Unverified) {
-                              Navigator.pushNamed(
-                                context,
-                                UnverifiedScreen.routeName,
-                              );
-                            } else {
-                              context.read<NotificationBloc>().add(
-                                LoadNotification(),
-                              );
-                              Navigator.pushNamed(
-                                context,
-                                NotificationListScreen.routeName,
-                              );
-                            }
-                          },
-                        );
-                      }
-                      return IconButton(
-                        icon: Icon(
-                          Icons.notifications,
-                          color: Colors.white,
-                          size: 25 * fem,
-                        ),
-                        onPressed: () {
-                          if (roleState is Unverified) {
-                            Navigator.pushNamed(
-                              context,
-                              UnverifiedScreen.routeName,
-                            );
-                          } else {
-                            Navigator.pushNamed(
-                              context,
-                              NotificationListScreen.routeName,
-                            );
-                          }
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
-              bottom: TabBar(
-                controller: _controller,
-                indicatorColor: Colors.white,
-                indicatorSize: TabBarIndicatorSize.tab,
-                indicatorWeight: 3,
-                // indicatorPadding: EdgeInsets.only(bottom: 1 * fem),
-                labelColor: Colors.white,
-                labelStyle: GoogleFonts.openSans(
-                  textStyle: TextStyle(
-                    fontSize: 12 * ffem,
-                    height: 1.3625 * ffem / fem,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                unselectedLabelColor: Colors.white60,
-                unselectedLabelStyle: GoogleFonts.openSans(
-                  textStyle: TextStyle(
-                    fontSize: 12 * ffem,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                tabs: list,
+      child: Column(
+        children: [
+          // AppBar phần tử cố định
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/background_splash.png'),
+                fit: BoxFit.cover,
               ),
             ),
-          ];
-        },
-        body: TabBarView(
-          controller: _controller,
-          children: [
-            //In process Challenge
-            InProcessChallenge(),
-
-            //complete Challenge
-            IsCompletedChallenge(),
-
-            //completed Challenge
-            IsClaimedChallenge(),
-          ],
-        ),
+            child: Column(
+              children: [
+                // AppBar content
+                SizedBox(
+                  height: 40 * hem,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Left icon
+                      Padding(
+                        padding: EdgeInsets.only(left: 20 * fem),
+                        child: BlocBuilder<ChallengeBloc, ChallengeState>(
+                          builder: (context, state) {
+                            return IconButton(
+                              icon: Icon(
+                                Icons.task, 
+                                color: Colors.white,
+                                size: 25 * fem,
+                              ),
+                              onPressed: () {
+                                if (roleState is Unverified) {
+                                  Navigator.pushNamed(
+                                    context,
+                                    UnverifiedScreen.routeName,
+                                  );
+                                } else {
+                                  Navigator.pushNamed(
+                                    context,
+                                    ChallengeDailyScreen.routeName,
+                                  );
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      
+                      // Title
+                      Padding(
+                        padding: EdgeInsets.only(top: 10 * hem),
+                        child: Text(
+                          'Swallet',
+                          style: GoogleFonts.openSans(
+                            textStyle: TextStyle(
+                              fontSize: 22 * ffem,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      
+                      // Right icon
+                      Padding(
+                        padding: EdgeInsets.only(top: 5 * fem, right: 20 * fem),
+                        child: BlocBuilder<NotificationBloc, NotificationState>(
+                          builder: (context, state) {
+                            if (state is NewNotification) {
+                              return IconButton(
+                                icon: Icon(
+                                  Icons.notifications_active_rounded,
+                                  color: Colors.yellow,
+                                  size: 25 * fem,
+                                ),
+                                onPressed: () {
+                                  if (roleState is Unverified) {
+                                    Navigator.pushNamed(
+                                      context,
+                                      UnverifiedScreen.routeName,
+                                    );
+                                  } else {
+                                    context.read<NotificationBloc>().add(
+                                      LoadNotification(),
+                                    );
+                                    Navigator.pushNamed(
+                                      context,
+                                      NotificationListScreen.routeName,
+                                    );
+                                  }
+                                },
+                              );
+                            }
+                            return IconButton(
+                              icon: Icon(
+                                Icons.notifications,
+                                color: Colors.white,
+                                size: 25 * fem,
+                              ),
+                              onPressed: () {
+                                if (roleState is Unverified) {
+                                  Navigator.pushNamed(
+                                    context,
+                                    UnverifiedScreen.routeName,
+                                  );
+                                } else {
+                                  Navigator.pushNamed(
+                                    context,
+                                    NotificationListScreen.routeName,
+                                  );
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // TabBar - Sử dụng DefaultTabController từ parent
+                TabBar(
+                  indicatorColor: Colors.white,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicatorWeight: 3,
+                  labelColor: Colors.white,
+                  labelStyle: GoogleFonts.openSans(
+                    textStyle: TextStyle(
+                      fontSize: 12 * ffem,
+                      height: 1.3625 * ffem / fem,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  unselectedLabelColor: Colors.white60,
+                  unselectedLabelStyle: GoogleFonts.openSans(
+                    textStyle: TextStyle(
+                      fontSize: 12 * ffem,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  tabs: _buildTabList(),
+                ),
+              ],
+            ),
+          ),
+          
+          // TabBarView - Phần nội dung tab
+          Expanded(
+            child: TabBarView(
+              children: [
+                //In process Challenge
+                InProcessChallenge(),
+                
+                //Is Completed Challenge (chưa claim)
+                IsCompletedChallenge(),
+                
+                //Is Claimed Challenge (đã claim)
+                IsClaimedChallenge(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

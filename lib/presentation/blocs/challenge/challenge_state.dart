@@ -23,6 +23,15 @@ final class ChallengesLoaded extends ChallengeState {
   List<Object> get props => [challenge, isClaimed];
 }
 
+final class ChallengesAchieveLoaded extends ChallengeState {
+  final List<ChallengeModel> challenge;
+  final bool isClaimed;
+
+  const ChallengesAchieveLoaded({required this.challenge, this.isClaimed = false});
+  @override
+  List<Object> get props => [challenge, isClaimed];
+}
+
 final class ChallengeFailed extends ChallengeState {
   final String error;
 
@@ -33,6 +42,11 @@ final class ChallengeFailed extends ChallengeState {
 }
 
 final class ClaimLoading extends ChallengeState {
+  @override
+  List<Object> get props => [];
+}
+
+final class ClaimAchieveLoading extends ChallengeState {
   @override
   List<Object> get props => [];
 }
