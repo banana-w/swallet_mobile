@@ -33,7 +33,7 @@ class _ChallengeTransactionState extends State<ChallengeTransaction> {
     scrollController.addListener(() {
       context
           .read<StudentBloc>()
-          .add(LoadMoreChallengeTransactions(scrollController, typeIds: 3));
+          .add(LoadMoreChallengeTransactions(scrollController, typeIds: 2));
     });
     super.initState();
   }
@@ -44,7 +44,7 @@ class _ChallengeTransactionState extends State<ChallengeTransaction> {
       onRefresh: () async {
         context
             .read<StudentBloc>()
-            .add(LoadStudentTransactions(id: widget.studentId, typeIds: 3));
+            .add(LoadStudentTransactions(id: widget.studentId, typeIds: 2));
       },
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),

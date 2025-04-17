@@ -102,7 +102,7 @@ class _InProcessChallengeState extends State<InProcessChallenge> {
     });
 
   if (challenges.isEmpty) {
-    return const EmptyWidget(text: 'Không có thử thách');
+    return const EmptyWidget(text: 'Không có thành tựu nào!');
   }
 
   return ListView.builder(

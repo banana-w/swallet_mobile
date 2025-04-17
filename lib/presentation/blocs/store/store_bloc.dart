@@ -252,31 +252,34 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
     }
   }
 
-    Future<void> _onScanVoucherCode(
-        ScanVoucherCode event, Emitter<StoreState> emit) async {
-      emit(ScanVoucherLoading());
-      try {
-        var apiResponse = await storeRepository.postScanVoucherCode(
-            storeId: event.storeId,
-          voucherId: event.voucherId,
-          studentId: event.studentId,
-        );
-        var check = apiResponse.keys.first;
-        if (check) {
-          String result = apiResponse.values.first;
-          emit(ScanVoucherSuccess(result: result));
+  Future<void> _onScanVoucherCode(
+    ScanVoucherCode event,
+    Emitter<StoreState> emit,
+  ) async {
+    emit(ScanVoucherLoading());
+    try {
+      var apiResponse = await storeRepository.postScanVoucherCode(
+        storeId: event.storeId,
+        voucherId: event.voucherId,
+        studentId: event.studentId,
+        voucherItemId: event.voucherItemId,
+      );
+      var check = apiResponse.keys.first;
+      if (check) {
+        String result = apiResponse.values.first;
+        emit(ScanVoucherSuccess(result: result));
+      } else {
+        String error = apiResponse.values.first;
+        if (error == '["Khuyến mãi không hợp lệ"]') {
+          emit(ScanVoucherFailed(error: 'Khuyến mãi không hợp lệ'));
         } else {
-          String error = apiResponse.values.first;
-          if(error == '["Khuyến mãi không hợp lệ"]'){
-               emit(ScanVoucherFailed(error: 'Khuyến mãi không hợp lệ'));
-          }else{
           emit(ScanVoucherFailed(error: error));
-          }
         }
-      } catch (e) {
-        emit(StoreFailed(error: e.toString()));
       }
+    } catch (e) {
+      emit(StoreFailed(error: e.toString()));
     }
+  }
 
   //   Future<void> _onCreateBonus(
   //       CreateBonus event, Emitter<StoreState> emit) async {
@@ -344,6 +347,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       final String voucherId = parts[0];
       final String studentId = parts[1];
       final String campaignId = parts[2];
+      final String voucherItemId = parts[3];
 
       var voucher = await storeRepository.fetchVoucherItemByStudentId(
         campaignId: campaignId,
@@ -359,6 +363,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             campaignDetailModel: campaignDetail,
             campaignVoucherDetailModel: voucher,
             studentId: studentId,
+            voucherItemId: voucherItemId,
           ),
         );
       } else {

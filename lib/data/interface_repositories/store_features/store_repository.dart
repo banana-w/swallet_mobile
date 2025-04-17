@@ -29,6 +29,7 @@ abstract class StoreRepository {
     required String storeId,
     required String voucherId,
     required String studentId,
+    required String voucherItemId,
   });
 
   // Future<List<CampaignRankingModel>?> fecthCampaignRanking();

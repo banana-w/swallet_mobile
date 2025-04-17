@@ -39,9 +39,9 @@ class Content5 extends StatelessWidget {
             labelText: 'MÃ GIỚI THIỆU',
             hintText: 'Nhập mã giới thiệu...',
             validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Mã giới thiệu không được bỏ trống';
-              }
+              // if (value == null || value.isEmpty) {
+              //   return 'Mã giới thiệu không được bỏ trống';
+              // }
 
               return null;
             },

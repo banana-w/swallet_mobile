@@ -21,6 +21,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
     required CampaignVoucherDetailModel voucherModel,
     required String studentId,
     required String storeId,
+    required String voucherItemId,
   }) {
     return PageRouteBuilder(
       pageBuilder:
@@ -33,6 +34,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
               voucherModel: voucherModel,
               studentId: studentId,
               storeId: storeId,
+              voucherItemId: voucherItemId,
             ),
           ),
       transitionDuration: Duration(milliseconds: 400),
@@ -54,12 +56,15 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
     required this.voucherModel,
     required this.studentId,
     required this.storeId,
+    required this.voucherItemId,
   });
 
   final CampaignDetailModel campaignModel;
   final CampaignVoucherDetailModel voucherModel;
   final String studentId;
   final String storeId;
+  final String voucherItemId;
+  
   @override
   Widget build(BuildContext context) {
     double baseWidth = 375;
@@ -121,7 +126,8 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                 ScanVoucherCode(
                   voucherId: voucherModel.id,
                   studentId: studentId,
-                  storeId: storeId,             
+                  storeId: storeId,
+                  voucherItemId: voucherItemId,             
                 ),
               );
             },

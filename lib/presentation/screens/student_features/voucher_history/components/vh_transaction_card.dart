@@ -45,7 +45,7 @@ class VoucherHistoryTransactionCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${transaction.voucherName}',
+                '${transaction.name}',
                 style: GoogleFonts.openSans(
                   fontSize: 17 * ffem,
                   fontWeight: FontWeight.bold,

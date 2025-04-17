@@ -101,8 +101,12 @@ class ValidationCubit extends Cubit<ValidationState> {
   Future<String?> validateInviteCode(String inviteCode) async {
     emit(ValidationInProcess());
     try {
-      var check = await validationRepository.validateUserName(
-        userName: inviteCode,
+      if(inviteCode.isEmpty) {
+        emit(CheckInvitedCodeSuccess());
+        return '';
+      }
+      var check = await validationRepository.validateInviteCode(
+        inviteCode: inviteCode,
       );
       // print(check);
       if (check == '') {
