@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/check_in_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/wishlist_repository.dart';
 import 'package:swallet_mobile/data/repositories/authen_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/lecture_features/lecture_repository_imp.dart';
 import 'package:swallet_mobile/data/repositories/store_features/store_repository_imp.dart';
@@ -27,6 +28,7 @@ import 'package:swallet_mobile/data/interface_repositories/student_features/stud
 import 'package:swallet_mobile/data/interface_repositories/student_features/validation_repository.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/verification_repository.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/wheel_repository.dart';
+import 'package:swallet_mobile/data/repositories/student_features/wishlist_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/authentication/authentication_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
@@ -39,6 +41,7 @@ import 'package:swallet_mobile/presentation/blocs/notification/notification_bloc
 import 'package:swallet_mobile/presentation/blocs/ranking/ranking_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/wishlist/wishlist_bloc.dart';
 import 'package:swallet_mobile/presentation/config/app_router.dart';
 import 'package:swallet_mobile/presentation/cubits/validation/validation_cubit.dart';
 import 'package:swallet_mobile/presentation/cubits/verification/verification_cubit.dart';
@@ -131,6 +134,9 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<CheckInRepository>(
           create: (_) => CheckInRepositoryImpl(),
         ),
+        RepositoryProvider<WishListRepository>(
+          create: (_) => WishListRepositoryImp(),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -166,10 +172,11 @@ class MyApp extends StatelessWidget {
                       ..loadingVerification(),
           ),
           BlocProvider(
-
-            create: (context) => ChallengeBloc(
-                challengeRepository: ChallengeRepositoryImp(),
-                studentRepository: StudentRepositoryImp())
+            create:
+                (context) => ChallengeBloc(
+                  challengeRepository: ChallengeRepositoryImp(),
+                  studentRepository: StudentRepositoryImp(),
+                ),
           ),
           BlocProvider(
             create:
@@ -217,6 +224,13 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (context) => LandingScreenBloc(),
             child: CusNavLectureBar(),
+          ),
+          BlocProvider(
+            create:
+                (context) => WishlistBloc(
+                  studentRepository: StudentRepositoryImp(),
+                  wishListRepository: WishListRepositoryImp(),
+                )..add(LoadWishListByStudentId()),
           ),
         ],
         child: MaterialApp(
