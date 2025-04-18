@@ -10,9 +10,7 @@ class BrandDetailScreen extends StatelessWidget {
 
   static Route route({required String id}) {
     return MaterialPageRoute(
-      builder: (_) => BrandDetailScreen(
-        id: id,
-      ),
+      builder: (_) => BrandDetailScreen(id: id),
       settings: const RouteSettings(arguments: routeName),
     );
   }
@@ -31,39 +29,40 @@ class BrandDetailScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-              forceMaterialTransparency: true,
-              elevation: 0,
-           
-              toolbarHeight: 50 * hem,
-              leading: Container(
-                margin: EdgeInsets.only(left: 20 * fem),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.arrow_back_rounded,
-                        color: Colors.white,
-                        size: 35 * fem,
-                      ),
-                    ),
-                  ],
+          forceMaterialTransparency: true,
+          elevation: 0,
+
+          toolbarHeight: 50 * hem,
+          leading: Container(
+            margin: EdgeInsets.only(left: 20 * fem),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back_rounded,
+                    color: Colors.white,
+                    size: 35 * fem,
+                  ),
                 ),
-              ),
-              leadingWidth: double.infinity,
-              backgroundColor: Colors.transparent,
+              ],
             ),
-            backgroundColor: klighGreyColor,
+          ),
+          leadingWidth: double.infinity,
+          backgroundColor: Colors.transparent,
+        ),
+        backgroundColor: klighGreyColor,
         extendBodyBehindAppBar: true,
         extendBody: true,
         body: BlocProvider(
-          create: (context) =>
-              BrandBloc(brandRepository: context.read<BrandRepository>())
-                ..add(LoadBrandById(id: id)),
+          create:
+              (context) =>
+                  BrandBloc(brandRepository: context.read<BrandRepository>())
+                    ..add(LoadBrandById(id: id)),
           child: BrandDetailBody(),
         ),
       ),

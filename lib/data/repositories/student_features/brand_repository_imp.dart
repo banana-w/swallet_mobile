@@ -9,7 +9,6 @@ import 'package:swallet_mobile/data/models/student_features/voucher_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/brand_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
-
 class BrandRepositoryImp implements BrandRepository {
   String endPoint = '${baseURL}Brand';
   String sort = 'Id%2Cdesc';
@@ -25,7 +24,11 @@ class BrandRepositoryImp implements BrandRepository {
     bool status = true, // Thêm tham số status, mặc định là true
   }) async {
     try {
-      final Map<String, String> headers = {'Content-Type': 'application/json'};
+      token = await AuthenLocalDataSource.getToken();
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
 
       // Sử dụng giá trị mặc định nếu page hoặc size không được truyền
       page ??= this.page;

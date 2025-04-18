@@ -3,8 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/brand_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/wishlist_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/wishlist/wishlist_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/brand_detail/components/brand_campaigns.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/brand_detail/components/brand_detail_showdal.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/brand_detail/components/detail_shadow_bottom.dart';
@@ -97,11 +100,20 @@ class BrandDetailBody extends StatelessWidget {
                           top: 80 * hem,
                           left: 0 * fem,
                           right: 0 * fem,
-                          child: InformationCardBrandDetail(
-                            hem: hem,
-                            fem: fem,
-                            ffem: ffem,
-                            brandModel: state.brand,
+                          child: BlocProvider(
+                            create:
+                                (context) => WishlistBloc(
+                                  studentRepository:
+                                      context.read<StudentRepository>(),
+                                  wishListRepository:
+                                      context.read<WishListRepository>(),
+                                ),
+                            child: InformationCardBrandDetail(
+                              hem: hem,
+                              fem: fem,
+                              ffem: ffem,
+                              brandModel: state.brand,
+                            ),
                           ),
                         ),
                       ],

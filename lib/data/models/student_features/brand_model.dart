@@ -24,8 +24,8 @@ class BrandModel extends Brand {
     required super.description,
     required super.state,
     required super.status,
-    // required super.isFavor,
-    // required super.numberOfFollowers,
+    required super.isFavor,
+    required super.numberOfFollowers,
     required super.numberOfCampaigns,
     // required super.greenWalletId,
     // required super.greenWallet,
@@ -63,8 +63,9 @@ class BrandModel extends Brand {
       description: json['description'] as String? ?? '',
       state: json['state'] as bool? ?? true,
       status: json['status'] as bool? ?? true,
-      // isFavor: json['isFavor'] as bool? ?? false, // Không có trong JSON result
-      // numberOfFollowers: json['numberOfFollowers'] as int? ?? 0, // Không có trong JSON result
+      isFavor: json['isFavor'] as bool? ?? false, // Không có trong JSON result
+      numberOfFollowers:
+          json['numberOfFollowers'] as int? ?? 0, // Không có trong JSON result
       numberOfCampaigns:
           json['numberOfCampaigns'] as int? ?? 0, // Không có trong JSON result
       // greenWalletId: json['greenWalletId'] as String? ?? '', // Không có trong JSON result
@@ -128,8 +129,8 @@ class BrandModel extends Brand {
       description: description ?? this.description,
       state: state ?? this.state,
       status: status ?? this.status,
-      // isFavor: isFavor ?? this.isFavor,
-      // numberOfFollowers: numberOfFollowers ?? this.numberOfFollowers,
+      isFavor: isFavor ?? this.isFavor,
+      numberOfFollowers: numberOfFollowers ?? this.numberOfFollowers,
       numberOfCampaigns: numberOfCampaigns ?? this.numberOfCampaigns,
       // greenWalletId: greenWalletId ?? this.greenWalletId,
       // greenWallet: greenWallet ?? this.greenWallet,
