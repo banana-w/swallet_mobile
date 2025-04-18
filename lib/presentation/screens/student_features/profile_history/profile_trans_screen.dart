@@ -25,10 +25,10 @@ class ProfileTransactionHistoryScreen extends StatelessWidget {
     return BlocProvider(
      create: (context) =>
           StudentBloc(studentRepository: context.read<StudentRepository>())
-            ..add(LoadStudentTransactions(id: studentId)),
+            ..add(LoadStudentTransactions(id: studentId, typeIds: 0)),
       child: SafeArea(
         child: DefaultTabController(
-          length: 2,
+          length: 3,
           child: Scaffold(
             backgroundColor: klighGreyColor,
             body: Body(

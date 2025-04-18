@@ -224,6 +224,7 @@ class StoreRepositoryImp extends StoreRepository {
     required String storeId,
     required String voucherId,
     required String studentId,
+    required String voucherItemId,
   }) async {
     try {
       final token = await AuthenLocalDataSource.getToken();
@@ -238,6 +239,7 @@ class StoreRepositoryImp extends StoreRepository {
         'studentId': studentId,
         'voucherId': voucherId,
         'storeId': storeId,
+        'voucherItemId': voucherItemId,
       };
 
       const String endPoint = '${baseURL}Activity/UseVoucher';

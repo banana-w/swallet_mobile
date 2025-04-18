@@ -42,7 +42,7 @@ class _AllTransactionState extends State<AllTransaction> {
       onRefresh: () async {
         context
             .read<StudentBloc>()
-            .add(LoadStudentTransactions(id: widget.studentId));
+            .add(LoadStudentTransactions(id: widget.studentId, typeIds: 0));
       },
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),

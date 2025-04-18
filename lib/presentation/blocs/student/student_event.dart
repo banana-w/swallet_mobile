@@ -70,7 +70,7 @@ final class LoadStudentTransactions extends StudentEvent {
     this.page = 1,
     this.limit = 10,
     required this.id,
-    this.typeIds = 0,
+    required this.typeIds,
   });
 
   @override
@@ -135,39 +135,7 @@ final class LoadMoreActivityTransactions extends StudentEvent {
     this.scrollController, {
     this.page = 1,
     this.limit = 10,
-    this.typeIds = 0,
-  });
-  @override
-  List<Object?> get props => [page, limit, typeIds, scrollController];
-}
-
-final class LoadMoreBonusTransactions extends StudentEvent {
-  final int page;
-  final int limit;
-  final int typeIds;
-  final ScrollController scrollController;
-
-  const LoadMoreBonusTransactions(
-    this.scrollController, {
-    this.page = 1,
-    this.limit = 10,
-    this.typeIds = 0,
-  });
-  @override
-  List<Object?> get props => [page, limit, typeIds, scrollController];
-}
-
-final class LoadMoreOrderTransactions extends StudentEvent {
-  final int page;
-  final int limit;
-  final int typeIds;
-  final ScrollController scrollController;
-
-  const LoadMoreOrderTransactions(
-    this.scrollController, {
-    this.page = 1,
-    this.limit = 10,
-    this.typeIds = 0,
+    this.typeIds = 1,
   });
   @override
   List<Object?> get props => [page, limit, typeIds, scrollController];
@@ -183,31 +151,12 @@ final class LoadMoreChallengeTransactions extends StudentEvent {
     this.scrollController, {
     this.page = 1,
     this.limit = 10,
-    this.typeIds = 0,
+    this.typeIds = 2,
   });
   @override
   List<Object?> get props => [page, limit, typeIds, scrollController];
 }
 
-final class LoadMoreOrders extends StudentEvent {
-  final int page;
-  final int limit;
-  final ScrollController scrollController;
-
-  const LoadMoreOrders(this.scrollController, {this.page = 1, this.limit = 10});
-  @override
-  List<Object?> get props => [page, limit, scrollController];
-}
-
-final class LoadStudentOrders extends StudentEvent {
-  final int page;
-  final int limit;
-  final String id;
-  const LoadStudentOrders({this.page = 1, this.limit = 10, required this.id});
-
-  @override
-  List<Object?> get props => [page, limit, id];
-}
 
 final class UpdateStudent extends StudentEvent {
   final String studentId;

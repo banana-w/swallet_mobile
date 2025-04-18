@@ -44,9 +44,9 @@ class TransactionCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 10 * fem),
+                    padding: EdgeInsets.only(left: 10 * fem, right: 10 * fem),
                     child: Text(
-                      '${transaction.voucherName}',
+                      '${transaction.name}',
                       style: GoogleFonts.openSans(
                           fontSize: 17 * ffem,
                           fontWeight: FontWeight.bold,
@@ -94,7 +94,7 @@ Widget _buildAmount(
       width: 125 * fem,
       padding: EdgeInsets.only(left: 10 * fem, right: 10 * fem),
       decoration: BoxDecoration(
-          border: Border.all(color: kPrimaryColor, width: 1),
+          border: Border.all(color: Color.fromARGB(255, 6, 138, 3), width: 2),
           color: Colors.white,
           borderRadius: BorderRadius.circular(8 * fem)),
       child: Row(
@@ -107,7 +107,7 @@ Widget _buildAmount(
             style: GoogleFonts.openSans(
                 textStyle: TextStyle(
               fontSize: 16 * ffem,
-              color: kPrimaryColor,
+              color: const Color.fromARGB(255, 6, 138, 3),
               fontWeight: FontWeight.bold,
             )),
           ),
@@ -165,7 +165,7 @@ Widget _buildAmount(
       width: 125 * fem,
       padding: EdgeInsets.only(left: 10 * fem, right: 10 * fem),
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.red, width: 1),
+          border: Border.all(color: Colors.red, width: 2),
           color: Colors.white,
           borderRadius: BorderRadius.circular(8 * fem)),
       child: Row(
@@ -199,7 +199,7 @@ Widget _buildAmount(
       width: 125 * fem,
       padding: EdgeInsets.only(left: 10 * fem, right: 10 * fem),
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.red, width: 1),
+          border: Border.all(color: Colors.red, width: 2),
           color: Colors.white,
           borderRadius: BorderRadius.circular(8 * fem)),
       child: Row(

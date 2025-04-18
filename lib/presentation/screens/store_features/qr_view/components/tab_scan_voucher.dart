@@ -55,6 +55,7 @@ class TabScanVoucher extends StatelessWidget {
               voucherModel: state.campaignVoucherDetailModel,
               studentId: state.studentId,
               storeId: widget.id,
+              voucherItemId: state.voucherItemId,
             ),
             (Route<dynamic> route) => false,
           );

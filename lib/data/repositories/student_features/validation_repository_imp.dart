@@ -120,9 +120,13 @@ class ValidationRepositoryImp implements ValidationRepository {
       if (response.statusCode == 200) {
         return '';
       }
-      List<dynamic> jsonReponse = jsonDecode(response.body);
-      String error = jsonReponse[0];
-      return error;
+      final jsonResponse = jsonDecode(response.body);
+      if (jsonResponse is List && jsonResponse.isNotEmpty) {
+        return jsonResponse[0].toString();
+      } else if (jsonResponse is Map) {
+        return jsonResponse['Message'].toString();
+      }
+      return 'Unknown error occurred';
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -160,7 +164,7 @@ class ValidationRepositoryImp implements ValidationRepository {
       Map<String, String> body = {'inviteCode': inviteCode};
 
       http.Response response = await http.post(
-        Uri.parse('$endPoint/invite-code'),
+        Uri.parse('${baseURL}Account/validInviteCode'),
         headers: headers,
         body: jsonEncode(body),
       );
@@ -168,9 +172,13 @@ class ValidationRepositoryImp implements ValidationRepository {
       if (response.statusCode == 200) {
         return '';
       }
-      List<dynamic> jsonReponse = jsonDecode(response.body);
-      String error = jsonReponse[0];
-      return error;
+      final jsonResponse = jsonDecode(response.body);
+      if (jsonResponse is List && jsonResponse.isNotEmpty) {
+        return jsonResponse[0].toString();
+      } else if (jsonResponse is Map) {
+        return jsonResponse['Message'].toString();
+      }
+      return 'Unknown error occurred';
     } catch (e) {
       throw Exception(e.toString());
     }

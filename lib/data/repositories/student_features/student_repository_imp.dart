@@ -238,6 +238,7 @@ class StudentRepositoryImp implements StudentRepository {
         'studentId': id,
         'page': page.toString(),
         'size': limit.toString(),
+        'type': typeIds.toString(),
       };
 
       if (searchName != null && searchName.isNotEmpty) {

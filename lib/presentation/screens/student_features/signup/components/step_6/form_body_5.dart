@@ -42,10 +42,10 @@ class _FormBody5State extends State<FormBody5> {
         children: [
           BlocBuilder<ValidationCubit, ValidationState>(
             builder: (context, state) {
-              print(state);
               if (state is CheckInvitedCodeFailed) {
                 return Container(
                   width: 318 * widget.fem,
+                  height: 100 * widget.hem,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15 * widget.fem),
@@ -69,7 +69,7 @@ class _FormBody5State extends State<FormBody5> {
                         hintText: 'Nhập mã giới thiệu...',
                         textController: codeController,
                       ),
-                      SizedBox(height: 3 * widget.hem),
+                      SizedBox(height: 5 * widget.hem),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(

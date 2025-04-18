@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 
 class Transaction extends Equatable {
   final String id;
-  final String voucherName;
-  final String activityId;
+  final String name;
+  final String transId;
   final String walletId;
   final double amount;
   final String description;
@@ -12,8 +12,8 @@ class Transaction extends Equatable {
 
   const Transaction({
     required this.id,
-    required this.voucherName,
-    required this.activityId,
+    required this.name,
+    required this.transId,
     required this.walletId,
     required this.amount,
     required this.description,
@@ -24,8 +24,8 @@ class Transaction extends Equatable {
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
       id: json['id'] as String,
-      voucherName: json['voucherName'] as String,
-      activityId: json['activityId'] as String,
+      name: json['name'] as String,
+      transId: json['transId'] as String,
       walletId: json['walletId'] as String,
       amount: (json['amount'] as num).toDouble(),
       description: json['description'] as String,
@@ -37,8 +37,8 @@ class Transaction extends Equatable {
   @override
   List<Object?> get props => [
         id,
-        voucherName,
-        activityId,
+        name,
+        transId,
         walletId,
         amount,
         description,

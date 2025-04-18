@@ -466,7 +466,7 @@ class Body extends StatelessWidget {
                                 height: 300 * hem,
                                 child: QrImageView(
                                   data:
-                                      '${voucher.id},${state.studentId},${campaign.id}', // Xem lai cai nay duoc khong
+                                      '${voucher.id},${state.studentId},${campaign.id},$voucherItemId', // Xem lai cai nay duoc khong
                                   padding: EdgeInsets.all(20 * fem),
                                   version: QrVersions.auto,
                                   backgroundColor: Colors.white,

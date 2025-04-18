@@ -1,6 +1,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -93,7 +94,7 @@ class Body extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'Mã QR của bạn',
+                        'Mã giới thiệu của bạn',
                         style: GoogleFonts.openSans(
                           textStyle: TextStyle(
                             fontSize: 13 * ffem,
@@ -135,6 +136,31 @@ class Body extends StatelessWidget {
                         dataModuleShape: QrDataModuleShape.square,
                       ),
                     ),
+                  ),
+                  SizedBox(height: 5 * hem),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        studentModel.id,
+                        style: GoogleFonts.openSans(
+                          fontSize: 15 * ffem,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      IconButton(
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: studentModel.id));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Đã sao chép mã voucher')),
+                          );
+                        },
+                        icon: Icon(Icons.copy, size: 20),
+                        tooltip: 'Sao chép mã',
+                      ),
+                    ],
                   ),
                 ],
               ),

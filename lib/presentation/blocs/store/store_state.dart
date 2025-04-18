@@ -163,11 +163,13 @@ final class StoreCampaigVoucherInforSuccess extends StoreState {
   final CampaignDetailModel campaignDetailModel;
   final CampaignVoucherDetailModel campaignVoucherDetailModel;
   final String studentId;
+  final String voucherItemId;
 
   const StoreCampaigVoucherInforSuccess({
     required this.campaignDetailModel,
     required this.campaignVoucherDetailModel,
     required this.studentId,
+    required this.voucherItemId,
   });
 
   @override
@@ -175,6 +177,7 @@ final class StoreCampaigVoucherInforSuccess extends StoreState {
     campaignDetailModel,
     campaignVoucherDetailModel,
     studentId,
+    voucherItemId,
   ];
 }
 

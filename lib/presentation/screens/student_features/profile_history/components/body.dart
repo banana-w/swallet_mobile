@@ -167,9 +167,9 @@ class Body extends StatelessWidget {
                     // Tab(
                     //   text: 'Đổi quà',
                     // ),
-                    // Tab(
-                    //   text: 'Thử thách',
-                    // ),
+                    Tab(
+                      text: 'Thử thách',
+                    ),
                     // Tab(
                     //   text: 'Điểm thưởng',
                     // ),
@@ -197,39 +197,17 @@ class Body extends StatelessWidget {
                   studentId: studentId,
                 ),
               ),
-              // BlocProvider(
-              //   create: (context) => StudentBloc(
-              //       studentRepository: context.read<StudentRepository>())
-              //     ..add(LoadStudentTransactions(id: studentId, typeIds: 2)),
-              //   // child: OrderTransaction(
-              //   //   hem: hem,
-              //   //   fem: fem,
-              //   //   ffem: ffem,
-              //   //   studentId: studentId,
-              //   // ),
-              // ),
-              // BlocProvider(
-              //   create: (context) => StudentBloc(
-              //       studentRepository: context.read<StudentRepository>())
-              //     ..add(LoadStudentTransactions(id: studentId, typeIds: 3)),
-              //   child: ChallengeTransaction(
-              //     hem: hem,
-              //     fem: fem,
-              //     ffem: ffem,
-              //     studentId: studentId,
-              //   ),
-              // ),
-              // BlocProvider(
-              //   create: (context) => StudentBloc(
-              //       studentRepository: context.read<StudentRepository>())
-              //     ..add(LoadStudentTransactions(id: studentId, typeIds: 4)),
-              //   // child: BonusTransaction(
-              //   //   hem: hem,
-              //   //   fem: fem,
-              //   //   ffem: ffem,
-              //   //   studentId: studentId,
-              //   // ),
-              // ),
+              BlocProvider(
+                create: (context) => StudentBloc(
+                    studentRepository: context.read<StudentRepository>())
+                  ..add(LoadStudentTransactions(id: studentId, typeIds: 2)),
+                child: ChallengeTransaction(
+                  hem: hem,
+                  fem: fem,
+                  ffem: ffem,
+                  studentId: studentId,
+                ),
+              ),
             ],
           )),
     );

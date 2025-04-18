@@ -55,16 +55,18 @@ final class ScanVoucherCode extends StoreEvent {
   final String storeId;
   final String voucherId;
   final String studentId;
+  final String voucherItemId;
  
 
   const ScanVoucherCode({
     required this.storeId,
     required this.voucherId,
     required this.studentId,
+    required this.voucherItemId,
   });
 
   @override
-  List<Object?> get props => [storeId, voucherId, studentId];
+  List<Object?> get props => [storeId, voucherId, studentId, voucherItemId];
 }
 
 final class CreateBonus extends StoreEvent {

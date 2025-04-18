@@ -23,18 +23,13 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     on<LoadStudentTransactions>(_onLoadStudentTransactions);
     on<LoadVoucherTransactions>(_onLoadVoucherTransactions);
     on<LoadMoreVoucherTransactions>(_onLoadMoreVoucherTransactions);
-    // on<LoadStudentOrders>(_onLoadStudentOrder);
     on<LoadMoreTransactions>(_onLoadMoreTransactions);
     on<LoadMoreActivityTransactions>(_onLoadMoreActivityTransactions);
-    // on<LoadMoreBonusTransactions>(_onLoadMoreBonusTransactions);
-    // on<LoadMoreChallengeTransactions>(_onLoadMoreChallengeTransactions);
-    // on<LoadMoreOrderTransactions>(_onLoadMoreOrderTransactions);
-    // on<LoadMoreOrders>(_onLoadMoreOrders);
+    on<LoadMoreChallengeTransactions>(_onLoadMoreChallengeTransactions);
     on<LoadVoucherItem>(_onLoadvoucherItem);
     on<UpdateStudent>(_onUpdateStudent);
     on<LoadStudentById>(_onLoadStudentById);
     on<UpdateVerification>(_onUpdateVerification);
-    // on<LoadOrderDetailById>(_onLoadOrderDetailBydId);
     // on<HideUsedVouchers>(_onHideUsedVoucher);
     on<SkipUpdateVerification>(_onSKipUpdateVerification);
   }
@@ -332,42 +327,6 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     }
   }
 
-  // Future<void> _onLoadMoreOrders(
-  //     LoadMoreOrders event, Emitter<StudentState> emit) async {
-  //   try {
-  //     final studentId = await AuthenLocalDataSource.getStudentId();
-  //     if ((this.state as StudentOrdersLoaded).hasReachedMax) {
-  //       emit(StudentOrdersLoaded(
-  //           orderModels:
-  //               List.from((this.state as StudentOrdersLoaded).orderModels),
-  //           hasReachedMax: true));
-  //     } else {
-  //       if (event.scrollController.position.pixels ==
-  //           event.scrollController.position.maxScrollExtent) {
-  //         isLoadingMoreOrder = true;
-  //         pageOrder++;
-  //         var apiResponse = await studentRepository
-  //             .fetchOrdersStudentId(pageOrder, event.limit, id: studentId!);
-  //         if (apiResponse!.result.length == 0) {
-  //           emit(StudentOrdersLoaded(
-  //               orderModels:
-  //                   List.from((this.state as StudentOrdersLoaded).orderModels)
-  //                     ..addAll(apiResponse.result),
-  //               hasReachedMax: true));
-  //           pageOrder = 1;
-  //         } else {
-  //           emit(StudentOrdersLoaded(
-  //               orderModels:
-  //                   List.from((this.state as StudentOrdersLoaded).orderModels)
-  //                     ..addAll(apiResponse.result)));
-  //         }
-  //       }
-  //     }
-  //   } catch (e) {
-  //     emit(StudentFaled(error: e.toString()));
-  //   }
-  // }
-
   Future<void> _onLoadMoreActivityTransactions(
     LoadMoreActivityTransactions event,
     Emitter<StudentState> emit,
@@ -409,109 +368,46 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     }
   }
 
-  // Future<void> _onLoadMoreBonusTransactions(
-  //     LoadMoreBonusTransactions event, Emitter<StudentState> emit) async {
-  //   try {
-  //     final studentId = await AuthenLocalDataSource.getStudentId();
-  //     if (event.scrollController.position.pixels ==
-  //         event.scrollController.position.maxScrollExtent) {
-  //       isLoadingMore = true;
-  //       pageBonusTransaction++;
-  //       var apiResponse = await studentRepository.fetchTransactionsStudentId(
-  //           pageBonusTransaction, event.limit, event.typeIds,
-  //           id: studentId!);
-  //       if (apiResponse!.result.length == 0) {
-  //         emit(StudentTransactionsLoaded(
-  //             transactions: List.from(
-  //                 (this.state as StudentTransactionsLoaded).transactions)
-  //               ..addAll(apiResponse.result),
-  //             hasReachedMax: true));
-  //       } else {
-  //         emit(StudentTransactionsLoaded(
-  //             transactions: List.from(
-  //                 (this.state as StudentTransactionsLoaded).transactions)
-  //               ..addAll(apiResponse.result)));
-  //       }
-  //     }
-  //   } catch (e) {
-  //     emit(StudentFaled(error: e.toString()));
-  //   }
-  // }
-
-  // Future<void> _onLoadMoreChallengeTransactions(
-  //     LoadMoreChallengeTransactions event, Emitter<StudentState> emit) async {
-  //   try {
-  //     final studentId = await AuthenLocalDataSource.getStudentId();
-  //     if (event.scrollController.position.pixels ==
-  //         event.scrollController.position.maxScrollExtent) {
-  //       isLoadingMore = true;
-  //       pageChallengeTransaction++;
-  //       var apiResponse = await studentRepository.fetchTransactionsStudentId(
-  //           pageChallengeTransaction, event.limit, event.typeIds,
-  //           id: studentId!);
-  //       if (apiResponse!.result.length == 0) {
-  //         emit(StudentTransactionsLoaded(
-  //             transactions: List.from(
-  //                 (this.state as StudentTransactionsLoaded).transactions)
-  //               ..addAll(apiResponse.result),
-  //             hasReachedMax: true));
-  //       } else {
-  //         emit(StudentTransactionsLoaded(
-  //             transactions: List.from(
-  //                 (this.state as StudentTransactionsLoaded).transactions)
-  //               ..addAll(apiResponse.result)));
-  //       }
-  //     }
-  //   } catch (e) {
-  //     emit(StudentFaled(error: e.toString()));
-  //   }
-  // }
-
-  // Future<void> _onLoadMoreOrderTransactions(
-  //     LoadMoreOrderTransactions event, Emitter<StudentState> emit) async {
-  //   try {
-  //     final studentId = await AuthenLocalDataSource.getStudentId();
-  //     if (event.scrollController.position.pixels ==
-  //         event.scrollController.position.maxScrollExtent) {
-  //       isLoadingMore = true;
-  //       pageOrderTransaction++;
-  //       var apiResponse = await studentRepository.fetchTransactionsStudentId(
-  //           pageOrderTransaction, event.limit, event.typeIds,
-  //           id: studentId!);
-  //       if (apiResponse!.result.length == 0) {
-  //         emit(StudentTransactionsLoaded(
-  //             transactions: List.from(
-  //                 (this.state as StudentTransactionsLoaded).transactions)
-  //               ..addAll(apiResponse.result),
-  //             hasReachedMax: true));
-  //       } else {
-  //         emit(StudentTransactionsLoaded(
-  //             transactions: List.from(
-  //                 (this.state as StudentTransactionsLoaded).transactions)
-  //               ..addAll(apiResponse.result)));
-  //       }
-  //     }
-  //   } catch (e) {
-  //     emit(StudentFaled(error: e.toString()));
-  //   }
-  // }
-
-  // Future<void> _onLoadStudentOrder(
-  //     LoadStudentOrders event, Emitter<StudentState> emit) async {
-  //   emit(StudentOrderLoading());
-  //   try {
-  //     var apiResponse = await studentRepository
-  //         .fetchOrdersStudentId(event.page, event.limit, id: event.id);
-  //     if (apiResponse!.pageSize > apiResponse.totalCount) {
-  //       emit(StudentOrdersLoaded(
-  //           orderModels: apiResponse.result, hasReachedMax: true));
-  //     } else {
-  //       emit(StudentOrdersLoaded(orderModels: apiResponse.result));
-  //     }
-  //   } catch (e) {
-  //     emit(StudentFaled(error: e.toString()));
-  //   }
-  // }
+  Future<void> _onLoadMoreChallengeTransactions(
+    LoadMoreChallengeTransactions event,
+    Emitter<StudentState> emit,
+  ) async {
+    try {
+      final student = await AuthenLocalDataSource.getStudent();
+      if (event.scrollController.position.pixels ==
+          event.scrollController.position.maxScrollExtent) {
+        isLoadingMore = true;
+        pageChallengeTransaction++;
+        var apiResponse = await studentRepository.fetchTransactionsStudentId(
+          pageChallengeTransaction,
+          event.limit,
+          event.typeIds,
+          '',
+          id: student!.id,
+        );
+        if (apiResponse!.result.isEmpty) {
+          emit(
+            StudentTransactionsLoaded(
+              transactions: List.from(
+                (state as StudentTransactionsLoaded).transactions,
+              )..addAll(apiResponse.result),
+              hasReachedMax: true,
+            ),
+          );
+        } else {
+          emit(
+            StudentTransactionsLoaded(
+              transactions: List.from(
+                (state as StudentTransactionsLoaded).transactions,
+              )..addAll(apiResponse.result),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      emit(StudentFaled(error: e.toString()));
+    }
+  }
 
   Future<void> _onUpdateStudent(
     UpdateStudent event,
@@ -614,20 +510,4 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     var studentModel = await AuthenLocalDataSource.getStudent();
     emit(StudentUpdateVerificationSuccess(studentModel: studentModel!));
   }
-
-  // Future<void> _onLoadOrderDetailBydId(
-  //     LoadOrderDetailById event, Emitter<StudentState> emit) async {
-  //   emit(StudentOrderDetailLoading());
-  //   try {
-  //     var apiResponse = await studentRepository.fetchOrderDetailByStudentId(
-  //         studentId: event.studentId, orderId: event.orderId);
-  //     if (apiResponse != null) {
-  //       emit(StudentOrderDetailLoaded(orderDetailModel: apiResponse));
-  //     } else {
-  //       emit(StudentFaled(error: 'Lỗi xử lí!'));
-  //     }
-  //   } catch (e) {
-  //     emit(StudentFaled(error: e.toString()));
-  //   }
-  // }
 }
