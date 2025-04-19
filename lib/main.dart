@@ -34,6 +34,7 @@ import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/campus/campus_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/challenge/challenge_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/checkin_bloc/check_in_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/lecture/lecture_bloc.dart';
@@ -219,7 +220,14 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create:
                 (context) =>
-                    CampaignBloc(campaignRepository: CampaignRepositoryImp()),
+                    CampaignBloc(campaignRepository: CampaignRepositoryImp())
+                      ..add(LoadCampaigns()),
+          ),
+          BlocProvider(
+            create:
+                (context) =>
+                    CheckInBloc(CheckInRepositoryImpl())
+                      ..add(LoadCheckInData()),
           ),
           BlocProvider(
             create: (context) => LandingScreenBloc(),

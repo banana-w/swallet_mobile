@@ -25,35 +25,17 @@ class CampaignScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          lazy: false,
-            create: (context) => RoleAppBloc(context.read<StudentRepository>(),
-                context.read<StoreRepository>(), context.read<LectureRepository>())
-              ..add(RoleAppStart())),
-        BlocProvider(
-          create: (context) => CampaignBloc(
-              campaignRepository: context.read<CampaignRepository>())
-            ..add(LoadCampaigns()),
-        ),
-        BlocProvider(
-          create: (context) => CheckInBloc(CheckInRepositoryImpl())
-        ..add(LoadCheckInData()),
-        ),
-      ],
-
-      child: BlocBuilder<CampaignBloc, CampaignState>(
-        builder: (context, state) {
-          if (state is CampaignsLoaded) {
-            return CampaignScreenBody();
-          }
-          return Center(
-            child: Container(
-                child: Lottie.asset('assets/animations/loading-screen.json')),
-          );
-        },
-      ),
+    return BlocBuilder<CampaignBloc, CampaignState>(
+      builder: (context, state) {
+        if (state is CampaignsLoaded) {
+          return CampaignScreenBody();
+        }
+        return Center(
+          child: Container(
+            child: Lottie.asset('assets/animations/loading-screen.json'),
+          ),
+        );
+      },
     );
   }
 }

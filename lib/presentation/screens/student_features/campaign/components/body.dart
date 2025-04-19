@@ -34,7 +34,7 @@ class CampaignScreenBody extends StatefulWidget {
 }
 
 class _BodyState extends State<CampaignScreenBody>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin{
   // Constants
   static const double _baseWidth = 375;
   static const double _baseHeight = 812;
@@ -48,7 +48,10 @@ class _BodyState extends State<CampaignScreenBody>
   // Optimizing scroll loading
   final ScrollController _campaignScrollController = ScrollController();
   bool _isLoadingMore = false;
-  
+
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   void initState() {
     super.initState();
@@ -118,6 +121,7 @@ class _BodyState extends State<CampaignScreenBody>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final responsiveValues = _getResponsiveValues(context);
     
     return BlocListener<InternetBloc, InternetState>(
@@ -738,12 +742,7 @@ class _BrandsSection extends StatelessWidget {
   
   Widget _buildBrandsList(BuildContext context, RoleAppState roleState) {
     // Using separate BlocProvider to prevent unnecessary rebuilds
-    return BlocProvider(
-      // Create a new BrandBloc instance only for this section
-      create: (context) => BrandBloc(
-        brandRepository: context.read<BrandRepository>(),
-      )..add(LoadBrands(page: 1, size: 10)),
-      child: BlocBuilder<BrandBloc, BrandState>(
+    return  BlocBuilder<BrandBloc, BrandState>(
         builder: (context, state) {
           if (state is BrandsLoaded) {
             return SizedBox(
@@ -770,8 +769,7 @@ class _BrandsSection extends StatelessWidget {
           }
           return _buildLoadingIndicator();
         },
-      ),
-    );
+      );
   }
   
   Widget _buildViewMoreBrandsItem(BuildContext context, RoleAppState roleState) {

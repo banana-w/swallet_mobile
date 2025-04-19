@@ -5,7 +5,6 @@ import 'package:swallet_mobile/presentation/blocs/authentication/authentication_
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 
-import '../../../blocs/blocs.dart';
 import 'components/body.dart';
 
 class BrandListScreen extends StatelessWidget {
@@ -15,12 +14,13 @@ class BrandListScreen extends StatelessWidget {
       builder:
           (_) => BlocListener<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
-              if (state is AuthenticationFailed)
+              if (state is AuthenticationFailed) {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   LoginScreen.routeName,
                   (Route<dynamic> route) => false,
                 );
+              }
             },
             child: BrandListScreen(),
           ),
@@ -51,16 +51,14 @@ class BrandListScreen extends StatelessWidget {
             ),
           ),
           centerTitle: true,
-          title: Container(
-            child: Text(
-              'Thương hiệu',
-              style: GoogleFonts.openSans(
-                textStyle: TextStyle(
-                  fontSize: 20 * ffem,
-                  fontWeight: FontWeight.w900,
-                  height: 1.3625 * ffem / fem,
-                  color: Colors.white,
-                ),
+          title: Text(
+            'Thương hiệu',
+            style: GoogleFonts.openSans(
+              textStyle: TextStyle(
+                fontSize: 20 * ffem,
+                fontWeight: FontWeight.w900,
+                height: 1.3625 * ffem / fem,
+                color: Colors.white,
               ),
             ),
           ),

@@ -40,8 +40,7 @@ class CampaignDetailStudentScreen extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(context,
-                        '/landing-screen', (Route<dynamic> route) => false);
+                    Navigator.pop(context);
                   },
                   child: Icon(
                     Icons.arrow_back_rounded,
