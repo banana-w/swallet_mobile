@@ -224,10 +224,7 @@ class MyApp extends StatelessWidget {
                       ..add(LoadCampaigns()),
           ),
           BlocProvider(
-            create:
-                (context) =>
-                    CheckInBloc(CheckInRepositoryImpl())
-                      ..add(LoadCheckInData()),
+            create: (context) => CheckInBloc(CheckInRepositoryImpl()),
           ),
           BlocProvider(
             create: (context) => LandingScreenBloc(),

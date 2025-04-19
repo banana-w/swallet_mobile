@@ -34,7 +34,7 @@ class CampaignScreenBody extends StatefulWidget {
 }
 
 class _BodyState extends State<CampaignScreenBody>
-    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin{
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   // Constants
   static const double _baseWidth = 375;
   static const double _baseHeight = 812;
@@ -44,7 +44,7 @@ class _BodyState extends State<CampaignScreenBody>
   late AnimationController _animationController;
   bool _isAnimationPlaying = false;
   ResponsiveValues? _cachedResponsiveValues;
-  
+
   // Optimizing scroll loading
   final ScrollController _campaignScrollController = ScrollController();
   bool _isLoadingMore = false;
@@ -72,7 +72,7 @@ class _BodyState extends State<CampaignScreenBody>
     _campaignScrollController.addListener(() {
       final maxScroll = _campaignScrollController.position.maxScrollExtent;
       final currentScroll = _campaignScrollController.position.pixels;
-      
+
       // Only trigger load more when we're near the end and not already loading
       if (currentScroll > maxScroll - 200 && !_isLoadingMore) {
         final campaignState = context.read<CampaignBloc>().state;
@@ -101,10 +101,10 @@ class _BodyState extends State<CampaignScreenBody>
   // Cached responsive values to prevent recalculation
   ResponsiveValues _getResponsiveValues(BuildContext context) {
     if (_cachedResponsiveValues != null) return _cachedResponsiveValues!;
-    
+
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    
+
     final fem = width / _baseWidth;
     final ffem = fem * 0.97;
     final hem = height / _baseHeight;
@@ -123,7 +123,7 @@ class _BodyState extends State<CampaignScreenBody>
   Widget build(BuildContext context) {
     super.build(context);
     final responsiveValues = _getResponsiveValues(context);
-    
+
     return BlocListener<InternetBloc, InternetState>(
       listener: _handleInternetState,
       child: RefreshIndicator(
@@ -145,8 +145,8 @@ class _BodyState extends State<CampaignScreenBody>
                     responsiveValues: responsiveValues,
                     animationController: _animationController,
                     onDayTap: (state) => _handleDayTap(context, state),
-                    onCheckInStateChanged: (context, state) => 
-                        _handleCheckInState(context, state),
+                    onCheckInStateChanged:
+                        (context, state) => _handleCheckInState(context, state),
                   ),
                   SizedBox(height: 5 * responsiveValues.hem),
                   _TodayCampaignsSection(responsiveValues: responsiveValues),
@@ -162,7 +162,7 @@ class _BodyState extends State<CampaignScreenBody>
       ),
     );
   }
-  
+
   // Animation control methods
   void _startBounceAnimation() {
     if (!_isAnimationPlaying) {
@@ -179,21 +179,25 @@ class _BodyState extends State<CampaignScreenBody>
       context.read<CheckInBloc>().add(CheckIn());
     } else {
       _showWarningSnackBar(
-        context, 'Thông báo', 'Bạn đã điểm danh hôm nay rồi!');
+        context,
+        'Thông báo',
+        'Bạn đã điểm danh hôm nay rồi!',
+      );
     }
   }
-  
+
   void _handleCheckInState(BuildContext context, CheckInState state) {
-    if(state is CheckInSuccess) {
-            context.read<RoleAppBloc>().add(RoleAppStart());
+    if (state is CheckInSuccess) {
+      context.read<RoleAppBloc>().add(RoleAppStart());
     }
     if (state is CheckInLoaded && !state.canCheckInToday) {
       final previousState = context.read<CheckInBloc>().state;
-      
+
       if (previousState is CheckInLoaded && previousState.canCheckInToday) {
         String message;
         if (state.streak >= 7) {
-          message = 'Bạn đã đạt chuỗi 7 ngày! Nhận 70 điểm mỗi ngày nếu giữ chuỗi!';
+          message =
+              'Bạn đã đạt chuỗi 7 ngày! Nhận 70 điểm mỗi ngày nếu giữ chuỗi!';
         } else {
           message = 'Bạn nhận được ${state.rewardPoints} điểm!';
         }
@@ -203,7 +207,7 @@ class _BodyState extends State<CampaignScreenBody>
       _showErrorSnackBar(context, 'Lỗi', state.message);
     }
   }
-  
+
   // Internet state handling
   void _handleInternetState(BuildContext context, InternetState state) {
     if (state is Connected) {
@@ -217,88 +221,105 @@ class _BodyState extends State<CampaignScreenBody>
   void _showConnectedSnackBar(BuildContext context) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        elevation: 0,
-        duration: const Duration(milliseconds: 2000),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'Đã kết nối internet',
-          message: 'Đã kết nối internet!',
-          contentType: ContentType.success,
+      ..showSnackBar(
+        SnackBar(
+          elevation: 0,
+          duration: const Duration(milliseconds: 2000),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'Đã kết nối internet',
+            message: 'Đã kết nối internet!',
+            contentType: ContentType.success,
+          ),
         ),
-      ));
+      );
   }
 
   void _showNoInternetDialog(BuildContext context) {
     showCupertinoDialog(
       context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: const Text('Không kết nối Internet'),
-        content: const Text('Vui lòng kết nối Internet'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              final stateInternet = context.read<InternetBloc>().state;
-              if (stateInternet is Connected) {
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Đồng ý'),
+      builder:
+          (context) => CupertinoAlertDialog(
+            title: const Text('Không kết nối Internet'),
+            content: const Text('Vui lòng kết nối Internet'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  final stateInternet = context.read<InternetBloc>().state;
+                  if (stateInternet is Connected) {
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text('Đồng ý'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
-  
-  void _showSuccessSnackBar(BuildContext context, String title, String message) {
+
+  void _showSuccessSnackBar(
+    BuildContext context,
+    String title,
+    String message,
+  ) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        elevation: 0,
-        duration: const Duration(milliseconds: 2000),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: title,
-          message: message,
-          contentType: ContentType.success,
+      ..showSnackBar(
+        SnackBar(
+          elevation: 0,
+          duration: const Duration(milliseconds: 2000),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: title,
+            message: message,
+            contentType: ContentType.success,
+          ),
         ),
-      ));
+      );
   }
-  
+
   void _showErrorSnackBar(BuildContext context, String title, String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        elevation: 0,
-        duration: const Duration(milliseconds: 2000),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: title,
-          message: message,
-          contentType: ContentType.failure,
+      ..showSnackBar(
+        SnackBar(
+          elevation: 0,
+          duration: const Duration(milliseconds: 2000),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: title,
+            message: message,
+            contentType: ContentType.failure,
+          ),
         ),
-      ));
+      );
   }
-  
-  void _showWarningSnackBar(BuildContext context, String title, String message) {
+
+  void _showWarningSnackBar(
+    BuildContext context,
+    String title,
+    String message,
+  ) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        elevation: 0,
-        duration: const Duration(milliseconds: 2000),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: title,
-          message: message,
-          contentType: ContentType.warning,
+      ..showSnackBar(
+        SnackBar(
+          elevation: 0,
+          duration: const Duration(milliseconds: 2000),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: title,
+            message: message,
+            contentType: ContentType.warning,
+          ),
         ),
-      ));
+      );
   }
-  
+
   // Data operations
   Future<void> _refreshData(BuildContext context) async {
     context.read<CampaignBloc>().add(LoadCampaigns());
@@ -309,10 +330,8 @@ class _BodyState extends State<CampaignScreenBody>
 
 // Separated section widgets for better performance
 class _MembershipSection extends StatelessWidget {
-  const _MembershipSection({
-    Key? key,
-    required this.responsiveValues,
-  }) : super(key: key);
+  const _MembershipSection({Key? key, required this.responsiveValues})
+    : super(key: key);
 
   final ResponsiveValues responsiveValues;
 
@@ -321,15 +340,17 @@ class _MembershipSection extends StatelessWidget {
     return BlocBuilder<RoleAppBloc, RoleAppState>(
       builder: (context, state) {
         if (state is Unverified) {
+          context.read<CheckInBloc>().add(LoadCheckInData());
           return _buildUnverifiedCard();
         } else if (state is Verified) {
+          context.read<CheckInBloc>().add(LoadCheckInData());
           return _buildMembershipCard(state.studentModel);
         }
         return _buildLoadingIndicator();
       },
     );
   }
-  
+
   Widget _buildUnverifiedCard() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15 * responsiveValues.fem),
@@ -341,7 +362,7 @@ class _MembershipSection extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildMembershipCard(StudentModel student) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15 * responsiveValues.fem),
@@ -355,7 +376,7 @@ class _MembershipSection extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildLoadingIndicator() {
     return Center(
       child: Lottie.asset(
@@ -404,21 +425,19 @@ class _DailyCheckInSection extends StatelessWidget {
   Widget _buildCheckInContent(BuildContext context) {
     // Using RepaintBoundary to optimize animation rendering
     return RepaintBoundary(
-        child: BlocConsumer<CheckInBloc, CheckInState>(
-          listener: onCheckInStateChanged,
-          builder: (context, state) {
-            if(state is CheckInSuccess) {
-              context.read<RoleAppBloc>().add(RoleAppStart());
-            }
-            if (state is CheckInLoaded) {
-              return _buildCheckInCalendar(context, state);
-            }
-            return Center(
-              child: CircularProgressIndicator(color: kPrimaryColor),
-            );
-          },
-        ),
-      );
+      child: BlocConsumer<CheckInBloc, CheckInState>(
+        listener: onCheckInStateChanged,
+        builder: (context, state) {
+          if (state is CheckInSuccess) {
+            context.read<RoleAppBloc>().add(RoleAppStart());
+          }
+          if (state is CheckInLoaded) {
+            return _buildCheckInCalendar(context, state);
+          }
+          return Center(child: CircularProgressIndicator(color: kPrimaryColor));
+        },
+      ),
+    );
   }
 
   Widget _buildCheckInCalendar(BuildContext context, CheckInLoaded state) {
@@ -427,10 +446,11 @@ class _DailyCheckInSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(7, (index) {
-            final isChecked = state.checkInHistory.length > index && 
+            final isChecked =
+                state.checkInHistory.length > index &&
                 state.checkInHistory[index];
             final isToday = index == state.currentDayIndex;
-            
+
             return GestureDetector(
               onTap: isToday ? () => onDayTap(state) : null,
               child: _buildDayItem(isChecked, isToday, state, index),
@@ -442,30 +462,40 @@ class _DailyCheckInSection extends StatelessWidget {
       ],
     );
   }
-  
-  Widget _buildDayItem(bool isChecked, bool isToday, CheckInLoaded state, int index) {
+
+  Widget _buildDayItem(
+    bool isChecked,
+    bool isToday,
+    CheckInLoaded state,
+    int index,
+  ) {
     // Only animate the current day that needs attention
     if (isToday && !isChecked && state.canCheckInToday) {
       return AnimatedBuilder(
         animation: animationController,
         builder: (context, child) {
           return _buildDayItemContent(
-            isChecked, 
-            isToday, 
-            state, 
-            index, 
+            isChecked,
+            isToday,
+            state,
+            index,
             offset: -animationController.value * 10,
           );
         },
       );
     }
-    
+
     // For other days, no need to rebuild with animation
     return _buildDayItemContent(isChecked, isToday, state, index, offset: 0);
   }
-  
+
   Widget _buildDayItemContent(
-      bool isChecked, bool isToday, CheckInLoaded state, int index, {double offset = 0}) {
+    bool isChecked,
+    bool isToday,
+    CheckInLoaded state,
+    int index, {
+    double offset = 0,
+  }) {
     return Transform.translate(
       offset: Offset(0, offset),
       child: Stack(
@@ -505,11 +535,12 @@ class _DailyCheckInSection extends StatelessWidget {
               style: GoogleFonts.openSans(
                 textStyle: TextStyle(
                   fontSize: 9 * responsiveValues.ffem,
-                  color: isChecked
-                      ? Colors.white
-                      : (isToday && state.canCheckInToday
+                  color:
+                      isChecked
                           ? Colors.white
-                          : Colors.grey),
+                          : (isToday && state.canCheckInToday
+                              ? Colors.white
+                              : Colors.grey),
                   fontWeight: FontWeight.w900,
                   shadows: [
                     Shadow(
@@ -527,7 +558,7 @@ class _DailyCheckInSection extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildStreakCounter(CheckInLoaded state) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10 * responsiveValues.hem),
@@ -565,17 +596,15 @@ class _DailyCheckInSection extends StatelessWidget {
 }
 
 class _TodayCampaignsSection extends StatelessWidget {
-  const _TodayCampaignsSection({
-    Key? key,
-    required this.responsiveValues,
-  }) : super(key: key);
+  const _TodayCampaignsSection({Key? key, required this.responsiveValues})
+    : super(key: key);
 
   final ResponsiveValues responsiveValues;
 
   @override
   Widget build(BuildContext context) {
     final roleState = context.watch<RoleAppBloc>().state;
-    
+
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10 * responsiveValues.fem),
       width: double.infinity,
@@ -593,7 +622,7 @@ class _TodayCampaignsSection extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildTodayCampaigns(BuildContext context, RoleAppState roleState) {
     return BlocBuilder<CampaignBloc, CampaignState>(
       buildWhen: (previous, current) {
@@ -618,9 +647,7 @@ class _TodayCampaignsSection extends StatelessWidget {
             );
           }
         }
-        return Center(
-          child: CircularProgressIndicator(color: kPrimaryColor),
-        );
+        return Center(child: CircularProgressIndicator(color: kPrimaryColor));
       },
     );
   }
@@ -638,7 +665,7 @@ class _TodayCampaignsSection extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildEmptyCampaignMessage() {
     return Container(
       width: double.infinity,
@@ -655,10 +682,7 @@ class _TodayCampaignsSection extends StatelessWidget {
           SvgPicture.asset(
             'assets/icons/campaign-navbar-icon.svg',
             width: 60 * responsiveValues.fem,
-            colorFilter: ColorFilter.mode(
-              kLowTextColor,
-              BlendMode.srcIn,
-            ),
+            colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
           ),
           Center(
             child: Padding(
@@ -682,17 +706,15 @@ class _TodayCampaignsSection extends StatelessWidget {
 }
 
 class _BrandsSection extends StatelessWidget {
-  const _BrandsSection({
-    Key? key,
-    required this.responsiveValues,
-  }) : super(key: key);
+  const _BrandsSection({Key? key, required this.responsiveValues})
+    : super(key: key);
 
   final ResponsiveValues responsiveValues;
 
   @override
   Widget build(BuildContext context) {
     final roleState = context.watch<RoleAppBloc>().state;
-    
+
     return Container(
       color: kbgWhiteColor,
       padding: EdgeInsets.symmetric(vertical: 15 * responsiveValues.fem),
@@ -714,15 +736,16 @@ class _BrandsSection extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildViewMoreButton(BuildContext context, RoleAppState roleState) {
     return InkWell(
-      onTap: () => _navigateBasedOnRole(
-        context, 
-        roleState, 
-        UnverifiedScreen.routeName,
-        BrandListScreen.routeName
-      ),
+      onTap:
+          () => _navigateBasedOnRole(
+            context,
+            roleState,
+            UnverifiedScreen.routeName,
+            BrandListScreen.routeName,
+          ),
       child: Container(
         height: 22 * responsiveValues.hem,
         width: 22 * responsiveValues.fem,
@@ -739,47 +762,51 @@ class _BrandsSection extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildBrandsList(BuildContext context, RoleAppState roleState) {
     // Using separate BlocProvider to prevent unnecessary rebuilds
-    return  BlocBuilder<BrandBloc, BrandState>(
-        builder: (context, state) {
-          if (state is BrandsLoaded) {
-            return SizedBox(
-              height: 160 * responsiveValues.hem,
-              width: MediaQuery.of(context).size.width,
-              child: ListView.builder(
-                // Horizontal scrolling is better for performance than vertical
-                scrollDirection: Axis.horizontal,
-                itemCount: state.brands.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == state.brands.length) {
-                    return _buildViewMoreBrandsItem(context, roleState);
-                  } else {
-                    return BrandCard(
-                      fem: responsiveValues.fem,
-                      hem: responsiveValues.hem,
-                      ffem: responsiveValues.ffem,
-                      brandModel: state.brands[index],
-                    );
-                  }
-                },
-              ),
-            );
-          }
-          return _buildLoadingIndicator();
-        },
-      );
+    return BlocBuilder<BrandBloc, BrandState>(
+      builder: (context, state) {
+        if (state is BrandsLoaded) {
+          return SizedBox(
+            height: 160 * responsiveValues.hem,
+            width: MediaQuery.of(context).size.width,
+            child: ListView.builder(
+              // Horizontal scrolling is better for performance than vertical
+              scrollDirection: Axis.horizontal,
+              itemCount: state.brands.length + 1,
+              itemBuilder: (context, index) {
+                if (index == state.brands.length) {
+                  return _buildViewMoreBrandsItem(context, roleState);
+                } else {
+                  return BrandCard(
+                    fem: responsiveValues.fem,
+                    hem: responsiveValues.hem,
+                    ffem: responsiveValues.ffem,
+                    brandModel: state.brands[index],
+                  );
+                }
+              },
+            ),
+          );
+        }
+        return _buildLoadingIndicator();
+      },
+    );
   }
-  
-  Widget _buildViewMoreBrandsItem(BuildContext context, RoleAppState roleState) {
+
+  Widget _buildViewMoreBrandsItem(
+    BuildContext context,
+    RoleAppState roleState,
+  ) {
     return InkWell(
-      onTap: () => _navigateBasedOnRole(
-        context,
-        roleState,
-        UnverifiedScreen.routeName,
-        BrandListScreen.routeName
-      ),
+      onTap:
+          () => _navigateBasedOnRole(
+            context,
+            roleState,
+            UnverifiedScreen.routeName,
+            BrandListScreen.routeName,
+          ),
       child: Container(
         width: 80 * responsiveValues.fem,
         margin: EdgeInsets.symmetric(horizontal: 5 * responsiveValues.fem),
@@ -832,7 +859,7 @@ class _BrandsSection extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildLoadingIndicator() {
     return Center(
       child: Lottie.asset(
@@ -842,9 +869,13 @@ class _BrandsSection extends StatelessWidget {
       ),
     );
   }
-  
-  void _navigateBasedOnRole(BuildContext context, RoleAppState roleState, 
-      String unverifiedRoute, String verifiedRoute) {
+
+  void _navigateBasedOnRole(
+    BuildContext context,
+    RoleAppState roleState,
+    String unverifiedRoute,
+    String verifiedRoute,
+  ) {
     if (roleState is Unverified) {
       Navigator.pushNamed(context, unverifiedRoute);
     } else {
@@ -855,10 +886,8 @@ class _BrandsSection extends StatelessWidget {
 
 // Use a separate stateful widget for campaigns list to better manage state
 class _CampaignsSection extends StatefulWidget {
-  const _CampaignsSection({
-    Key? key,
-    required this.responsiveValues,
-  }) : super(key: key);
+  const _CampaignsSection({Key? key, required this.responsiveValues})
+    : super(key: key);
 
   final ResponsiveValues responsiveValues;
 
@@ -874,7 +903,7 @@ class _CampaignsSectionState extends State<_CampaignsSection> {
   @override
   Widget build(BuildContext context) {
     final roleState = context.watch<RoleAppBloc>().state;
-    
+
     return Container(
       color: kbgWhiteColor,
       padding: EdgeInsets.symmetric(vertical: 15 * widget.responsiveValues.fem),
@@ -884,9 +913,7 @@ class _CampaignsSectionState extends State<_CampaignsSection> {
             margin: EdgeInsets.only(left: 10 * widget.responsiveValues.fem),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildSectionTitle('CHIẾN DỊCH ƯU ĐÃI'),
-              ],
+              children: [_buildSectionTitle('CHIẾN DỊCH ƯU ĐÃI')],
             ),
           ),
           SizedBox(height: 12 * widget.responsiveValues.hem),
@@ -896,7 +923,7 @@ class _CampaignsSectionState extends State<_CampaignsSection> {
       ),
     );
   }
-  
+
   Widget _buildCampaignsList(BuildContext context, RoleAppState roleState) {
     return BlocConsumer<CampaignBloc, CampaignState>(
       listenWhen: (previous, current) {
@@ -915,11 +942,11 @@ class _CampaignsSectionState extends State<_CampaignsSection> {
       buildWhen: (previous, current) {
         // Avoid rebuilding when the data hasn't changed
         if (previous is CampaignsLoaded && current is CampaignsLoaded) {
-          if (_cachedCampaigns == current.campaigns && 
+          if (_cachedCampaigns == current.campaigns &&
               _cachedHasReachedMax == current.hasReachMax) {
             return false;
           }
-          
+
           _cachedCampaigns = current.campaigns;
           _cachedHasReachedMax = current.hasReachMax;
           return true;
@@ -940,13 +967,16 @@ class _CampaignsSectionState extends State<_CampaignsSection> {
       },
     );
   }
-  
+
   Widget _buildCampaignsListView(
-      BuildContext context, CampaignsLoaded state, RoleAppState roleState) {
+    BuildContext context,
+    CampaignsLoaded state,
+    RoleAppState roleState,
+  ) {
     // Extract the campaigns once to avoid multiple accesses
     final campaigns = state.campaigns;
     final hasReachedMax = state.hasReachMax;
-    
+
     // Use SliverList in a ListView to improve performance
     return ListView.builder(
       physics: NeverScrollableScrollPhysics(),
@@ -961,20 +991,27 @@ class _CampaignsSectionState extends State<_CampaignsSection> {
             ),
           );
         }
-        
+
         // Cache campaign for this index
         final campaign = campaigns[index];
-        
+
         // Using RepaintBoundary to optimize rendering
         return RepaintBoundary(
           child: GestureDetector(
-            onTap: () => _navigateToDetailCampaign(context, roleState, campaign.id),
+            onTap:
+                () =>
+                    _navigateToDetailCampaign(context, roleState, campaign.id),
             child: CampaignListCard(
               fem: widget.responsiveValues.fem,
               hem: widget.responsiveValues.hem,
               ffem: widget.responsiveValues.ffem,
               campaignModel: campaign,
-              onTap: () => _navigateToDetailCampaign(context, roleState, campaign.id),
+              onTap:
+                  () => _navigateToDetailCampaign(
+                    context,
+                    roleState,
+                    campaign.id,
+                  ),
             ),
           ),
         );
@@ -1018,11 +1055,13 @@ class _CampaignsSectionState extends State<_CampaignsSection> {
       ),
     );
   }
-  
+
   Widget _buildEmptyCampaignMessage() {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.symmetric(horizontal: 15 * widget.responsiveValues.fem),
+      margin: EdgeInsets.symmetric(
+        horizontal: 15 * widget.responsiveValues.fem,
+      ),
       height: 220 * widget.responsiveValues.hem,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -1035,10 +1074,7 @@ class _CampaignsSectionState extends State<_CampaignsSection> {
           SvgPicture.asset(
             'assets/icons/campaign-navbar-icon.svg',
             width: 60 * widget.responsiveValues.fem,
-            colorFilter: ColorFilter.mode(
-              kLowTextColor,
-              BlendMode.srcIn,
-            ),
+            colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
           ),
           const Center(
             child: Padding(
@@ -1057,14 +1093,17 @@ class _CampaignsSectionState extends State<_CampaignsSection> {
       ),
     );
   }
-  
+
   void _navigateToDetailCampaign(
-      BuildContext context, RoleAppState roleState, String campaignId) {
+    BuildContext context,
+    RoleAppState roleState,
+    String campaignId,
+  ) {
     if (roleState is Unverified) {
       Navigator.pushNamed(context, UnverifiedScreen.routeName);
     } else {
       Navigator.pushNamed(
-        context, 
+        context,
         CampaignDetailStudentScreen.routeName,
         arguments: campaignId,
       );

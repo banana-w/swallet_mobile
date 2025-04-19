@@ -44,7 +44,7 @@ class CampaignDetailStudentScreen extends StatelessWidget {
                   },
                   child: Icon(
                     Icons.arrow_back_rounded,
-                    color: Colors.white,
+                    color: kPrimaryColor,
                     size: 35 * fem,
                   ),
                 ),
