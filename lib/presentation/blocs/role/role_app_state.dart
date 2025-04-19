@@ -46,6 +46,10 @@ final class RoleAppLoading extends RoleAppState {
   @override
   List<Object?> get props => [];
 }
+final class RoleReset extends RoleAppState {
+  @override
+  List<Object?> get props => [];
+}
 
 // final class Pending extends RoleAppState {
 //   final AuthenModel authenModel;

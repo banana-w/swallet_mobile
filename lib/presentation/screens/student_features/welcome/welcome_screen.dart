@@ -32,6 +32,8 @@ class WelcomeScreen extends StatelessWidget {
             '/landing-screen-store',
             (Route<dynamic> route) => false,
           );
+        } else if (state is RoleReset){
+          context.read<RoleAppBloc>().add(RoleAppEnd());
         }
       },
       child: Scaffold(

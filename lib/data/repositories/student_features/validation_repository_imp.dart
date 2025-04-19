@@ -161,12 +161,9 @@ class ValidationRepositoryImp implements ValidationRepository {
     try {
       final Map<String, String> headers = {'Content-Type': 'application/json'};
 
-      Map<String, String> body = {'inviteCode': inviteCode};
-
       http.Response response = await http.post(
-        Uri.parse('${baseURL}Account/validInviteCode'),
+        Uri.parse('${baseURL}Account/validInviteCode?inviteCode=$inviteCode'),
         headers: headers,
-        body: jsonEncode(body),
       );
 
       if (response.statusCode == 200) {

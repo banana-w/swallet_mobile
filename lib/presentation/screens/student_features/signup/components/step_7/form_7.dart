@@ -245,6 +245,7 @@ class _FormBody7State extends State<FormBody7> {
                 );
               } else if (state is AuthenticationInProcess) {
                 showDialog<String>(
+                  barrierDismissible: false,
                   context: context,
                   builder: (BuildContext context) {
                     Future.delayed(Duration(seconds: 20), () {

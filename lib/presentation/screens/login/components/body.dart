@@ -17,7 +17,6 @@ class Body extends StatelessWidget {
     double baseHeight = 812;
     double hem = MediaQuery.of(context).size.height / baseHeight;
     double height = MediaQuery.of(context).size.height;
-    print(height);
 
     double responsiveSize() {
       if (height < 800) {

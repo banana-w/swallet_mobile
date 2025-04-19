@@ -90,7 +90,7 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
             emit(StoreRole(authenModel: authenModel, storeModel: store!));
           }
         } else {
-          emit(RoleAppLoading());
+          emit(RoleReset());
         }
       }
     } catch (e) {
