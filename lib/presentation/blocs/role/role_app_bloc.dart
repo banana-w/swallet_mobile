@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
+import 'package:swallet_mobile/data/firebase/notification_service.dart';
 import 'package:swallet_mobile/data/models/authen_model.dart';
 import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
@@ -110,6 +112,7 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
       } else {
         AuthenLocalDataSource.removeAuthen();
         AuthenLocalDataSource.clearAuthen();
+        await NotificationService.instance.logoutStudent();
       }
 
       // emit(Unknown());

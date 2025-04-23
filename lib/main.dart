@@ -1,7 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:swallet_mobile/data/firebase/notification_service.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/check_in_repository.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/wishlist_repository.dart';
 import 'package:swallet_mobile/data/repositories/authen_repository_imp.dart';
@@ -29,6 +31,7 @@ import 'package:swallet_mobile/data/interface_repositories/student_features/vali
 import 'package:swallet_mobile/data/interface_repositories/student_features/verification_repository.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/wheel_repository.dart';
 import 'package:swallet_mobile/data/repositories/student_features/wishlist_repository.dart';
+import 'package:swallet_mobile/firebase_options.dart';
 import 'package:swallet_mobile/presentation/blocs/authentication/authentication_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
@@ -56,6 +59,10 @@ final notificationBloc = NotificationBloc();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await NotificationService.instance.initialize();
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,

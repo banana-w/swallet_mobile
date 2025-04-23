@@ -5,8 +5,11 @@ class NotificationModel extends Equatable {
   final String body;
   final String payload;
 
-  const NotificationModel(
-      {required this.title, required this.body, required this.payload});
+  const NotificationModel({
+    required this.title,
+    required this.body,
+    required this.payload,
+  });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
@@ -17,11 +20,11 @@ class NotificationModel extends Equatable {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['title'] = title;
-    data['body'] = body;
-    data['payload'] = payload;
-    return data;
+    return {
+      'title': title,
+      'body': body,
+      'payload': payload, // Store payload as-is (already a JSON string)
+    };
   }
 
   @override
