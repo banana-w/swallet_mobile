@@ -137,7 +137,7 @@ class AppRouter {
         return UnverifiedScreen.route();
 
       case NotificationScreen.routeName:
-        return NotificationScreen.route(data: null);
+        return NotificationScreen.route(data: settings.arguments as dynamic);
 
       case NotificationListScreen.routeName:
         return NotificationListScreen.route();

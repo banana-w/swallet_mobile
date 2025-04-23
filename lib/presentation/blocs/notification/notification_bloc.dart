@@ -51,6 +51,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
             title: event.notificationModel.title,
             body: event.notificationModel.body,
             payload: event.notificationModel.payload));
+            
         List<Map<String, dynamic>> jsonList =
             listNoti.map((item) => item.toJson()).toList();
         String notiString = json.encode(jsonList);

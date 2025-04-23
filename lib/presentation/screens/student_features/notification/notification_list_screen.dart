@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/presentation/blocs/notification/notification_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
 import '../../../widgets/shimmer_widget.dart';
 
 class NotificationListScreen extends StatelessWidget {
@@ -105,12 +106,13 @@ class NotificationListScreen extends StatelessWidget {
                                       jsonDecode(notification.payload);
                                   return GestureDetector(
                                     onTap: () async {
-                                      // if (payloadMap['campaignId'] != '') {
-                                      //   Navigator.of(context).pushNamed(
-                                      //       CampaignDetailScreen.routeName,
-                                      //       arguments:
-                                      //           payloadMap['campaignId']);
-                                      // }
+                                      if (payloadMap['campaignId'] != null &&
+                                        payloadMap['campaignId'].isNotEmpty) {
+                                        Navigator.of(context).pushNamed(
+                                            CampaignDetailStudentScreen.routeName,
+                                            arguments:
+                                                payloadMap['campaignId']);
+                                      }
                                     },
                                     child: Container(
                                       margin: EdgeInsets.only(
@@ -283,12 +285,13 @@ class NotificationListScreen extends StatelessWidget {
                                       jsonDecode(notification.payload);
                                   return GestureDetector(
                                     onTap: () async {
-                                      // if (payloadMap['campaignId'] != '') {
-                                      //   Navigator.of(context).pushNamed(
-                                      //       CampaignDetailScreen.routeName,
-                                      //       arguments:
-                                      //           payloadMap['campaignId']);
-                                      // }
+                                      if (payloadMap['campaignId'] != null &&
+                                          payloadMap['campaignId'].isNotEmpty) {
+                                        Navigator.of(context).pushNamed(
+                                            CampaignDetailStudentScreen.routeName,
+                                            arguments:
+                                                payloadMap['campaignId']);
+                                      }
                                     },
                                     child: Container(
                                       margin: EdgeInsets.only(
@@ -326,7 +329,7 @@ class NotificationListScreen extends StatelessWidget {
                                                 width: 100 * fem,
                                                 height: 100 * hem,
                                                 child: Image.network(
-                                                  payloadMap['image'],
+                                                  payloadMap['image'] ?? '',
                                                   fit: BoxFit.fill,
                                                   loadingBuilder: (context,
                                                       child,
@@ -342,7 +345,7 @@ class NotificationListScreen extends StatelessWidget {
                                                   errorBuilder: (context,
                                                       error, stackTrace) {
                                                     return Image.asset(
-                                                      'assets/images/bean_logo.jpg',
+                                                      'assets/images/swallet_logo.png',
                                                     );
                                                   },
                                                 ),

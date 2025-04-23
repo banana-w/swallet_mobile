@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:swallet_mobile/data/firebase/notification_service.dart';
 import 'package:swallet_mobile/data/models/student_features/create_model/create_authen_model.dart';
 import 'package:swallet_mobile/data/models/student_features/verify_authen_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/authentication_repository.dart';
@@ -45,6 +47,9 @@ class AuthenticationBloc
           // Nếu đã xác thực (isVerified = true)
           if (authenModel.role == 'Sinh viên') {
             emit(AuthenticationSuccess());
+            await NotificationService.instance.loginStudent(
+              authenModel.accountId,
+            );
           } else if (authenModel.role.contains('Giáo viên')) {
             emit(AuthenticationLectureSuccess());
           } else {
