@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:swallet_mobile/data/models/authen_model.dart';
 import 'package:swallet_mobile/data/models/student_features/create_model/create_authen_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/authentication_repository.dart';
+import 'package:swallet_mobile/data/repositories/lecture_features/lecture_repository_imp.dart';
 
 import '../../presentation/config/constants.dart';
 import '../datasource/authen_local_datasource.dart';
 import 'package:http/http.dart' as http;
-
 
 class AuthenticationRepositoryImp implements AuthenticationRepository {
   String endPoint = '${baseURL}Auth';
@@ -40,6 +40,9 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
 
           return authenModel;
         } else if (authenModel.role.contains("Giáo viên")) {
+          final lecture = await LectureRepositoryImp().fetchLectureById(
+            accountId: authenModel.accountId,
+          );
           String authenString = jsonEncode(authenModel);
           AuthenLocalDataSource.saveAuthen(authenString);
           AuthenLocalDataSource.saveToken(authenModel.jwt);
