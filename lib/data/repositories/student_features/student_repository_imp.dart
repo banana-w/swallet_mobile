@@ -475,13 +475,14 @@ class StudentRepositoryImp implements StudentRepository {
   Future<List<String>?> fetchWishListByStudentId() async {
     try {
       token = await AuthenLocalDataSource.getToken();
-      studentId = (await AuthenLocalDataSource.getStudentId())!;
+      var student = await AuthenLocalDataSource.getStudent();
+      studentId = student!.id;
       final Map<String, String> headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       };
       http.Response response = await http.get(
-        Uri.parse('$endPoint/$studentId/wishlists'),
+        Uri.parse('${baseURL}Wishlist/getWishlishBrand/$studentId'),
         headers: headers,
       );
 

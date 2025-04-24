@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
+import 'package:swallet_mobile/data/firebase/notification_service.dart';
 import 'package:swallet_mobile/data/models/student_features/brand_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/brand_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
@@ -49,6 +50,7 @@ class _InformationCardBrandDetailState
           if (state.wishlist.status) {
             setState(() {
               isFollowed = true;
+              NotificationService.instance.followBrand(state.wishlist.brandId);
             });
             // PushNotification().initNotifications();
             // PushNotification().localNotiInit();
@@ -68,8 +70,9 @@ class _InformationCardBrandDetailState
                 ),
               );
           } else {
-            setState(() {
+            setState(()  {
               isFollowed = false;
+              NotificationService.instance.unfollowBrand(state.wishlist.brandId);
             });
             // PushNotification().initNotifications();
             // PushNotification().localNotiInit();

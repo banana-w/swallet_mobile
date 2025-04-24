@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/student_features/notification_model.dart';
+import 'package:swallet_mobile/data/repositories/student_features/student_repository_imp.dart';
 import 'package:swallet_mobile/main.dart';
 import 'package:swallet_mobile/presentation/blocs/notification/notification_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_screen.dart';
@@ -15,6 +17,9 @@ class NotificationService {
 
   // Firebase Messaging instance
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+
+  // Student repository instance
+  final _studentRepository = StudentRepositoryImp();
 
   // Local notifications plugin
   final FlutterLocalNotificationsPlugin localNotifications =
@@ -29,6 +34,9 @@ class NotificationService {
         _firebaseMessagingBackgroundHandler,
       );
 
+      if (!isFlutterLocalNotificationsInitialized) {
+        await _initLocalNotifications();
+      }
       // Request notification permissions
       await requestPermission();
 
@@ -131,10 +139,7 @@ class NotificationService {
 
   Future<void> showNotification(RemoteMessage message) async {
     try {
-      if (!isFlutterLocalNotificationsInitialized) {
-        await _initLocalNotifications();
-      }
-
+      // Không cần kiểm tra isFlutterLocalNotificationsInitialized vì đã khởi tạo trong initialize
       const androidDetails = AndroidNotificationDetails(
         'high_importance_channel',
         'High Importance Notifications',
@@ -156,7 +161,7 @@ class NotificationService {
       );
 
       await localNotifications.show(
-        message.messageId.hashCode, // Use message ID as notification ID
+        message.messageId.hashCode,
         message.notification?.title ?? 'Notification',
         message.notification?.body ?? '',
         platformDetails,
@@ -231,18 +236,38 @@ class NotificationService {
     }
   }
 
-  String? _currentStudentId;
-
-  Future<void> logoutStudent() async {
-    try {
-      if (_currentStudentId != null) {
-        await unsubscribeFromTopic(_currentStudentId!);
-        _currentStudentId = null;
-      }
-    } catch (e) {
-      print('Error during logout: $e');
-    }
+  Future<Set<String>> _getSubscribedTopics() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList('subscribed_topics')?.toSet() ?? {};
   }
+
+  Future<void> _saveSubscribedTopics(Set<String> topics) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('subscribed_topics', topics.toList());
+  }
+
+  Future<List<String>?> _getCachedWishList(String studentId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final cachedWishList = prefs.getString('wishlist_$studentId');
+    if (cachedWishList != null) {
+      return jsonDecode(cachedWishList).cast<String>();
+    }
+    final wishList = await _studentRepository.fetchWishListByStudentId();
+    if (wishList != null) {
+      await prefs.setString('wishlist_$studentId', jsonEncode(wishList));
+    }
+    return wishList;
+  }
+
+  Future<void> _saveCachedWishList(
+    String studentId,
+    List<String> wishList,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('wishlist_$studentId', jsonEncode(wishList));
+  }
+
+  String? _currentStudentId;
 
   Future<void> loginStudent(String studentId) async {
     try {
@@ -250,15 +275,115 @@ class NotificationService {
         print('Already subscribed to topic: $studentId');
         return;
       }
-      // Unsubscribe khỏi topic cũ nếu có
+
+      final subscribedTopics = await _getSubscribedTopics();
+
       if (_currentStudentId != null && _currentStudentId != studentId) {
         await unsubscribeFromTopic(_currentStudentId!);
+        subscribedTopics.remove(_currentStudentId!);
       }
-      // Subscribe vào topic mới
-      await subribeToTopic(studentId);
+
+      if (!subscribedTopics.contains(studentId)) {
+        await subribeToTopic(studentId);
+        subscribedTopics.add(studentId);
+      }
       _currentStudentId = studentId;
+
+      final wishList = await _getCachedWishList(studentId);
+      if (wishList != null && wishList.isNotEmpty) {
+        await Future.wait(
+          wishList.where((topic) => !subscribedTopics.contains(topic)).map((
+            topic,
+          ) async {
+            await subribeToTopic(topic);
+            subscribedTopics.add(topic);
+            print('Subscribed to wishlist topic: $topic');
+          }),
+        );
+      }
+
+      await _saveSubscribedTopics(subscribedTopics);
     } catch (e) {
-      print('Error switching student topic: $e');
+      print('Error switching student topic or subscribing to wishlist: $e');
+    }
+  }
+
+  Future<void> logoutStudent() async {
+    try {
+      final subscribedTopics = await _getSubscribedTopics();
+
+      if (_currentStudentId != null) {
+        await unsubscribeFromTopic(_currentStudentId!);
+        subscribedTopics.remove(_currentStudentId!);
+        _currentStudentId = null;
+      }
+
+      final wishList = await _getCachedWishList(_currentStudentId ?? '');
+      if (wishList != null) {
+        await Future.wait(
+          wishList.where((topic) => subscribedTopics.contains(topic)).map((
+            topic,
+          ) async {
+            await unsubscribeFromTopic(topic);
+            subscribedTopics.remove(topic);
+            print('Unsubscribed from wishlist topic: $topic');
+          }),
+        );
+      }
+
+      await _saveSubscribedTopics(subscribedTopics);
+    } catch (e) {
+      print('Error during logout: $e');
+    }
+  }
+
+  Future<void> followBrand(String brandId) async {
+    try {
+      final subscribedTopics = await _getSubscribedTopics();
+      if (!subscribedTopics.contains(brandId)) {
+        await subribeToTopic(brandId);
+        subscribedTopics.add(brandId);
+        await _saveSubscribedTopics(subscribedTopics);
+
+        // Cập nhật cache wishlist
+        final studentId =
+            _currentStudentId ?? (await AuthenLocalDataSource.getStudent())?.id;
+        if (studentId != null) {
+          final wishList = await _getCachedWishList(studentId) ?? [];
+          if (!wishList.contains(brandId)) {
+            wishList.add(brandId);
+            await _saveCachedWishList(studentId, wishList);
+          }
+        }
+        print('Followed campaign: $brandId');
+      }
+    } catch (e) {
+      print('Error following campaign $brandId: $e');
+    }
+  }
+
+  Future<void> unfollowBrand(String brandId) async {
+    try {
+      final subscribedTopics = await _getSubscribedTopics();
+      if (subscribedTopics.contains(brandId)) {
+        await unsubscribeFromTopic(brandId);
+        subscribedTopics.remove(brandId);
+        await _saveSubscribedTopics(subscribedTopics);
+
+        // Cập nhật cache wishlist
+        final studentId =
+            _currentStudentId ?? (await AuthenLocalDataSource.getStudent())?.id;
+        if (studentId != null) {
+          final wishList = await _getCachedWishList(studentId) ?? [];
+          if (wishList.contains(brandId)) {
+            wishList.remove(brandId);
+            await _saveCachedWishList(studentId, wishList);
+          }
+        }
+        print('Unfollowed campaign: $brandId');
+      }
+    } catch (e) {
+      print('Error unfollowing campaign $brandId: $e');
     }
   }
 }
