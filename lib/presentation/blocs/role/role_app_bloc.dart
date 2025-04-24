@@ -105,15 +105,16 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
     Emitter<RoleAppState> emit,
   ) async {
     try {
-      final studentId = await AuthenLocalDataSource.getStudentId();
-      if (studentId == null) {
-        AuthenLocalDataSource.removeAuthen();
-        AuthenLocalDataSource.clearAuthen();
-      } else {
-        AuthenLocalDataSource.removeAuthen();
-        AuthenLocalDataSource.clearAuthen();
+      // final studentId = await AuthenLocalDataSource.getStudentId();
+      // if (studentId == null) {
         await NotificationService.instance.logoutStudent();
-      }
+        AuthenLocalDataSource.removeAuthen();
+        AuthenLocalDataSource.clearAuthen();
+      // } else {
+      //   AuthenLocalDataSource.removeAuthen();
+      //   AuthenLocalDataSource.clearAuthen();
+      //   await NotificationService.instance.logoutStudent();
+      // }
 
       // emit(Unknown());
     } catch (e) {
