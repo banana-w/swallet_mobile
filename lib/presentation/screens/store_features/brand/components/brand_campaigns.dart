@@ -6,7 +6,6 @@ import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
 
-import '../../../../blocs/blocs.dart';
 import '../../../../config/constants.dart';
 import '../../../../widgets/shimmer_widget.dart';
 import 'campaign_list_card.dart';

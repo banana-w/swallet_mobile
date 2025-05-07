@@ -9,8 +9,6 @@ import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_update_detail/components/form_update.dart';
 
-import '../../../../blocs/blocs.dart';
-
 class Body extends StatelessWidget {
   const Body({super.key, required this.studentModel});
 

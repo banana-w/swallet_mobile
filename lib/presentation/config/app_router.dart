@@ -27,6 +27,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/challenge/c
 import 'package:swallet_mobile/presentation/screens/student_features/challenge_daily/challenge_daily_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/check_in/check_in_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/landing/landing_screen.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/location_checkin/location_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/lucky_wheel/lucky_wheel_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_list_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_screen.dart';
@@ -177,6 +178,9 @@ class AppRouter {
         );
       case VoucherScreen.routeName:
         return VoucherScreen.route();
+      
+      case LocationListScreen.routeName:
+        return LocationListScreen.route();
 
       case VoucherItemDetailScreen.routeName:
         final args = settings.arguments as Map<String, String>;

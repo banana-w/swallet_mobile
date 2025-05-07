@@ -4,7 +4,6 @@ import 'package:swallet_mobile/data/interface_repositories/student_features/bran
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
-import '../../../blocs/blocs.dart';
 import 'components/body.dart';
 
 class BrandDetailStoreScreen extends StatelessWidget {

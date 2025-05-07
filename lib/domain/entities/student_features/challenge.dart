@@ -18,6 +18,7 @@ class Challenge extends Equatable {
   final String dateUpdated;
   final String description;
   final bool status;
+  final String category;
 
   const Challenge(
       {required this.id,
@@ -36,7 +37,8 @@ class Challenge extends Equatable {
       required this.dateCreated,
       required this.dateUpdated,
       required this.description,
-      required this.status});
+      required this.status,
+      required this.category});
 
   @override
   List<Object> get props => [
