@@ -11,7 +11,6 @@ import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/lecture/lecture_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 
-import '../../../../blocs/blocs.dart';
 import 'form_update.dart';
 
 class Body extends StatelessWidget {

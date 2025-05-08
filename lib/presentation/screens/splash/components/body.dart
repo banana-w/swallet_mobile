@@ -19,12 +19,12 @@ List<Map<String, String>> splashData = [
     'image': 'assets/images/onboarding1.png',
     'title': 'Swallet - Ví tích điểm',
     'content':
-        'Ứng dụng ví tích điểm cho sinh viên,\n thu thập "Seed" và đổi quà dễ dàng.',
+        'Ứng dụng ví tích điểm cho sinh viên,\n thu thập "Coin" và đổi quà dễ dàng.',
     'button': 'Tiếp tục',
   },
   {
     'image': 'assets/images/onboarding2.png',
-    'title': 'Nhận Star Mọi Nơi!',
+    'title': 'Nhận Coin Mọi Nơi!',
     'content':
         'Tham gia hoạt động, tích điểm,\n đổi quà hấp dẫn ngay trong tầm tay.',
     'button': 'Tiếp tục',

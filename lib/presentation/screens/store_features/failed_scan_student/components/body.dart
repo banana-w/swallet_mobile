@@ -8,7 +8,6 @@ import 'package:lottie/lottie.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
-import '../../../../blocs/blocs.dart';
 
 class Body extends StatelessWidget {
   const Body({super.key, required this.failed});

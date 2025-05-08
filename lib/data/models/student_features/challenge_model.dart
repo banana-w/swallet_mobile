@@ -19,6 +19,7 @@ class ChallengeModel extends Challenge {
     required super.dateUpdated,
     required super.description,
     required super.status,
+    required super.category
   });
 
   factory ChallengeModel.fromJson(Map<String, dynamic> json) {
@@ -41,6 +42,7 @@ class ChallengeModel extends Challenge {
       dateUpdated: json['dateUpdated'] ?? '',
       description: json['description'],
       status: json['status'],
+      category: json['category'] ?? '',
     );
   }
 
@@ -104,6 +106,7 @@ class ChallengeModel extends Challenge {
       dateUpdated: dateUpdated ?? this.dateUpdated,
       description: description ?? this.description,
       status: status ?? this.status,
+      category: category,
     );
   }
 }
