@@ -453,6 +453,7 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
       var voucherItemId = await studentRepository.fetchVoucherItemAvailable(
         voucherId: event.voucherId,
         studentId: student!.id,
+        campaignId: event.campaignId,
       );
 
       emit(

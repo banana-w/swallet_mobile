@@ -34,16 +34,18 @@ final class LoadCampaignById extends CampaignEvent {
 final class RedeemCampaignVoucher extends CampaignEvent {
   final String campaignId;
   final String studentId;
+  final String voucherId;
   final int quantity;
   final double cost;
 
   const RedeemCampaignVoucher(
       {required this.campaignId,
       required this.studentId,
+      required this.voucherId,
       required this.quantity,
       required this.cost});
 
   @override
   List<Object?> get props =>
-      [campaignId, studentId, quantity, cost];
+      [campaignId, studentId, voucherId,quantity, cost];
 }
