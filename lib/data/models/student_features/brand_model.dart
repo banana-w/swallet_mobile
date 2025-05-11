@@ -1,7 +1,7 @@
 import 'package:swallet_mobile/domain/entities/student_features/brand.dart';
 
 class BrandModel extends Brand {
-  BrandModel({
+  const BrandModel({
     required super.id,
     required super.accountId,
     required super.brandName,
@@ -27,6 +27,7 @@ class BrandModel extends Brand {
     required super.isFavor,
     required super.numberOfFollowers,
     required super.numberOfCampaigns,
+    required super.favorCount,
     // required super.greenWalletId,
     // required super.greenWallet,
     // required super.greenWalletName,
@@ -63,6 +64,7 @@ class BrandModel extends Brand {
       description: json['description'] as String? ?? '',
       state: json['state'] as bool? ?? true,
       status: json['status'] as bool? ?? true,
+      favorCount: json['favorCount'] as int? ?? 0, // Không có trong JSON result
       isFavor: json['isFavor'] as bool? ?? false, // Không có trong JSON result
       numberOfFollowers:
           json['numberOfFollowers'] as int? ?? 0, // Không có trong JSON result
@@ -130,6 +132,7 @@ class BrandModel extends Brand {
       state: state ?? this.state,
       status: status ?? this.status,
       isFavor: isFavor ?? this.isFavor,
+      favorCount: favorCount,
       numberOfFollowers: numberOfFollowers ?? this.numberOfFollowers,
       numberOfCampaigns: numberOfCampaigns ?? this.numberOfCampaigns,
       // greenWalletId: greenWalletId ?? this.greenWalletId,

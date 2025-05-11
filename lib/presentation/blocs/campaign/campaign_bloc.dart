@@ -124,6 +124,7 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
       var result = await campaignRepository.redeemCampaignVoucher(
         campaignId: event.campaignId,
         studentId: event.studentId,
+        voucherId: event.voucherId,
         cost: event.cost,
         quantity: event.quantity,
       );

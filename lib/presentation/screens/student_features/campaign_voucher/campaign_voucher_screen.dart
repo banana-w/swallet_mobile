@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -237,9 +239,9 @@ class CampaignVoucherScreen extends StatelessWidget {
                                               size: 15,
                                             ),
                                             onPressed: () {
+                                              int maxLimit = min(2, campaignVoucherModel.numberOfItemsAvailable!);
                                               if (state.counterValue >=
-                                                  campaignVoucherModel
-                                                      .numberOfItemsAvailable!) {
+                                                  maxLimit) {
                                               } else {
                                                 context
                                                     .read<CounterCubit>()
