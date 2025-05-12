@@ -6,6 +6,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/check_in/check_in_screen.dart';
 import 'tab_scan_voucher.dart';
 
 class Body extends StatefulWidget {
@@ -30,6 +31,12 @@ class _BodyState extends State<Body> {
     double ffem = fem * 0.97;
     double baseHeight = 812;
     double hem = MediaQuery.of(context).size.height / baseHeight;
+
+    MobileScannerController cameraController2 = MobileScannerController(
+      detectionSpeed: DetectionSpeed.noDuplicates,
+      facing: CameraFacing.back,
+      torchEnabled: false,
+    );
 
     return BlocListener<InternetBloc, InternetState>(
       listener: (context, state) {
@@ -71,59 +78,111 @@ class _BodyState extends State<Body> {
       child: BlocBuilder<InternetBloc, InternetState>(
         builder: (context, state) {
           if (state is Connected) {
-            return Column(
-              children: [
-                // App Bar
-                Container(
-                  height: 80 * hem,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/background_splash.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 10 * hem),
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: IconButton(
-                            icon: Icon(Icons.arrow_back, color: Colors.white),
-                            onPressed: () => Navigator.pop(context),
-                          ),
+            return DefaultTabController(
+              length: 2,
+              child: Column(
+                children: [
+                  // App Bar
+                  Container(
+                    height: 80 * hem,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                          'assets/images/background_splash.png',
                         ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Quét mã QR',
-                            style: GoogleFonts.openSans(
-                              textStyle: TextStyle(
-                                fontSize: 22 * ffem,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 10 * hem),
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: IconButton(
+                              icon: Icon(Icons.arrow_back, color: Colors.white),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Quét mã QR',
+                              style: GoogleFonts.openSans(
+                                textStyle: TextStyle(
+                                  fontSize: 22 * ffem,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // TabBar
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                          'assets/images/background_splash.png',
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: TabBar(
+                      indicatorColor: Colors.white,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      indicatorWeight: 2,
+                      labelColor: Colors.white,
+                      labelStyle: GoogleFonts.openSans(
+                        textStyle: TextStyle(
+                          fontSize: 12 * ffem,
+                          height: 1.3625 * ffem / fem,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      unselectedLabelColor: Colors.white60,
+                      unselectedLabelStyle: GoogleFonts.openSans(
+                        textStyle: TextStyle(
+                          fontSize: 12 * ffem,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      tabs: [Tab(text: 'Lecture QR'), Tab(text: 'Check-in QR')],
+                    ),
+                  ),
+                  // Scanner Area
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        BlocProvider(
+                          create:
+                              (context) => StudentBloc(
+                                studentRepository:
+                                    context.read<StudentRepository>(),
+                              ),
+                          child: TabScanLectureQR(
+                            cameraController: widget.cameraController,
+                            studentId: widget.studentId,
+                          ),
+                        ),
+                        BlocProvider(
+                          create:
+                              (context) => StudentBloc(
+                                studentRepository:
+                                    context.read<StudentRepository>(),
+                              ),
+                          child: CheckInQRScanner(
+                            cameraController: cameraController2,
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                // Scanner Area
-                Expanded(
-                  child: BlocProvider(
-                    create:
-                        (context) => StudentBloc(
-                          studentRepository: context.read<StudentRepository>(),
-                        ),
-                    child: TabScanLectureQR(
-                      cameraController: widget.cameraController,
-                      studentId: widget.studentId,
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             );
           } else {
             return Center(

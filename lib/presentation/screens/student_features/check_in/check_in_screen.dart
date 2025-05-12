@@ -184,7 +184,7 @@ class _CheckInBodyState extends State<CheckInBody> {
 }
 
 class CheckInQRScanner extends StatefulWidget {
-  const CheckInQRScanner({required this.cameraController});
+  const CheckInQRScanner({super.key, required this.cameraController});
 
   final MobileScannerController cameraController;
 
@@ -207,6 +207,15 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Dịch vụ định vị bị tắt. Vui lòng bật định vị.'),
+          action: SnackBarAction(
+            label: 'Mở cài đặt',
+            onPressed: () => Geolocator.openLocationSettings(),
+          ),
+        ),
+      );
       throw 'Dịch vụ định vị bị tắt.';
     }
 
@@ -214,6 +223,9 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Quyền định vị bị từ chối.')),
+        );
         throw 'Quyền định vị bị từ chối.';
       }
     }
@@ -221,9 +233,7 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
     if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Quyền định vị bị từ chối vĩnh viễn. Vui lòng cấp quyền trong cài đặt.',
-          ),
+          content: Text('Quyền định vị bị từ chối vĩnh viễn. Vui lòng cấp quyền trong cài đặt.'),
           action: SnackBarAction(
             label: 'Mở cài đặt',
             onPressed: () => Geolocator.openAppSettings(),
@@ -235,94 +245,6 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
 
     return await Geolocator.getCurrentPosition();
   }
-
-  // Future<void> _checkInWithQR(String qrCode) async {
-  //   final student = await AuthenLocalDataSource.getStudent();
-  //   final studentId = student?.id;
-
-  //   try {
-  //     // Lấy vị trí GPS hiện tại
-  //     Position position = await _determinePosition();
-
-  //     //       final baseURL = 'https://10.0.2.2:7137/api/';
-  //     //       final client = http.Client();
-  //     // final ioClient =
-  //     //     HttpClient()
-  //     //       ..badCertificateCallback =
-  //     //           (X509Certificate cert, String host, int port) =>
-  //     //               true; // Bỏ qua kiểm tra chứng chỉ
-  //     // final httpClient = IOClient(ioClient);
-
-  //     // Gửi yêu cầu check-in với GPS
-  //     final response = await http.post(
-  //       Uri.parse('${baseUrl}CheckIn/qr'),
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: jsonEncode({
-  //         'studentId': studentId,
-  //         'qrCode': qrCode,
-  //         'latitude': position.latitude,
-  //         'longitude': position.longitude,
-  //       }),
-  //     );
-
-  //     var data = jsonDecode(response.body);
-  //     if (response.statusCode == 200) {
-  //       await context.read<SpinHistoryRepository>().incrementBonusSpins(
-  //         studentId!,
-  //         DateTime.now(),
-  //       );
-
-  //       ScaffoldMessenger.of(context)
-  //         ..hideCurrentSnackBar()
-  //         ..showSnackBar(
-  //           SnackBar(
-  //             elevation: 0,
-  //             duration: const Duration(milliseconds: 2000),
-  //             behavior: SnackBarBehavior.floating,
-  //             backgroundColor: Colors.transparent,
-  //             content: AwesomeSnackbarContent(
-  //               title: 'Thành công!',
-  //               message:
-  //                   'Check-in thành công, bạn nhận được ${data['pointsAwarded'] ?? 10} xu và 1 lượt quay Lucky Wheel!',
-  //               contentType: ContentType.success,
-  //             ),
-  //           ),
-  //         );
-  //     } else {
-  //       throw Exception(data['message'] ?? 'Check-in thất bại');
-  //     }
-  //   } catch (e) {
-  //     String errorMessage;
-  //     if (e.toString().contains("Bạn không ở gần địa điểm này để check-in")) {
-  //       errorMessage = 'Bạn không ở gần địa điểm này để check-in';
-  //     } else if (e.toString().contains(
-  //       "Bạn đã check-in tại địa điểm này hôm nay",
-  //     )) {
-  //       errorMessage = 'Bạn đã check-in tại địa điểm này hôm nay';
-  //     } else {
-  //       errorMessage = e.toString().replaceFirst(
-  //         'Exception: ',
-  //         '',
-  //       ); // Hiển thị lỗi khác nếu có
-  //     }
-
-  //     ScaffoldMessenger.of(context)
-  //       ..hideCurrentSnackBar()
-  //       ..showSnackBar(
-  //         SnackBar(
-  //           elevation: 0,
-  //           duration: const Duration(milliseconds: 2000),
-  //           behavior: SnackBarBehavior.floating,
-  //           backgroundColor: Colors.transparent,
-  //           content: AwesomeSnackbarContent(
-  //             title: 'Lỗi!',
-  //             message: errorMessage,
-  //             contentType: ContentType.failure,
-  //           ),
-  //         ),
-  //       );
-  //   }
-  // }
 
   Future<void> _checkInWithQR(String qrCode) async {
     final student = await AuthenLocalDataSource.getStudent();
@@ -345,37 +267,37 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
       var data = jsonDecode(response.body);
       if (response.statusCode == 200) {
         await context.read<SpinHistoryRepository>().incrementBonusSpins(
-          studentId!,
-          DateTime.now(),
-        );
+              studentId!,
+              DateTime.now(),
+            );
 
-        // Điều hướng đến CheckInSuccessScreen
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
-          CheckInSuccessScreen.route(
-            pointsAwarded: data['pointsAwarded'] ?? 10,
-          ),
+          CheckInSuccessScreen.route(pointsAwarded: data['pointsAwarded'] ?? 10),
         );
       } else {
+        print('API Error: ${response.statusCode} - ${data['message']}');
         throw Exception(data['message'] ?? 'Check-in thất bại');
       }
     } catch (e) {
+      print('Check-in Error: $e');
       String errorMessage;
       if (e.toString().contains("Bạn không ở gần địa điểm này để check-in")) {
         errorMessage = 'Bạn không ở gần địa điểm này để check-in';
-      } else if (e.toString().contains(
-        "Bạn đã check-in tại địa điểm này hôm nay",
-      )) {
+      } else if (e.toString().contains("Bạn đã check-in tại địa điểm này hôm nay")) {
         errorMessage = 'Bạn đã check-in tại địa điểm này hôm nay';
       } else {
         errorMessage = e.toString().replaceFirst('Exception: ', '');
       }
 
-      // Điều hướng đến CheckInFailedScreen
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
         CheckInFailedScreen.route(failedReason: errorMessage),
       );
+    } finally {
+      setState(() {
+        _hasScanned = false;
+      });
     }
   }
 
@@ -432,4 +354,5 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
       ],
     );
   }
+
 }
