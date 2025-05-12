@@ -9,7 +9,7 @@ import 'package:swallet_mobile/presentation/screens/student_features/landing/com
 class CusNavBar extends StatelessWidget {
   const CusNavBar({super.key});
 
-  @override
+    @override
   Widget build(BuildContext context) {
     double baseWidth = 375;
     double fem = MediaQuery.of(context).size.width / baseWidth;
@@ -30,7 +30,7 @@ class CusNavBar extends StatelessWidget {
                     var index = NavItem.navItems.indexOf(item);
                     if (index == 1) {
                       return Container(
-                        width: 51 * fem,
+                        width: 50 * fem,
                         margin: EdgeInsets.only(top: 0 * hem, right: 40 * fem),
                         padding: EdgeInsets.only(top: 15.2 * hem),
                         decoration: BoxDecoration(
@@ -40,7 +40,7 @@ class CusNavBar extends StatelessWidget {
                               color:
                                   state.tabIndex == index
                                       ? kNauVang
-                                      : kPrimaryColor,
+                                      : Colors.white10,
                             ),
                           ),
                         ),
@@ -85,7 +85,7 @@ class CusNavBar extends StatelessWidget {
                       return Container(
                         width: 50 * fem,
                         margin: EdgeInsets.only(top: 0 * hem, left: 70 * fem),
-                        padding: EdgeInsets.only(top: 15.5 * hem),
+                        padding: EdgeInsets.only(top: 15 * hem),
                         decoration: BoxDecoration(
                           border: Border(
                             top: BorderSide(
@@ -93,7 +93,7 @@ class CusNavBar extends StatelessWidget {
                               color:
                                   state.tabIndex == index
                                       ? kNauVang
-                                      : kPrimaryColor,
+                                      : Colors.white10,
                             ),
                           ),
                         ),
@@ -106,8 +106,8 @@ class CusNavBar extends StatelessWidget {
                           child: Column(
                             children: [
                               SizedBox(
-                                width: 22 * fem,
-                                height: 22 * fem,
+                                width: 22.5 * fem,
+                                height: 22.5 * fem,
                                 child:
                                     state.tabIndex == index
                                         ? item.icon
@@ -150,7 +150,7 @@ class CusNavBar extends StatelessWidget {
                             color:
                                 state.tabIndex == index
                                     ? kNauVang
-                                    : kPrimaryColor,
+                                    : Colors.white10,
                           ),
                         ),
                       ),
