@@ -518,21 +518,21 @@ class Body extends StatelessWidget {
                                             title: 'Lịch sử giao dịch',
                                           ),
 
-                                          SizedBox(height: 10 * hem),
-                                          ButtonProfile(
-                                            fem: fem,
-                                            hem: hem,
-                                            ffem: ffem,
-                                            svgIcon:
-                                                'assets/icons/qr-unbean-icon.svg',
-                                            title: 'Check-in hằng ngày',
-                                            onPressed: () async {
-                                              Navigator.pushNamed(
-                                                context,
-                                                CheckInScreen.routeName,
-                                              );
-                                            },
-                                          ),
+                                          // SizedBox(height: 10 * hem),
+                                          // ButtonProfile(
+                                          //   fem: fem,
+                                          //   hem: hem,
+                                          //   ffem: ffem,
+                                          //   svgIcon:
+                                          //       'assets/icons/qr-unbean-icon.svg',
+                                          //   title: 'Check-in hằng ngày',
+                                          //   onPressed: () async {
+                                          //     Navigator.pushNamed(
+                                          //       context,
+                                          //       CheckInScreen.routeName,
+                                          //     );
+                                          //   },
+                                          // ),
                                           SizedBox(height: 10 * hem),
                                           //button logout
                                           ButtonProfile(

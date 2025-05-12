@@ -21,7 +21,7 @@ class QrStudentViewScreen extends StatefulWidget {
     );
   }
 
-  QrStudentViewScreen({super.key, required this.studentId});
+  const QrStudentViewScreen({super.key, required this.studentId});
   final String studentId;
 
   @override
@@ -29,7 +29,11 @@ class QrStudentViewScreen extends StatefulWidget {
 }
 
 class _QrStudentViewScreenState extends State<QrStudentViewScreen> {
-  MobileScannerController cameraController = MobileScannerController();
+  MobileScannerController cameraController = MobileScannerController(
+      detectionSpeed: DetectionSpeed.noDuplicates,
+      facing: CameraFacing.back,
+      torchEnabled: false,
+    );
 
   @override
   void dispose() {
@@ -39,11 +43,14 @@ class _QrStudentViewScreenState extends State<QrStudentViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Body(
-          studentId: widget.studentId,
-          cameraController: cameraController,
+    return DefaultTabController(
+      length: 2,
+      child: SafeArea(
+        child: Scaffold(
+          body: Body(
+            cameraController: cameraController,
+            studentId: widget.studentId,
+          ),
         ),
       ),
     );

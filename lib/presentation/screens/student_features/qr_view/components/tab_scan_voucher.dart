@@ -5,8 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/failed_scan_voucher/failed_scan_voucher_screen.dart';
-import 'package:swallet_mobile/presentation/screens/student_features/qr_view/success-scren.dart';
+
 
 import '../../../../config/constants.dart';
 import 'qr_scanner_overlay.dart';
