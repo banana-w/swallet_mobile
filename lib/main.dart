@@ -41,6 +41,7 @@ import 'package:swallet_mobile/presentation/blocs/checkin_bloc/check_in_bloc.dar
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/lecture/lecture_bloc.dart';
+import 'package:swallet_mobile/presentation/blocs/location/location_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/notification/notification_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/ranking/ranking_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
@@ -229,6 +230,11 @@ class MyApp extends StatelessWidget {
                 (context) =>
                     CampaignBloc(campaignRepository: CampaignRepositoryImp())
                       ..add(LoadCampaigns()),
+          ),
+          BlocProvider(
+            create:
+                (context) =>
+                    LocationBloc(ChallengeRepositoryImp())..add(AddLocation()),
           ),
           BlocProvider(
             create: (context) => CheckInBloc(CheckInRepositoryImpl()),

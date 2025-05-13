@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/student_features/challenge_model.dart';
 import 'package:swallet_mobile/presentation/blocs/challenge/challenge_bloc.dart';
+import 'package:swallet_mobile/presentation/screens/student_features/location_checkin/location_screen.dart';
 
 import '../../../../config/constants.dart';
 import 'in_process/in_process_button.dart';
@@ -28,8 +28,6 @@ class ChallengeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var formatter = NumberFormat('###,000');
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -93,16 +91,31 @@ class ChallengeCard extends StatelessWidget {
                         SizedBox(
                           height: 4 * hem,
                         ), // khoảng cách nhỏ giữa 2 dòng
-                        Text(
-                          challengeModel.description,
-                          textAlign: TextAlign.justify,
-                          style: GoogleFonts.openSans(
-                            fontSize: 12 * ffem,
-                            height: 1.3,
-                            color: Colors.grey[700],
+                        GestureDetector(
+                          onTap:
+                              challengeModel.category == "Check-in"
+                                  ? () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      LocationListScreen.routeName
+                                    );
+                                  }
+                                  : null,
+                          child: Text(
+                            challengeModel.description,
+                            textAlign: TextAlign.justify,
+                            style: GoogleFonts.openSans(
+                              fontSize: 12 * ffem,
+                              height: 1.3,
+                              color: Colors.grey[700],
+                              decoration:
+                                  challengeModel.category == "Check-in"
+                                      ? TextDecoration.underline
+                                      : null,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
@@ -172,7 +185,7 @@ class ChallengeCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        '+ ${formatter.format(challengeModel.amount)}',
+                        '+ ${challengeModel.amount.toInt()}',
                         style: GoogleFonts.openSans(
                           color: kPrimaryColor,
                           fontSize: 17 * ffem,
@@ -218,7 +231,7 @@ Widget _checkCondition(
       hem: hem,
       onPressed: () async {
         final student = await AuthenLocalDataSource.getStudent();
-        
+
         context.read<ChallengeBloc>().add(
           ClaimChallengeStudentIdDaily(
             studentId: student!.id,

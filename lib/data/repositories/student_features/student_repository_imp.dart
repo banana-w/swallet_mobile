@@ -558,8 +558,9 @@ class StudentRepositoryImp implements StudentRepository {
   Future<String?> fetchVoucherItemAvailable({
     required String voucherId,
     required String studentId,
+    required String campaignId,
   }) async {
-    final url = Uri.parse('${baseURL}VoucherItem/viId?voucherId=$voucherId&studentId=$studentId');
+    final url = Uri.parse('${baseURL}VoucherItem/viId?voucherId=$voucherId&studentId=$studentId&campaignId=$campaignId');
 
     try {
       final response = await http.get(

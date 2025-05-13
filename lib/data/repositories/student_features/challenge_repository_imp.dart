@@ -6,6 +6,7 @@ import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/challenge_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/challenge_repository.dart';
+import 'package:swallet_mobile/data/models/student_features/location_model.dart';
 
 import '../../../presentation/config/constants.dart';
 
@@ -114,6 +115,31 @@ class ChallengeRepositoryImp extends ChallengeRepository {
       }
     } catch (e) {
       throw Exception(e.toString());
+    }
+  }
+
+@override
+  Future<List<LocationModel>?> fetchLocation() async {
+    try {
+      final response = await http.get(
+        Uri.parse('${baseURL}Location/getAll'),
+        headers: {'accept': 'text/plain'},
+      );
+
+      if (response.statusCode == 200) {
+        // Giải mã JSON thành danh sách
+        final result = jsonDecode(utf8.decode(response.bodyBytes));
+        // Chuyển đổi từng JSON thành LocationModel
+        final List<LocationModel> locations = 
+            (result as List).map((e) => LocationModel.fromJson(e)).toList();
+        return locations;
+      } else {
+        // Nếu API trả về lỗi (ví dụ: 404, 500)
+        throw Exception('Failed to fetch locations: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Xử lý lỗi mạng hoặc lỗi khác
+      throw Exception('Error fetching locations: $e');
     }
   }
 }

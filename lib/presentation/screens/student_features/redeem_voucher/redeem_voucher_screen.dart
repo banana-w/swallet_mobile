@@ -201,6 +201,7 @@ class RedeemVoucherScreen extends StatelessWidget {
                 onTap: () {
                   context.read<CampaignBloc>().add(RedeemCampaignVoucher(
                       campaignId: campignId,
+                      voucherId: campaignDetailId,
                       studentId: studentId,
                       quantity: quantity,
                       cost: total));

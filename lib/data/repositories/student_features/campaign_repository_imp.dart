@@ -227,6 +227,7 @@ class CampaignRepositoryImp implements CampaignRepository {
   Future<String?> redeemCampaignVoucher({
     required String campaignId,
     required String studentId,
+    required String voucherId,
     required int quantity,
     required double cost,
   }) async {
@@ -240,6 +241,7 @@ class CampaignRepositoryImp implements CampaignRepository {
       Map body = {
         'campaignId': campaignId,
         'studentId': studentId,
+        'voucherId': voucherId,
         'cost': cost,
         'quantity': quantity,
       };

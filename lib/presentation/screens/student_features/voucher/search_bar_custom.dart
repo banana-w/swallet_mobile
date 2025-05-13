@@ -16,7 +16,7 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
   @override
   void initState() {
     super.initState();
-    _suggestions = ['HighLands Coffee', 'Passio', 'Koi Thé'];
+    _suggestions = ['HighLands Coffee', 'Passio'];
   }
 
   @override
@@ -29,17 +29,17 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
         Expanded(
           flex: 6,
           child: SearchAnchor(
-            viewBackgroundColor: kPrimaryColor,
+            viewBackgroundColor: const Color.fromARGB(255, 180, 235, 249),
             isFullScreen: false,
             viewConstraints: const BoxConstraints(maxHeight: 400.0),
             viewOnSubmitted: (value) async {
-              final studentId = await AuthenLocalDataSource.getStudentId();
+              final student = await AuthenLocalDataSource.getStudent();
               FocusScope.of(context).unfocus();
-              // Navigator.pushNamed(
-              //   context,
-              //   VoucherListScreen.routeName,
-              //   arguments: <dynamic>[value, studentId],
-              // );
+              Navigator.pushNamed(
+                context,
+                VoucherListScreen.routeName,
+                arguments: <dynamic>[value, student!.id],
+              );
             },
             builder: (BuildContext context, SearchController controller) {
               return SizedBox(
@@ -95,14 +95,14 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
                       title: Text(item),
                       onTap: () {
                         setState(() async {
-                          final studentId =
-                              await AuthenLocalDataSource.getStudentId();
+                          final student =
+                              await AuthenLocalDataSource.getStudent();
                           controller.closeView(item);
-                          // Navigator.pushNamed(
-                          //   context,
-                          //   VoucherListScreen.routeName,
-                          //   arguments: <dynamic>[item, studentId],
-                          // );
+                          Navigator.pushNamed(
+                            context,
+                            VoucherListScreen.routeName,
+                            arguments: <dynamic>[item, student!.id],
+                          );
                           FocusScope.of(context).unfocus();
                         });
                       },

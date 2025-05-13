@@ -122,19 +122,17 @@ class _InformationCardBrandDetailState
                 //avatar
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10 * widget.fem),
-                  child: Container(
+                  child: SizedBox(
                     height: 80 * widget.hem,
                     width: 80 * widget.fem,
                     child: Image.network(
                       widget.brandModel.coverPhoto,
                       fit: BoxFit.fill,
                       errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          child: Icon(
-                            Icons.error,
-                            size: 50 * widget.fem,
-                            color: kPrimaryColor,
-                          ),
+                        return Icon(
+                          Icons.error,
+                          size: 50 * widget.fem,
+                          color: kPrimaryColor,
                         );
                       },
                     ),

@@ -5,6 +5,7 @@ import 'package:swallet_mobile/data/models/authen_model.dart';
 import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/models/student_features/create_model/create_authen_model.dart';
+import 'package:swallet_mobile/data/models/student_features/location_model.dart';
 import 'package:swallet_mobile/data/models/student_features/notification_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/data/models/student_features/verify_authen_model.dart';
@@ -12,7 +13,29 @@ import 'package:swallet_mobile/data/models/user_model.dart';
 
 class AuthenLocalDataSource {
   AuthenLocalDataSource();
+  static Future<void> saveLocation(List<LocationModel> locations) async {
+    final sf = await SharedPreferences.getInstance();
+    // Chuyển danh sách LocationModel thành chuỗi JSON
+    final List<String> locationsJson =
+        locations.map((location) => jsonEncode(location.toJson())).toList();
+    // Lưu chuỗi JSON vào SharedPreferences
+    await sf.setStringList('locations', locationsJson);
+  }
 
+  static Future<List<LocationModel>?> getLocations() async {
+    final sf = await SharedPreferences.getInstance();
+    // Lấy danh sách chuỗi JSON từ SharedPreferences
+    final List<String>? locationsJson = sf.getStringList('locations');
+    if (locationsJson == null) {
+      return null;
+    }
+    // Chuyển chuỗi JSON thành danh sách LocationModel
+    final List<LocationModel> locations = locationsJson
+        .map((json) => LocationModel.fromJson(jsonDecode(json)))
+        .toList();
+    return locations;
+  }
+  
   static Future<void> saveToken(String token) async {
     final sf = await SharedPreferences.getInstance();
     await sf.setString('token', token);

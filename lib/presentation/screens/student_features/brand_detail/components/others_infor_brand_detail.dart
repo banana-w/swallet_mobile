@@ -55,8 +55,7 @@ class _OthersInforBrandDetailState extends State<OthersInforBrandDetail> {
                 builder: (context, state) {
                  if(state is BrandByIdLoaded){
                    return Text(
-                    // '${state.brand.numberOfFollowers} Theo dõi',
-                    '0 Theo dõi',
+                    '${state.brand.favorCount} Theo dõi',
                     style: GoogleFonts.openSans(
                         textStyle: TextStyle(
                             fontSize: 10 * widget.fem,

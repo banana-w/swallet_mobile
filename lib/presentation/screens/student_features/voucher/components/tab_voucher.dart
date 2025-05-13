@@ -26,8 +26,8 @@ class TabVoucher extends StatefulWidget {
 
 class _BodyState extends State<TabVoucher> {
   ScrollController scrollController = ScrollController();
-  bool isLoadingMore = false; 
-  
+  bool isLoadingMore = false;
+
   @override
   void initState() {
     scrollController.addListener(() {
@@ -42,12 +42,12 @@ class _BodyState extends State<TabVoucher> {
           !state.hasReachedMax) {
         isLoadingMore = true;
         context.read<StudentBloc>().add(
-              LoadMoreStudentVouchers(
-                scrollController,
-                id: widget.studentId,
-                isUsed: false,
-              ),
-            );
+          LoadMoreStudentVouchers(
+            scrollController,
+            id: widget.studentId,
+            isUsed: false,
+          ),
+        );
       }
     });
 
@@ -359,16 +359,19 @@ class VoucherCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () async {
-        Navigator.pushNamed(
-          context,
-          VoucherItemDetailScreen.routeName,
-          arguments: {
-            'campaignId': voucherGroup.campaignId,
-            'voucherId': voucherGroup.voucherId,
-          },
-        );
-      },
+      onTap:
+          DateTime.parse(voucherGroup.expireOn).isAfter(DateTime.now())
+              ? () async {
+                Navigator.pushNamed(
+                  context,
+                  VoucherItemDetailScreen.routeName,
+                  arguments: {
+                    'campaignId': voucherGroup.campaignId,
+                    'voucherId': voucherGroup.voucherId,
+                  },
+                );
+              }
+              : null,
       child: Stack(
         children: [
           Row(
@@ -580,7 +583,35 @@ class VoucherCard extends StatelessWidget {
       );
     }
 
-    if (voucherGroup.quantity > 0) {
+    if (!DateTime.parse(voucherGroup.expireOn).isAfter(DateTime.now())) {
+      return GestureDetector(
+        onTap: () {},
+        child: AbsorbPointer(
+          child: ElevatedButton(
+            onPressed: () {}, // Để null hoặc empty để GestureDetector xử lý
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              shape: const StadiumBorder(
+                side: BorderSide(
+                  width: 1,
+                  color: Color.fromARGB(255, 255, 121, 80),
+                ),
+              ),
+            ),
+            child: Text(
+              'Hết hạn sử dụng',
+              style: GoogleFonts.openSans(
+                textStyle: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: kPrimaryColor,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    } else if (voucherGroup.quantity > 0) {
       return GestureDetector(
         onTap: () {
           Navigator.pushNamed(

@@ -75,13 +75,13 @@ class Body extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                campaign.campaignName,
+                                'Chiến dịch: ${campaign.campaignName}',
                                 textAlign: TextAlign.justify,
                                 softWrap: true,
                                 style: GoogleFonts.openSans(
                                   textStyle: TextStyle(
-                                    fontSize: 15 * ffem,
-                                    color: klowTextGrey,
+                                    fontSize: 17 * ffem,
+                                    color: kDarkPrimaryColor,
                                     fontWeight: FontWeight.normal,
                                   ),
                                 ),

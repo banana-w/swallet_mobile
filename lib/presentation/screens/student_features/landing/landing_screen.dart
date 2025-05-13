@@ -11,7 +11,6 @@ import 'package:swallet_mobile/presentation/screens/student_features/landing/com
 import 'package:swallet_mobile/presentation/screens/student_features/qr_view/qr_student_view_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/voucher_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/app_bar_campaign.dart';
-import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
 const List<Widget> bottomNavScreen = [
   CampaignScreen(),

@@ -6,7 +6,6 @@ import 'package:swallet_mobile/data/interface_repositories/student_features/camp
 import 'package:swallet_mobile/presentation/blocs/campaign_store/campaign_store_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_voucher_list/campaign_voucher_list_screen.dart';
-import 'package:swallet_mobile/presentation/screens/student_features/voucher/voucher_list_screen.dart';
 
 import '../../../widgets/shimmer_widget.dart';
 import '../campaign_detail/components/body.dart';
@@ -245,7 +244,7 @@ class StoreListScreen extends StatelessWidget {
                   ],
                 );
               }
-              return buildVoucherStudentShimmer(3, fem, hem);
+              return buildStoreShimmer(3, fem, hem);
             },
           ),
         ),
