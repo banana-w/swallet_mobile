@@ -48,7 +48,7 @@ class BrandDetailShadow extends StatelessWidget {
               padding: EdgeInsets.only(
                   top: 5 * hem),
               child: Text(
-                'Địa chỉ email: ${brandModel.email}.',
+                'Địa chỉ email: ${brandModel.email}',
                 // textAlign: TextAlign.justify,
                 softWrap: true,
                 style: GoogleFonts.openSans(
@@ -64,7 +64,7 @@ class BrandDetailShadow extends StatelessWidget {
               padding: EdgeInsets.only(
                   top: 5 * hem),
               child: Text(
-                'Số điện thoại: ${brandModel.phone}.',
+                'Số điện thoại: ${brandModel.phone}',
                 // textAlign: TextAlign.justify,
                 softWrap: true,
                 style: GoogleFonts.openSans(

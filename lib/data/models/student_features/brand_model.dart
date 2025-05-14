@@ -47,7 +47,7 @@ class BrandModel extends Brand {
       coverPhoto: json['coverPhoto'] as String? ?? '',
       coverFileName: json['coverFileName'] as String? ?? '',
       email: json['email'] as String? ?? '', // Không có trong JSON result
-      phone: json['phone'] as String? ?? '', // Không có trong JSON result
+      phone: json['phoneNumber'] as String? ?? '', // Không có trong JSON result
       link: json['link'] as String? ?? '',
       openingHours: json['openingHours'] as String? ?? '',
       closingHours: json['closingHours'] as String? ?? '',
