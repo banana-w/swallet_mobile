@@ -83,7 +83,7 @@ class DetailShowdalBottom extends StatelessWidget {
                               top: 5 * hem, left: 15 * fem, right: 15 * fem),
                           child: Text(
                             // ' ${formatTime(brandModel.openingHours)} - ${formatTime(brandModel.closingHours)}.',
-                            ' ${formatTime(brandModel.openingHours)} - ${formatTime(brandModel.closingHours)}.',
+                            ' ${formatTime(brandModel.openingHours)} - ${formatTime(brandModel.closingHours)}',
                             textAlign: TextAlign.justify,
                             softWrap: true,
                             style: GoogleFonts.openSans(
@@ -114,7 +114,7 @@ class DetailShowdalBottom extends StatelessWidget {
                           padding: EdgeInsets.only(
                               top: 5 * hem, left: 15 * fem, right: 15 * fem),
                           child: Text(
-                            'Địa chỉ email: ${brandModel.email}.',
+                            'Địa chỉ email: ${brandModel.email}',
                             // textAlign: TextAlign.justify,
                             softWrap: true,
                             style: GoogleFonts.openSans(
@@ -130,7 +130,7 @@ class DetailShowdalBottom extends StatelessWidget {
                           padding: EdgeInsets.only(
                               top: 5 * hem, left: 15 * fem, right: 15 * fem),
                           child: Text(
-                            'Số điện thoại: ${brandModel.phone}.',
+                            'Số điện thoại: ${brandModel.phone}',
                             // textAlign: TextAlign.justify,
                             softWrap: true,
                             style: GoogleFonts.openSans(

@@ -35,7 +35,8 @@ class Body extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'GIAO DỊCH THẤT BẠI!',
+                  'GIAO DỊCH THẤT BẠI!\n Vui lòng thử lại!',
+                  textAlign: TextAlign.center,
                   style: GoogleFonts.openSans(
                     textStyle: TextStyle(
                       fontSize: 18 * ffem,
@@ -115,13 +116,13 @@ class Body extends StatelessWidget {
                         SizedBox(
                           width: 200 * fem,
                           child: Text(
-                            'Giao dịch thất bại, vui lòng thử lại!',
-                            textAlign: TextAlign.end,
-                            maxLines: 3,
+                            '$failed',
+                            textAlign: TextAlign.start,
+                            maxLines: 6,
                             softWrap: true,
                             style: GoogleFonts.openSans(
                               textStyle: TextStyle(
-                                fontSize: 15 * ffem,
+                                fontSize: 14 * ffem,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
