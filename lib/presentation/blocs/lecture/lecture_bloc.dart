@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/lecture_features/lecture_repository.dart';
@@ -41,10 +42,10 @@ class LectureBloc extends Bloc<LectureEvent, LectureState> {
     try {
       final qrCodeData = await lectureRepository.generateQRCode(
         points: event.points,
-        // expirationTime: event.expirationTime,
-        // startOnTime: event.startOnTime,
         availableHours: event.availableHours,
-        lecturerId: event.lecturerId, // Sửa thành lecturerId
+        lecturerId: event.lecturerId,
+        maxUsageCount: event.maxUsageCount, // Thêm maxUsageCount
+        context: event.context, // Thêm context
       );
       emit(QRCodeGenerated(qrCodeData)); // qrCodeData là Map
     } catch (e) {

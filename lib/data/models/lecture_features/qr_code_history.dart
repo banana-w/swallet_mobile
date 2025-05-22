@@ -7,6 +7,8 @@ class QRCodeHistory {
   final String qrCodeData;
   final String qrCodeImageUrl;
   final DateTime createdAt;
+  final int maxUsageCount;
+  final int currentUsageCount;
 
   QRCodeHistory({
     required this.id,
@@ -17,6 +19,8 @@ class QRCodeHistory {
     required this.qrCodeData,
     required this.qrCodeImageUrl,
     required this.createdAt,
+    required this.maxUsageCount,
+    required this.currentUsageCount,
   });
 
   factory QRCodeHistory.fromJson(Map<String, dynamic> json) {
@@ -29,6 +33,8 @@ class QRCodeHistory {
       qrCodeData: json['qrCodeData'] as String,
       qrCodeImageUrl: json['qrCodeImageUrl'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
+      maxUsageCount: json['maxUsageCount'] as int,
+      currentUsageCount: json['currentUsageCount'] as int,
     );
   }
 
@@ -42,6 +48,8 @@ class QRCodeHistory {
       'qrCodeData': qrCodeData,
       'qrCodeImageUrl': qrCodeImageUrl,
       'createdAt': createdAt.toIso8601String(),
+      'maxUsageCount': maxUsageCount,
+      'currentUsageCount': currentUsageCount,
     };
   }
 }

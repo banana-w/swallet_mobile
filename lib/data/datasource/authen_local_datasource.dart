@@ -30,12 +30,13 @@ class AuthenLocalDataSource {
       return null;
     }
     // Chuyển chuỗi JSON thành danh sách LocationModel
-    final List<LocationModel> locations = locationsJson
-        .map((json) => LocationModel.fromJson(jsonDecode(json)))
-        .toList();
+    final List<LocationModel> locations =
+        locationsJson
+            .map((json) => LocationModel.fromJson(jsonDecode(json)))
+            .toList();
     return locations;
   }
-  
+
   static Future<void> saveToken(String token) async {
     final sf = await SharedPreferences.getInstance();
     await sf.setString('token', token);
@@ -55,6 +56,17 @@ class AuthenLocalDataSource {
   static Future<void> saveAccountId(String accountId) async {
     final sf = await SharedPreferences.getInstance();
     await sf.setString('accountId', accountId);
+  }
+
+  static Future<void> saveBalance(int balance) async {
+    final sf = await SharedPreferences.getInstance();
+    await sf.setString('balance', balance.toString());
+  }
+
+  static Future<int?> getBalance() async {
+    final sf = await SharedPreferences.getInstance();
+    int? balance = sf.getInt('balance');
+    return balance;
   }
 
   static Future<void> saveIsVerified(bool isVerify) async {

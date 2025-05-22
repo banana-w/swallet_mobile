@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
-import 'package:swallet_mobile/data/models/authen_model.dart';
-import 'package:swallet_mobile/data/interface_repositories/lecture_features/lecture_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/lecture/lecture_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
@@ -31,33 +26,57 @@ class QRGenerateScreen extends StatefulWidget {
 class _QRGenerateScreenState extends State<QRGenerateScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _pointsController = TextEditingController();
-  final TextEditingController _expirationTimeController =
-      TextEditingController();
-  final TextEditingController _startOnTimeController = TextEditingController();
   final TextEditingController _availableHoursController =
       TextEditingController();
+  final TextEditingController _maxUsageCountController =
+      TextEditingController();
   String? _lecturerId;
+  int? _balance;
   Map<String, String>? _qrCodeData;
+  int _totalCost = 0;
 
   @override
   void initState() {
     super.initState();
     _loadLecturerId();
+    _pointsController.addListener(_updateTotalCost);
+    _maxUsageCountController.addListener(_updateTotalCost);
   }
 
   Future<void> _loadLecturerId() async {
     final authenModel = await AuthenLocalDataSource.getLecture();
+    final balance = await AuthenLocalDataSource.getBalance();
     setState(() {
       _lecturerId = authenModel?.id ?? widget.lectureId;
+      final rawBalance = authenModel?.balance ?? balance;
+      _balance =
+          rawBalance != null
+              ? (rawBalance is double ? rawBalance.toInt() : rawBalance as int)
+              : null;
     });
+  }
+
+  void _updateTotalCost() {
+    final points = int.tryParse(_pointsController.text) ?? 0;
+    final maxUsageCount = int.tryParse(_maxUsageCountController.text) ?? 0;
+    if (points > 0 && maxUsageCount > 0) {
+      setState(() {
+        _totalCost = points * maxUsageCount;
+      });
+    } else {
+      setState(() {
+        _totalCost = 0;
+      });
+    }
   }
 
   @override
   void dispose() {
+    _pointsController.removeListener(_updateTotalCost);
+    _maxUsageCountController.removeListener(_updateTotalCost);
     _pointsController.dispose();
-    _expirationTimeController.dispose();
-    _startOnTimeController.dispose();
     _availableHoursController.dispose();
+    _maxUsageCountController.dispose();
     super.dispose();
   }
 
@@ -115,8 +134,7 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
                   backgroundColor: Colors.transparent,
                   content: AwesomeSnackbarContent(
                     title: 'Thất bại',
-                    message:
-                        'Tạo mã QR thất bại: Ví của bạn không đủ xu hoặc do kết nối',
+                    message: 'Tạo mã QR thất bại: ${state.message}',
                     contentType: ContentType.failure,
                   ),
                 ),
@@ -125,17 +143,12 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
         },
         child: Stack(
           children: [
-            // Nội dung chính
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const SizedBox(), // Spacer để đẩy nút xuống dưới
+                const SizedBox(),
                 Padding(
-                  padding: EdgeInsets.only(
-                    bottom:
-                        120 *
-                        hem, // Giảm khoảng cách từ dưới lên (trước đó là 40 * hem)
-                  ),
+                  padding: EdgeInsets.only(bottom: 120 * hem),
                   child: Center(
                     child: ElevatedButton(
                       onPressed:
@@ -165,13 +178,9 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
                 ),
               ],
             ),
-
-            // Overlay hiển thị mã QR
             Center(
               child: Padding(
-                padding: EdgeInsets.only(
-                  top: 30 * hem,
-                ), // Đẩy toàn bộ nội dung lên trên
+                padding: EdgeInsets.only(top: 30 * hem),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -185,24 +194,22 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 15 * hem,
-                    ), // Giảm khoảng cách giữa Text và QR Code
+                    SizedBox(height: 15 * hem),
                     Container(
-                      width: 320 * fem, // Rộng hơn QR Code một chút
-                      height: 320 * fem, // Cao hơn QR Code một chút
+                      width: 320 * fem,
+                      height: 320 * fem,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: Colors.green, // Màu viền xanh lá
-                          width: 3, // Độ dày của viền
+                          color: const Color.fromARGB(255, 22, 52, 119),
+                          width: 3,
                         ),
-                        borderRadius: BorderRadius.circular(10), // Bo góc viền
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
                         child:
                             _qrCodeData != null
                                 ? Image.network(
-                                  _qrCodeData!['qrCodeImageUrl']!, // Hiển thị hình ảnh từ URL
+                                  _qrCodeData!['qrCodeImageUrl']!,
                                   width: 300 * fem,
                                   height: 300 * fem,
                                   fit: BoxFit.contain,
@@ -243,9 +250,7 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
                                 ),
                       ),
                     ),
-                    SizedBox(
-                      height: 200 * hem,
-                    ), // Giảm khoảng cách dưới QR Code
+                    SizedBox(height: 200 * hem),
                   ],
                 ),
               ),
@@ -262,12 +267,10 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
     double ffem,
     double hem,
   ) {
-    // Đặt lại giá trị của các TextEditingController
     _pointsController.clear();
-    _startOnTimeController.text = DateFormat(
-      'yyyy-MM-dd HH:mm',
-    ).format(DateTime.now());
     _availableHoursController.clear();
+    _maxUsageCountController.clear();
+    _totalCost = 0;
 
     showDialog(
       context: context,
@@ -292,15 +295,11 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
                         textStyle: TextStyle(
                           fontSize: 18 * ffem,
                           fontWeight: FontWeight.bold,
-                          color: const Color.fromARGB(
-                            255,
-                            0,
-                            0,
-                            0,
-                          ), // Màu chữ trắng để nổi bật trên nền xanh
+                          color: Colors.black,
                         ),
                       ),
                     ),
+
                     SizedBox(height: 20 * hem),
                     Form(
                       key: _formKey,
@@ -310,45 +309,19 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
                             controller: _pointsController,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
-                              labelText: 'Points',
-                              labelStyle: TextStyle(
-                                color: const Color.fromARGB(255, 0, 0, 0),
-                              ),
+                              labelText: 'Số điểm',
+                              labelStyle: TextStyle(color: Colors.black),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10 * fem),
                               ),
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Vui lòng nhập points';
+                                return 'Vui lòng nhập số điểm';
                               }
-                              if (int.tryParse(value) == null) {
-                                return 'Points phải là số';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 15 * hem),
-                          TextFormField(
-                            controller: _startOnTimeController,
-                            readOnly: true,
-                            decoration: InputDecoration(
-                              labelText: 'Start On Time (YYYY-MM-DD HH:MM)',
-                              labelStyle: TextStyle(
-                                color: const Color.fromARGB(255, 0, 0, 0),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10 * fem),
-                              ),
-                              suffixIcon: Icon(
-                                Icons.lock_clock,
-                                size: 20 * ffem,
-                                color: const Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Vui lòng nhập start on time';
+                              if (int.tryParse(value) == null ||
+                                  int.parse(value) <= 0) {
+                                return 'Số điểm phải là số nguyên dương';
                               }
                               return null;
                             },
@@ -358,25 +331,57 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
                             controller: _availableHoursController,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
-                              labelText: 'Available Hours',
-                              labelStyle: TextStyle(
-                                color: const Color.fromARGB(255, 0, 0, 0),
-                              ),
+                              labelText: 'Thời gian hiệu lực (giờ)',
+                              labelStyle: TextStyle(color: Colors.black),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10 * fem),
                               ),
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Vui lòng nhập available hours';
+                                return 'Vui lòng nhập thời gian hiệu lực';
                               }
-                              if (int.tryParse(value) == null) {
-                                return 'Available hours phải là số nguyên';
+                              if (int.tryParse(value) == null ||
+                                  int.parse(value) <= 0) {
+                                return 'Thời gian hiệu lực phải là số nguyên dương';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 15 * hem),
+                          TextFormField(
+                            controller: _maxUsageCountController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: 'Số lần sử dụng tối đa',
+                              labelStyle: TextStyle(color: Colors.black),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10 * fem),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Vui lòng nhập số lần sử dụng tối đa';
+                              }
+                              if (int.tryParse(value) == null ||
+                                  int.parse(value) <= 0) {
+                                return 'Số lần sử dụng tối đa phải là số nguyên dương';
                               }
                               return null;
                             },
                           ),
                         ],
+                      ),
+                    ),
+                    SizedBox(height: 10 * hem),
+                    Text(
+                      'Số dư ví: ${_balance ?? 'Đang tải...'} xu',
+                      style: GoogleFonts.openSans(
+                        textStyle: TextStyle(
+                          fontSize: 16 * ffem,
+                          fontWeight: FontWeight.w600,
+                          color: const Color.fromARGB(255, 8, 88, 153),
+                        ),
                       ),
                     ),
                     SizedBox(height: 20 * hem),
@@ -387,38 +392,44 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
                           onPressed: () => Navigator.pop(context),
                           child: Text(
                             'Hủy',
-                            style: TextStyle(
-                              color: const Color.fromARGB(255, 0, 0, 0),
-                            ),
+                            style: TextStyle(color: Colors.black),
                           ),
                         ),
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate() &&
                                 _lecturerId != null) {
-                              final startTime = DateTime.parse(
-                                _startOnTimeController.text,
+                              final points = int.parse(_pointsController.text);
+                              final maxUsageCount = int.parse(
+                                _maxUsageCountController.text,
                               );
-                              final availableHours = int.parse(
-                                _availableHoursController.text,
+                              if (_balance != null && _totalCost > _balance!) {
+                                ScaffoldMessenger.of(context)
+                                  ..hideCurrentSnackBar()
+                                  ..showSnackBar(
+                                    SnackBar(
+                                      elevation: 0,
+                                      duration: const Duration(
+                                        milliseconds: 2000,
+                                      ),
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: Colors.transparent,
+                                      content: AwesomeSnackbarContent(
+                                        title: 'Thất bại',
+                                        message:
+                                            'Tạo mã QR thất bại: Số dư không đủ',
+                                        contentType: ContentType.failure,
+                                      ),
+                                    ),
+                                  );
+                                return;
+                              }
+                              // Hiển thị dialog xác nhận
+                              _showConfirmationDialog(
+                                context,
+                                points,
+                                maxUsageCount,
                               );
-                              final expirationTime = startTime.add(
-                                Duration(hours: availableHours),
-                              );
-                              final formattedExpirationTime = DateFormat(
-                                'yyyy-MM-dd HH:mm',
-                              ).format(expirationTime);
-
-                              context.read<LectureBloc>().add(
-                                GenerateQRCodeEvent(
-                                  points: int.parse(_pointsController.text),
-                                  expirationTime: formattedExpirationTime,
-                                  startOnTime: _startOnTimeController.text,
-                                  availableHours: availableHours,
-                                  lecturerId: _lecturerId!,
-                                ),
-                              );
-                              Navigator.pop(context);
                             } else if (_lecturerId == null) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -428,21 +439,14 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(
-                              255,
-                              28,
-                              160,
-                              78,
-                            ),
+                            backgroundColor: Color.fromARGB(255, 28, 160, 78),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10 * fem),
                             ),
                           ),
                           child: Text(
                             'Tạo',
-                            style: TextStyle(
-                              color: const Color.fromARGB(255, 0, 0, 0),
-                            ),
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                       ],
@@ -451,6 +455,72 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
                 ),
               ),
             ),
+          ),
+    );
+  }
+
+  void _showConfirmationDialog(
+    BuildContext context,
+    int points,
+    int maxUsageCount,
+  ) {
+    final fem = MediaQuery.of(context).size.width / 375;
+    final ffem = fem * 0.97;
+    final hem = MediaQuery.of(context).size.height / 812;
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15 * fem),
+            ),
+            title: Text(
+              'Xác nhận tạo mã QR',
+              style: GoogleFonts.openSans(
+                textStyle: TextStyle(
+                  fontSize: 18 * ffem,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            content: Text(
+              'Tổng cộng sẽ cần $_totalCost Xu để tạo QR, bạn có chắc muốn tạo không?',
+              style: GoogleFonts.openSans(
+                textStyle: TextStyle(fontSize: 16 * ffem, color: Colors.black),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Hủy', style: TextStyle(color: Colors.black)),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  context.read<LectureBloc>().add(
+                    GenerateQRCodeEvent(
+                      points: points,
+                      availableHours: int.parse(_availableHoursController.text),
+                      lecturerId: _lecturerId!,
+                      maxUsageCount: maxUsageCount,
+                      expirationTime: '',
+                      startOnTime: '',
+                      context: context,
+                    ),
+                  );
+                  Navigator.pop(context); // Đóng dialog xác nhận
+                  Navigator.pop(context); // Đóng dialog nhập thông tin
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 28, 160, 78),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10 * fem),
+                  ),
+                ),
+                child: Text('Có', style: TextStyle(color: Colors.white)),
+              ),
+            ],
           ),
     );
   }
