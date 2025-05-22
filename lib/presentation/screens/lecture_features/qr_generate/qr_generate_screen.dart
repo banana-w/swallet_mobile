@@ -278,14 +278,7 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
             ),
             child: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    const Color.fromARGB(255, 184, 211, 185),
-                    const Color.fromARGB(255, 134, 207, 138),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(15 * fem),
               ),
               padding: EdgeInsets.all(20 * fem),
