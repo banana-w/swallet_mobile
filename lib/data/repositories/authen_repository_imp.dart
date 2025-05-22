@@ -44,6 +44,7 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
             accountId: authenModel.accountId,
           );
           String authenString = jsonEncode(authenModel);
+          AuthenLocalDataSource.saveBalance(lecture?.balance as int);
           AuthenLocalDataSource.saveAuthen(authenString);
           AuthenLocalDataSource.saveToken(authenModel.jwt);
           AuthenLocalDataSource.saveAccountId(authenModel.accountId);

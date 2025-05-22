@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
 
 abstract class LectureRepository {
@@ -20,5 +21,7 @@ abstract class LectureRepository {
     // required String startOnTime,
     required int availableHours,
     required String lecturerId,
+    required int maxUsageCount, // Thêm maxUsageCount
+    required BuildContext context, // Thêm context để hiển thị thông báo
   });
 }

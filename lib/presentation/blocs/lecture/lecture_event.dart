@@ -19,6 +19,8 @@ class GenerateQRCodeEvent extends LectureEvent {
   final String startOnTime;
   final int availableHours; // Sửa thành int
   final String lecturerId; // Đổi tên thành lecturerId
+  final int maxUsageCount; // Thêm maxUsageCount
+  final BuildContext context; // Thêm context
 
   const GenerateQRCodeEvent({
     required this.points,
@@ -26,6 +28,8 @@ class GenerateQRCodeEvent extends LectureEvent {
     required this.startOnTime,
     required this.availableHours,
     required this.lecturerId,
+    required this.maxUsageCount,
+    required this.context,
   });
 
   @override
@@ -35,5 +39,7 @@ class GenerateQRCodeEvent extends LectureEvent {
     startOnTime,
     availableHours,
     lecturerId,
+    maxUsageCount,
+    context,
   ];
 }
