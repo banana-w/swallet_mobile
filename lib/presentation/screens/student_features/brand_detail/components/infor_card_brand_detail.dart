@@ -9,7 +9,6 @@ import 'package:swallet_mobile/data/interface_repositories/student_features/bran
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/wishlist/wishlist_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
-import 'package:swallet_mobile/presentation/cubits/validation/validation_cubit.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/brand_detail/components/others_infor_brand_detail.dart';
 
 class InformationCardBrandDetail extends StatefulWidget {
