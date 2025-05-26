@@ -196,7 +196,7 @@ class BrandRepositoryImp implements BrandRepository {
 
       // Tạo URL với các query parameters page và size
       final url = Uri.parse(
-        '${baseURL}Campaign/brand/$id?page=$page&size=$size',
+        '${baseURL}Campaign/brand-mobile/$id?page=$page&size=$size',
       );
 
       http.Response response = await http.get(url, headers: headers);
