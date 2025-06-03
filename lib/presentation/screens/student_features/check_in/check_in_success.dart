@@ -266,11 +266,11 @@ class CheckInSuccessBody extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          width: 200 * fem,
+                          width: 100 * fem,
                           child: Text(
                             '1 lượt',
                             textAlign: TextAlign.end,
-                            maxLines: 1,
+                            maxLines: 2,
                             style: GoogleFonts.openSans(
                               textStyle: TextStyle(
                                 fontSize: 15 * ffem,
