@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/presentation/blocs/location/location_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
-import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
-import '../../../widgets/shimmer_widget.dart';
 
 class LocationListScreen extends StatelessWidget {
   static const String routeName = '/location_screen';

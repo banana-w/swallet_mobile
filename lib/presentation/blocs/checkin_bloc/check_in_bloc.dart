@@ -1,7 +1,4 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 import 'package:equatable/equatable.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/check_in_repository.dart';

@@ -30,7 +30,7 @@ class NavItem {
         'assets/icons/voucher-navbar-icon.svg',
         colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
-      "Kho Ưu Đãi",
+      "Ưu Đãi",
     ),
     NavItem(
       SvgPicture.asset(
