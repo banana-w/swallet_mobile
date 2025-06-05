@@ -325,6 +325,7 @@ class _BodyState extends State<CampaignScreenBody>
     context.read<CampaignBloc>().add(LoadCampaigns());
     context.read<BrandBloc>().add(LoadBrands(page: 1, size: 10));
     context.read<CheckInBloc>().add(LoadCheckInData());
+    context.read<RoleAppBloc>().add(RoleAppStart());
   }
 }
 
