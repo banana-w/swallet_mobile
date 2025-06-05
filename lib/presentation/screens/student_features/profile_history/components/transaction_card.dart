@@ -231,8 +231,13 @@ Widget _buildAmount(
 }
 
 String _formatDatetime(String date) {
-  DateTime dateTime = DateTime.parse(date).add(Duration(hours: 7));
+  DateTime dt = DateTime.parse(date);
 
-  String formattedDatetime = DateFormat("HH:mm - dd/MM/yyyy").format(dateTime);
-  return formattedDatetime;
+  // // Chuyển giờ về UTC (loại bỏ offset local)
+  // DateTime utcDate = dt.toUtc();
+
+  // // Cộng thêm 7 tiếng để thành giờ VN
+  // DateTime vietnamDate = utcDate.add(Duration(hours: 7));
+
+  return DateFormat("HH:mm - dd/MM/yyyy").format(dt);
 }
