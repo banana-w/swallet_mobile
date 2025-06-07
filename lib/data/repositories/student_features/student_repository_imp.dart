@@ -57,6 +57,8 @@ class StudentRepositoryImp implements StudentRepository {
   Future<ScanQRResponse> scanLectureQR({
     required String qrCode,
     required String studentId,
+    required double longitude, // Thêm longitude
+    required double latitude, // Thêm latitude
   }) async {
     try {
       token = await AuthenLocalDataSource.getToken();
@@ -68,6 +70,8 @@ class StudentRepositoryImp implements StudentRepository {
       final Map<String, dynamic> body = {
         'qrCodeJson': qrCode,
         'studentId': studentId,
+        'longitude': longitude,
+        'latitude': latitude,
       };
 
       http.Response response = await http.post(
@@ -606,22 +610,19 @@ class StudentRepositoryImp implements StudentRepository {
       throw Exception(e.toString());
     }
   }
-  
+
   @override
   Future<String?> fetchVoucherItemAvailable({
     required String voucherId,
     required String studentId,
     required String campaignId,
   }) async {
-    final url = Uri.parse('${baseURL}VoucherItem/viId?voucherId=$voucherId&studentId=$studentId&campaignId=$campaignId');
+    final url = Uri.parse(
+      '${baseURL}VoucherItem/viId?voucherId=$voucherId&studentId=$studentId&campaignId=$campaignId',
+    );
 
     try {
-      final response = await http.get(
-        url,
-        headers: {
-          'accept': 'text/plain',
-        },
-      );
+      final response = await http.get(url, headers: {'accept': 'text/plain'});
 
       if (response.statusCode == 200) {
         return response.body;
@@ -633,4 +634,3 @@ class StudentRepositoryImp implements StudentRepository {
     }
   }
 }
-

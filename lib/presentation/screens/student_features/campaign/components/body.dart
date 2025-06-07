@@ -456,19 +456,15 @@ class _DailyCheckInSection extends StatelessWidget {
                 state.checkInHistory.length > index &&
                 state.checkInHistory[index];
             final isCurrentDay = index == state.currentDayIndex;
-            final isNextDay =
-                state.canCheckInToday &&
-                index == (state.currentDayIndex + 1) % 7 &&
-                !isChecked;
 
             return GestureDetector(
               onTap:
-                  (isCurrentDay || isNextDay) && state.canCheckInToday
+                  isCurrentDay && state.canCheckInToday
                       ? () => onDayTap(state)
                       : null,
               child: _buildDayItem(
                 isChecked,
-                isCurrentDay || (isNextDay && state.canCheckInToday),
+                isCurrentDay && state.canCheckInToday,
                 state,
                 index,
               ),

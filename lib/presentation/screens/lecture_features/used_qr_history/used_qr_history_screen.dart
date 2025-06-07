@@ -91,8 +91,8 @@ class _HistoryTabScreenState extends State<HistoryTabScreen> {
           _isLoading = false;
         });
       } else {
-        final errorData = jsonDecode(response.body);
-        throw Exception(errorData['message'] ?? 'Lỗi khi lấy lịch sử');
+        final errorData = "Không tìm thấy lịch sử";
+        throw Exception(errorData);
       }
     } catch (e) {
       setState(() {
@@ -177,12 +177,12 @@ class _HistoryTabScreenState extends State<HistoryTabScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Lỗi: $_errorMessage',
+                              '$_errorMessage',
                               style: GoogleFonts.openSans(
                                 textStyle: TextStyle(
                                   fontSize: 16 * ffem,
                                   fontWeight: FontWeight.w600,
-                                  color: kErrorTextColor,
+                                  color: const Color.fromARGB(255, 95, 95, 95),
                                 ),
                               ),
                             ),

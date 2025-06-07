@@ -16,6 +16,8 @@ abstract class StudentRepository {
   Future<ScanQRResponse> scanLectureQR({
     required String qrCode,
     required String studentId,
+    required double longitude,
+    required double latitude,
   });
 
   Future<ApiResponse<List<VoucherStudentModel>>?> fetchVoucherStudentId(
@@ -42,7 +44,8 @@ abstract class StudentRepository {
     required String id,
   });
 
-  Future<ApiResponse<List<TransactionModel>>?> fetchVoucherTransactionsByStudentId(
+  Future<ApiResponse<List<TransactionModel>>?>
+  fetchVoucherTransactionsByStudentId(
     int? page,
     int? limit,
     int? typeIds,
@@ -50,7 +53,8 @@ abstract class StudentRepository {
     required String id,
   });
 
-  Future<ApiResponse<List<TransactionModel>>?> fetchVoucherTransactionsByStoreId(
+  Future<ApiResponse<List<TransactionModel>>?>
+  fetchVoucherTransactionsByStoreId(
     int? page,
     int? limit,
     int? typeIds,
@@ -83,7 +87,7 @@ abstract class StudentRepository {
     required String campaignId,
     required String voucherId,
   });
-  
+
   Future<String?> fetchVoucherItemAvailable({
     required String voucherId,
     required String studentId,

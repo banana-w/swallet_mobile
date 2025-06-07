@@ -7,8 +7,15 @@ sealed class StudentEvent extends Equatable {
 class ScanLectureQR extends StudentEvent {
   final String qrCode;
   final String studentId;
+  final double longitude;
+  final double latitude;
 
-  const ScanLectureQR({required this.qrCode, required this.studentId});
+  const ScanLectureQR({
+    required this.qrCode,
+    required this.studentId,
+    required this.longitude,
+    required this.latitude,
+  });
 
   @override
   List<Object> get props => [qrCode, studentId];
@@ -188,7 +195,6 @@ final class LoadMoreChallengeTransactions extends StudentEvent {
   @override
   List<Object?> get props => [page, limit, typeIds, scrollController];
 }
-
 
 final class UpdateStudent extends StudentEvent {
   final String studentId;
