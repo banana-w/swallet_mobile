@@ -140,7 +140,7 @@ class NavItemLecturer {
         'assets/icons/dashboard-icon.svg',
         colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
-      "Thống kê",
+      "Hoạt động",
     ),
     NavItemLecturer(
       SvgPicture.asset(
@@ -151,7 +151,7 @@ class NavItemLecturer {
         'assets/icons/transaction-icon.svg',
         colorFilter: ColorFilter.mode(kIconColor, BlendMode.srcIn),
       ),
-      "Giao dịch",
+      "QR",
     ),
     NavItemLecturer(
       SvgPicture.asset(
