@@ -8,6 +8,7 @@ import 'package:swallet_mobile/presentation/screens/store_features/campaign/camp
 import 'package:swallet_mobile/presentation/screens/store_features/dashboard/dashboard_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/profile/profile_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/qr_view/qr_view_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/voucher_history/voucher_history.dart';
 import 'package:swallet_mobile/presentation/widgets/app_bar_store.dart';
 import 'components/cus_nav_bar_strore.dart';
 
@@ -209,7 +210,7 @@ class LandingStoreScreen extends StatelessWidget {
 List<Widget> bottomNavScreen = [
   CampaignStoreScreen(),
   DashboardScreen(),
-  ProfileStoreScreen(),
+  VoucherHistoryScreenStore(),
   ProfileStoreScreen(),
 ];
 
@@ -224,3 +225,4 @@ PreferredSizeWidget? _buildAppbar(
   } else
     return null;
 }
+

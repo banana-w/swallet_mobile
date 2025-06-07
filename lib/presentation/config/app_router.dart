@@ -17,6 +17,7 @@ import 'package:swallet_mobile/presentation/screens/store_features/transact/tran
 import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 import 'package:swallet_mobile/presentation/screens/splash/onboarding_screen.dart';
 import 'package:swallet_mobile/presentation/screens/splash/splash_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/voucher_history/voucher_history.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/brand_detail/brand_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/brand_list/brand_list_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/buy_failed/buy_failed_screen.dart';
@@ -196,10 +197,15 @@ class AppRouter {
           campaignId: args['campaignId']!,
           voucherId: args['voucherId']!,
         );
+        
       case VoucherHistoryScreen.routeName:
         return VoucherHistoryScreen.route(
           studentId: settings.arguments as String,
         );
+
+      case VoucherHistoryScreenStore.routeName:
+        return VoucherHistoryScreenStore.route();
+          
       case RedeemVoucherScreen.routeName:
         List<dynamic> args = settings.arguments as List<dynamic>;
 

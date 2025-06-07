@@ -125,6 +125,38 @@ final class LoadMoreVoucherTransactions extends StudentEvent {
   List<Object?> get props => [page, limit, typeIds, scrollController];
 }
 
+final class LoadVoucherStoreTransactions extends StudentEvent {
+  final int page;
+  final int limit;
+  final String id;
+  final int typeIds;
+  const LoadVoucherStoreTransactions({
+    this.page = 1,
+    this.limit = 10,
+    required this.id,
+    this.typeIds = 0,
+  });
+
+  @override
+  List<Object?> get props => [page, limit, id, typeIds];
+}
+
+final class LoadMoreVoucherStoreTransactions extends StudentEvent {
+  final int page;
+  final int limit;
+  final int typeIds;
+  final ScrollController scrollController;
+
+  const LoadMoreVoucherStoreTransactions(
+    this.scrollController, {
+    this.page = 1,
+    this.limit = 10,
+    this.typeIds = 0,
+  });
+  @override
+  List<Object?> get props => [page, limit, typeIds, scrollController];
+}
+
 final class LoadMoreActivityTransactions extends StudentEvent {
   final int page;
   final int limit;
