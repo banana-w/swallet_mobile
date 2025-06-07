@@ -330,6 +330,59 @@ class StudentRepositoryImp implements StudentRepository {
   }
 
   @override
+  Future<ApiResponse<List<TransactionModel>>?>
+  fetchVoucherTransactionsByStoreId(
+    int? page,
+    int? limit,
+    int? typeIds,
+    String? searchName, {
+    required String id,
+  }) async {
+    try {
+      token = await AuthenLocalDataSource.getToken();
+      final Map<String, String> headers = {
+        'accept': 'text/plain', // Khớp với curl
+        'Authorization': 'Bearer $token',
+      };
+
+      page ??= 1;
+      limit ??= 10;
+
+      final queryParams = {
+        'storeId': id,
+        'page': page.toString(),
+        'size': limit.toString(),
+      };
+
+      if (searchName != null && searchName.isNotEmpty) {
+        queryParams['searchName'] = searchName;
+      }
+
+      // final baseURL = 'https://10.0.2.2:7137/api/';
+
+      final uri = Uri.parse(
+        '${baseURL}Activity/UseVoucherStoreTransaction',
+      ).replace(queryParameters: queryParams);
+
+      final response = await http.get(uri, headers: headers);
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(utf8.decode(response.bodyBytes));
+
+        final apiResponse = ApiResponse<List<TransactionModel>>.fromJson(
+          result,
+          (data) => data.map((e) => TransactionModel.fromJson(e)).toList(),
+        );
+        return apiResponse;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
   Future<bool?> postChallengeStudentId({
     required String studentId,
     required String challengeId,

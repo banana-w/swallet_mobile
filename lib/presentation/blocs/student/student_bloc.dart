@@ -23,6 +23,8 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     on<LoadStudentTransactions>(_onLoadStudentTransactions);
     on<LoadVoucherTransactions>(_onLoadVoucherTransactions);
     on<LoadMoreVoucherTransactions>(_onLoadMoreVoucherTransactions);
+    on<LoadVoucherStoreTransactions>(_onLoadVoucherStoreTransactions);
+    on<LoadMoreVoucherStoreTransactions>(_onLoadMoreVoucherStoreTransactions);
     on<LoadMoreTransactions>(_onLoadMoreTransactions);
     on<LoadMoreActivityTransactions>(_onLoadMoreActivityTransactions);
     on<LoadMoreChallengeTransactions>(_onLoadMoreChallengeTransactions);
@@ -244,6 +246,35 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     }
   }
 
+  Future<void> _onLoadVoucherStoreTransactions(
+    LoadVoucherStoreTransactions event,
+    Emitter<StudentState> emit,
+  ) async {
+    emit(StudentTransactionLoading());
+    try {
+      var apiResponse = await studentRepository
+          .fetchVoucherTransactionsByStoreId(
+            event.page,
+            event.limit,
+            event.typeIds,
+            '',
+            id: event.id,
+          );
+      if (apiResponse!.total < apiResponse.size) {
+        emit(
+          StudentTransactionsLoaded(
+            transactions: apiResponse.result,
+            hasReachedMax: true,
+          ),
+        );
+      } else {
+        emit(StudentTransactionsLoaded(transactions: apiResponse.result));
+      }
+    } catch (e) {
+      emit(StudentFaled(error: e.toString()));
+    }
+  }
+
   Future<void> _onLoadMoreTransactions(
     LoadMoreTransactions event,
     Emitter<StudentState> emit,
@@ -297,6 +328,48 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
         pageTransaction++;
         var apiResponse = await studentRepository
             .fetchVoucherTransactionsByStudentId(
+              pageTransaction,
+              event.limit,
+              event.typeIds,
+              '',
+              id: student!.id,
+            );
+        if (apiResponse!.result.isEmpty) {
+          emit(
+            StudentTransactionsLoaded(
+              transactions: List.from(
+                (state as StudentTransactionsLoaded).transactions,
+              )..addAll(apiResponse.result),
+              hasReachedMax: true,
+            ),
+          );
+        } else {
+          emit(
+            StudentTransactionsLoaded(
+              transactions: List.from(
+                (state as StudentTransactionsLoaded).transactions,
+              )..addAll(apiResponse.result),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      emit(StudentFaled(error: e.toString()));
+    }
+  }
+
+    Future<void> _onLoadMoreVoucherStoreTransactions(
+    LoadMoreVoucherStoreTransactions event,
+    Emitter<StudentState> emit,
+  ) async {
+    try {
+      final student = await AuthenLocalDataSource.getStudent();
+      if (event.scrollController.position.pixels ==
+          event.scrollController.position.maxScrollExtent) {
+        isLoadingMore = true;
+        pageTransaction++;
+        var apiResponse = await studentRepository
+            .fetchVoucherTransactionsByStoreId(
               pageTransaction,
               event.limit,
               event.typeIds,
