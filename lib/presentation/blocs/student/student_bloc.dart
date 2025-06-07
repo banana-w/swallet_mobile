@@ -58,6 +58,8 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
       final response = await studentRepository.scanLectureQR(
         qrCode: event.qrCode,
         studentId: event.studentId,
+        longitude: event.longitude,
+        latitude: event.latitude,
       );
       emit(QRScanSuccess(response));
     } catch (e) {
@@ -358,7 +360,7 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     }
   }
 
-    Future<void> _onLoadMoreVoucherStoreTransactions(
+  Future<void> _onLoadMoreVoucherStoreTransactions(
     LoadMoreVoucherStoreTransactions event,
     Emitter<StudentState> emit,
   ) async {
