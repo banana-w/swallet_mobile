@@ -424,10 +424,15 @@ class _DailyCheckInSection extends StatelessWidget {
   }
 
   Widget _buildCheckInContent(BuildContext context) {
-    // Using RepaintBoundary to optimize animation rendering
     return RepaintBoundary(
       child: BlocConsumer<CheckInBloc, CheckInState>(
-        listener: onCheckInStateChanged,
+        listener: (context, state) {
+          onCheckInStateChanged(context, state);
+          if (state is CheckInSuccess) {
+            // Reload dữ liệu sau khi điểm danh thành công
+            context.read<CheckInBloc>().add(LoadCheckInData());
+          }
+        },
         builder: (context, state) {
           if (state is CheckInSuccess) {
             context.read<RoleAppBloc>().add(RoleAppStart());
@@ -450,11 +455,23 @@ class _DailyCheckInSection extends StatelessWidget {
             final isChecked =
                 state.checkInHistory.length > index &&
                 state.checkInHistory[index];
-            final isToday = index == state.currentDayIndex;
+            final isCurrentDay = index == state.currentDayIndex;
+            final isNextDay =
+                state.canCheckInToday &&
+                index == (state.currentDayIndex + 1) % 7 &&
+                !isChecked;
 
             return GestureDetector(
-              onTap: isToday ? () => onDayTap(state) : null,
-              child: _buildDayItem(isChecked, isToday, state, index),
+              onTap:
+                  (isCurrentDay || isNextDay) && state.canCheckInToday
+                      ? () => onDayTap(state)
+                      : null,
+              child: _buildDayItem(
+                isChecked,
+                isCurrentDay || (isNextDay && state.canCheckInToday),
+                state,
+                index,
+              ),
             );
           }),
         ),
