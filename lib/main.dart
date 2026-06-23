@@ -50,7 +50,6 @@ import 'package:swallet_mobile/presentation/blocs/wishlist/wishlist_bloc.dart';
 import 'package:swallet_mobile/presentation/config/app_router.dart';
 import 'package:swallet_mobile/presentation/cubits/validation/validation_cubit.dart';
 import 'package:swallet_mobile/presentation/cubits/verification/verification_cubit.dart';
-import 'package:swallet_mobile/presentation/screens/lecture_features/landing_screen/components/cus_nav_bar_lecture.dart';
 import 'package:swallet_mobile/presentation/screens/splash/splash_screen.dart';
 import 'package:swallet_mobile/simple_bloc_observer.dart';
 
@@ -93,7 +92,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
@@ -117,13 +115,11 @@ class MyApp extends StatelessWidget {
           create: (_) => CampaignRepositoryImp(),
         ),
         RepositoryProvider<LuckyPrizeRepository>(
-          create: (_) => LuckyPrizeRepository(),
+          create:
+              (_) => LuckyPrizeRepository(), // Giữ nguyên nếu không có bản Imp
         ),
         RepositoryProvider<VerificationRepository>(
           create: (_) => VerificationRepositoryImp(),
-        ),
-        RepositoryProvider<StoreRepository>(
-          create: (_) => StoreRepositoryImp(),
         ),
         RepositoryProvider<BrandRepository>(
           create: (_) => BrandRepositoryImp(),
@@ -133,9 +129,6 @@ class MyApp extends StatelessWidget {
         ),
         RepositoryProvider<LectureRepository>(
           create: (_) => LectureRepositoryImp(),
-        ),
-        RepositoryProvider<BrandRepository>(
-          create: (_) => BrandRepositoryImp(),
         ),
         RepositoryProvider<SpinHistoryRepository>(
           create: (_) => SpinHistoryRepositoryImpl(),
@@ -157,97 +150,87 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create:
                 (context) => RoleAppBloc(
-                  StudentRepositoryImp(),
-                  StoreRepositoryImp(),
-                  LectureRepositoryImp(),
+                  context.read<StudentRepository>(),
+                  context.read<StoreRepository>(),
+                  context.read<LectureRepository>(),
                 )..add(RoleAppStart()),
           ),
           BlocProvider(
             create:
                 (context) => AuthenticationBloc(
-                  authenticationRepository: AuthenticationRepositoryImp(),
+                  authenticationRepository:
+                      context.read<AuthenticationRepository>(),
                 )..add(StartAuthen()),
           ),
           BlocProvider(
             create:
                 (context) =>
-                    ValidationCubit(ValidationRepositoryImp())
+                    ValidationCubit(context.read<ValidationRepository>())
                       ..loadingValidation(),
           ),
           BlocProvider(
             create:
                 (context) =>
-                    VerificationCubit(VerificationRepositoryImp())
+                    VerificationCubit(context.read<VerificationRepository>())
                       ..loadingVerification(),
           ),
           BlocProvider(
             create:
                 (context) => ChallengeBloc(
-                  challengeRepository: ChallengeRepositoryImp(),
-                  studentRepository: StudentRepositoryImp(),
+                  challengeRepository: context.read<ChallengeRepository>(),
+                  studentRepository: context.read<StudentRepository>(),
                 ),
           ),
           BlocProvider(
             create:
                 (context) =>
-                    CampusBloc(CampusRepositoryImp())
+                    CampusBloc(context.read<CampusRepository>())
                       ..add(LoadCampus(searchName: '')),
           ),
           BlocProvider(
             create:
-                (context) => RoleAppBloc(
-                  StudentRepositoryImp(),
-                  StoreRepositoryImp(),
-                  LectureRepositoryImp(),
-                )..add(RoleAppStart()),
-          ),
-          BlocProvider(
-            create:
                 (context) =>
-                    StoreBloc(storeRepository: StoreRepositoryImp())
+                    StoreBloc(storeRepository: context.read<StoreRepository>())
                       ..add(LoadStoreCampaignVouchers()),
           ),
           BlocProvider(
             create:
-                (context) =>
-                    RankingBloc(storeRepository: StoreRepositoryImp())
-                      ..add(LoadCampaignRanking()),
-          ),
-
-          BlocProvider(
-            create:
-                (context) =>
-                    LectureBloc(lectureRepository: LectureRepositoryImp()),
+                (context) => RankingBloc(
+                  storeRepository: context.read<StoreRepository>(),
+                )..add(LoadCampaignRanking()),
           ),
           BlocProvider(
             create:
+                (context) => LectureBloc(
+                  lectureRepository: context.read<LectureRepository>(),
+                ),
+          ),
+          BlocProvider(
+            create:
                 (context) =>
-                    BrandBloc(brandRepository: BrandRepositoryImp())
+                    BrandBloc(brandRepository: context.read<BrandRepository>())
                       ..add(LoadBrands(page: 1, size: 10)),
           ),
           BlocProvider(
             create:
-                (context) =>
-                    CampaignBloc(campaignRepository: CampaignRepositoryImp())
-                      ..add(LoadCampaigns()),
+                (context) => CampaignBloc(
+                  campaignRepository: context.read<CampaignRepository>(),
+                )..add(LoadCampaigns()),
           ),
           BlocProvider(
             create:
                 (context) =>
-                    LocationBloc(ChallengeRepositoryImp())..add(AddLocation()),
+                    LocationBloc(context.read<ChallengeRepository>())
+                      ..add(AddLocation()),
           ),
           BlocProvider(
-            create: (context) => CheckInBloc(CheckInRepositoryImpl()),
-          ),
-          BlocProvider(
-            create: (context) => LandingScreenBloc(),
-            child: CusNavLectureBar(),
+            create: (context) => CheckInBloc(context.read<CheckInRepository>()),
           ),
           BlocProvider(
             create:
                 (context) => WishlistBloc(
-                  studentRepository: StudentRepositoryImp(),
-                  wishListRepository: WishListRepositoryImp(),
+                  studentRepository: context.read<StudentRepository>(),
+                  wishListRepository: context.read<WishListRepository>(),
                 )..add(LoadWishListByStudentId()),
           ),
         ],
