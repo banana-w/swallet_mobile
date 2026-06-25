@@ -7,9 +7,9 @@ class QrViewScreen extends StatefulWidget {
   static const String routeName = '/qr-view';
   static Route route({required String storeId}) {
     return PageRouteBuilder(
-      pageBuilder: (_, __, ___) => QrViewScreen(storeId: storeId),
+      pageBuilder: (_, _, _) => QrViewScreen(storeId: storeId),
       transitionDuration: Duration(milliseconds: 400),
-      transitionsBuilder: (_, animation, __, child) {
+      transitionsBuilder: (_, animation, _, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
         var tween = Tween(begin: begin, end: end);

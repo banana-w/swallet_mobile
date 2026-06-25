@@ -4,7 +4,7 @@ import 'package:swallet_mobile/presentation/screens/lecture_features/campus/comp
 import 'package:swallet_mobile/presentation/widgets/app_bar_campaign.dart';
 
 class CampusScreen extends StatefulWidget {
-  const CampusScreen({Key? key}) : super(key: key);
+  const CampusScreen({super.key});
 
   @override
   _CampusScreen createState() => _CampusScreen();

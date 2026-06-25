@@ -466,7 +466,7 @@ class _QRGenerateScreenState extends State<QRGenerateScreen> {
   ) {
     final fem = MediaQuery.of(context).size.width / 375;
     final ffem = fem * 0.97;
-    final hem = MediaQuery.of(context).size.height / 812;
+    // final hem = MediaQuery.of(context).size.height / 812;
 
     showDialog(
       context: context,

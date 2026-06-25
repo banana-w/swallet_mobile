@@ -171,7 +171,7 @@ class _FormBody1State extends State<FormUpdate> {
                     textController: storeNameController,
                   ),
                   SizedBox(height: 25 * widget.hem),
-                  Container(
+                  SizedBox(
                     width: 272 * widget.fem,
                     // color: Colors.red,
                     child: TextFormField(
@@ -269,7 +269,7 @@ class _FormBody1State extends State<FormUpdate> {
                     },
                     child: Stack(
                       children: [
-                        Container(
+                        SizedBox(
                           width: 272 * widget.fem,
                           height: 60 * widget.hem,
                         ),
@@ -294,8 +294,8 @@ class _FormBody1State extends State<FormUpdate> {
                               ),
                               child: Text(
                                 openingHours == null
-                                    ? '${initialOpenHours!.format(context)}'
-                                    : '${openingHours!.format(context)}',
+                                    ? initialOpenHours!.format(context)
+                                    : openingHours!.format(context),
                                 style: GoogleFonts.openSans(
                                   textStyle: TextStyle(
                                     color: Colors.black,
@@ -363,7 +363,7 @@ class _FormBody1State extends State<FormUpdate> {
                     },
                     child: Stack(
                       children: [
-                        Container(
+                        SizedBox(
                           width: 272 * widget.fem,
                           height: 60 * widget.hem,
                         ),
@@ -388,8 +388,8 @@ class _FormBody1State extends State<FormUpdate> {
                               ),
                               child: Text(
                                 closingHours == null
-                                    ? '${initialClosingHours!.format(context)}'
-                                    : '${closingHours!.format(context)}',
+                                    ? initialClosingHours!.format(context)
+                                    : closingHours!.format(context),
                                 style: GoogleFonts.openSans(
                                   textStyle: TextStyle(
                                     color: Colors.black,
@@ -435,7 +435,7 @@ class _FormBody1State extends State<FormUpdate> {
                     textController: addressController,
                   ),
                   SizedBox(height: 25 * widget.hem),
-                  Container(
+                  SizedBox(
                     width: 272 * widget.fem,
                     height: 100 * widget.fem,
                     child: TextFormField(

@@ -8,9 +8,6 @@ class LoadLectureById extends LectureEvent {
   final String id;
 
   LoadLectureById({required this.id});
-
-  @override
-  List<Object> get props => [id];
 }
 
 class GenerateQRCodeEvent extends LectureEvent {
@@ -32,7 +29,6 @@ class GenerateQRCodeEvent extends LectureEvent {
     required this.context,
   });
 
-  @override
   List<Object?> get props => [
     points,
     expirationTime,

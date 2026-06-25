@@ -6,7 +6,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lottie/lottie.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
-import 'package:swallet_mobile/presentation/screens/student_features/profile_history/profile_trans_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher_history/voucher_history.dart';
 import 'package:swallet_mobile/presentation/widgets/app_bar_campaign.dart';
 

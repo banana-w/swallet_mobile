@@ -62,10 +62,9 @@ class TabScanVoucher extends StatelessWidget {
         }
       },
       child: Stack(
+        alignment: Alignment.center,
         children: [
           MobileScanner(
-            startDelay: true,
-            overlay: Lottie.asset('assets/animations/scanning.json'),
             controller: cameraController,
             onDetect: (capture) {
               final List<Barcode> barcodes = capture.barcodes;
@@ -84,6 +83,14 @@ class TabScanVoucher extends StatelessWidget {
               }
             },
           ),
+          IgnorePointer(
+            child: Lottie.asset(
+              'assets/animations/scanning.json',
+              width: 250,
+              height: 250,
+              fit: BoxFit.cover,
+            ),
+          ),
           Positioned.fill(
             child: Container(
               decoration: ShapeDecoration(
@@ -92,7 +99,6 @@ class TabScanVoucher extends StatelessWidget {
                   borderRadius: 10,
                   borderLength: 20,
                   borderWidth: 5,
-                  // cutOutSize: scanArea,
                 ),
               ),
             ),

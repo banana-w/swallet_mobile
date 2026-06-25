@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:swallet_mobile/data/models/lecture_features/qr_code_history.dart';
 import 'package:swallet_mobile/data/models/student_features/campus_model.dart';
 
 class CampusAPIClient {

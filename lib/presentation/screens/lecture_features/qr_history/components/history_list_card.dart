@@ -35,7 +35,7 @@ class QRCodeHistoryListCard extends StatelessWidget {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF757575).withOpacity(0.3),
+              color: const Color(0xFF757575).withValues(alpha: 0.3),
               blurRadius: 10.0,
               spreadRadius: 1.0,
               offset: const Offset(5.0, 5.0),
@@ -55,7 +55,7 @@ class QRCodeHistoryListCard extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10 * fem),
-                child: Container(
+                child: SizedBox(
                   width: 120 * fem,
                   height: 120 * hem,
                   child: Image.network(
@@ -189,7 +189,7 @@ class QRCodeHistoryListCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 20 * hem),
-                  Container(
+                  SizedBox(
                     width: 320 * fem,
                     height: 320 * fem,
                     // decoration: BoxDecoration(

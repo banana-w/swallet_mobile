@@ -9,7 +9,6 @@ import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/signup/screens/signup_6_screen.dart';
 
 import 'button_signup6.dart';
-import 'upload_back_card.dart';
 import 'upload_front_card.dart';
 
 class FormBody6 extends StatefulWidget {

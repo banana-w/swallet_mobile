@@ -5,17 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/interface_repositories/lecture_features/lecture_repository.dart';
-import 'package:swallet_mobile/data/interface_repositories/store_features/store_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/lecture/lecture_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
-import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/profile_update_detail/profile_update_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/brand/brand_detail_store_screen.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/profile_update_detail/profile_update_detail_screen.dart';
 import 'button_profile.dart';
 import 'information_card_profile.dart';
 

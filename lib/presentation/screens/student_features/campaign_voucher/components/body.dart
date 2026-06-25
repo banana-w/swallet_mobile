@@ -185,7 +185,7 @@ class Body extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${campaignDetail.campaignName}',
+                                  campaignDetail.campaignName,
                                   textAlign: TextAlign.justify,
                                   softWrap: true,
                                   style: GoogleFonts.openSans(
@@ -202,7 +202,7 @@ class Body extends StatelessWidget {
                                     bottom: 5 * hem,
                                   ),
                                   child: Text(
-                                    '${campaignVoucherDetail.voucherName}',
+                                    campaignVoucherDetail.voucherName,
                                     textAlign: TextAlign.justify,
                                     softWrap: true,
                                     style: GoogleFonts.openSans(
@@ -219,7 +219,7 @@ class Body extends StatelessWidget {
                                     Row(
                                       children: [
                                         Text(
-                                          '${formatter.format((campaignVoucherModel.price))}',
+                                          formatter.format((campaignVoucherModel.price)),
                                           style: GoogleFonts.openSans(
                                             textStyle: TextStyle(
                                               fontSize: 22 * ffem,
@@ -377,7 +377,7 @@ class Body extends StatelessWidget {
                                       top: 5 * hem,
                                     ),
                                     child: HtmlWidget(
-                                      '${campaignVoucherDetail.condition}',
+                                      campaignVoucherDetail.condition,
                                       textStyle: GoogleFonts.openSans(
                                         textStyle: TextStyle(
                                           fontSize: 14 * ffem,
@@ -595,7 +595,7 @@ void _detailModelBottomSheet(
                               right: 15 * fem,
                             ),
                             child: HtmlWidget(
-                              '${campaignVoucherDetail.condition}',
+                              campaignVoucherDetail.condition,
                               textStyle: GoogleFonts.openSans(
                                 textStyle: TextStyle(
                                   fontSize: 15 * ffem,
@@ -626,7 +626,7 @@ void _detailModelBottomSheet(
                               right: 15 * fem,
                             ),
                             child: HtmlWidget(
-                              '${campaignVoucherDetail.description}',
+                              campaignVoucherDetail.description,
                               textStyle: GoogleFonts.openSans(
                                 textStyle: TextStyle(
                                   fontSize: 15 * ffem,

@@ -12,8 +12,6 @@ import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher
 import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:http/http.dart' as http;
-import 'dart:io';
-import 'package:http/io_client.dart';
 
 class StudentRepositoryImp implements StudentRepository {
   String endPoint = '${baseURL}Student';

@@ -41,7 +41,7 @@ class InformationCardProfile extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(50),
                 child: Image.network(
-                  '${studentModel.studentCardFront}',
+                  studentModel.studentCardFront,
                   // 'assets/images/ava_signup.png',
                   width: 80 * fem,
                   height: 80 * hem,
@@ -74,7 +74,7 @@ class InformationCardProfile extends StatelessWidget {
                     SizedBox(
                       width: 150 * fem,
                       child: Text(
-                        '${studentModel.address}',
+                        studentModel.address,
                         maxLines: 1,
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,

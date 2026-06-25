@@ -95,141 +95,139 @@ class NotificationListScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Container(
-                              child: ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: notifications.length,
-                                itemBuilder: (context, index) {
-                                  var notification = notifications[index];
-                                  var payloadMap =
-                                      jsonDecode(notification.payload);
-                                  return GestureDetector(
-                                    onTap: () async {
-                                      if (payloadMap['campaignId'] != null &&
-                                        payloadMap['campaignId'].isNotEmpty) {
-                                        Navigator.of(context).pushNamed(
-                                            CampaignDetailStudentScreen.routeName,
-                                            arguments:
-                                                payloadMap['campaignId']);
-                                      }
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.only(
-                                          top: 15 * hem,
-                                          left: 10 * fem,
-                                          right: 10 * fem),
-                                      constraints: BoxConstraints(
-                                          maxHeight: 120 * hem,
-                                          minWidth: 340 * fem),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15 * fem),
-                                          color: Colors.white,
-                                          border:
-                                              Border.all(color: klighGreyColor),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: Color(0x0c000000),
-                                                offset:
-                                                    Offset(0 * fem, 0 * fem),
-                                                blurRadius: 5 * fem)
-                                          ]),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            margin: EdgeInsets.all(5),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: SizedBox(
-                                                width: 100 * fem,
-                                                height: 100 * hem,
-                                                child: Image.network(
-                                                  payloadMap['image'],
-                                                  fit: BoxFit.fill,
-                                                  loadingBuilder: (context,
-                                                      child, loadingProgress) {
-                                                    if (loadingProgress ==
-                                                        null) {
-                                                      return child;
-                                                    }
-                                                    return ShimmerWidget
-                                                        .rectangular(
-                                                            height: 80);
-                                                  },
-                                                  errorBuilder: (context, error,
-                                                      stackTrace) {
-                                                    return Image.asset(
-                                                      'assets/images/bean_logo.jpg',
-                                                    );
-                                                  },
-                                                ),
+                            ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: notifications.length,
+                              itemBuilder: (context, index) {
+                                var notification = notifications[index];
+                                var payloadMap =
+                                    jsonDecode(notification.payload);
+                                return GestureDetector(
+                                  onTap: () async {
+                                    if (payloadMap['campaignId'] != null &&
+                                      payloadMap['campaignId'].isNotEmpty) {
+                                      Navigator.of(context).pushNamed(
+                                          CampaignDetailStudentScreen.routeName,
+                                          arguments:
+                                              payloadMap['campaignId']);
+                                    }
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(
+                                        top: 15 * hem,
+                                        left: 10 * fem,
+                                        right: 10 * fem),
+                                    constraints: BoxConstraints(
+                                        maxHeight: 120 * hem,
+                                        minWidth: 340 * fem),
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(15 * fem),
+                                        color: Colors.white,
+                                        border:
+                                            Border.all(color: klighGreyColor),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Color(0x0c000000),
+                                              offset:
+                                                  Offset(0 * fem, 0 * fem),
+                                              blurRadius: 5 * fem)
+                                        ]),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.all(5),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: SizedBox(
+                                              width: 100 * fem,
+                                              height: 100 * hem,
+                                              child: Image.network(
+                                                payloadMap['image'],
+                                                fit: BoxFit.fill,
+                                                loadingBuilder: (context,
+                                                    child, loadingProgress) {
+                                                  if (loadingProgress ==
+                                                      null) {
+                                                    return child;
+                                                  }
+                                                  return ShimmerWidget
+                                                      .rectangular(
+                                                          height: 80);
+                                                },
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return Image.asset(
+                                                    'assets/images/bean_logo.jpg',
+                                                  );
+                                                },
                                               ),
                                             ),
                                           ),
-                                          SizedBox(
-                                            width: 8 * fem,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              SizedBox(
-                                                width: 200 * fem,
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: 5 * hem,
-                                                      bottom: 5 * hem),
-                                                  child: Text(
-                                                      notification.title,
-                                                      softWrap: true,
-                                                      maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style:
-                                                          GoogleFonts.openSans(
-                                                              textStyle:
-                                                                  TextStyle(
-                                                        fontSize: 15 * ffem,
-                                                        color: kPrimaryColor,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ))),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 200 * fem,
-                                                child: Text(notification.body,
+                                        ),
+                                        SizedBox(
+                                          width: 8 * fem,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: 200 * fem,
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 5 * hem,
+                                                    bottom: 5 * hem),
+                                                child: Text(
+                                                    notification.title,
                                                     softWrap: true,
-                                                    maxLines: 3,
+                                                    maxLines: 2,
                                                     overflow:
                                                         TextOverflow.ellipsis,
-                                                    style: GoogleFonts.openSans(
-                                                        textStyle: TextStyle(
-                                                      fontSize: 12 * ffem,
-                                                      color: Colors.black,
+                                                    style:
+                                                        GoogleFonts.openSans(
+                                                            textStyle:
+                                                                TextStyle(
+                                                      fontSize: 15 * ffem,
+                                                      color: kPrimaryColor,
                                                       fontWeight:
-                                                          FontWeight.normal,
+                                                          FontWeight.w500,
                                                     ))),
                                               ),
-                                              SizedBox(
-                                                height: 5 * hem,
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      ),
+                                            ),
+                                            SizedBox(
+                                              width: 200 * fem,
+                                              child: Text(notification.body,
+                                                  softWrap: true,
+                                                  maxLines: 3,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: GoogleFonts.openSans(
+                                                      textStyle: TextStyle(
+                                                    fontSize: 12 * ffem,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ))),
+                                            ),
+                                            SizedBox(
+                                              height: 5 * hem,
+                                            ),
+                                          ],
+                                        )
+                                      ],
                                     ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         );
@@ -427,7 +425,7 @@ class NotificationListScreen extends StatelessWidget {
   }
 }
 
-Widget buildNotificationShimmer(count, double fem, double hem) {
+Widget buildNotificationShimmer(int count, double fem, double hem) {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

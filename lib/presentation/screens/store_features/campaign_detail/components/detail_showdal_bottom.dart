@@ -126,7 +126,7 @@ class DetailShowdalBottom extends StatelessWidget {
                           //   ),
                           // ),
                           child: HtmlWidget(
-                            '${campaignDetailModel.condition}',
+                            campaignDetailModel.condition,
                             textStyle: GoogleFonts.openSans(
                               textStyle: TextStyle(
                                 fontSize: 15 * ffem,
@@ -155,7 +155,7 @@ class DetailShowdalBottom extends StatelessWidget {
                           padding: EdgeInsets.only(
                               top: 5 * hem, left: 15 * fem, right: 15 * fem),
                           child: HtmlWidget(
-                            '${campaignDetailModel.description}',
+                            campaignDetailModel.description,
                             textStyle: GoogleFonts.openSans(
                               textStyle: TextStyle(
                                 fontSize: 15 * ffem,

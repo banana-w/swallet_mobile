@@ -89,7 +89,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                 Navigator.of(context).pop();
               });
               return AlertDialog(
-                content: Container(
+                content: SizedBox(
                   width: 250,
                   height: 250,
                   child: Center(
@@ -135,7 +135,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                                 child:
                                     _selectedAvatar == null
                                         ? Image.network(
-                                          '${store.avatar}',
+                                          store.avatar,
                                           // 'assets/images/ava_signup.png',
                                           width: 80 * widget.fem,
                                           height: 80 * widget.hem,
@@ -266,7 +266,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                               return SizedBox(
                                 width: 150 * widget.fem,
                                 child: Text(
-                                  '${state.storeModel.email}',
+                                  state.storeModel.email,
                                   maxLines: 1,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
@@ -284,7 +284,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                               width: 150 * widget.fem,
                               child: Text(
                                 store == null
-                                    ? '${widget.storeModel.email}'
+                                    ? widget.storeModel.email
                                     : store!.email,
                                 maxLines: 1,
                                 softWrap: true,
@@ -469,7 +469,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
     showModalBottomSheet(
       context: context,
       builder: (_) {
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height * 0.2,
           width: MediaQuery.of(context).size.width,
           child: Column(

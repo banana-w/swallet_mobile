@@ -83,7 +83,7 @@ class Body extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '${_formatDateTime(DateTime.now())}',
+                          _formatDateTime(DateTime.now()),
                           style: GoogleFonts.openSans(
                             textStyle: TextStyle(
                               fontSize: 15 * ffem,
@@ -116,7 +116,7 @@ class Body extends StatelessWidget {
                         SizedBox(
                           width: 200 * fem,
                           child: Text(
-                            '$failed',
+                            failed,
                             textAlign: TextAlign.start,
                             maxLines: 6,
                             softWrap: true,

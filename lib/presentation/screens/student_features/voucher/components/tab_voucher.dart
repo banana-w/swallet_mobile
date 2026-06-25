@@ -561,28 +561,6 @@ class VoucherCard extends StatelessWidget {
     VoucherGroup voucherGroup,
     BuildContext context,
   ) {
-    if (voucherGroup == null) {
-      return ElevatedButton(
-        onPressed: null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: klighGreyColor,
-          shape: const StadiumBorder(
-            side: BorderSide(width: 1, color: klowTextGrey),
-          ),
-        ),
-        child: Text(
-          'Không có voucher',
-          style: GoogleFonts.openSans(
-            textStyle: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: klowTextGrey,
-            ),
-          ),
-        ),
-      );
-    }
-
     if (!DateTime.parse(voucherGroup.expireOn).isAfter(DateTime.now())) {
       return GestureDetector(
         onTap: () {},

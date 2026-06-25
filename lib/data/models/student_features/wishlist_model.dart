@@ -30,17 +30,17 @@ class WishListModel extends WishList {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['studentId'] = this.studentId;
-    data['studentName'] = this.studentName;
-    data['studentImage'] = this.studentImage;
-    data['brandId'] = this.brandId;
-    data['brandName'] = this.brandName;
-    data['brandImage'] = this.brandImage;
-    data['description'] = this.description;
-    data['state'] = this.state;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['studentId'] = studentId;
+    data['studentName'] = studentName;
+    data['studentImage'] = studentImage;
+    data['brandId'] = brandId;
+    data['brandName'] = brandName;
+    data['brandImage'] = brandImage;
+    data['description'] = description;
+    data['state'] = state;
+    data['status'] = status;
     return data;
   }
 }

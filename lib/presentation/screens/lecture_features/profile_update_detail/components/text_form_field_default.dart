@@ -27,7 +27,7 @@ class TextFormFieldDefault extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 272 * fem,
       child: TextFormField(
         initialValue: initialValue,

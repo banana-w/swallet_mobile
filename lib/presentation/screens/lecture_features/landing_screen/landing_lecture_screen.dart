@@ -10,9 +10,6 @@ import 'package:swallet_mobile/presentation/screens/lecture_features/landing_scr
 import 'package:swallet_mobile/presentation/screens/lecture_features/profile/profile_lecture_screen.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/qr_generate/qr_generate_screen.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/used_qr_history/used_qr_history_screen.dart';
-import 'package:swallet_mobile/presentation/widgets/app_bar_campaign.dart';
-
-import 'package:swallet_mobile/presentation/widgets/app_bar_store.dart';
 
 class LandingLectureScreen extends StatelessWidget {
   const LandingLectureScreen({super.key});
@@ -52,7 +49,7 @@ class LandingLectureScreen extends StatelessWidget {
                         186,
                         186,
                         186,
-                      ).withOpacity(0.35),
+                      ).withValues(alpha: 0.35),
                       spreadRadius: 8,
                       blurRadius: 8,
                       offset: const Offset(0, 1),
@@ -118,7 +115,7 @@ class LandingLectureScreen extends StatelessWidget {
                           186,
                           186,
                           186,
-                        ).withOpacity(0.35),
+                        ).withValues(alpha: 0.35),
                         spreadRadius: 8,
                         blurRadius: 8,
                         offset: const Offset(0, 1),
@@ -183,7 +180,7 @@ class LandingLectureScreen extends StatelessWidget {
                         186,
                         186,
                         186,
-                      ).withOpacity(0.35),
+                      ).withValues(alpha: 0.35),
                       spreadRadius: 8,
                       blurRadius: 8,
                       offset: const Offset(0, 1),

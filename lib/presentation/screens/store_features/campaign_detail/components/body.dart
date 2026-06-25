@@ -12,7 +12,6 @@ import 'package:swallet_mobile/presentation/config/constants.dart';
 
 import '../../../../widgets/shimmer_widget.dart';
 import 'campaign_detail_showdal.dart';
-import 'campaign_store_card.dart';
 import 'detail_showdal_bottom.dart';
 
 class Body extends StatelessWidget {
@@ -85,7 +84,6 @@ class Body extends StatelessWidget {
             if (state is CampaignLoading) {
               return buildCampaignDetailShimmer(fem, hem);
             } else if (state is CampaignByIdLoaded) {
-              var campaignDetailModel = state.campaignDetailModel;
               return CustomScrollView(
                 slivers: [
                   SliverList(
@@ -94,7 +92,7 @@ class Body extends StatelessWidget {
                       children: [
                         Column(
                           children: [
-                            Container(
+                            SizedBox(
                               height: 200 * hem,
                               width: MediaQuery.of(context).size.width,
                               child: Image.network(
@@ -150,10 +148,10 @@ class Body extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
+                                SizedBox(
                                   width: 300 * fem,
                                   child: Text(
-                                    '${state.campaignDetailModel.campaignName}',
+                                    state.campaignDetailModel.campaignName,
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.openSans(
                                         textStyle: TextStyle(
@@ -177,7 +175,7 @@ class Body extends StatelessWidget {
                                     ClipRRect(
                                       borderRadius:
                                           BorderRadius.circular(10 * fem),
-                                      child: Container(
+                                      child: SizedBox(
                                         height: 35 * hem,
                                         width: 35 * fem,
                                         child: Image.network(
@@ -197,7 +195,7 @@ class Body extends StatelessWidget {
                                       width: 5 * fem,
                                     ),
                                     Text(
-                                      '${state.campaignDetailModel.brandName}',
+                                      state.campaignDetailModel.brandName,
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.openSans(
                                           textStyle: TextStyle(
@@ -335,10 +333,8 @@ class Body extends StatelessWidget {
                 ],
               );
             }
-            return Container(
-              child: Center(
-                child: Text('Error'),
-              ),
+            return Center(
+              child: Text('Error'),
             );
           },
         ),

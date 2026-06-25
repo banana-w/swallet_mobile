@@ -31,21 +31,21 @@ class ApiResponse<T> extends Equatable {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['items'] = this.result; // đổi từ 'result' thành 'items'
-    data['page'] = this.page; // đổi từ 'currentPage' thành 'page'
+    data['items'] = result; // đổi từ 'result' thành 'items'
+    data['page'] = page; // đổi từ 'currentPage' thành 'page'
     data['totalPages'] =
-        this.totalPages; // đổi từ 'pageCount' thành 'totalPages'
-    data['size'] = this.size; // đổi từ 'pageSize' thành 'size'
-    data['total'] = this.total; // đổi từ 'totalCount' thành 'total'
+        totalPages; // đổi từ 'pageCount' thành 'totalPages'
+    data['size'] = size; // đổi từ 'pageSize' thành 'size'
+    data['total'] = total; // đổi từ 'totalCount' thành 'total'
     return data;
   }
 
   @override
   List<Object?> get props => [
-    this.result,
-    this.page,
-    this.totalPages,
-    this.size,
-    this.total,
+    result,
+    page,
+    totalPages,
+    size,
+    total,
   ];
 }

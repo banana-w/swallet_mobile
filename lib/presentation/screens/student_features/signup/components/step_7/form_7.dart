@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -333,7 +331,7 @@ class _FormBody7State extends State<FormBody7> {
                 createAuthenModel!.phoneNumber =
                     '0${phoneNumberController.text}';
                     
-                String createAuthenString = jsonEncode(createAuthenModel);
+                // String createAuthenString = jsonEncode(createAuthenModel);
                 // AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
 
                 if (context.mounted) {

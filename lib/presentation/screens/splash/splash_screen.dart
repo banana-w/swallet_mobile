@@ -75,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         PageRouteBuilder(
-          pageBuilder: (_, __, ___) {
+          pageBuilder: (_, _, _) {
             if (launchApp) {
               return const WelcomeScreen();
             }
@@ -83,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
           },
           transitionDuration: const Duration(seconds: 1),
           transitionsBuilder:
-              (_, a, __, c) => FadeTransition(opacity: a, child: c),
+              (_, a, _, c) => FadeTransition(opacity: a, child: c),
         ),
         (Route<dynamic> route) => false,
       );

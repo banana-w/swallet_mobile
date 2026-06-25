@@ -10,7 +10,6 @@ import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/cubits/validation/validation_cubit.dart';
 import 'package:swallet_mobile/presentation/cubits/verification/verification_cubit.dart';
-import 'package:swallet_mobile/presentation/screens/student_features/verify_email/screens/verifycode_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/verify_studentMail/screens/verifycode_student_screen.dart';
 
 import '../../../../config/constants.dart';

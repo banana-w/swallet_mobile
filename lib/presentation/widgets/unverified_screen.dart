@@ -7,9 +7,9 @@ class UnverifiedScreen extends StatelessWidget {
   static const String routeName = '/unverified_screen';
   static Route route() {
     return PageRouteBuilder(
-      pageBuilder: (_, __, ___) => UnverifiedScreen(),
+      pageBuilder: (_, _, _) => UnverifiedScreen(),
       transitionDuration: Duration(milliseconds: 400),
-      transitionsBuilder: (_, animation, __, child) {
+      transitionsBuilder: (_, animation, _, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
         var tween = Tween(begin: begin, end: end);

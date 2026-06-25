@@ -1,7 +1,7 @@
 import 'package:swallet_mobile/domain/entities/store_features/campaign_ranking.dart';
 
 class CampaignRankingModel extends CampaignRanking {
-  CampaignRankingModel({
+  const CampaignRankingModel({
     required super.rank,
     required super.name,
     required super.image,
@@ -18,11 +18,11 @@ class CampaignRankingModel extends CampaignRanking {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['rank'] = this.rank;
-    data['name'] = this.name;
-    data['image'] = this.image;
-    data['value'] = this.value;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['rank'] = rank;
+    data['name'] = name;
+    data['image'] = image;
+    data['value'] = value;
     return data;
   }
 }

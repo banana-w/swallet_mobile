@@ -11,7 +11,7 @@ import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'form_update.dart';
 
 class Body extends StatelessWidget {
-  Body({super.key, required this.storeModel});
+  const Body({super.key, required this.storeModel});
 
   final StoreModel storeModel;
   @override
@@ -64,7 +64,7 @@ class Body extends StatelessWidget {
       },
       child: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: CustomScrollView(
           slivers: [

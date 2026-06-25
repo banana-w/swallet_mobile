@@ -46,7 +46,7 @@ class TransactionCard extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 10 * fem, right: 10 * fem),
                     child: Text(
-                      '${transaction.name}',
+                      transaction.name,
                       style: GoogleFonts.openSans(
                           fontSize: 17 * ffem,
                           fontWeight: FontWeight.bold,
@@ -57,7 +57,7 @@ class TransactionCard extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.only(left: 10 * fem),
                     width: 200 * fem,
-                    child: Text('${transaction.description}',
+                    child: Text(transaction.description,
                         maxLines: 2,
                         style: GoogleFonts.openSans(
                             fontSize: 15 * ffem,
@@ -173,7 +173,7 @@ Widget _buildAmount(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            '${formatter.format(transaction.amount)}',
+            formatter.format(transaction.amount),
             style: GoogleFonts.openSans(
                 textStyle: TextStyle(
               fontSize: 16 * ffem,
@@ -207,7 +207,7 @@ Widget _buildAmount(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            '${formatter.format(transaction.amount)}',
+            formatter.format(transaction.amount),
             style: GoogleFonts.openSans(
                 textStyle: TextStyle(
               fontSize: 16 * ffem,

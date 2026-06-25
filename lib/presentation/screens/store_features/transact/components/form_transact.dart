@@ -60,7 +60,7 @@ class _FormTransactState extends State<FormTransact> {
             SizedBox(
               height: 15 * widget.hem,
             ),
-            Container(
+            SizedBox(
               width: 272 * widget.fem,
               height: 100 * widget.hem,
               // color: Colors.red,

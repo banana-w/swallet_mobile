@@ -106,7 +106,7 @@ class _DropDownCampusState extends State<DropDownCampus> {
           gapPadding: 10,
         ),
       ),
-      value: widget.campuses.firstWhere((u) => u.id == widget.campusId).id,
+      initialValue: widget.campuses.firstWhere((u) => u.id == widget.campusId).id,
       onChanged: (newValue) {
         setState(() {
           widget.campusController.text = newValue!;

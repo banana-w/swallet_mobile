@@ -97,7 +97,7 @@ class _DropDownGenderState extends State<DropDownGender> {
             gapPadding: 10,
           ),
         ),
-        value: GenderModel.genders.firstWhere((g) => g.name == gender).id,
+        initialValue: GenderModel.genders.firstWhere((g) => g.name == gender).id,
         onChanged: (newValue) {
           setState(() {
             widget.genderController.text = newValue.toString();

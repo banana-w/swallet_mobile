@@ -22,29 +22,34 @@ import 'components/body.dart';
 class CampaignVoucherScreen extends StatelessWidget {
   static const String routeName = '/campaign-voucher-detail-student';
 
-  static Route route(
-      {required CampaignVoucherModel campaignVoucher,
-      required CampaignDetailModel campaignDetail,
-      required String accountId}) {
+  static Route route({
+    required CampaignVoucherModel campaignVoucher,
+    required CampaignDetailModel campaignDetail,
+    required String accountId,
+  }) {
     return MaterialPageRoute(
-        builder: (_) => BlocProvider(
-              create: (context) => CampaignBloc(
-                  campaignRepository: context.read<CampaignRepository>())
-                ..add(LoadCampaigns()),
-              child: CampaignVoucherScreen(
-                campaignDetailModel: campaignDetail,
-                campaignVoucherModel: campaignVoucher,
-                accountId: accountId,
-              ),
+      builder:
+          (_) => BlocProvider(
+            create:
+                (context) => CampaignBloc(
+                  campaignRepository: context.read<CampaignRepository>(),
+                )..add(LoadCampaigns()),
+            child: CampaignVoucherScreen(
+              campaignDetailModel: campaignDetail,
+              campaignVoucherModel: campaignVoucher,
+              accountId: accountId,
             ),
-        settings: const RouteSettings(arguments: routeName));
+          ),
+      settings: const RouteSettings(arguments: routeName),
+    );
   }
 
-  const CampaignVoucherScreen(
-      {super.key,
-      required this.campaignVoucherModel,
-      required this.campaignDetailModel,
-      required this.accountId});
+  const CampaignVoucherScreen({
+    super.key,
+    required this.campaignVoucherModel,
+    required this.campaignDetailModel,
+    required this.accountId,
+  });
 
   final CampaignVoucherModel campaignVoucherModel;
   final CampaignDetailModel campaignDetailModel;
@@ -58,9 +63,10 @@ class CampaignVoucherScreen extends StatelessWidget {
     double ffem = fem * 0.97;
     double hem = MediaQuery.of(context).size.height / baseHeight;
     return BlocProvider(
-      create: (context) =>
-          StudentBloc(studentRepository: context.read<StudentRepository>())
-            ..add(LoadStudentById(accountId: accountId)),
+      create:
+          (context) =>
+              StudentBloc(studentRepository: context.read<StudentRepository>())
+                ..add(LoadStudentById(accountId: accountId)),
       child: SafeArea(
         child: Scaffold(
           backgroundColor: klighGreyColor,
@@ -68,9 +74,11 @@ class CampaignVoucherScreen extends StatelessWidget {
             elevation: 0,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/background_splash.png'),
-                      fit: BoxFit.cover)),
+                image: DecorationImage(
+                  image: AssetImage('assets/images/background_splash.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             leading: InkWell(
               onTap: () {
@@ -87,25 +95,26 @@ class CampaignVoucherScreen extends StatelessWidget {
             title: Text(
               'Chi tiết ưu đãi',
               style: GoogleFonts.openSans(
-                  textStyle: TextStyle(
-                      fontSize: 18 * ffem,
-                      fontWeight: FontWeight.w900,
-                      height: 1.3625 * ffem / fem,
-                      color: Colors.white)),
+                textStyle: TextStyle(
+                  fontSize: 18 * ffem,
+                  fontWeight: FontWeight.w900,
+                  height: 1.3625 * ffem / fem,
+                  color: Colors.white,
+                ),
+              ),
             ),
             actions: [
               // SvgPicture.asset('assets/icons/notification-icon.svg')
               Padding(
                 padding: EdgeInsets.only(right: 20 * fem),
                 child: IconButton(
-                  icon: Icon(
-                    Icons.home,
-                    color: Colors.white,
-                    size: 25 * fem,
-                  ),
+                  icon: Icon(Icons.home, color: Colors.white, size: 25 * fem),
                   onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(context,
-                        '/landing-screen', (Route<dynamic> route) => false);
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/landing-screen',
+                      (Route<dynamic> route) => false,
+                    );
                   },
                 ),
               ),
@@ -119,13 +128,13 @@ class CampaignVoucherScreen extends StatelessWidget {
                 if (true) {
                   return MultiBlocProvider(
                     providers: [
+                      BlocProvider(create: (context) => CounterCubit()),
                       BlocProvider(
-                        create: (context) => CounterCubit(),
-                      ),
-                      BlocProvider(
-                        create: (context) => CampaignBloc(
-                            campaignRepository:
-                                context.read<CampaignRepository>()),
+                        create:
+                            (context) => CampaignBloc(
+                              campaignRepository:
+                                  context.read<CampaignRepository>(),
+                            ),
                       ),
                     ],
                     child: BottomAppBar(
@@ -145,33 +154,40 @@ class CampaignVoucherScreen extends StatelessWidget {
                                   Text(
                                     'Tổng coin',
                                     style: GoogleFonts.openSans(
-                                        textStyle: TextStyle(
-                                            fontSize: 15 * ffem,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black)),
+                                      textStyle: TextStyle(
+                                        fontSize: 15 * ffem,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
                                   ),
                                   Row(
                                     children: [
                                       Text(
-                                        '${formatter.format((campaignVoucherModel.price) * state.counterValue)}',
+                                        formatter.format(
+                                          (campaignVoucherModel.price) *
+                                              state.counterValue,
+                                        ),
                                         style: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
-                                          fontSize: 25 * ffem,
-                                          color: kPrimaryColor,
-                                          fontWeight: FontWeight.bold,
-                                        )),
+                                          textStyle: TextStyle(
+                                            fontSize: 25 * ffem,
+                                            color: kPrimaryColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(
-                                            left: 8 * fem,
-                                            top: 1 * hem,
-                                            bottom: 0 * hem),
+                                          left: 8 * fem,
+                                          top: 1 * hem,
+                                          bottom: 0 * hem,
+                                        ),
                                         child: SvgPicture.asset(
                                           'assets/icons/coin.svg',
                                           width: 30 * fem,
                                           height: 30 * fem,
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -190,21 +206,22 @@ class CampaignVoucherScreen extends StatelessWidget {
                                         width: 25 * fem,
                                         height: 25 * fem,
                                         child: FloatingActionButton(
-                                            heroTag: 'remove',
-                                            elevation: 0,
-                                            backgroundColor: klightPrimaryColor,
-                                            child: const Icon(
-                                              Icons.remove,
-                                              size: 15,
-                                            ),
-                                            onPressed: () {
-                                              if (state.counterValue <= 1) {
-                                              } else {
-                                                context
-                                                    .read<CounterCubit>()
-                                                    .decrement();
-                                              }
-                                            }),
+                                          heroTag: 'remove',
+                                          elevation: 0,
+                                          backgroundColor: klightPrimaryColor,
+                                          child: const Icon(
+                                            Icons.remove,
+                                            size: 15,
+                                          ),
+                                          onPressed: () {
+                                            if (state.counterValue <= 1) {
+                                            } else {
+                                              context
+                                                  .read<CounterCubit>()
+                                                  .decrement();
+                                            }
+                                          },
+                                        ),
                                       ),
                                       Container(
                                         margin: EdgeInsets.only(
@@ -214,40 +231,50 @@ class CampaignVoucherScreen extends StatelessWidget {
                                         width: 40 * fem,
                                         height: 30 * hem,
                                         decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color: kbgWhiteColor),
+                                          borderRadius: BorderRadius.circular(
+                                            5,
+                                          ),
+                                          color: kbgWhiteColor,
+                                        ),
                                         child: Center(
-                                            child: Text(
-                                          '${state.counterValue}',
-                                          style: GoogleFonts.openSans(
+                                          child: Text(
+                                            '${state.counterValue}',
+                                            style: GoogleFonts.openSans(
                                               textStyle: TextStyle(
-                                                  fontSize: 12 * ffem,
-                                                  fontWeight: FontWeight.normal,
-                                                  color: Colors.black)),
-                                        )),
+                                                fontSize: 12 * ffem,
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                       SizedBox(
                                         width: 25 * fem,
                                         height: 25 * fem,
                                         child: FloatingActionButton(
-                                            heroTag: 'Add',
-                                            elevation: 0,
-                                            backgroundColor: klightPrimaryColor,
-                                            child: const Icon(
-                                              Icons.add,
-                                              size: 15,
-                                            ),
-                                            onPressed: () {
-                                              int maxLimit = min(2, campaignVoucherModel.numberOfItemsAvailable!);
-                                              if (state.counterValue >=
-                                                  maxLimit) {
-                                              } else {
-                                                context
-                                                    .read<CounterCubit>()
-                                                    .increment();
-                                              }
-                                            }),
+                                          heroTag: 'Add',
+                                          elevation: 0,
+                                          backgroundColor: klightPrimaryColor,
+                                          child: const Icon(
+                                            Icons.add,
+                                            size: 15,
+                                          ),
+                                          onPressed: () {
+                                            int maxLimit = min(
+                                              2,
+                                              campaignVoucherModel
+                                                  .numberOfItemsAvailable!,
+                                            );
+                                            if (state.counterValue >=
+                                                maxLimit) {
+                                            } else {
+                                              context
+                                                  .read<CounterCubit>()
+                                                  .increment();
+                                            }
+                                          },
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -255,28 +282,33 @@ class CampaignVoucherScreen extends StatelessWidget {
                                     builder: (context, stateStudent) {
                                       if (stateStudent is StudentByIdSuccess) {
                                         return buildButtonBuy(
-                                            context,
-                                            state,
-                                            fem,
-                                            hem,
-                                            ffem,
-                                            stateStudent.studentMode);
+                                          context,
+                                          state,
+                                          fem,
+                                          hem,
+                                          ffem,
+                                          stateStudent.studentMode,
+                                        );
                                       }
                                       return Container(
                                         width: 200 * fem,
                                         height: 35 * hem,
                                         decoration: BoxDecoration(
-                                            color: kLowTextColor,
-                                            borderRadius: BorderRadius.circular(
-                                                10 * fem)),
+                                          color: kLowTextColor,
+                                          borderRadius: BorderRadius.circular(
+                                            10 * fem,
+                                          ),
+                                        ),
                                         child: Center(
                                           child: Text(
                                             'Mua ngay',
                                             style: GoogleFonts.openSans(
-                                                textStyle: TextStyle(
-                                                    fontSize: 15 * ffem,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white)),
+                                              textStyle: TextStyle(
+                                                fontSize: 15 * ffem,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       );
@@ -300,24 +332,25 @@ class CampaignVoucherScreen extends StatelessWidget {
                         'Bạn không thể mua vì ưu đãi này thuộc trong chiến dịch mà bạn không được tham gia.',
                         textAlign: TextAlign.center,
                         style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
-                                fontSize: 15 * ffem,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black)),
+                          textStyle: TextStyle(
+                            fontSize: 15 * ffem,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
                     ),
                   );
                 }
               }
               return BottomAppBar(
-                  color: Colors.white,
-                  height: 110 * hem,
-                  elevation: 50,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: kPrimaryColor,
-                    ),
-                  ));
+                color: Colors.white,
+                height: 110 * hem,
+                elevation: 50,
+                child: Center(
+                  child: CircularProgressIndicator(color: kPrimaryColor),
+                ),
+              );
             },
           ),
           body: Body(
@@ -329,120 +362,111 @@ class CampaignVoucherScreen extends StatelessWidget {
     );
   }
 
-  Widget buildButtonBuy(BuildContext context, CounterState state, double fem,
-      double hem, double ffem, StudentModel student) {
-    final stateName = student.state;
-    if (stateName == 'Pending' || stateName == 'Rejected') {
+  Widget buildButtonBuy(
+    BuildContext context,
+    CounterState state,
+    double fem,
+    double hem,
+    double ffem,
+    StudentModel student,
+  ) {
+    final stateName = student.state.toString();
+
+    // Biến dùng chung cho Style Text để code đỡ dài dòng
+    final textStyle = GoogleFonts.openSans(
+      textStyle: TextStyle(
+        fontSize: 15 * ffem,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+
+    // Khung giao diện dùng chung cho các nút bị khóa (Disabled)
+    Widget buildDisabledButton(String label) {
       return Container(
         width: 200 * fem,
         height: 35 * hem,
         decoration: BoxDecoration(
-            color: kLowTextColor,
-            borderRadius: BorderRadius.circular(10 * fem)),
-        child: Center(
-          child: Text(
-            'Mua ngay',
-            style: GoogleFonts.openSans(
-                textStyle: TextStyle(
-                    fontSize: 15 * ffem,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white)),
-          ),
+          color: kLowTextColor,
+          borderRadius: BorderRadius.circular(10 * fem),
         ),
+        child: Center(child: Text(label, style: textStyle)),
       );
-    } else {
-      if (campaignVoucherModel.numberOfItemsAvailable == 0) {
-        return Container(
-          width: 200 * fem,
-          height: 35 * hem,
-          decoration: BoxDecoration(
-              color: kLowTextColor,
-              borderRadius: BorderRadius.circular(10 * fem)),
-          child: Center(
-            child: Text(
-              'Hết ưu đãi',
-              style: GoogleFonts.openSans(
-                  textStyle: TextStyle(
-                      fontSize: 15 * ffem,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white)),
-            ),
-          ),
-        );
-      } else if ((campaignDetailModel.startOn
-              .compareTo(DateTime.now().toString()) >
-          0)) {
-        return Container(
-          width: 200 * fem,
-          height: 35 * hem,
-          decoration: BoxDecoration(
-              color: kLowTextColor,
-              borderRadius: BorderRadius.circular(10 * fem)),
-          child: Center(
-            child: Text(
-              'Sắp diễn ra',
-              style: GoogleFonts.openSans(
-                  textStyle: TextStyle(
-                      fontSize: 15 * ffem,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white)),
-            ),
-          ),
-        );
-      } else {
-        return InkWell(
-            onTap: () async {
-              final student = await AuthenLocalDataSource.getStudent();
-              if (student!.coinBalance! <
-                  (campaignVoucherModel.price * state.counterValue)) {
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(SnackBar(
-                    elevation: 0,
-                    duration: const Duration(milliseconds: 2000),
-                    behavior: SnackBarBehavior.floating,
-                    backgroundColor: Colors.transparent,
-                    content: AwesomeSnackbarContent(
-                      title: 'Mua thất bại',
-                      message: 'Số coin của bạn không đủ!',
-                      contentType: ContentType.failure,
-                    ),
-                  ));
-              } else {
-                final student = await AuthenLocalDataSource.getStudent();
+    }
 
-                Navigator.pushNamed(context, RedeemVoucherScreen.routeName,
-                    arguments: <dynamic>[
-                      campaignDetailModel.id,
-                      campaignVoucherModel.id,
-                      student?.id,
-                      state.counterValue,
-                      'string',
-                      campaignDetailModel.campaignName,
-                      (campaignVoucherModel.price * state.counterValue),
-                      campaignVoucherModel.voucherName,
-                      campaignVoucherModel.price
-                    ]);
-              }
-            },
-            child: Container(
-              width: 200 * fem,
-              height: 35 * hem,
-              decoration: BoxDecoration(
-                  color: kPrimaryColor,
-                  borderRadius: BorderRadius.circular(10 * fem)),
-              child: Center(
-                child: Text(
-                  'Mua ngay',
-                  style: GoogleFonts.openSans(
-                      textStyle: TextStyle(
-                          fontSize: 15 * ffem,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
+    // LỢI ÍCH 1: Cập nhật chữ hiển thị đúng với trạng thái thực tế
+    if (stateName == 'Pending') {
+      return buildDisabledButton('Chờ phê duyệt');
+    }
+
+    if (stateName == 'Rejected') {
+      return buildDisabledButton('Bị từ chối');
+    }
+
+    if (campaignVoucherModel.numberOfItemsAvailable == 0) {
+      return buildDisabledButton('Hết ưu đãi');
+    }
+
+    if (campaignDetailModel.startOn.compareTo(DateTime.now().toString()) > 0) {
+      return buildDisabledButton('Sắp diễn ra');
+    }
+
+    // Trường hợp hợp lệ: Cho phép bấm nút "Mua ngay"
+    return InkWell(
+      onTap: () async {
+        // LỢI ÍCH 2: Gọi lấy dữ liệu DUY NHẤT 1 LẦN
+        final localStudent = await AuthenLocalDataSource.getStudent();
+        if (localStudent == null) return;
+
+        // LỢI ÍCH 3: Chặn lỗi Async Gap - Bảo vệ context trước khi dùng
+        if (!context.mounted) return;
+
+        final totalPrice = campaignVoucherModel.price * state.counterValue;
+        final currentBalance = localStudent.coinBalance ?? 0;
+
+        if (currentBalance < totalPrice) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                elevation: 0,
+                duration: const Duration(milliseconds: 2000),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Mua thất bại',
+                  message: 'Số coin của bạn không đủ!',
+                  contentType: ContentType.failure,
                 ),
               ),
-            ));
-      }
-    }
+            );
+        } else {
+          Navigator.pushNamed(
+            context,
+            RedeemVoucherScreen.routeName,
+            arguments: <dynamic>[
+              campaignDetailModel.id,
+              campaignVoucherModel.id,
+              localStudent.id,
+              state.counterValue,
+              'string',
+              campaignDetailModel.campaignName,
+              totalPrice,
+              campaignVoucherModel.voucherName,
+              campaignVoucherModel.price,
+            ],
+          );
+        }
+      },
+      child: Container(
+        width: 200 * fem,
+        height: 35 * hem,
+        decoration: BoxDecoration(
+          color: kPrimaryColor,
+          borderRadius: BorderRadius.circular(10 * fem),
+        ),
+        child: Center(child: Text('Mua ngay', style: textStyle)),
+      ),
+    );
   }
 }

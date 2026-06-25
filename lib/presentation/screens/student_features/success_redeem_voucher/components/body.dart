@@ -83,7 +83,7 @@ class Body extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '${_formatDateTime(DateTime.now())}',
+                          _formatDateTime(DateTime.now()),
                           style: GoogleFonts.openSans(
                             textStyle: TextStyle(
                               fontSize: 16 * ffem,
@@ -113,7 +113,7 @@ class Body extends StatelessWidget {
                         SizedBox(
                           width: 120 * fem,
                           child: Text(
-                            '$voucherName',
+                            voucherName,
                             maxLines: 2,
                             softWrap: true,
                             textAlign: TextAlign.end,
@@ -147,7 +147,7 @@ class Body extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              '${formatter.format(total)}',
+                              formatter.format(total),
                               style: GoogleFonts.openSans(
                                 textStyle: TextStyle(
                                   fontSize: 22 * ffem,

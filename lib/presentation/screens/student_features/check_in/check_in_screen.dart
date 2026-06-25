@@ -1,13 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart';
-import 'package:lottie/lottie.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
@@ -24,11 +21,13 @@ const String baseUrl =
 class CheckInScreen extends StatefulWidget {
   static const String routeName = '/check-in';
 
+  const CheckInScreen({super.key});
+
   static Route route() {
     return PageRouteBuilder(
-      pageBuilder: (_, __, ___) => CheckInScreen(),
+      pageBuilder: (_, _, _) => CheckInScreen(),
       transitionDuration: Duration(milliseconds: 400),
-      transitionsBuilder: (_, animation, __, child) {
+      transitionsBuilder: (_, animation, _, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
         var tween = Tween(begin: begin, end: end);
@@ -61,7 +60,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
 }
 
 class CheckInBody extends StatefulWidget {
-  const CheckInBody({required this.cameraController});
+  const CheckInBody({super.key, required this.cameraController});
 
   final MobileScannerController cameraController;
 
@@ -223,9 +222,9 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Quyền định vị bị từ chối.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Quyền định vị bị từ chối.')));
         throw 'Quyền định vị bị từ chối.';
       }
     }
@@ -233,7 +232,9 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
     if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Quyền định vị bị từ chối vĩnh viễn. Vui lòng cấp quyền trong cài đặt.'),
+          content: Text(
+            'Quyền định vị bị từ chối vĩnh viễn. Vui lòng cấp quyền trong cài đặt.',
+          ),
           action: SnackBarAction(
             label: 'Mở cài đặt',
             onPressed: () => Geolocator.openAppSettings(),
@@ -267,13 +268,15 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
       var data = jsonDecode(response.body);
       if (response.statusCode == 200) {
         await context.read<SpinHistoryRepository>().incrementBonusSpins(
-              studentId!,
-              DateTime.now(),
-            );
+          studentId!,
+          DateTime.now(),
+        );
 
         Navigator.push(
           context,
-          CheckInSuccessScreen.route(pointsAwarded: data['pointsAwarded'] ?? 10),
+          CheckInSuccessScreen.route(
+            pointsAwarded: data['pointsAwarded'] ?? 10,
+          ),
         );
       } else {
         print('API Error: ${response.statusCode} - ${data['message']}');
@@ -284,7 +287,9 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
       String errorMessage;
       if (e.toString().contains("Bạn không ở gần địa điểm này để check-in")) {
         errorMessage = 'Bạn không ở gần địa điểm này để check-in';
-      } else if (e.toString().contains("Bạn đã check-in tại địa điểm này hôm nay")) {
+      } else if (e.toString().contains(
+        "Bạn đã check-in tại địa điểm này hôm nay",
+      )) {
         errorMessage = 'Bạn đã check-in tại địa điểm này hôm nay';
       } else {
         errorMessage = e.toString().replaceFirst('Exception: ', '');
@@ -306,8 +311,6 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
     return Stack(
       children: [
         MobileScanner(
-          startDelay: true,
-          overlay: Lottie.asset('assets/animations/scanning.json'),
           controller: widget.cameraController,
           onDetect: (capture) {
             if (_hasScanned) return;
@@ -354,5 +357,4 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
       ],
     );
   }
-
 }

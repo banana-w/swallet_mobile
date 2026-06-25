@@ -14,10 +14,10 @@ class SuccessTransactScreen extends StatelessWidget {
   static Route route({required TransactResultModel transactResultModel}) {
     return PageRouteBuilder(
       pageBuilder:
-          (_, __, ___) =>
+          (_, _, _) =>
               SuccessTransactScreen(transactResultModel: transactResultModel),
       transitionDuration: Duration(milliseconds: 400),
-      transitionsBuilder: (_, animation, __, child) {
+      transitionsBuilder: (_, animation, _, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
         var tween = Tween(begin: begin, end: end);
@@ -128,7 +128,7 @@ class SuccessTransactScreen extends StatelessWidget {
           ),
         ),
         body: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -178,7 +178,7 @@ class SuccessTransactScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
+                      SizedBox(
                         height: 50 * hem,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -194,7 +194,7 @@ class SuccessTransactScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '${_formatDatetimeString(transactResultModel.dateCreated)}',
+                              _formatDatetimeString(transactResultModel.dateCreated),
                               style: GoogleFonts.openSans(
                                 textStyle: TextStyle(
                                   fontSize: 15 * ffem,
@@ -206,7 +206,7 @@ class SuccessTransactScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         height: 50 * hem,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -221,10 +221,10 @@ class SuccessTransactScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               width: 150 * fem,
                               child: Text(
-                                '${transactResultModel.studentName}',
+                                transactResultModel.studentName,
                                 maxLines: 2,
                                 softWrap: true,
                                 textAlign: TextAlign.end,
@@ -240,7 +240,7 @@ class SuccessTransactScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         height: 50 * hem,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -255,10 +255,10 @@ class SuccessTransactScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               width: 150 * fem,
                               child: Text(
-                                '${transactResultModel.description}',
+                                transactResultModel.description,
                                 maxLines: 2,
                                 softWrap: true,
                                 textAlign: TextAlign.end,
@@ -274,7 +274,7 @@ class SuccessTransactScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         height: 50 * hem,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -290,7 +290,7 @@ class SuccessTransactScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '${formatter.format(transactResultModel.amount)}',
+                              formatter.format(transactResultModel.amount),
                               style: GoogleFonts.openSans(
                                 textStyle: TextStyle(
                                   fontSize: 15 * ffem,
