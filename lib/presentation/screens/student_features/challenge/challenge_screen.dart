@@ -6,7 +6,6 @@ import 'package:swallet_mobile/data/interface_repositories/student_features/stud
 import 'package:swallet_mobile/presentation/blocs/challenge/challenge_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/challenge/components/body.dart';
-import 'package:swallet_mobile/presentation/widgets/app_bar_campaign.dart';
 import 'package:swallet_mobile/presentation/widgets/card_for_unverified.dart';
 
 import '../../../config/constants.dart';

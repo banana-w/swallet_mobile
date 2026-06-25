@@ -25,7 +25,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
   }) {
     return PageRouteBuilder(
       pageBuilder:
-          (_, __, ___) => BlocProvider(
+          (_, _, _) => BlocProvider(
             create:
                 (context) =>
                     StoreBloc(storeRepository: context.read<StoreRepository>()),
@@ -38,7 +38,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
             ),
           ),
       transitionDuration: Duration(milliseconds: 400),
-      transitionsBuilder: (_, animation, __, child) {
+      transitionsBuilder: (_, animation, _, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
         var tween = Tween(begin: begin, end: end);
@@ -202,7 +202,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
+                      SizedBox(
                         width: double.infinity,
                         height: 220 * hem,
                         child: Image.network(
@@ -229,7 +229,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${campaignModel.campaignName}',
+                              campaignModel.campaignName,
                               textAlign: TextAlign.justify,
                               softWrap: true,
                               style: GoogleFonts.openSans(
@@ -246,7 +246,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                 bottom: 5 * hem,
                               ),
                               child: Text(
-                                '${voucherModel.voucherName}',
+                                voucherModel.voucherName,
                                 textAlign: TextAlign.justify,
                                 softWrap: true,
                                 style: GoogleFonts.openSans(
@@ -263,7 +263,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      '${formatter.format((voucherModel.price))}',
+                                      formatter.format((voucherModel.price)),
                                       style: GoogleFonts.openSans(
                                         textStyle: TextStyle(
                                           fontSize: 22 * ffem,
@@ -378,7 +378,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.only(top: 5 * hem),
-                                      child: Container(
+                                      child: SizedBox(
                                         width: 200 * fem,
                                         child: Text(
                                           campaignModel
@@ -442,7 +442,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                   top: 5 * hem,
                                 ),
                                 child: HtmlWidget(
-                                  '${voucherModel.condition}',
+                                  voucherModel.condition,
                                   textStyle: GoogleFonts.openSans(
                                     textStyle: TextStyle(
                                       fontSize: 14 * ffem,
@@ -472,7 +472,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                   top: 5 * hem,
                                 ),
                                 child: HtmlWidget(
-                                  '${voucherModel.description}',
+                                  voucherModel.description,
                                   textStyle: GoogleFonts.openSans(
                                     textStyle: TextStyle(
                                       fontSize: 14 * ffem,

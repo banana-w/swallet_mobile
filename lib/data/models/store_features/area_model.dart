@@ -1,7 +1,7 @@
 import 'package:swallet_mobile/domain/entities/store_features/area.dart';
 
 class AreaModel extends Area {
-  AreaModel({
+  const AreaModel({
     required super.id,
     required super.areaName,
     required super.image,

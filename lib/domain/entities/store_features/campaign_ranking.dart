@@ -6,7 +6,7 @@ class CampaignRanking extends Equatable {
   final String image;
   final double value;
 
-  CampaignRanking({
+  const CampaignRanking({
     required this.rank,
     required this.name,
     required this.image,
@@ -14,5 +14,5 @@ class CampaignRanking extends Equatable {
   });
 
   @override
-  List<Object?> get props => [this.rank, this.name, this.image, this.value];
+  List<Object?> get props => [rank, name, image, value];
 }

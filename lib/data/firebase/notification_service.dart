@@ -117,7 +117,7 @@ class NotificationService {
 
       // Initialize the plugin
       await localNotifications.initialize(
-        initializationSettings,
+        settings:initializationSettings,
         onDidReceiveNotificationResponse: (details) {
           // Handle notification tap
           print('Notification tapped: ${details.payload}');
@@ -161,10 +161,10 @@ class NotificationService {
       );
 
       await localNotifications.show(
-        message.messageId.hashCode,
-        message.notification?.title ?? 'Notification',
-        message.notification?.body ?? '',
-        platformDetails,
+        id: message.messageId.hashCode,
+        title: message.notification?.title ?? 'Notification',
+        body: message.notification?.body ?? '',
+        notificationDetails:  platformDetails,
         payload: jsonEncode(message.data),
       );
       notificationBloc.add(

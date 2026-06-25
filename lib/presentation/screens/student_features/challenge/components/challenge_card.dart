@@ -109,7 +109,7 @@ class ChallengeCard extends StatelessWidget {
                     padding: EdgeInsets.only(right: 10 * fem),
                     child: RichText(
                       text: TextSpan(
-                        text: '${challengeModel.current.toStringAsFixed(0)}',
+                        text: challengeModel.current.toStringAsFixed(0),
                         style: GoogleFonts.openSans(
                           fontSize: 17 * ffem,
                           height: 1.3625 * ffem / fem,

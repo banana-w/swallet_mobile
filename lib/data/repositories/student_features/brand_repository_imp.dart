@@ -192,7 +192,7 @@ class BrandRepositoryImp implements BrandRepository {
 
       // Sử dụng giá trị mặc định nếu page hoặc size không được truyền
       page ??= this.page;
-      size ??= this.limit;
+      size ??= limit;
 
       // Tạo URL với các query parameters page và size
       final url = Uri.parse(

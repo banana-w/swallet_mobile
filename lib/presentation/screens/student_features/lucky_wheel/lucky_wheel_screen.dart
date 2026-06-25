@@ -294,7 +294,7 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
                             color: Colors.white,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
+                                color: Colors.black.withValues(alpha: 0.2),
                                 blurRadius: 10,
                                 spreadRadius: 5,
                               ),
@@ -355,7 +355,7 @@ class _LuckyWheelViewState extends State<LuckyWheelView>
                                     color: Colors.yellow,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.yellow.withOpacity(0.9),
+                                        color: Colors.yellow.withValues(alpha: 0.9),
                                         blurRadius: _lightAnimation.value,
                                         spreadRadius: _lightAnimation.value / 2,
                                       ),

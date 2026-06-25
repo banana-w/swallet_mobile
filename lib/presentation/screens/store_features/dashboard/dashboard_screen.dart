@@ -218,7 +218,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                                   50,
                                                                 ),
                                                             child: Image.network(
-                                                              '${studentRanking.image}',
+                                                              studentRanking.image,
                                                               // 'assets/images/ava_signup.png',
                                                               width: 55,
                                                               height: 55,
@@ -254,7 +254,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                                       .spaceEvenly,
                                                               children: [
                                                                 Text(
-                                                                  '${studentRanking.name}',
+                                                                  studentRanking.name,
                                                                   style: GoogleFonts.openSans(
                                                                     textStyle: TextStyle(
                                                                       fontSize:
@@ -277,7 +277,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                                           .center,
                                                                   children: [
                                                                     Text(
-                                                                      '${formatter.format(studentRanking.value)}',
+                                                                      formatter.format(studentRanking.value),
                                                                       style: GoogleFonts.openSans(
                                                                         textStyle: TextStyle(
                                                                           fontSize:
@@ -452,7 +452,7 @@ class SparkbarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 320,
       height: 200,
       child: SfSparkBarChart.custom(

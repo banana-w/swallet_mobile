@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/challenge_repository.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
-import 'package:swallet_mobile/data/models/student_features/location_model.dart';
 import 'package:swallet_mobile/presentation/blocs/challenge/challenge_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/location/location_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';

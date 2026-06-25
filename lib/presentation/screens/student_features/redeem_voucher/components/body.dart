@@ -102,7 +102,7 @@ class Body extends StatelessWidget {
                         SizedBox(
                           width: 200 * fem,
                           child: Text(
-                            '$voucherName',
+                            voucherName,
                             textAlign: TextAlign.end,
                             maxLines: 2,
                             softWrap: true,
@@ -136,7 +136,7 @@ class Body extends StatelessWidget {
                         SizedBox(
                           width: 120 * fem,
                           child: Text(
-                            '$campaignName',
+                            campaignName,
                             textAlign: TextAlign.end,
                             maxLines: 2,
                             softWrap: true,
@@ -170,7 +170,7 @@ class Body extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              '${formatter.format(priceVoucher)}',
+                              formatter.format(priceVoucher),
                               style: GoogleFonts.openSans(
                                 textStyle: TextStyle(
                                   fontSize: 16 * ffem,
@@ -245,7 +245,7 @@ class Body extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(left: 10 * fem),
                               child: Text(
-                                '${formatter.format(total)}',
+                                formatter.format(total),
                                 style: GoogleFonts.openSans(
                                   textStyle: TextStyle(
                                     fontSize: 25 * ffem,

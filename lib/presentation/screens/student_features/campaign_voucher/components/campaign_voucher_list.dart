@@ -147,7 +147,7 @@ class CampaignVoucherList extends StatelessWidget {
                                     Row(
                                       children: [
                                         Text(
-                                          '${formatter.format(listCampaignVouchers[index].price)}',
+                                          formatter.format(listCampaignVouchers[index].price),
                                           style: GoogleFonts.openSans(
                                               textStyle: TextStyle(
                                             fontSize: 16 * ffem,

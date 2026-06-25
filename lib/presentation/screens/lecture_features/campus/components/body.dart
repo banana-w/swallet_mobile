@@ -23,7 +23,7 @@ class CampusScreenBody extends StatefulWidget {
 
 class _BodyState extends State<CampusScreenBody> {
   late Future<List<CampusModel>> _campusFuture;
-  int _currentPage = 1;
+  final int _currentPage = 1;
   final int _pageSize = 10;
 
   @override

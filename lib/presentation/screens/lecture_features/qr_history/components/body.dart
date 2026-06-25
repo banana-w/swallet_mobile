@@ -23,7 +23,7 @@ class HistoryScreenBody extends StatefulWidget {
 
 class _BodyState extends State<HistoryScreenBody> {
   late Future<List<QRCodeHistory>> _qrCodeHistoryFuture;
-  int _currentPage = 1;
+  final int _currentPage = 1;
   final int _pageSize = 10;
 
   @override

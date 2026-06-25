@@ -10,9 +10,9 @@ class SignUp9Screen extends StatelessWidget {
   static const String routeName = '/signup_9';
   static Route route() {
     return PageRouteBuilder(
-      pageBuilder: (_, __, ___) => SignUp9Screen(),
+      pageBuilder: (_, _, _) => SignUp9Screen(),
       transitionDuration: Duration(milliseconds: 400),
-      transitionsBuilder: (_, animation, __, child) {
+      transitionsBuilder: (_, animation, _, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
         var tween = Tween(begin: begin, end: end);

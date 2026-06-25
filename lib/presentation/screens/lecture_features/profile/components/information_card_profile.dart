@@ -64,7 +64,6 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                     child: BlocBuilder<LectureBloc, LectureState>(
                       builder: (context, state) {
                         if (state is LectureLoaded) {
-                          final lecture = state.lecture;
                           return Stack(
                             children: [
                               ClipRRect(
@@ -203,7 +202,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                               return SizedBox(
                                 width: 150 * widget.fem,
                                 child: Text(
-                                  '${state.lecture.email}',
+                                  state.lecture.email,
                                   maxLines: 1,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
@@ -221,7 +220,7 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
                               width: 150 * widget.fem,
                               child: Text(
                                 lecture == null
-                                    ? '${widget.lectureModel.email}'
+                                    ? widget.lectureModel.email
                                     : lecture!.email,
                                 maxLines: 1,
                                 softWrap: true,
@@ -344,7 +343,9 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
     setState(() {
       _selectedAvatar = selectedImage;
     });
-    Navigator.pop(context);
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
   }
 
   Future _pickerImageFromCamera(
@@ -362,7 +363,10 @@ class _InformationCardProfileState extends State<InformationCardProfile> {
     setState(() {
       _selectedAvatar = selectedImage;
     });
-    Navigator.pop(context);
+
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
   }
 
   void _imageModelBottomSheet(BuildContext context, File? selectedImage) {

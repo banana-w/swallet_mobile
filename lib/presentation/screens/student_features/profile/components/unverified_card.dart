@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:swallet_mobile/data/models/authen_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile/components/name_profile.dart';
-import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/profile_verification_screen.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/profile_verification/update_verification_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
 
@@ -98,7 +96,7 @@ class UnverifiedCard extends StatelessWidget {
                           height: 30 * hem,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Color(0xfffffe58f)),
+                            border: Border.all(color: Color(0xffffe58f)),
                             color: kbgYellow,
                           ),
                           child: Center(

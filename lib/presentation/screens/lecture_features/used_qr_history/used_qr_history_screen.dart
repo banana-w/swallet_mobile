@@ -16,11 +16,11 @@ class HistoryTabScreen extends StatefulWidget {
 }
 
 class _HistoryTabScreenState extends State<HistoryTabScreen> {
-  List<QRCodeUsageHistory> _history = [];
+  final List<QRCodeUsageHistory> _history = [];
   bool _isLoading = false;
   String? _errorMessage;
   int _page = 1;
-  int _size = 10;
+  final int _size = 10;
   bool _hasMore = true;
   String _searchName = '';
   final ScrollController _scrollController = ScrollController();
@@ -250,7 +250,7 @@ class _HistoryTabScreenState extends State<HistoryTabScreen> {
                               border: Border.all(color: kPrimaryColor),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
+                                  color: Colors.grey.withValues(alpha: 0.2),
                                   blurRadius: 5,
                                   offset: Offset(0, 3),
                                 ),

@@ -53,7 +53,7 @@ class CampaignDetailShowdal extends StatelessWidget {
               padding: EdgeInsets.only(left: 5 * fem, top: 5 * hem),
               // height: campaignDetailModel.condition.length >= 200 ? 75 : 35,
               child: HtmlWidget(
-                '${campaignDetailModel.condition}',
+                campaignDetailModel.condition,
                 textStyle: GoogleFonts.openSans(
                   textStyle: TextStyle(
                     fontSize: 14 * ffem,

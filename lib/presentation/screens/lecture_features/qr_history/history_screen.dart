@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
-import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/qr_history/components/body.dart';
 import 'package:swallet_mobile/presentation/widgets/app_bar_campaign.dart';
 
 class QRCodeHistoryScreen extends StatefulWidget {
-  const QRCodeHistoryScreen({Key? key}) : super(key: key);
+  const QRCodeHistoryScreen({super.key});
 
   @override
   _QRCodeHistoryScreenState createState() => _QRCodeHistoryScreenState();

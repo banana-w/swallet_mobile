@@ -4,7 +4,7 @@ import 'package:swallet_mobile/presentation/config/constants.dart';
 
 // ignore: must_be_immutable
 class TextFormFieldAddress extends StatelessWidget {
-  TextFormFieldAddress({
+  const TextFormFieldAddress({
     super.key,
     required this.hem,
     required this.fem,
@@ -25,7 +25,7 @@ class TextFormFieldAddress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 272 * fem,
       height: 100 * fem,
       child: TextFormField(

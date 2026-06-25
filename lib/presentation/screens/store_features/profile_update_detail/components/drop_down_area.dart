@@ -41,7 +41,7 @@ class _DropDownAreaState extends State<DropDownArea> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       // height: 43 * widget.hem,
       width: 272 * widget.fem,
       child: _dropDownAreaLoaded(),
@@ -105,7 +105,7 @@ class _DropDownAreaState extends State<DropDownArea> {
           gapPadding: 10,
         ),
       ),
-      value: widget.areas.firstWhere((u) => u.id == widget.areaId).id,
+      initialValue: widget.areas.firstWhere((u) => u.id == widget.areaId).id,
       onChanged: (newValue) {
         setState(() {
           widget.areaController.text = newValue!;
@@ -114,8 +114,8 @@ class _DropDownAreaState extends State<DropDownArea> {
       items:
           widget.areas.map((u) {
             return DropdownMenuItem(
-              child: Text(u.areaName.toString()),
               value: u.id,
+              child: Text(u.areaName.toString()),
             );
           }).toList(),
     );

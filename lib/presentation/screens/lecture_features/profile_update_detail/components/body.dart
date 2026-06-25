@@ -2,19 +2,15 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
-import 'package:swallet_mobile/data/models/store_features/store_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/lecture_features/lecture_repository.dart';
-import 'package:swallet_mobile/data/interface_repositories/store_features/store_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/lecture/lecture_bloc.dart';
-import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 
 import 'form_update.dart';
 
 class Body extends StatelessWidget {
-  Body({super.key, required this.lectureModel});
+  const Body({super.key, required this.lectureModel});
 
   final LectureModel lectureModel;
   @override
@@ -67,7 +63,7 @@ class Body extends StatelessWidget {
       },
       child: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: CustomScrollView(
           slivers: [

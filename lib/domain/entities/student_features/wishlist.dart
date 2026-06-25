@@ -12,7 +12,7 @@ class WishList extends Equatable {
   final bool state;
   final bool status;
 
-  WishList({
+  const WishList({
     required this.id,
     required this.studentId,
     required this.studentName,
@@ -27,15 +27,15 @@ class WishList extends Equatable {
 
   @override
   List<Object?> get props => [
-    this.id,
-    this.studentId,
-    this.studentName,
-    this.studentImage,
-    this.brandId,
-    this.brandName,
-    this.brandImage,
-    this.description,
-    this.state,
-    this.status,
+    id,
+    studentId,
+    studentName,
+    studentImage,
+    brandId,
+    brandName,
+    brandImage,
+    description,
+    state,
+    status,
   ];
 }

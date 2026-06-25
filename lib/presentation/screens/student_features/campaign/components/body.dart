@@ -9,8 +9,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
-import 'package:swallet_mobile/data/interface_repositories/student_features/brand_repository.dart';
-import 'package:swallet_mobile/data/repositories/student_features/check_in_repository_imp.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/checkin_bloc/check_in_bloc.dart';
@@ -331,8 +329,7 @@ class _BodyState extends State<CampaignScreenBody>
 
 // Separated section widgets for better performance
 class _MembershipSection extends StatelessWidget {
-  const _MembershipSection({Key? key, required this.responsiveValues})
-    : super(key: key);
+  const _MembershipSection({required this.responsiveValues});
 
   final ResponsiveValues responsiveValues;
 
@@ -391,12 +388,11 @@ class _MembershipSection extends StatelessWidget {
 
 class _DailyCheckInSection extends StatelessWidget {
   const _DailyCheckInSection({
-    Key? key,
     required this.responsiveValues,
     required this.animationController,
     required this.onDayTap,
     required this.onCheckInStateChanged,
-  }) : super(key: key);
+  });
 
   final ResponsiveValues responsiveValues;
   final AnimationController animationController;
@@ -519,13 +515,13 @@ class _DailyCheckInSection extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 5,
                   offset: Offset(0, 2),
                 ),
                 if (isToday && state.canCheckInToday)
                   BoxShadow(
-                    color: Colors.yellow.withOpacity(0.5),
+                    color: Colors.yellow.withValues(alpha: 0.5),
                     blurRadius: 10,
                     spreadRadius: 2,
                   ),
@@ -558,7 +554,7 @@ class _DailyCheckInSection extends StatelessWidget {
                   fontWeight: FontWeight.w900,
                   shadows: [
                     Shadow(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withValues(alpha: 0.5),
                       offset: Offset(1, 1),
                       blurRadius: 2,
                     ),
@@ -610,8 +606,7 @@ class _DailyCheckInSection extends StatelessWidget {
 }
 
 class _TodayCampaignsSection extends StatelessWidget {
-  const _TodayCampaignsSection({Key? key, required this.responsiveValues})
-    : super(key: key);
+  const _TodayCampaignsSection({required this.responsiveValues});
 
   final ResponsiveValues responsiveValues;
 
@@ -720,8 +715,7 @@ class _TodayCampaignsSection extends StatelessWidget {
 }
 
 class _BrandsSection extends StatelessWidget {
-  const _BrandsSection({Key? key, required this.responsiveValues})
-    : super(key: key);
+  const _BrandsSection({required this.responsiveValues});
 
   final ResponsiveValues responsiveValues;
 
@@ -900,8 +894,7 @@ class _BrandsSection extends StatelessWidget {
 
 // Use a separate stateful widget for campaigns list to better manage state
 class _CampaignsSection extends StatefulWidget {
-  const _CampaignsSection({Key? key, required this.responsiveValues})
-    : super(key: key);
+  const _CampaignsSection({required this.responsiveValues});
 
   final ResponsiveValues responsiveValues;
 

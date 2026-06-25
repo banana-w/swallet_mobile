@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/firebase/notification_service.dart';
 import 'package:swallet_mobile/data/models/student_features/create_model/create_authen_model.dart';

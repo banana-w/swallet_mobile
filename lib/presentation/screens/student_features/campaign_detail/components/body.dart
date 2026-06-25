@@ -157,7 +157,7 @@ class Body extends StatelessWidget {
                                 SizedBox(
                                   width: 300 * fem,
                                   child: Text(
-                                    '${state.campaignDetailModel.campaignName}',
+                                    state.campaignDetailModel.campaignName,
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.openSans(
                                         textStyle: TextStyle(
@@ -201,7 +201,7 @@ class Body extends StatelessWidget {
                                       width: 5 * fem,
                                     ),
                                     Text(
-                                      '${state.campaignDetailModel.brandName}',
+                                      state.campaignDetailModel.brandName,
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.openSans(
                                           textStyle: TextStyle(
@@ -270,7 +270,7 @@ class Body extends StatelessWidget {
                                             )),
                                           )
                                         : Text(
-                                            'Cửa hàng áp dụng (${numberOfStores})',
+                                            'Cửa hàng áp dụng ($numberOfStores)',
                                             style: GoogleFonts.openSans(
                                                 textStyle: TextStyle(
                                               fontSize: 16 * ffem,

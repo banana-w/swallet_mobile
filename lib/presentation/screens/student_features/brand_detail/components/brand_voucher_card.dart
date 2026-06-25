@@ -43,14 +43,14 @@ class BrandVoucherCard extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10 * fem),
                         topRight: Radius.circular(10 * fem)),
-                    child: Container(
+                    child: SizedBox(
                       height: 150 * hem,
                       width: 180 * fem,
                       child: Image.network(
                         voucherModel.image,
                         fit: BoxFit.fill,
                         errorBuilder: (context, error, stackTrace) {
-                          return Container(
+                          return SizedBox(
                             width: 170 * fem,
                             height: 180 * hem,
                             child: Icon(
@@ -94,7 +94,7 @@ class BrandVoucherCard extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 10 * fem),
                     child: Text(
-                      '${formatter.format(voucherModel.price)}',
+                      formatter.format(voucherModel.price),
                       style: GoogleFonts.openSans(
                           textStyle: TextStyle(
                         fontSize: 14 * ffem,

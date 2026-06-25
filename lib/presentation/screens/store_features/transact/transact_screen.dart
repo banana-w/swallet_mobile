@@ -89,7 +89,7 @@ class _TransactScreenState extends State<TransactScreen> {
             builder: (BuildContext context) {
               Future.delayed(Duration(seconds: 2));
               return AlertDialog(
-                content: Container(
+                content: SizedBox(
                   width: 250,
                   height: 250,
                   child: Center(
@@ -273,7 +273,7 @@ class _TransactScreenState extends State<TransactScreen> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                '${formatter.format(brand.totalIncome)}',
+                                                formatter.format(brand.totalIncome),
                                                 style: GoogleFonts.openSans(
                                                   textStyle: TextStyle(
                                                     fontSize: 20 * ffem,

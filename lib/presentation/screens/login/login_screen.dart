@@ -10,9 +10,9 @@ class LoginScreen extends StatelessWidget {
   static const String routeName = '/login';
   static Route route() {
     return PageRouteBuilder(
-      pageBuilder: (_, __, ___) => LoginScreen(),
+      pageBuilder: (_, _, _) => LoginScreen(),
       transitionDuration: Duration(milliseconds: 400),
-      transitionsBuilder: (_, animation, __, child) {
+      transitionsBuilder: (_, animation, _, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
         var tween = Tween(begin: begin, end: end);

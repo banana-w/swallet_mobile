@@ -11,12 +11,12 @@ class SuccessRedeemVoucherScreen extends StatelessWidget {
 
   static Route route({required String voucherName, required double total}) {
     return PageRouteBuilder(
-        pageBuilder: (_, __, ___) => SuccessRedeemVoucherScreen(
+        pageBuilder: (_, _, _) => SuccessRedeemVoucherScreen(
               voucherName: voucherName,
               total: total,
             ),
         transitionDuration: Duration(milliseconds: 400),
-        transitionsBuilder: (_, animation, __, child) {
+        transitionsBuilder: (_, animation, _, child) {
           const begin = Offset(0.0, 1.0);
           const end = Offset.zero;
           var tween = Tween(begin: begin, end: end);

@@ -15,9 +15,9 @@ class SuccessScanLectureQRScreen extends StatelessWidget {
   static Route route({required ScanQRResponse response}) {
     return PageRouteBuilder(
       pageBuilder:
-          (_, __, ___) => SuccessScanLectureQRScreen(response: response),
+          (_, _, _) => SuccessScanLectureQRScreen(response: response),
       transitionDuration: const Duration(milliseconds: 400),
-      transitionsBuilder: (_, animation, __, child) {
+      transitionsBuilder: (_, animation, _, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
         var tween = Tween(begin: begin, end: end);

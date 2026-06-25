@@ -81,7 +81,7 @@ class Body extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '${_formatDateTime(DateTime.now())}',
+                          _formatDateTime(DateTime.now()),
                           style: GoogleFonts.openSans(
                             textStyle: TextStyle(
                               fontSize: 15 * ffem,
@@ -110,7 +110,7 @@ class Body extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '$success',
+                          success,
                           style: GoogleFonts.openSans(
                             textStyle: TextStyle(
                               fontSize: 15 * ffem,

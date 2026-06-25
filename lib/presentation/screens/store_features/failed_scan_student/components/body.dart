@@ -63,7 +63,7 @@ class Body extends StatelessWidget {
         }
       },
       child: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -114,7 +114,7 @@ class Body extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+                    SizedBox(
                       height: 50 * hem,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -130,7 +130,7 @@ class Body extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '${_formatDateTime(DateTime.now())}',
+                            _formatDateTime(DateTime.now()),
                             style: GoogleFonts.openSans(
                               textStyle: TextStyle(
                                 fontSize: 15 * ffem,
@@ -142,7 +142,7 @@ class Body extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       height: 50 * hem,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -157,7 +157,7 @@ class Body extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: 150 * fem,
                             child: Text(
                               'Không tìm thấy sinh viên',

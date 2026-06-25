@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
 class CheckInSuccessScreen extends StatelessWidget {
@@ -12,9 +10,9 @@ class CheckInSuccessScreen extends StatelessWidget {
   static Route route({required int pointsAwarded}) {
     return PageRouteBuilder(
       pageBuilder:
-          (_, __, ___) => CheckInSuccessScreen(pointsAwarded: pointsAwarded),
+          (_, _, _) => CheckInSuccessScreen(pointsAwarded: pointsAwarded),
       transitionDuration: Duration(milliseconds: 400),
-      transitionsBuilder: (_, animation, __, child) {
+      transitionsBuilder: (_, animation, _, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
         var tween = Tween(begin: begin, end: end);

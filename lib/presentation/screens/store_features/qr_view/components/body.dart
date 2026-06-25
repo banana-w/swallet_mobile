@@ -25,15 +25,12 @@ class _BodyState extends State<Body> {
     double baseHeight = 812;
     double hem = MediaQuery.of(context).size.height / baseHeight;
     MobileScannerController cameraController = MobileScannerController(
+      detectionTimeoutMs: 1000,
       detectionSpeed: DetectionSpeed.noDuplicates,
       facing: CameraFacing.back,
       torchEnabled: false,
     );
-    MobileScannerController cameraController2 = MobileScannerController(
-      detectionSpeed: DetectionSpeed.noDuplicates,
-      facing: CameraFacing.back,
-      torchEnabled: false,
-    );
+    
     return BlocListener<InternetBloc, InternetState>(
       listener: (context, state) {
         if (state is Connected) {

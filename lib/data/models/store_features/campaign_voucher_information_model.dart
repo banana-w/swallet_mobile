@@ -1,7 +1,7 @@
 import 'package:swallet_mobile/domain/entities/store_features/campaign_voucher_information.dart';
 
 class CampaignVoucherInformationModel extends CampaignVoucherInformation {
-  CampaignVoucherInformationModel({
+  const CampaignVoucherInformationModel({
     required super.id,
     required super.voucherId,
     required super.voucherName,

@@ -38,7 +38,7 @@ class CampaignListCard extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Color(0xFF757575).withOpacity(0.3),
+                color: Color(0xFF757575).withValues(alpha: 0.3),
                 blurRadius: 10.0, // soften the shadow
                 spreadRadius: 1.0, //extend the shadow
                 offset: const Offset(5.0, 5.0),

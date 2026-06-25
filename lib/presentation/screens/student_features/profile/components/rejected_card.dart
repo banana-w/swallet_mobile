@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/models/authen_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
-import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
 // import '../../../../config/constants.dart';
@@ -101,7 +100,7 @@ class RejectedCard extends StatelessWidget {
                           height: 30 * hem,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Color(0xfffffccc7)),
+                            border: Border.all(color: Color(0xffffccc7)),
                             color: Color(0xfffff2f0),
                           ),
                           child: Center(

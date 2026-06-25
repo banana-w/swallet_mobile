@@ -63,7 +63,7 @@ class WishListRepositoryImp extends WishListRepository {
         'description': "Được yêu thích",
         'state': state,
       };
-      http.Request req = http.Request('Post', Uri.parse('$endPoint'));
+      http.Request req = http.Request('Post', Uri.parse(endPoint));
 
       req.headers['Content-Type'] = 'application/json';
       req.headers['Authorization'] = 'Bearer $token';
