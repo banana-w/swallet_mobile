@@ -12,7 +12,6 @@ import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/voucher/components/tab_voucher.dart';
 
-
 class VoucherListScreen extends StatelessWidget {
   static const String routeName = '/voucher-list-student';
 
@@ -40,11 +39,12 @@ class VoucherListScreen extends StatelessWidget {
     double hem = MediaQuery.of(context).size.height / baseHeight;
 
     return BlocProvider(
-      create: (context) => StudentBloc(
-        studentRepository: context.read<StudentRepository>(),
-      )..add(
-          LoadStudentVouchers(search: search, id: studentId, isUsed: false),
-        ),
+      create:
+          (context) => StudentBloc(
+            studentRepository: context.read<StudentRepository>(),
+          )..add(
+            LoadStudentVouchers(search: search, id: studentId, isUsed: false),
+          ),
       child: SafeArea(
         child: Scaffold(
           backgroundColor: klighGreyColor,
@@ -145,13 +145,13 @@ class _BodyVoucherListState extends State<BodyVoucherList> {
           !state.hasReachedMax) {
         isLoadingMore = true;
         context.read<StudentBloc>().add(
-              LoadMoreStudentVouchers(
-                scrollController,
-                id: widget.studentId,
-                search: widget.search,
-                isUsed: false,
-              ),
-            );
+          LoadMoreStudentVouchers(
+            scrollController,
+            id: widget.studentId,
+            search: widget.search,
+            isUsed: false,
+          ),
+        );
       }
     });
 
@@ -217,12 +217,12 @@ class _BodyVoucherListState extends State<BodyVoucherList> {
       child: RefreshIndicator(
         onRefresh: () async {
           context.read<StudentBloc>().add(
-                LoadStudentVouchers(
-                  search: widget.search,
-                  id: widget.studentId,
-                  isUsed: false,
-                ),
-              );
+            LoadStudentVouchers(
+              search: widget.search,
+              id: widget.studentId,
+              isUsed: false,
+            ),
+          );
         },
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -283,8 +283,8 @@ class _BodyVoucherListState extends State<BodyVoucherList> {
                               TextButton(
                                 onPressed: () {
                                   context.read<LandingScreenBloc>().add(
-                                        TabChange(tabIndex: 0),
-                                      );
+                                    TabChange(tabIndex: 0),
+                                  );
                                 },
                                 child: Container(
                                   width: 180 * widget.fem,
@@ -326,9 +326,10 @@ class _BodyVoucherListState extends State<BodyVoucherList> {
                             ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemCount: state.hasReachedMax
-                                  ? vouchers.length
-                                  : vouchers.length + 1,
+                              itemCount:
+                                  state.hasReachedMax
+                                      ? vouchers.length
+                                      : vouchers.length + 1,
                               itemBuilder: (context, index) {
                                 if (index >= vouchers.length) {
                                   return const Center(
@@ -345,7 +346,8 @@ class _BodyVoucherListState extends State<BodyVoucherList> {
                                     right: 15,
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.only(
@@ -369,14 +371,16 @@ class _BodyVoucherListState extends State<BodyVoucherList> {
                                         itemCount:
                                             brandVoucher.voucherGroups.length,
                                         itemBuilder: (context, voucherIndex) {
-                                          var voucherGroup = brandVoucher
-                                              .voucherGroups[voucherIndex];
+                                          var voucherGroup =
+                                              brandVoucher
+                                                  .voucherGroups[voucherIndex];
                                           return Container(
                                             decoration: BoxDecoration(
                                               boxShadow: [
                                                 BoxShadow(
-                                                  color:
-                                                      const Color(0x0c000000),
+                                                  color: const Color(
+                                                    0x0c000000,
+                                                  ),
                                                   offset: Offset(
                                                     3 * widget.fem,
                                                     2 * widget.fem,
@@ -385,9 +389,10 @@ class _BodyVoucherListState extends State<BodyVoucherList> {
                                                 ),
                                               ],
                                             ),
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
+                                            height:
+                                                MediaQuery.of(
+                                                  context,
+                                                ).size.height *
                                                 0.18,
                                             margin: EdgeInsets.only(bottom: 10),
                                             width: double.infinity,
