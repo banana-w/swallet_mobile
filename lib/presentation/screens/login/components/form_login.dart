@@ -31,119 +31,59 @@ class _FormLoginState extends State<FormLogin> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    final authState = context.watch<AuthenticationBloc>().state;
-    var loginWidget = (switch (authState) {
-      AuthenticationInitial() => _buildAuthIntial(
-        userNameController,
-        passwordController,
-        widget.fem,
-        widget.hem,
-        widget.ffem,
-      ),
-      AuthenticationFailed(error: final error) => _buildAuthFailed(
-        userNameController,
-        passwordController,
-        error,
-        widget.fem,
-        widget.hem,
-        widget.ffem,
-      ),
-      AuthenticationSuccess() => _buildAuthIntial(
-        userNameController,
-        passwordController,
-        widget.fem,
-        widget.hem,
-        widget.ffem,
-      ),
-      AuthenticationStoreSuccess() => _buildAuthIntial(
-        userNameController,
-        passwordController,
-        widget.fem,
-        widget.hem,
-        widget.ffem,
-      ),
-      AuthenticationLectureSuccess() => _buildAuthIntial(
-        userNameController,
-        passwordController,
-        widget.fem,
-        widget.hem,
-        widget.ffem,
-      ),
-      AuthenticationInProcess() => _buildAuthIntial(
-        userNameController,
-        passwordController,
-        widget.fem,
-        widget.hem,
-        widget.ffem,
-      ),
-      AuthenticationInProcessByGmail() => _buildAuthIntial(
-        userNameController,
-        passwordController,
-        widget.fem,
-        widget.hem,
-        widget.ffem,
-      ),
-      AuthenticationSuccessButNotVerified() => _buildAuthIntial(
-        userNameController,
-        passwordController,
-        widget.fem,
-        widget.hem,
-        widget.ffem,
-      ),
-    });
-
-    loginWidget = BlocListener<AuthenticationBloc, AuthenticationState>(
-      listener: (context, state) async {
-        if (state is AuthenticationSuccess) {
-          context.read<RoleAppBloc>().add(RoleAppStart());
-          // context.read<ChallengeBloc>().add(LoadChallenge());
-          // PushNotification().initNotifications();
-          // PushNotification().localNotiInit();
-          context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/landing-screen',
-            (Route<dynamic> route) => false,
-          );
-        } else if (state is AuthenticationStoreSuccess) {
-          context.read<RoleAppBloc>().add(RoleAppStart());
-          context.read<StoreBloc>().add(LoadStoreCampaignVouchers());
-          context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/landing-screen-store',
-            (Route<dynamic> route) => false,
-          );
-        } else if (state is AuthenticationLectureSuccess) {
-          context.read<RoleAppBloc>().add(RoleAppStart());
-          context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/landing-screen-lecture',
-            (Route<dynamic> route) => false,
-          );
-        } else if (state is AuthenticationSuccessButNotVerified) {
-          final email = await AuthenLocalDataSource.getAuthen().then((value) {
-            return value!.email;
-          });
-          Navigator.pushNamed(
-            context,
-            VerifyCodeScreen.routeName,
-            arguments: email,
-          );
-        }
-      },
-      child: loginWidget,
-    );
-
     return Form(
       key: _formKey,
       child: Column(
         children: [
-          loginWidget,
+          // 1. Sử dụng BlocConsumer để cô lập phần giao diện thay đổi theo AuthState
+          BlocConsumer<AuthenticationBloc, AuthenticationState>(
+            listener: (context, state) async {
+              // Di chuyển TOÀN BỘ logic điều hướng (Side-effect) về đây
+              if (state is AuthenticationSuccess) {
+                context.read<RoleAppBloc>().add(RoleAppStart());
+                context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
+                Navigator.pushNamedAndRemoveUntil(context, '/landing-screen', (route) => false);
+              } 
+              else if (state is AuthenticationStoreSuccess) {
+                context.read<RoleAppBloc>().add(RoleAppStart());
+                context.read<StoreBloc>().add(LoadStoreCampaignVouchers());
+                context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
+                Navigator.pushNamedAndRemoveUntil(context, '/landing-screen-store', (route) => false);
+              } 
+              else if (state is AuthenticationLectureSuccess) {
+                context.read<RoleAppBloc>().add(RoleAppStart());
+                context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
+                Navigator.pushNamedAndRemoveUntil(context, '/landing-screen-lecture', (route) => false);
+              } 
+              else if (state is AuthenticationSuccessButNotVerified) {
+                final authenData = await AuthenLocalDataSource.getAuthen();
+                if (authenData == null) return;
+                
+                // Chặn lỗi Async Gap bảo vệ BuildContext trước khi điều hướng
+                if (!context.mounted) return;
+                Navigator.pushNamed(context, VerifyCodeScreen.routeName, arguments: authenData.email);
+              }
+            },
+            builder: (context, state) {
+              // Chỉ vẽ lại Widget giao diện Form nhập liệu cụ thể dựa trên State hiện tại
+              return switch (state) {
+                AuthenticationFailed(error: final error) => _buildAuthFailed(
+                    userNameController, passwordController, error, widget.fem, widget.hem, widget.ffem,
+                  ),
+                // Tất cả các trạng thái còn lại dùng chung giao diện khởi tạo ban đầu
+                _ => _buildAuthIntial(
+                    userNameController, passwordController, widget.fem, widget.hem, widget.ffem,
+                  ),
+              };
+            },
+          ),
+          
           SizedBox(height: 25 * widget.hem),
+          
+          // 2. Nút bấm Login (Bên trong nút bấm này đã tự có BlocBuilder để đổi UI xoay tròn rồi)
           ButtonLogin(
             widget: widget,
             onPressed: () {
@@ -151,7 +91,7 @@ class _FormLoginState extends State<FormLogin> {
                 context.read<AuthenticationBloc>().add(
                   LoginAccount(
                     userName: userNameController.text.trim(),
-                    password: passwordController.text.toString(),
+                    password: passwordController.text,
                   ),
                 );
               }
@@ -169,7 +109,6 @@ class _FormLoginState extends State<FormLogin> {
     super.dispose();
   }
 }
-
 Widget _buildAuthIntial(
   TextEditingController userNameController,
   TextEditingController passwordController,

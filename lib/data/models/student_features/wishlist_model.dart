@@ -1,7 +1,7 @@
 import 'package:swallet_mobile/domain/entities/student_features/wishlist.dart';
 
 class WishListModel extends WishList {
-  WishListModel({
+  const WishListModel({
     required super.id,
     required super.studentId,
     required super.studentName,

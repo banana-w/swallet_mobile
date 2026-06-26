@@ -323,11 +323,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   }
                                 }
 
-                                return Container(
-                                  child: Center(
-                                    child: Lottie.asset(
-                                      'assets/animations/loading-screen.json',
-                                    ),
+                                return Center(
+                                  child: Lottie.asset(
+                                    'assets/animations/loading-screen.json',
                                   ),
                                 );
                               },
@@ -347,7 +345,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                               ),
                               Card(
-                                color: Color(0xffff6ffed),
+                                color: Color(0xfff6ffed),
                                 child: Container(
                                   width: MediaQuery.of(context).size.width - 10,
                                   padding: const EdgeInsets.all(16.0),
@@ -434,13 +432,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           );
         } else if (state is CampaignRankingLoading) {
-          return Container(
-            child: Center(
-              child: Lottie.asset('assets/animations/loading-screen.json'),
-            ),
+          return Center(
+            child: Lottie.asset('assets/animations/loading-screen.json'),
           );
         }
-        return Container(child: Center(child: Text('Đã xảy ra lỗi!')));
+        return Center(child: Text('Đã xảy ra lỗi!'));
       },
     );
   }

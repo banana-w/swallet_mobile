@@ -97,7 +97,7 @@ class PendingCard extends StatelessWidget {
                           height: 30 * hem,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Color(0xfffffe58f)),
+                            border: Border.all(color: Color(0xffffe58f)),
                             color: kbgYellow,
                           ),
                           child: Center(
