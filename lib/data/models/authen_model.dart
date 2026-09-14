@@ -1,5 +1,6 @@
 
 import 'package:equatable/equatable.dart';
+import 'package:swallet_mobile/domain/entities/account_role.dart';
 
 class AuthenModel extends Equatable {
   final String jwt;
@@ -37,6 +38,10 @@ class AuthenModel extends Equatable {
       email: email as String,
     );
   }
+
+  /// Vai trò đã được parse sang enum. Mọi so sánh phân quyền phải dùng getter
+  /// này, không so sánh trực tiếp chuỗi [role].
+  AccountRole get accountRole => AccountRole.fromApi(role);
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
