@@ -91,12 +91,11 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void checkLaunchApp() {
-    var check = box.get('launchApp');
-    if (check == null || check == false) {
-      launchApp = false;
-      box.put('launchApp', false);
-    } else {
-      launchApp = false;
+    // launchApp == true nghĩa là app đã được mở trước đó -> bỏ qua onboarding.
+    final check = box.get('launchApp');
+    launchApp = check == true;
+    if (!launchApp) {
+      box.put('launchApp', true);
     }
   }
 }

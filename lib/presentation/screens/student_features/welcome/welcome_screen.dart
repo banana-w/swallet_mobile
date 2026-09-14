@@ -32,6 +32,12 @@ class WelcomeScreen extends StatelessWidget {
             '/landing-screen-store',
             (Route<dynamic> route) => false,
           );
+        } else if (state is LectureRole) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/landing-screen-lecture',
+            (Route<dynamic> route) => false,
+          );
         } else if (state is RoleReset){
           context.read<RoleAppBloc>().add(RoleAppEnd());
         }
