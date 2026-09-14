@@ -38,7 +38,10 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
         page: event.page,
         size: event.limit,
       );
-      if (apiResponse!.totalPages < apiResponse.size) {
+      if (apiResponse == null) {
+        return emit(CampaignsFailed(error: 'Không tải được dữ liệu chiến dịch.'));
+      }
+      if (apiResponse.totalPages < apiResponse.size) {
         emit(
           CampaignsLoaded(
             campaigns: apiResponse.result.toList(),
@@ -74,7 +77,10 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
             page: page,
             size: event.limit,
           );
-          if (apiResponse!.result.isEmpty) {
+          if (apiResponse == null) {
+            return emit(CampaignsFailed(error: 'Không tải được dữ liệu chiến dịch.'));
+          }
+          if (apiResponse.result.isEmpty) {
             emit(
               CampaignsLoaded(
                 campaigns: List.from((state as CampaignsLoaded).campaigns)
@@ -107,7 +113,10 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
       var campaignModel = await campaignRepository.fecthCampaignById(
         id: event.id,
       );
-      emit(CampaignByIdLoaded(campaignDetailModel: campaignModel!));
+      if (campaignModel == null) {
+        return emit(CampaignsFailed(error: 'Không tải được dữ liệu chiến dịch.'));
+      }
+      emit(CampaignByIdLoaded(campaignDetailModel: campaignModel));
     } catch (e) {
       emit(CampaignsFailed(error: e.toString()));
     }

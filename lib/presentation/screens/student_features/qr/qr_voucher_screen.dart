@@ -1,6 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:swallet_mobile/presentation/config/app_injection.dart';
+
+@Preview(
+  name: 'QR Screen - Connected',
+  size: Size(375, 812), // Định cấu hình kích thước chuẩn điện thoại giống QR Screen
+)
+Widget anyScreenPreview() {
+  return const AppInjection(
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: QRVoucherScreen(
+        id: '1234567890', // Đổi tên trang bạn muốn xem vào đây là xong
+      ),
+    ),
+  );
+}
 
 class QRVoucherScreen extends StatelessWidget {
   static const String routeName = '/qr-voucher-student';

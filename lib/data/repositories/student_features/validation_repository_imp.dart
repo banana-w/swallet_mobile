@@ -4,8 +4,15 @@ import 'package:swallet_mobile/data/interface_repositories/student_features/vali
 
 import '../../../presentation/config/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:swallet_mobile/data/datasource/api_client.dart';
+import 'package:swallet_mobile/data/datasource/api_exceptions.dart';
 
 class ValidationRepositoryImp implements ValidationRepository {
+  /// Cho phep test tiem client gia; app dung client dung chung.
+  ValidationRepositoryImp({ApiClient? api}) : _api = api ?? ApiClient.public;
+
+  final ApiClient _api;
+
   String endPoint = '${baseURL}Account';
 
   @override
@@ -17,7 +24,7 @@ class ValidationRepositoryImp implements ValidationRepository {
       final String encodedEmail = Uri.encodeComponent(email);
       final String url = '$endPoint/validEmail/$encodedEmail';
 
-      http.Response response = await http.post(
+      http.Response response = await _api.post(
         Uri.parse(url),
         headers: headers,
       );
@@ -48,7 +55,7 @@ class ValidationRepositoryImp implements ValidationRepository {
       final String encodedEmail = Uri.encodeComponent(email);
       final String url = '$baseURL/Student/validSudentEmail/$encodedEmail';
 
-      http.Response response = await http.post(
+      http.Response response = await _api.post(
         Uri.parse(url),
         headers: headers,
       );
@@ -82,7 +89,7 @@ class ValidationRepositoryImp implements ValidationRepository {
       final String encodedUserName = Uri.encodeComponent(userName);
       final String url = '$endPoint/validUsername/$encodedUserName';
 
-      http.Response response = await http.post(
+      http.Response response = await _api.post(
         Uri.parse(url),
         headers: headers,
       );
@@ -111,7 +118,7 @@ class ValidationRepositoryImp implements ValidationRepository {
 
       Map<String, String> body = {'code': studentCode};
 
-      http.Response response = await http.post(
+      http.Response response = await _api.post(
         Uri.parse('$endPoint/code'),
         headers: headers,
         body: jsonEncode(body),
@@ -127,6 +134,8 @@ class ValidationRepositoryImp implements ValidationRepository {
         return jsonResponse['Message'].toString();
       }
       return 'Unknown error occurred';
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -139,7 +148,7 @@ class ValidationRepositoryImp implements ValidationRepository {
 
       Map<String, String> body = {'phone': phoneNumber};
 
-      http.Response response = await http.post(
+      http.Response response = await _api.post(
         Uri.parse('$endPoint/phone'),
         headers: headers,
         body: jsonEncode(body),
@@ -151,6 +160,8 @@ class ValidationRepositoryImp implements ValidationRepository {
       List<dynamic> jsonReponse = jsonDecode(response.body);
       String error = jsonReponse[0];
       return error;
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -161,7 +172,7 @@ class ValidationRepositoryImp implements ValidationRepository {
     try {
       final Map<String, String> headers = {'Content-Type': 'application/json'};
 
-      http.Response response = await http.post(
+      http.Response response = await _api.post(
         Uri.parse('${baseURL}Account/validInviteCode?inviteCode=$inviteCode'),
         headers: headers,
       );
@@ -176,6 +187,8 @@ class ValidationRepositoryImp implements ValidationRepository {
         return jsonResponse['Message'].toString();
       }
       return 'Unknown error occurred';
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }

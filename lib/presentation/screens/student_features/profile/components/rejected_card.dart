@@ -111,7 +111,7 @@ class RejectedCard extends StatelessWidget {
                                   fontSize: 13 * ffem,
                                   height: 1.3625 * ffem / fem,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xfffff4d4f),
+                                  color: Color(0xffff4d4f),
                                 ),
                               ),
                             ),

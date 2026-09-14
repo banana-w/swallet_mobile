@@ -1,12 +1,19 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:swallet_mobile/data/datasource/api_client.dart';
+import 'package:swallet_mobile/data/datasource/api_exceptions.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/campus_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/campus_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
 class CampusRepositoryImp implements CampusRepository {
+  /// Cho phep test tiem client gia; app dung client dung chung.
+  CampusRepositoryImp({ApiClient? api}) : _api = api ?? ApiClient.public;
+
+  final ApiClient _api;
+
   String endPoint = '${baseURL}Campus';
   String sort = 'Id%2Cdesc';
   int page = 1;
@@ -20,7 +27,7 @@ class CampusRepositoryImp implements CampusRepository {
     try {
       final Map<String, String> headers = {'Content-Type': 'application/json'};
       page ??= this.page;
-      http.Response response = await http.get(
+      http.Response response = await _api.get(
         Uri.parse(
           '$endPoint?state=$state&universityIds=$uniId&sort=$sort&page=$page&limit=100',
         ),
@@ -39,6 +46,8 @@ class CampusRepositoryImp implements CampusRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -60,7 +69,7 @@ class CampusRepositoryImp implements CampusRepository {
       );
 
       // Gửi request GET
-      http.Response response = await http.get(url, headers: headers);
+      http.Response response = await _api.get(url, headers: headers);
 
       // Xử lý response
       if (response.statusCode == 200) {

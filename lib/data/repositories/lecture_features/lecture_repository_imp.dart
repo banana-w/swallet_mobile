@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:swallet_mobile/data/datasource/api_client.dart';
+import 'package:swallet_mobile/data/datasource/api_exceptions.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/lecture_features/lecture_repository.dart';
@@ -8,6 +10,11 @@ import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'dart:convert';
 
 class LectureRepositoryImp implements LectureRepository {
+  /// Cho phep test tiem client gia; app dung client dung chung.
+  LectureRepositoryImp({ApiClient? api}) : _api = api ?? ApiClient.instance;
+
+  final ApiClient _api;
+
   String endPoint = '${baseURL}Lecturer/';
   String? token;
   String? lectureId;
@@ -24,7 +31,7 @@ class LectureRepositoryImp implements LectureRepository {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       };
-      http.Response response = await http.get(
+      http.Response response = await _api.get(
         Uri.parse('${endPoint}account/$accountId'),
         headers: headers,
       );
@@ -38,6 +45,8 @@ class LectureRepositoryImp implements LectureRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -109,7 +118,7 @@ class LectureRepositoryImp implements LectureRepository {
       debugPrint('Request body: ${jsonEncode(body)}'); // Log request để debug
 
       // Gửi yêu cầu POST
-      http.Response response = await http.post(
+      http.Response response = await _api.post(
         Uri.parse('${baseURL}Lecturer/generate-qrcode'),
         headers: headers,
         body: jsonEncode(body),

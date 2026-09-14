@@ -19,7 +19,8 @@ class InternetBloc extends Bloc<InternetEvent, InternetState> {
 
     subscription = Connectivity().onConnectivityChanged.listen((result) {
       if (result.contains(ConnectivityResult.wifi) ||
-          result.contains(ConnectivityResult.mobile)) {
+          result.contains(ConnectivityResult.mobile)||
+      result.contains(ConnectivityResult.ethernet)) {
         add(OnConnected());
       } else {
         add(OnNotConnected());

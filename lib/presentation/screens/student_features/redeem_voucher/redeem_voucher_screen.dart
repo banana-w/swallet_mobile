@@ -14,42 +14,46 @@ import 'components/body.dart';
 class RedeemVoucherScreen extends StatelessWidget {
   static const String routeName = '/redeem-voucher-student';
 
-  static Route route(
-      {required String campignId,
-      required String campaignDetailId,
-      required String studentId,
-      required int quantity,
-      required String description,
-      required double total,
-      required String voucherName,
-      required String campaignName,
-      required double priceVoucher}) {
+  static Route route({
+    required String campignId,
+    required String campaignDetailId,
+    required String studentId,
+    required int quantity,
+    required String description,
+    required double total,
+    required String voucherName,
+    required String campaignName,
+    required double priceVoucher,
+  }) {
     return MaterialPageRoute(
-        builder: (_) => RedeemVoucherScreen(
-              campignId: campignId,
-              campaignDetailId: campaignDetailId,
-              studentId: studentId,
-              quantity: quantity,
-              campaignName: campaignName,
-              total: total,
-              voucherName: voucherName,
-              description: description,
-              priceVoucher: priceVoucher,
-            ),
-        settings: const RouteSettings(name: routeName));
+      builder:
+          (_) => RedeemVoucherScreen(
+            campignId: campignId,
+            campaignDetailId: campaignDetailId,
+            studentId: studentId,
+            quantity: quantity,
+            campaignName: campaignName,
+            total: total,
+            voucherName: voucherName,
+            description: description,
+            priceVoucher: priceVoucher,
+          ),
+      settings: const RouteSettings(name: routeName),
+    );
   }
 
-  const RedeemVoucherScreen(
-      {super.key,
-      required this.campignId,
-      required this.campaignDetailId,
-      required this.studentId,
-      required this.quantity,
-      required this.description,
-      required this.total,
-      required this.campaignName,
-      required this.voucherName,
-      required this.priceVoucher});
+  const RedeemVoucherScreen({
+    super.key,
+    required this.campignId,
+    required this.campaignDetailId,
+    required this.studentId,
+    required this.quantity,
+    required this.description,
+    required this.total,
+    required this.campaignName,
+    required this.voucherName,
+    required this.priceVoucher,
+  });
   final String campignId;
   final String campaignDetailId;
   final String studentId;
@@ -73,17 +77,19 @@ class RedeemVoucherScreen extends StatelessWidget {
         if (state is Connected) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-              elevation: 0,
-              duration: const Duration(milliseconds: 2000),
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.transparent,
-              content: AwesomeSnackbarContent(
-                title: 'Đã kết nối internet',
-                message: 'Đã kết nối internet!',
-                contentType: ContentType.success,
+            ..showSnackBar(
+              SnackBar(
+                elevation: 0,
+                duration: const Duration(milliseconds: 2000),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Đã kết nối internet',
+                  message: 'Đã kết nối internet!',
+                  contentType: ContentType.success,
+                ),
               ),
-            ));
+            );
         } else if (state is NotConnected) {
           showCupertinoDialog(
             context: context,
@@ -93,14 +99,14 @@ class RedeemVoucherScreen extends StatelessWidget {
                 content: Text('Vui lòng kết nối Internet'),
                 actions: [
                   TextButton(
-                      onPressed: () {
-                        final stateInternet =
-                            context.read<InternetBloc>().state;
-                        if (stateInternet is Connected) {
-                          Navigator.pop(context);
-                        } else {}
-                      },
-                      child: const Text('Đồng ý'))
+                    onPressed: () {
+                      final stateInternet = context.read<InternetBloc>().state;
+                      if (stateInternet is Connected) {
+                        Navigator.pop(context);
+                      } else {}
+                    },
+                    child: const Text('Đồng ý'),
+                  ),
                 ],
               );
             },
@@ -114,9 +120,11 @@ class RedeemVoucherScreen extends StatelessWidget {
             elevation: 0,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/background_splash.png'),
-                      fit: BoxFit.cover)),
+                image: DecorationImage(
+                  image: AssetImage('assets/images/background_splash.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             leading: InkWell(
               onTap: () {
@@ -133,52 +141,65 @@ class RedeemVoucherScreen extends StatelessWidget {
             title: Text(
               'Thanh toán an toàn',
               style: GoogleFonts.openSans(
-                  textStyle: TextStyle(
-                      fontSize: 20 * ffem,
-                      fontWeight: FontWeight.w900,
-                      height: 1.3625 * ffem / fem,
-                      color: Colors.white)),
+                textStyle: TextStyle(
+                  fontSize: 20 * ffem,
+                  fontWeight: FontWeight.w900,
+                  height: 1.3625 * ffem / fem,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
           body: BlocListener<CampaignBloc, CampaignState>(
             listener: (context, state) {
               if (state is RedeemVoucherSuccess) {
                 Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    SuccessRedeemVoucherScreen.routeName,
-                    (Route<dynamic> route) => false,
-                    arguments: <dynamic>[voucherName, total]);
+                  context,
+                  SuccessRedeemVoucherScreen.routeName,
+                  (Route<dynamic> route) => false,
+                  arguments: <dynamic>[voucherName, total],
+                );
               } else if (state is RedeemVoucherFailed) {
-                Navigator.pushNamedAndRemoveUntil(context,
-                    FailedBuyScreen.routeName, (Route<dynamic> route) => false,
-                    arguments: state.error);
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  FailedBuyScreen.routeName,
+                  (Route<dynamic> route) => false,
+                  arguments: state.error,
+                );
               } else if (state is RedeemVoucherLoading) {
                 showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      Future.delayed(Duration(seconds: 5));
-                      return AlertDialog(
-                          content: SizedBox(
-                              width: 250,
-                              height: 250,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Center(
-                                      child: CircularProgressIndicator(
-                                          color: kPrimaryColor)),
-                                  Text(
-                                    'Đang thực hiện...',
-                                    style: GoogleFonts.openSans(
-                                        textStyle: TextStyle(
-                                            fontSize: 15 * ffem,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black)),
-                                  )
-                                ],
-                              )));
-                    });
+                  context: context,
+                  builder: (BuildContext context) {
+                    Future.delayed(Duration(seconds: 5));
+                    return AlertDialog(
+                      content: SizedBox(
+                        width: 250,
+                        height: 250,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: CircularProgressIndicator(
+                                color: kPrimaryColor,
+                              ),
+                            ),
+                            Text(
+                              'Đang thực hiện...',
+                              style: GoogleFonts.openSans(
+                                textStyle: TextStyle(
+                                  fontSize: 15 * ffem,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
               }
             },
             child: Body(
@@ -194,70 +215,77 @@ class RedeemVoucherScreen extends StatelessWidget {
             ),
           ),
           bottomNavigationBar: BottomAppBar(
-              color: kPrimaryColor,
-              height: 80 * hem,
-              elevation: 5,
-              child: GestureDetector(
-                onTap: () {
-                  context.read<CampaignBloc>().add(RedeemCampaignVoucher(
-                      campaignId: campignId,
-                      voucherId: campaignDetailId,
-                      studentId: studentId,
-                      quantity: quantity,
-                      cost: total));
-                },
-                child: BlocBuilder<CampaignBloc, CampaignState>(
-                  builder: (context, state) {
-                    if (state is RedeemVoucherLoading) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Center(
-                            child: Container(
-                              width: 320 * fem,
-                              height: 45 * hem,
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.circular(10 * fem)),
-                              child: Center(
-                                  child: CircularProgressIndicator(
+            color: kPrimaryColor,
+            height: 80 * hem,
+            elevation: 5,
+            child: GestureDetector(
+              onTap: () {
+                context.read<CampaignBloc>().add(
+                  RedeemCampaignVoucher(
+                    campaignId: campignId,
+                    voucherId: campaignDetailId,
+                    studentId: studentId,
+                    quantity: quantity,
+                    cost: total,
+                  ),
+                );
+              },
+              child: BlocBuilder<CampaignBloc, CampaignState>(
+                builder: (context, state) {
+                  if (state is RedeemVoucherLoading) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Container(
+                            width: 320 * fem,
+                            height: 45 * hem,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10 * fem),
+                            ),
+                            child: Center(
+                              child: CircularProgressIndicator(
                                 color: Colors.white,
-                              )),
+                              ),
                             ),
                           ),
-                        ],
-                      );
-                    } else {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Center(
-                            child: Container(
-                              width: 320 * fem,
-                              height: 45 * hem,
-                              decoration: BoxDecoration(
-                                  color: klightPrimaryColor,
-                                  borderRadius:
-                                      BorderRadius.circular(10 * fem)),
-                              child: Center(
-                                child: Text(
-                                  'Thanh toán',
-                                  style: GoogleFonts.openSans(
-                                      textStyle: TextStyle(
-                                          fontSize: 17 * ffem,
-                                          fontWeight: FontWeight.w600,
-                                          height: 1.3625 * ffem / fem,
-                                          color: Colors.white)),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Container(
+                            width: 320 * fem,
+                            height: 45 * hem,
+                            decoration: BoxDecoration(
+                              color: klightPrimaryColor,
+                              borderRadius: BorderRadius.circular(10 * fem),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Thanh toán',
+                                style: GoogleFonts.openSans(
+                                  textStyle: TextStyle(
+                                    fontSize: 17 * ffem,
+                                    fontWeight: FontWeight.w600,
+                                    height: 1.3625 * ffem / fem,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ],
-                      );
-                    }
-                  },
-                ),
-              )),
+                        ),
+                      ],
+                    );
+                  }
+                },
+              ),
+            ),
+          ),
         ),
       ),
     );

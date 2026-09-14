@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:swallet_mobile/data/datasource/api_client.dart';
+import 'package:swallet_mobile/data/datasource/api_exceptions.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/voucher_model.dart';
@@ -10,6 +12,11 @@ import 'package:swallet_mobile/presentation/config/constants.dart';
 
 
 class VoucherRepositoryImp implements VoucherRepository {
+  /// Cho phep test tiem client gia; app dung client dung chung.
+  VoucherRepositoryImp({ApiClient? api}) : _api = api ?? ApiClient.instance;
+
+  final ApiClient _api;
+
   String endPoint = '${baseURL}vouchers';
   String sort = 'Id%2Cdesc';
   int page = 1;
@@ -28,7 +35,7 @@ class VoucherRepositoryImp implements VoucherRepository {
         'Authorization': 'Bearer $token',
       };
       page ??= this.page;
-      http.Response response = await http.get(
+      http.Response response = await _api.get(
         Uri.parse('$endPoint?sort=$sort&page=$page&limit=$limit'),
         headers: headers,
       );
@@ -44,6 +51,8 @@ class VoucherRepositoryImp implements VoucherRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -59,7 +68,7 @@ class VoucherRepositoryImp implements VoucherRepository {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       };
-      http.Response response = await http.get(
+      http.Response response = await _api.get(
         Uri.parse('$endPoint/$voucherId'),
         headers: headers,
       );
@@ -73,6 +82,8 @@ class VoucherRepositoryImp implements VoucherRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }

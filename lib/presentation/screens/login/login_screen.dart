@@ -1,11 +1,24 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
+import 'package:swallet_mobile/presentation/config/app_injection.dart';
 import 'package:swallet_mobile/presentation/screens/login/components/body.dart';
 
-
+@Preview(
+  name: 'Login Screen - Connected',
+  size: Size(375, 812), // Định cấu hình kích thước chuẩn điện thoại giống QR Screen
+)
+Widget anyScreenPreview() {
+  return const AppInjection(
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: LoginScreen(), // Đổi tên trang bạn muốn xem vào đây là xong
+    ),
+  );
+}
 class LoginScreen extends StatelessWidget {
   static const String routeName = '/login';
   static Route route() {

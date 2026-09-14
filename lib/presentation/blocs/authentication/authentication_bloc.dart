@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:swallet_mobile/data/datasource/api_exceptions.dart';
 import 'package:swallet_mobile/data/firebase/notification_service.dart';
+import 'package:swallet_mobile/domain/entities/account_role.dart';
 import 'package:swallet_mobile/data/models/student_features/create_model/create_authen_model.dart';
 import 'package:swallet_mobile/data/models/student_features/verify_authen_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/authentication_repository.dart';
@@ -44,15 +46,24 @@ class AuthenticationBloc
       if (authenModel != null) {
         if (authenModel.isVerified) {
           // Nếu đã xác thực (isVerified = true)
-          if (authenModel.role == 'Sinh viên') {
-            emit(AuthenticationSuccess());
-            await NotificationService.instance.loginStudent(
-              authenModel.accountId,
-            );
-          } else if (authenModel.role.contains('Giáo viên')) {
-            emit(AuthenticationLectureSuccess());
-          } else {
-            emit(AuthenticationStoreSuccess());
+          switch (authenModel.accountRole) {
+            case AccountRole.student:
+              emit(AuthenticationSuccess());
+              await _registerNotificationTopics(authenModel.accountId);
+            case AccountRole.lecturer:
+              emit(AuthenticationLectureSuccess());
+            case AccountRole.store:
+              emit(AuthenticationStoreSuccess());
+            case AccountRole.admin:
+            case AccountRole.brand:
+            case AccountRole.unknown:
+              // Cac vai tro nay truoc day roi vao nhanh else va duoc cap quyen
+              // Cua hang. Nay tu choi dang nhap kem thong diep ro rang.
+              emit(
+                AuthenticationFailed(
+                  error: UnsupportedRoleException(authenModel.role).message,
+                ),
+              );
           }
         } else {
           // Nếu chưa xác thực (isVerified = false)
@@ -63,8 +74,21 @@ class AuthenticationBloc
           AuthenticationFailed(error: 'Tài khoản hoặc mật khẩu không đúng!'),
         );
       }
+    } on AppException catch (e) {
+      emit(AuthenticationFailed(error: e.message));
     } catch (e) {
       emit(AuthenticationFailed(error: e.toString()));
+    }
+  }
+
+  /// Đăng ký topic thông báo là việc phụ. Trước đây nó nằm thẳng trong khối
+  /// `try` của đăng nhập nên chỉ cần Firebase lỗi là trạng thái đã
+  /// `AuthenticationSuccess` bị lật thành `AuthenticationFailed`.
+  Future<void> _registerNotificationTopics(String accountId) async {
+    try {
+      await NotificationService.instance.loginStudent(accountId);
+    } catch (_) {
+      // Mất thông báo đẩy không phải lý do để chặn đăng nhập.
     }
   }
 
@@ -82,6 +106,8 @@ class AuthenticationBloc
       } else {
         emit(AuthenticationFailed(error: 'Đăng ký thất bại!'));
       }
+    } on AppException catch (e) {
+      emit(AuthenticationFailed(error: e.message));
     } catch (e) {
       emit(AuthenticationFailed(error: e.toString()));
     }

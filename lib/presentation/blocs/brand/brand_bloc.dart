@@ -118,7 +118,10 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
     emit(BrandLoading());
     try {
       final brandModel = await brandRepository.fecthBrandById(id: event.id);
-      emit(BrandByIdLoaded(brand: brandModel!));
+      if (brandModel == null) {
+        return emit(BrandsFailed(error: 'Không tải được dữ liệu thương hiệu.'));
+      }
+      emit(BrandByIdLoaded(brand: brandModel));
     } catch (e) {
       emit(BrandsFailed(error: e.toString()));
     }
@@ -135,7 +138,10 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
         event.size,
         id: event.id,
       );
-      emit(BrandCampaignsByIdLoaded(campaignModels: apiResponse!.result));
+      if (apiResponse == null) {
+        return emit(BrandsFailed(error: 'Không tải được dữ liệu thương hiệu.'));
+      }
+      emit(BrandCampaignsByIdLoaded(campaignModels: apiResponse.result));
     } catch (e) {
       emit(BrandsFailed(error: e.toString()));
     }
@@ -152,7 +158,10 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
         event.limit,
         id: event.id,
       );
-      emit(BrandVouchersByIdLoaded(vouchers: apiResponse!.result));
+      if (apiResponse == null) {
+        return emit(BrandsFailed(error: 'Không tải được dữ liệu thương hiệu.'));
+      }
+      emit(BrandVouchersByIdLoaded(vouchers: apiResponse.result));
     } catch (e) {
       emit(BrandsFailed(error: e.toString()));
     }

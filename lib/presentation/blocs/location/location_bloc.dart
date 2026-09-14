@@ -40,7 +40,10 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
     emit(LocationLoading());
     try {
       var locations = await challengeRepository.fetchLocation();
-      await AuthenLocalDataSource.saveLocation(locations!);
+      if (locations == null) {
+        return emit(LocationFailed(error: 'Không tải được danh sách địa điểm.'));
+      }
+      await AuthenLocalDataSource.saveLocation(locations);
     } catch (e) {
       emit(LocationFailed(error: e.toString()));
     }

@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:swallet_mobile/data/datasource/api_client.dart';
+import 'package:swallet_mobile/data/datasource/api_exceptions.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/challenge_model.dart';
@@ -9,6 +11,11 @@ import 'package:swallet_mobile/data/models/student_features/location_model.dart'
 import '../../../presentation/config/constants.dart';
 
 class ChallengeRepositoryImp extends ChallengeRepository {
+  /// Cho phep test tiem client gia; app dung client dung chung.
+  ChallengeRepositoryImp({ApiClient? api}) : _api = api ?? ApiClient.instance;
+
+  final ApiClient _api;
+
   String endPoint = '${baseURL}students';
   String? token;
   String? studentId;
@@ -43,7 +50,7 @@ class ChallengeRepositoryImp extends ChallengeRepository {
       //               true; // Bỏ qua kiểm tra chứng chỉ
       // final httpClient = IOClient(ioClient);
 
-      http.Response response = await http.get(
+      http.Response response = await _api.get(
         Uri.parse(
           '${baseURL}Challenge/extra?studentId=$studentId&types=2&page=$page&size=100',
         ),
@@ -61,6 +68,8 @@ class ChallengeRepositoryImp extends ChallengeRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -93,7 +102,7 @@ class ChallengeRepositoryImp extends ChallengeRepository {
       //               true; // Bỏ qua kiểm tra chứng chỉ
       // final httpClient = IOClient(ioClient);
 
-      http.Response response = await http.get(
+      http.Response response = await _api.get(
         Uri.parse(
           '${baseURL}Challenge/extra?studentId=$studentId&types=1&page=$page&size=100',
         ),
@@ -111,6 +120,8 @@ class ChallengeRepositoryImp extends ChallengeRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -119,7 +130,7 @@ class ChallengeRepositoryImp extends ChallengeRepository {
 @override
   Future<List<LocationModel>?> fetchLocation() async {
     try {
-      final response = await http.get(
+      final response = await _api.get(
         Uri.parse('${baseURL}Location/getAll'),
         headers: {'accept': 'text/plain'},
       );

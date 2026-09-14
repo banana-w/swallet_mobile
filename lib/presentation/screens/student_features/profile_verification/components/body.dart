@@ -349,8 +349,8 @@ class Body extends StatelessWidget {
         width: 100 * fem,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: Color(0xfffb7eb8f)),
-          color: Color(0xffff6ffed),
+          border: Border.all(color: Color(0xffb7eb8f)),
+          color: Color(0xfff6ffed),
         ),
         child: Center(
           child: Text(
@@ -373,7 +373,7 @@ class Body extends StatelessWidget {
         width: 120 * fem,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: Color(0xfffffe58f)),
+          border: Border.all(color: Color(0xffffe58f)),
           color: kbgYellow,
         ),
         child: Center(
@@ -396,7 +396,7 @@ class Body extends StatelessWidget {
         height: 30 * hem,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: Color(0xfffffe58f)),
+          border: Border.all(color: Color(0xffffe58f)),
           color: kbgYellow,
         ),
         child: Center(

@@ -22,7 +22,10 @@ class CampaignStoreBloc extends Bloc<CampaignStoreEvent, CampaignStoreState> {
         event.limit,
         id: event.id,
       );
-      emit(CampaignStoreByIdLoaded(campaignStores: apiResponse!.result));
+      if (apiResponse == null) {
+        return emit(CampaignStoresFailed(error: 'Không tải được danh sách cửa hàng.'));
+      }
+      emit(CampaignStoreByIdLoaded(campaignStores: apiResponse.result));
     } catch (e) {
       emit(CampaignStoresFailed(error: e.toString()));
     }

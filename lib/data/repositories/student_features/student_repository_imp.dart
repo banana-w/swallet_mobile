@@ -12,8 +12,15 @@ import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher
 import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:swallet_mobile/data/datasource/api_client.dart';
+import 'package:swallet_mobile/data/datasource/api_exceptions.dart';
 
 class StudentRepositoryImp implements StudentRepository {
+  /// Cho phep test tiem client gia; app dung client dung chung.
+  StudentRepositoryImp({ApiClient? api}) : _api = api ?? ApiClient.instance;
+
+  final ApiClient _api;
+
   String endPoint = '${baseURL}Student';
   String? token;
   String? studentId;
@@ -31,7 +38,7 @@ class StudentRepositoryImp implements StudentRepository {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       };
-      http.Response response = await http.get(
+      http.Response response = await _api.get(
         Uri.parse('$endPoint/account/$id'),
         headers: headers,
       );
@@ -46,6 +53,8 @@ class StudentRepositoryImp implements StudentRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -72,7 +81,7 @@ class StudentRepositoryImp implements StudentRepository {
         'latitude': latitude,
       };
 
-      http.Response response = await http.post(
+      http.Response response = await _api.post(
         Uri.parse('${baseURL}Lecturer/scan-qrcode'),
         headers: headers,
         body: jsonEncode(body),
@@ -93,7 +102,7 @@ class StudentRepositoryImp implements StudentRepository {
 
   @override
   Future<void> updateWalletByStudentId(String studentId, int point) async {
-    final response = await http.post(
+    final response = await _api.post(
       Uri.parse('${baseURL}Wallet/student?studentId=$studentId&points=$point'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'studentId': studentId, 'points': point}),
@@ -140,7 +149,7 @@ class StudentRepositoryImp implements StudentRepository {
         '${baseURL}Activity/RedeemedVouchersByStudent',
       ).replace(queryParameters: queryParams);
 
-      final response = await http.get(uri, headers: headers);
+      final response = await _api.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
@@ -152,6 +161,8 @@ class StudentRepositoryImp implements StudentRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -201,7 +212,7 @@ class StudentRepositoryImp implements StudentRepository {
       //               true; // Bỏ qua kiểm tra chứng chỉ
       // final httpClient = IOClient(ioClient);
 
-      final response = await http.get(uri, headers: headers);
+      final response = await _api.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
@@ -213,6 +224,8 @@ class StudentRepositoryImp implements StudentRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -261,7 +274,7 @@ class StudentRepositoryImp implements StudentRepository {
       //               true; // Bỏ qua kiểm tra chứng chỉ
       // final httpClient = IOClient(ioClient);
 
-      final response = await http.get(uri, headers: headers);
+      final response = await _api.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
@@ -273,6 +286,8 @@ class StudentRepositoryImp implements StudentRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -313,7 +328,7 @@ class StudentRepositoryImp implements StudentRepository {
         '${baseURL}Activity/UseVoucherTransaction',
       ).replace(queryParameters: queryParams);
 
-      final response = await http.get(uri, headers: headers);
+      final response = await _api.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
@@ -326,6 +341,8 @@ class StudentRepositoryImp implements StudentRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -366,7 +383,7 @@ class StudentRepositoryImp implements StudentRepository {
         '${baseURL}Activity/UseVoucherStoreTransaction',
       ).replace(queryParameters: queryParams);
 
-      final response = await http.get(uri, headers: headers);
+      final response = await _api.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
@@ -379,6 +396,8 @@ class StudentRepositoryImp implements StudentRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -411,7 +430,7 @@ class StudentRepositoryImp implements StudentRepository {
       //               true; // Bỏ qua kiểm tra chứng chỉ
       // final httpClient = IOClient(ioClient);
 
-      final http.Response response = await http.post(uri, headers: headers);
+      final http.Response response = await _api.post(uri, headers: headers);
 
       if (response.statusCode == 200) {
         return true;
@@ -420,6 +439,8 @@ class StudentRepositoryImp implements StudentRepository {
       } else {
         return false;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -438,7 +459,10 @@ class StudentRepositoryImp implements StudentRepository {
   }) async {
     try {
       final authenModel = await AuthenLocalDataSource.getAuthen();
-      final accountId = authenModel!.accountId;
+      if (authenModel == null) {
+        throw const SessionExpiredException();
+      }
+      final accountId = authenModel.accountId;
       final token = await AuthenLocalDataSource.getToken();
       final headers = {
         'Accept': 'application/json',
@@ -459,7 +483,7 @@ class StudentRepositoryImp implements StudentRepository {
         '&dateOfBirth=$formattedDateOfBirth'
         '&address=${Uri.encodeComponent(address)}',
       );
-      final response = await http.put(uri, headers: headers);
+      final response = await _api.put(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
@@ -505,7 +529,7 @@ class StudentRepositoryImp implements StudentRepository {
       ).replace(queryParameters: queryParams);
 
       // Gửi yêu cầu HTTP GET
-      final response = await http.get(uri, headers: headers);
+      final response = await _api.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
@@ -515,6 +539,8 @@ class StudentRepositoryImp implements StudentRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -531,12 +557,15 @@ class StudentRepositoryImp implements StudentRepository {
     try {
       token = await AuthenLocalDataSource.getToken();
       var student = await AuthenLocalDataSource.getStudent();
-      studentId = student!.id;
+      if (student == null) {
+        throw const SessionExpiredException();
+      }
+      studentId = student.id;
       final Map<String, String> headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       };
-      http.Response response = await http.get(
+      http.Response response = await _api.get(
         Uri.parse('${baseURL}Wishlist/getWishlishBrand/$studentId'),
         headers: headers,
       );
@@ -549,6 +578,8 @@ class StudentRepositoryImp implements StudentRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -582,7 +613,7 @@ class StudentRepositoryImp implements StudentRepository {
       // request.fields.addAll({'Code': studentCode});
 
       //gửi request
-      var streamedResponse = await request.send();
+      var streamedResponse = await _api.send(request);
       var response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
@@ -604,6 +635,8 @@ class StudentRepositoryImp implements StudentRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -620,7 +653,7 @@ class StudentRepositoryImp implements StudentRepository {
     );
 
     try {
-      final response = await http.get(url, headers: {'accept': 'text/plain'});
+      final response = await _api.get(url, headers: {'accept': 'text/plain'});
 
       if (response.statusCode == 200) {
         return response.body;

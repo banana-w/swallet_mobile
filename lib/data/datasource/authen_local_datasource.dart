@@ -60,13 +60,17 @@ class AuthenLocalDataSource {
 
   static Future<void> saveBalance(int balance) async {
     final sf = await SharedPreferences.getInstance();
-    await sf.setString('balance', balance.toString());
+    await sf.setInt('balance', balance);
   }
 
   static Future<int?> getBalance() async {
     final sf = await SharedPreferences.getInstance();
-    int? balance = sf.getInt('balance');
-    return balance;
+    // Đọc thô để vẫn đọc được giá trị cũ từng lưu dưới dạng String.
+    final balance = sf.get('balance');
+    if (balance is int) return balance;
+    if (balance is double) return balance.toInt();
+    if (balance is String) return int.tryParse(balance);
+    return null;
   }
 
   static Future<void> saveIsVerified(bool isVerify) async {

@@ -253,7 +253,7 @@ class StoreListScreen extends StatelessWidget {
   }
 }
 
-Widget buildStoreShimmer(count, double fem, double hem) {
+Widget buildStoreShimmer(int count, double fem, double hem) {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

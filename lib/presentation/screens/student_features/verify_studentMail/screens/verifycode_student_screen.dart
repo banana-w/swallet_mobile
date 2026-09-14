@@ -13,8 +13,9 @@ class VerifyCodeStudentScreen extends StatefulWidget {
   final String email;
   static Route route({required String email}) {
     return MaterialPageRoute(
-        builder: (_) => VerifyCodeStudentScreen(email: email),
-        settings: const RouteSettings(name: routeName));
+      builder: (_) => VerifyCodeStudentScreen(email: email),
+      settings: const RouteSettings(name: routeName),
+    );
   }
 
   const VerifyCodeStudentScreen({super.key, required this.email});
@@ -44,17 +45,19 @@ class _VerifyCodeScreenState extends State<VerifyCodeStudentScreen> {
         if (state is Connected) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-              elevation: 0,
-              duration: const Duration(milliseconds: 2000),
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.transparent,
-              content: AwesomeSnackbarContent(
-                title: 'Đã kết nối internet',
-                message: 'Đã kết nối internet!',
-                contentType: ContentType.success,
+            ..showSnackBar(
+              SnackBar(
+                elevation: 0,
+                duration: const Duration(milliseconds: 2000),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Đã kết nối internet',
+                  message: 'Đã kết nối internet!',
+                  contentType: ContentType.success,
+                ),
               ),
-            ));
+            );
         } else if (state is NotConnected) {
           showCupertinoDialog(
             context: context,
@@ -64,14 +67,14 @@ class _VerifyCodeScreenState extends State<VerifyCodeStudentScreen> {
                 content: Text('Vui lòng kết nối Internet'),
                 actions: [
                   TextButton(
-                      onPressed: () {
-                        final stateInternet =
-                            context.read<InternetBloc>().state;
-                        if (stateInternet is Connected) {
-                          Navigator.pop(context);
-                        } else {}
-                      },
-                      child: const Text('Đồng ý'))
+                    onPressed: () {
+                      final stateInternet = context.read<InternetBloc>().state;
+                      if (stateInternet is Connected) {
+                        Navigator.pop(context);
+                      } else {}
+                    },
+                    child: const Text('Đồng ý'),
+                  ),
                 ],
               );
             },
@@ -90,12 +93,13 @@ class _VerifyCodeScreenState extends State<VerifyCodeStudentScreen> {
             title: Text(
               title,
               style: GoogleFonts.openSans(
-                  textStyle: TextStyle(
-                fontSize: 15 * ffem,
-                fontWeight: FontWeight.w900,
-                height: 1.3625 * ffem / fem,
-                color: kLowTextColor,
-              )),
+                textStyle: TextStyle(
+                  fontSize: 15 * ffem,
+                  fontWeight: FontWeight.w900,
+                  height: 1.3625 * ffem / fem,
+                  color: kLowTextColor,
+                ),
+              ),
             ),
           ),
           extendBodyBehindAppBar: true,
