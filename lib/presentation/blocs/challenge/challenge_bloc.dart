@@ -27,7 +27,10 @@ class ChallengeBloc extends Bloc<ChallengeEvent, ChallengeState> {
     emit(ChallengeLoading());
     try {
       var apiResponse = await challengeRepository.fecthChallenges();
-      emit(ChallengesLoaded(challenge: apiResponse!.result.toList()));
+      if (apiResponse == null) {
+        return emit(ChallengeFailed(error: 'Không tải được dữ liệu thử thách.'));
+      }
+      emit(ChallengesLoaded(challenge: apiResponse.result.toList()));
     } catch (e) {
       emit(ChallengeFailed(error: e.toString()));
     }
@@ -40,7 +43,10 @@ class ChallengeBloc extends Bloc<ChallengeEvent, ChallengeState> {
     emit(ChallengeLoading());
     try {
       var apiResponse = await challengeRepository.fecthDailyChallenges();
-      emit(ChallengesLoaded(challenge: apiResponse!.result.toList()));
+      if (apiResponse == null) {
+        return emit(ChallengeFailed(error: 'Không tải được dữ liệu thử thách.'));
+      }
+      emit(ChallengesLoaded(challenge: apiResponse.result.toList()));
     } catch (e) {
       emit(ChallengeFailed(error: e.toString()));
     }
@@ -57,11 +63,17 @@ class ChallengeBloc extends Bloc<ChallengeEvent, ChallengeState> {
         studentId: event.studentId,
         type: 2,
       );
-      if (isSuccess!) {
+      if (isSuccess == null) {
+        return emit(ChallengeFailed(error: 'Không tải được dữ liệu thử thách.'));
+      }
+      if (isSuccess) {
         var apiResponse = await challengeRepository.fecthChallenges();
+        if (apiResponse == null) {
+          return emit(ChallengeFailed(error: 'Không tải được dữ liệu thử thách.'));
+        }
         emit(
           ChallengesAchieveLoaded(
-            challenge: apiResponse!.result.toList(),
+            challenge: apiResponse.result.toList(),
             isClaimed: true,
           ),
         );
@@ -88,10 +100,13 @@ class ChallengeBloc extends Bloc<ChallengeEvent, ChallengeState> {
       if (isSuccess == true) {
         // Explicit comparison
         final apiResponse = await challengeRepository.fecthDailyChallenges();
-        if (apiResponse?.result != null) {
+        if (apiResponse == null) {
+          return emit(ChallengeFailed(error: 'Không tải được dữ liệu thử thách.'));
+        }
+        if (apiResponse.result.isNotEmpty) {
           emit(
             ChallengesLoaded(
-              challenge: apiResponse!.result.toList(),
+              challenge: apiResponse.result.toList(),
               isClaimed: true, // Make sure this is set to true
             ),
           );

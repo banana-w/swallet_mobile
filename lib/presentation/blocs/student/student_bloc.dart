@@ -107,8 +107,11 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
         event.isUsed,
         id: event.id,
       );
+      if (apiResponse == null) {
+        return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+      }
       bool hasReachedMax =
-          apiResponse!.result.length < event.limit ||
+          apiResponse.result.length < event.limit ||
           event.page >= apiResponse.totalPages;
 
       if (hasReachedMax) {
@@ -167,7 +170,10 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
             id: event.id,
             event.isUsed,
           );
-          if (apiResponse!.result.isEmpty) {
+          if (apiResponse == null) {
+            return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+          }
+          if (apiResponse.result.isEmpty) {
             List<BrandVoucher> vouchers = List.from(
               (state as StudentVouchersLoaded1).brandVoucherModels,
             )..addAll(apiResponse.result);
@@ -204,7 +210,10 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
         '',
         id: event.id,
       );
-      if (apiResponse!.total < apiResponse.size) {
+      if (apiResponse == null) {
+        return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+      }
+      if (apiResponse.total < apiResponse.size) {
         emit(
           StudentTransactionsLoaded(
             transactions: apiResponse.result,
@@ -233,7 +242,10 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
             '',
             id: event.id,
           );
-      if (apiResponse!.total < apiResponse.size) {
+      if (apiResponse == null) {
+        return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+      }
+      if (apiResponse.total < apiResponse.size) {
         emit(
           StudentTransactionsLoaded(
             transactions: apiResponse.result,
@@ -262,7 +274,10 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
             '',
             id: event.id,
           );
-      if (apiResponse!.total < apiResponse.size) {
+      if (apiResponse == null) {
+        return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+      }
+      if (apiResponse.total < apiResponse.size) {
         emit(
           StudentTransactionsLoaded(
             transactions: apiResponse.result,
@@ -283,6 +298,9 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   ) async {
     try {
       final student = await AuthenLocalDataSource.getStudent();
+      if (student == null) {
+        return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+      }
       if (event.scrollController.position.pixels ==
           event.scrollController.position.maxScrollExtent) {
         isLoadingMore = true;
@@ -292,9 +310,12 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
           event.limit,
           event.typeIds,
           '',
-          id: student!.id,
+          id: student.id,
         );
-        if (apiResponse!.result.isEmpty) {
+        if (apiResponse == null) {
+          return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+        }
+        if (apiResponse.result.isEmpty) {
           emit(
             StudentTransactionsLoaded(
               transactions: List.from(
@@ -324,6 +345,9 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   ) async {
     try {
       final student = await AuthenLocalDataSource.getStudent();
+      if (student == null) {
+        return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+      }
       if (event.scrollController.position.pixels ==
           event.scrollController.position.maxScrollExtent) {
         isLoadingMore = true;
@@ -334,9 +358,12 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
               event.limit,
               event.typeIds,
               '',
-              id: student!.id,
+              id: student.id,
             );
-        if (apiResponse!.result.isEmpty) {
+        if (apiResponse == null) {
+          return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+        }
+        if (apiResponse.result.isEmpty) {
           emit(
             StudentTransactionsLoaded(
               transactions: List.from(
@@ -366,6 +393,9 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   ) async {
     try {
       final student = await AuthenLocalDataSource.getStudent();
+      if (student == null) {
+        return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+      }
       if (event.scrollController.position.pixels ==
           event.scrollController.position.maxScrollExtent) {
         isLoadingMore = true;
@@ -376,9 +406,12 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
               event.limit,
               event.typeIds,
               '',
-              id: student!.id,
+              id: student.id,
             );
-        if (apiResponse!.result.isEmpty) {
+        if (apiResponse == null) {
+          return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+        }
+        if (apiResponse.result.isEmpty) {
           emit(
             StudentTransactionsLoaded(
               transactions: List.from(
@@ -408,6 +441,9 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   ) async {
     try {
       final student = await AuthenLocalDataSource.getStudent();
+      if (student == null) {
+        return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+      }
       if (event.scrollController.position.pixels ==
           event.scrollController.position.maxScrollExtent) {
         isLoadingMore = true;
@@ -417,9 +453,12 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
           event.limit,
           event.typeIds,
           '',
-          id: student!.id,
+          id: student.id,
         );
-        if (apiResponse!.result.isEmpty) {
+        if (apiResponse == null) {
+          return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+        }
+        if (apiResponse.result.isEmpty) {
           emit(
             StudentTransactionsLoaded(
               transactions: List.from(
@@ -449,6 +488,9 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   ) async {
     try {
       final student = await AuthenLocalDataSource.getStudent();
+      if (student == null) {
+        return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+      }
       if (event.scrollController.position.pixels ==
           event.scrollController.position.maxScrollExtent) {
         isLoadingMore = true;
@@ -458,9 +500,12 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
           event.limit,
           event.typeIds,
           '',
-          id: student!.id,
+          id: student.id,
         );
-        if (apiResponse!.result.isEmpty) {
+        if (apiResponse == null) {
+          return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+        }
+        if (apiResponse.result.isEmpty) {
           emit(
             StudentTransactionsLoaded(
               transactions: List.from(
@@ -520,21 +565,30 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
         campaignId: event.campaignId,
         voucherId: event.voucherId,
       );
+      if (apiResponse == null) {
+        return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+      }
       var campaignDetail = await studentRepository.fecthCampaignById(
         id: event.campaignId,
       );
+      if (campaignDetail == null) {
+        return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+      }
       var student = await AuthenLocalDataSource.getStudent();
+      if (student == null) {
+        return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+      }
 
       var voucherItemId = await studentRepository.fetchVoucherItemAvailable(
         voucherId: event.voucherId,
-        studentId: student!.id,
+        studentId: student.id,
         campaignId: event.campaignId,
       );
 
       emit(
         StudentVoucherItemLoaded(
-          voucherStudentItemModel: apiResponse!,
-          campaignDetailModel: campaignDetail!,
+          voucherStudentItemModel: apiResponse,
+          campaignDetailModel: campaignDetail,
           studentId: student.id,
           voucherItemId: voucherItemId ?? "code",
         ),
@@ -553,7 +607,10 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
       var apiResponse = await studentRepository.fetchStudentById(
         id: event.accountId,
       );
-      emit(StudentByIdSuccess(studentMode: apiResponse!));
+      if (apiResponse == null) {
+        return emit(StudentByIdFailed(error: 'Không tải được thông tin sinh viên.'));
+      }
+      emit(StudentByIdSuccess(studentMode: apiResponse));
     } catch (e) {
       emit(StudentByIdFailed(error: e.toString()));
     }
@@ -584,6 +641,9 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     Emitter<StudentState> emit,
   ) async {
     var studentModel = await AuthenLocalDataSource.getStudent();
-    emit(StudentUpdateVerificationSuccess(studentModel: studentModel!));
+    if (studentModel == null) {
+      return emit(StudentFaled(error: 'Không tải được dữ liệu sinh viên.'));
+    }
+    emit(StudentUpdateVerificationSuccess(studentModel: studentModel));
   }
 }

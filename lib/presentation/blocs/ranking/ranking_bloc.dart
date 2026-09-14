@@ -21,8 +21,11 @@ class RankingBloc extends Bloc<RankingEvent, RankingState> {
     emit(CampaignRankingLoading());
     try {
       var apiResponse = await storeRepository.fecthCampaignRanking();
+      if (apiResponse == null) {
+        return emit(RankingFailed(error: 'Không tải được bảng xếp hạng.'));
+      }
 
-      emit(CampaignRankingLoaded(campaignRankings: apiResponse!));
+      emit(CampaignRankingLoaded(campaignRankings: apiResponse));
     } catch (e) {
       emit(RankingFailed(error: e.toString()));
     }
@@ -35,8 +38,11 @@ class RankingBloc extends Bloc<RankingEvent, RankingState> {
     emit(StudentRankingLoading());
     try {
       var apiResponse = await storeRepository.fecthStudentRanking();
+      if (apiResponse == null) {
+        return emit(RankingFailed(error: 'Không tải được bảng xếp hạng.'));
+      }
 
-      emit(StudentRankingLoaded(studentRankings: apiResponse!));
+      emit(StudentRankingLoaded(studentRankings: apiResponse));
     } catch (e) {
       emit(RankingFailed(error: e.toString()));
     }

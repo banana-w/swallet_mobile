@@ -18,7 +18,7 @@ class CampaignStoreCartModel extends Equatable {
         listItem = [];
       } else {
         filterCampaign.forEach((key, value) {
-          if (campaignVoucher.campaignName.contains(key!)) {
+          if (key != null && campaignVoucher.campaignName.contains(key)) {
             value.add(campaignVoucher);
           }
         });

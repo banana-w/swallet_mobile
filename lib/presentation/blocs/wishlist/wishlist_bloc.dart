@@ -27,7 +27,10 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
     emit(WishListLoading());
     try {
       var apiResponse = await wishListRepository.fetchWishLists();
-      emit(WishListLoaded(wishList: apiResponse!.result));
+      if (apiResponse == null) {
+        return emit(WishListFailed(error: 'Không tải được danh sách theo dõi.'));
+      }
+      emit(WishListLoaded(wishList: apiResponse.result));
     } catch (e) {
       emit(WishListFailed(error: e.toString()));
     }
@@ -45,7 +48,10 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
         description: event.description,
         state: event.state,
       );
-      emit(CreateWishListSuccess(wishlist: apiResponse!));
+      if (apiResponse == null) {
+        return emit(WishListFailed(error: 'Không tải được danh sách theo dõi.'));
+      }
+      emit(CreateWishListSuccess(wishlist: apiResponse));
     } catch (e) {
       emit(WishListFailed(error: e.toString()));
     }
@@ -57,7 +63,10 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
   ) async {
     try {
       var apiResponse = await wishListRepository.fetchWishLists();
-      final isFollowed = apiResponse!.result.any(
+      if (apiResponse == null) {
+        return emit(WishListFailed(error: 'Không tải được danh sách theo dõi.'));
+      }
+      final isFollowed = apiResponse.result.any(
         (w) => w.brandId == event.brandId && w.status == true,
       );
       emit(WishListStatusChecked(isFollowed: isFollowed));

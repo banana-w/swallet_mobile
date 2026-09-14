@@ -22,8 +22,11 @@ class CampaignVoucherBloc
     try {
       var apiResponse = await campaignRepository
           .fecthCampaignVouchersById(event.page, event.limit, id: event.id);
+      if (apiResponse == null) {
+        return emit(CampaignVoucherFailed(error: 'Không tải được danh sách voucher.'));
+      }
       emit(CampaignVouchersLoaded(
-          campaignVouchers: apiResponse!));
+          campaignVouchers: apiResponse));
     } catch (e) {
       emit(CampaignVoucherFailed(error: e.toString()));
     }

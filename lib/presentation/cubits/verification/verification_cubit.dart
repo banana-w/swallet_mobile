@@ -17,12 +17,16 @@ class VerificationCubit extends Cubit<VerificationState> {
     emit(VerificationLoading());
     try {
       final authenModel = await AuthenLocalDataSource.getAuthen();
+      if (authenModel == null) {
+        emit(OTPVerificationFailed(error: 'Phiên đăng nhập đã hết hạn.'));
+        return false;
+      }
       // final email = authenModel?.email;
       // if (email == null) {
       //   emit(OTPVerificationFailed(error: 'Mã không hợp lệ'));
       // }
       final check = await verificationRepository.verifyEmailCode(
-        authenModel!.accountId,
+        authenModel.accountId,
         email,
         code,
       );

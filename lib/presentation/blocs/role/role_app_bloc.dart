@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
+import 'package:swallet_mobile/domain/entities/account_role.dart';
 import 'package:swallet_mobile/data/firebase/notification_service.dart';
 import 'package:swallet_mobile/data/models/authen_model.dart';
 import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
@@ -38,14 +39,17 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
         return emit(RoleAppLoading());
       }
 
-      if (authenModel.role == 'Sinh viên') {
+      if (authenModel.accountRole == AccountRole.student) {
         final student = await studentRepository.fetchStudentById(
           id: authenModel.accountId,
         );
-        if (student != null) {
+        if (student == null) {
+          return emit(RoleAppLoading());
+        }
+        if (student.state == 2) {
           emit(Verified(authenModel: authenModel, studentModel: student));
         } else {
-          emit(Unverified(authenModel: authenModel, studentModel: student!));
+          emit(Unverified(authenModel: authenModel, studentModel: student));
         }
       }
     } catch (e) {
@@ -60,39 +64,44 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
     emit(RoleAppLoading());
     try {
       final authenModel = await AuthenLocalDataSource.getAuthen();
+      if (authenModel == null || authenModel.accountId.isEmpty) {
+        // Chưa đăng nhập (hoặc session đã bị xoá) -> trả về màn hình chào.
+        return emit(RoleReset());
+      }
+
       final isVerifyAfter = await AuthenLocalDataSource.getIsVerified();
+      if (!authenModel.isVerified && isVerifyAfter != 'true') {
+        return;
+      }
 
-      bool isVerify = authenModel!.isVerified;
-      String role = authenModel.role;
-      String userId = authenModel.accountId;
-
-      if (isVerify || isVerifyAfter == "true") {
-        if (userId != '') {
-          if (role == 'Sinh viên') {
-            final student = await studentRepository.fetchStudentById(
-              id: authenModel.accountId,
-            );
-            if (student?.state == 2) {
-              emit(Verified(authenModel: authenModel, studentModel: student!));
-            } else {
-              emit(
-                Unverified(authenModel: authenModel, studentModel: student!),
-              );
-            }
-          } else if (role.contains('Giáo viên')) {
-            final lecture = await lectureRepository.fetchLectureById(
-              accountId: authenModel.accountId,
-            );
-            emit(LectureRole(authenModel: authenModel, lectureModel: lecture!));
-          } else {
-            final store = await storeRepository.fetchStoreById(
-              accountId: authenModel.accountId,
-            );
-            emit(StoreRole(authenModel: authenModel, storeModel: store!));
-          }
+      final role = authenModel.accountRole;
+      if (role == AccountRole.student) {
+        final student = await studentRepository.fetchStudentById(
+          id: authenModel.accountId,
+        );
+        // Gọi API lỗi thì giữ nguyên loading, không được xoá session của user.
+        if (student == null) return;
+        if (student.state == 2) {
+          emit(Verified(authenModel: authenModel, studentModel: student));
         } else {
-          emit(RoleReset());
+          emit(Unverified(authenModel: authenModel, studentModel: student));
         }
+      } else if (role == AccountRole.lecturer) {
+        final lecture = await lectureRepository.fetchLectureById(
+          accountId: authenModel.accountId,
+        );
+        if (lecture == null) return;
+        emit(LectureRole(authenModel: authenModel, lectureModel: lecture));
+      } else if (role == AccountRole.store) {
+        final store = await storeRepository.fetchStoreById(
+          accountId: authenModel.accountId,
+        );
+        if (store == null) return;
+        emit(StoreRole(authenModel: authenModel, storeModel: store));
+      } else {
+        // Admin/Brand hoặc vai trò app chưa hỗ trợ: không có màn hình nào để
+        // vào, trả về màn chào thay vì cấp nhầm quyền Cửa hàng.
+        emit(RoleReset());
       }
     } catch (e) {
       print(e);
@@ -138,7 +147,7 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
   //         final student = await studentRepository.fetchStudentById(
   //           id: authenModel.accountId,
   //         );
-  //         if (role == 'Sinh viên') {
+  //         if (role == AccountRole.student) {
   //           if (student?.state == 2) {
   //             emit(Verified(authenModel: authenModel, studentModel: student!));
   //           } else {
@@ -146,7 +155,7 @@ class RoleAppBloc extends Bloc<RoleAppEvent, RoleAppState> {
   //               Unverified(authenModel: authenModel, studentModel: student!),
   //             );
   //           }
-  //         } else if (role.contains('Giáo viên')) {
+  //         } else if (role == AccountRole.lecturer) {
   //           final lecture = await lectureRepository.fetchLectureById(
   //             accountId: authenModel.accountId,
   //           );

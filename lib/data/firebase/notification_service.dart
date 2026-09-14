@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,37 +10,33 @@ import 'package:swallet_mobile/presentation/blocs/notification/notification_bloc
 import 'package:swallet_mobile/presentation/screens/student_features/notification/notification_screen.dart';
 
 class NotificationService {
-  // Singleton pattern
   NotificationService._();
   static final NotificationService instance = NotificationService._();
 
-  // Firebase Messaging instance
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-
-  // Student repository instance
   final _studentRepository = StudentRepositoryImp();
-
-  // Local notifications plugin
-  final FlutterLocalNotificationsPlugin localNotifications =
-      FlutterLocalNotificationsPlugin();
-
-  // Flag to track initialization status
+  final FlutterLocalNotificationsPlugin localNotifications = FlutterLocalNotificationsPlugin();
   bool isFlutterLocalNotificationsInitialized = false;
+  String? _currentStudentId;
 
   Future<void> initialize() async {
     try {
-      FirebaseMessaging.onBackgroundMessage(
-        _firebaseMessagingBackgroundHandler,
-      );
+      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
       if (!isFlutterLocalNotificationsInitialized) {
         await _initLocalNotifications();
       }
-      // Request notification permissions
+      
+      // Request quyền trước khi lấy Token hoặc cài đặt handler
       await requestPermission();
-
-      // Setup message handler
       await setupMessageHandler();
+
+      // Cấu hình hiển thị foreground mặc định của Firebase cho iOS
+      await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
 
       final token = await _messaging.getToken();
       print('FCM Token: $token');
@@ -60,24 +55,13 @@ class NotificationService {
 
   Future<void> requestPermission() async {
     try {
-      // Request notification permissions
       final settings = await _messaging.requestPermission(
         alert: true,
         badge: true,
         sound: true,
         provisional: false,
-        announcement: false,
-        carPlay: false,
-        criticalAlert: false,
       );
-
-      // Print permission status
       print('Permission status: ${settings.authorizationStatus}');
-
-      // Initialize local notifications if not already initialized
-      if (!isFlutterLocalNotificationsInitialized) {
-        await _initLocalNotifications();
-      }
     } catch (e) {
       print('Error requesting permission: $e');
     }
@@ -85,7 +69,6 @@ class NotificationService {
 
   Future<void> _initLocalNotifications() async {
     try {
-      // android setup
       const channel = AndroidNotificationChannel(
         'high_importance_channel',
         'High Importance Notifications',
@@ -93,33 +76,26 @@ class NotificationService {
         importance: Importance.high,
       );
       await localNotifications
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >()
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
 
-      // Android initialization settings
-      const AndroidInitializationSettings androidSettings =
-          AndroidInitializationSettings('@mipmap/ic_launcher');
+      const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
 
-      // iOS initialization settings
+      // Bật các flag present lên true để iOS nhận diện hiển thị ở Foreground
       const iosSettings = DarwinInitializationSettings(
-        requestAlertPermission: false,
-        requestBadgePermission: false,
-        requestSoundPermission: false,
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
       );
 
-      // Combined initialization settings
       const initializationSettings = InitializationSettings(
         android: androidSettings,
         iOS: iosSettings,
       );
 
-      // Initialize the plugin
       await localNotifications.initialize(
-        settings:initializationSettings,
+        settings: initializationSettings,
         onDidReceiveNotificationResponse: (details) {
-          // Handle notification tap
           print('Notification tapped: ${details.payload}');
           onNotificationTap(details);
         },
@@ -131,7 +107,7 @@ class NotificationService {
   }
 
   static void onNotificationTap(NotificationResponse notificationResponse) {
-    navigatorKey.currentState!.pushNamed(
+    navigatorKey.currentState?.pushNamed(
       NotificationScreen.routeName,
       arguments: notificationResponse,
     );
@@ -139,7 +115,6 @@ class NotificationService {
 
   Future<void> showNotification(RemoteMessage message) async {
     try {
-      // Không cần kiểm tra isFlutterLocalNotificationsInitialized vì đã khởi tạo trong initialize
       const androidDetails = AndroidNotificationDetails(
         'high_importance_channel',
         'High Importance Notifications',
@@ -164,9 +139,10 @@ class NotificationService {
         id: message.messageId.hashCode,
         title: message.notification?.title ?? 'Notification',
         body: message.notification?.body ?? '',
-        notificationDetails:  platformDetails,
+        notificationDetails: platformDetails,
         payload: jsonEncode(message.data),
       );
+      
       notificationBloc.add(
         AddNewNotification(
           notificationModel: NotificationModel(
@@ -183,31 +159,27 @@ class NotificationService {
 
   Future<void> setupMessageHandler() async {
     try {
-      // Handle foreground messages
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         print('Received foreground message: ${message.messageId}');
+        // Trên iOS, nếu đã set setForegroundNotificationPresentationOptions thì hệ thống tự hiện banner,
+        // bạn có thể cân nhắc chỉ cần cập nhật Bloc hoặc call showNotification tuỳ nhu cầu.
         showNotification(message);
       });
 
-      // Handle background messages
-      FirebaseMessaging.onBackgroundMessage(
-        _firebaseMessagingBackgroundHandler,
-      );
-
-      // Handle when app is opened from a terminated state
-      RemoteMessage? initialMessage =
-          await FirebaseMessaging.instance.getInitialMessage();
+      RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
       if (initialMessage != null) {
         print('App opened from terminated state: ${initialMessage.messageId}');
-        showNotification(initialMessage);
+        // Thay vì gọi showNotification tạo thêm một cái nữa, ta điều hướng thẳng sang màn hình notify
+        navigatorKey.currentState?.pushNamed(
+          NotificationScreen.routeName,
+          arguments: initialMessage,
+        );
       }
 
-      // Handle when app is opened from background
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        // showNotification(message);
         if (message.notification != null) {
-          print('Backgroud Notification Tapped');
-          navigatorKey.currentState!.pushNamed(
+          print('Background Notification Tapped');
+          navigatorKey.currentState?.pushNamed(
             NotificationScreen.routeName,
             arguments: message,
           );
@@ -217,6 +189,8 @@ class NotificationService {
       print('Error setting up message handler: $e');
     }
   }
+
+  // --- Các hàm Topic và Cache (Giữ nguyên logic của bạn nhưng sửa bug logout) ---
 
   Future<void> subribeToTopic(String topic) async {
     try {
@@ -247,6 +221,7 @@ class NotificationService {
   }
 
   Future<List<String>?> _getCachedWishList(String studentId) async {
+    if (studentId.isEmpty) return [];
     final prefs = await SharedPreferences.getInstance();
     final cachedWishList = prefs.getString('wishlist_$studentId');
     if (cachedWishList != null) {
@@ -259,28 +234,21 @@ class NotificationService {
     return wishList;
   }
 
-  Future<void> _saveCachedWishList(
-    String studentId,
-    List<String> wishList,
-  ) async {
+  Future<void> _saveCachedWishList(String studentId, List<String> wishList) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('wishlist_$studentId', jsonEncode(wishList));
   }
 
-  String? _currentStudentId;
-
   Future<void> loginStudent(String studentId) async {
     try {
-      if (_currentStudentId == studentId) {
-        print('Already subscribed to topic: $studentId');
-        return;
-      }
+      if (_currentStudentId == studentId) return;
 
       final subscribedTopics = await _getSubscribedTopics();
 
-      if (_currentStudentId != null && _currentStudentId != studentId) {
-        await unsubscribeFromTopic(_currentStudentId!);
-        subscribedTopics.remove(_currentStudentId!);
+      final previousStudentId = _currentStudentId;
+      if (previousStudentId != null && previousStudentId != studentId) {
+        await unsubscribeFromTopic(previousStudentId);
+        subscribedTopics.remove(previousStudentId);
       }
 
       if (!subscribedTopics.contains(studentId)) {
@@ -292,46 +260,41 @@ class NotificationService {
       final wishList = await _getCachedWishList(studentId);
       if (wishList != null && wishList.isNotEmpty) {
         await Future.wait(
-          wishList.where((topic) => !subscribedTopics.contains(topic)).map((
-            topic,
-          ) async {
+          wishList.where((topic) => !subscribedTopics.contains(topic)).map((topic) async {
             await subribeToTopic(topic);
             subscribedTopics.add(topic);
-            print('Subscribed to wishlist topic: $topic');
           }),
         );
       }
 
       await _saveSubscribedTopics(subscribedTopics);
     } catch (e) {
-      print('Error switching student topic or subscribing to wishlist: $e');
+      print('Error switching student topic: $e');
     }
   }
 
   Future<void> logoutStudent() async {
     try {
+      final studentId = _currentStudentId;
+      if (studentId == null) return;
+
       final subscribedTopics = await _getSubscribedTopics();
+      final wishList = await _getCachedWishList(studentId);
 
-      if (_currentStudentId != null) {
-        await unsubscribeFromTopic(_currentStudentId!);
-        subscribedTopics.remove(_currentStudentId!);
-        _currentStudentId = null;
-      }
+      await unsubscribeFromTopic(studentId);
+      subscribedTopics.remove(studentId);
 
-      final wishList = await _getCachedWishList(_currentStudentId ?? '');
       if (wishList != null) {
         await Future.wait(
-          wishList.where((topic) => subscribedTopics.contains(topic)).map((
-            topic,
-          ) async {
+          wishList.where((topic) => subscribedTopics.contains(topic)).map((topic) async {
             await unsubscribeFromTopic(topic);
             subscribedTopics.remove(topic);
-            print('Unsubscribed from wishlist topic: $topic');
           }),
         );
       }
 
       await _saveSubscribedTopics(subscribedTopics);
+      _currentStudentId = null; // <-- Đưa xuống cuối cùng sau khi đã dùng để clear cache
     } catch (e) {
       print('Error during logout: $e');
     }
@@ -345,9 +308,7 @@ class NotificationService {
         subscribedTopics.add(brandId);
         await _saveSubscribedTopics(subscribedTopics);
 
-        // Cập nhật cache wishlist
-        final studentId =
-            _currentStudentId ?? (await AuthenLocalDataSource.getStudent())?.id;
+        final studentId = _currentStudentId ?? (await AuthenLocalDataSource.getStudent())?.id;
         if (studentId != null) {
           final wishList = await _getCachedWishList(studentId) ?? [];
           if (!wishList.contains(brandId)) {
@@ -355,7 +316,6 @@ class NotificationService {
             await _saveCachedWishList(studentId, wishList);
           }
         }
-        print('Followed campaign: $brandId');
       }
     } catch (e) {
       print('Error following campaign $brandId: $e');
@@ -370,9 +330,7 @@ class NotificationService {
         subscribedTopics.remove(brandId);
         await _saveSubscribedTopics(subscribedTopics);
 
-        // Cập nhật cache wishlist
-        final studentId =
-            _currentStudentId ?? (await AuthenLocalDataSource.getStudent())?.id;
+        final studentId = _currentStudentId ?? (await AuthenLocalDataSource.getStudent())?.id;
         if (studentId != null) {
           final wishList = await _getCachedWishList(studentId) ?? [];
           if (wishList.contains(brandId)) {
@@ -380,7 +338,6 @@ class NotificationService {
             await _saveCachedWishList(studentId, wishList);
           }
         }
-        print('Unfollowed campaign: $brandId');
       }
     } catch (e) {
       print('Error unfollowing campaign $brandId: $e');
@@ -390,22 +347,16 @@ class NotificationService {
 
 final notificationBloc = NotificationBloc();
 
-// Background message handler
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling background message: ${message.messageId}');
-  // Note: Background messages don't show notifications automatically
-  // You can call showNotification here if needed, but ensure NotificationService is properly initialized
-  await NotificationService.instance._initLocalNotifications();
-  // await NotificationService.instance.showNotification(message);
-
-  if (message.notification != null) {
-    print('Some notification Received!');
+  final notification = message.notification;
+  if (notification != null) {
     notificationBloc.add(
       AddNewNotification(
         notificationModel: NotificationModel(
-          title: message.notification!.title!,
-          body: message.notification!.body!,
+          title: notification.title ?? '',
+          body: notification.body ?? '',
           payload: jsonEncode(message.data),
         ),
       ),

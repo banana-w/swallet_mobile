@@ -40,9 +40,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       var apiResponse = await storeRepository.fetchStoreById(
         accountId: event.accountId,
       );
+      if (apiResponse == null) {
+        return emit(StoreFailed(error: 'Không tải được dữ liệu cửa hàng.'));
+      }
       // bool hasReachedMax = false;
 
-      emit(StoreByIdLoaed(storeModel: apiResponse!));
+      emit(StoreByIdLoaed(storeModel: apiResponse));
     } catch (e) {
       emit(StoreFailed(error: e.toString()));
     }
@@ -60,9 +63,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         event.typeIds,
         id: event.id,
       );
+      if (apiResponse == null) {
+        return emit(StoreFailed(error: 'Không tải được dữ liệu cửa hàng.'));
+      }
       bool hasReachedMax = false;
       if (event.typeIds == 0) {
-        if (apiResponse!.totalPages <= apiResponse.size) {
+        if (apiResponse.totalPages <= apiResponse.size) {
           hasReachedMax = true;
         }
         emit(
@@ -74,7 +80,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           ),
         );
       } else if (event.typeIds == 1) {
-        if (apiResponse!.totalPages <= apiResponse.size) {
+        if (apiResponse.totalPages <= apiResponse.size) {
           hasReachedMax = true;
         }
         emit(
@@ -86,7 +92,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           ),
         );
       } else {
-        if (apiResponse!.totalPages <= apiResponse.size) {
+        if (apiResponse.totalPages <= apiResponse.size) {
           hasReachedMax = true;
         }
         emit(
@@ -109,6 +115,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   ) async {
     try {
       final storeId = await AuthenLocalDataSource.getStoreId();
+      if (storeId == null) {
+        return emit(StoreFailed(error: 'Không tải được dữ liệu cửa hàng.'));
+      }
       if (event.scrollController.position.pixels ==
           event.scrollController.position.maxScrollExtent) {
         if ((state as StoreTransactionsLoaded).hasReachedMax) {
@@ -147,13 +156,16 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             pageTransaction,
             event.limit,
             event.typeIds,
-            id: storeId!,
+            id: storeId,
           );
+          if (apiResponse == null) {
+            return emit(StoreFailed(error: 'Không tải được dữ liệu cửa hàng.'));
+          }
           if (event.typeIds == 0) {
-            if (apiResponse!.result.isEmpty) {
+            if (apiResponse.result.isEmpty) {
               emit(
                 StoreTransactionsLoaded(
-                  List.from((state as StoreTransactionsLoaded).transactions!)
+                  List.from((state as StoreTransactionsLoaded).transactions ?? const [])
                     ..addAll(apiResponse.result),
                   null,
                   null,
@@ -164,7 +176,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             } else {
               emit(
                 StoreTransactionsLoaded(
-                  List.from((state as StoreTransactionsLoaded).transactions!)
+                  List.from((state as StoreTransactionsLoaded).transactions ?? const [])
                     ..addAll(apiResponse.result),
                   null,
                   null,
@@ -172,12 +184,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               );
             }
           } else if (event.typeIds == 1) {
-            if (apiResponse!.result.isEmpty) {
+            if (apiResponse.result.isEmpty) {
               emit(
                 StoreTransactionsLoaded(
                   null,
                   List.from(
-                    (state as StoreTransactionsLoaded).activityTransactions!,
+                    (state as StoreTransactionsLoaded).activityTransactions ?? const [],
                   )..addAll(apiResponse.result),
                   null,
                   hasReachedMax: true,
@@ -189,20 +201,20 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 StoreTransactionsLoaded(
                   null,
                   List.from(
-                    (state as StoreTransactionsLoaded).activityTransactions!,
+                    (state as StoreTransactionsLoaded).activityTransactions ?? const [],
                   )..addAll(apiResponse.result),
                   null,
                 ),
               );
             }
           } else if (event.typeIds == 2) {
-            if (apiResponse!.result.isEmpty) {
+            if (apiResponse.result.isEmpty) {
               emit(
                 StoreTransactionsLoaded(
                   null,
                   null,
                   List.from(
-                    (state as StoreTransactionsLoaded).bonusTransactions!,
+                    (state as StoreTransactionsLoaded).bonusTransactions ?? const [],
                   )..addAll(apiResponse.result),
                   hasReachedMax: true,
                 ),
@@ -214,7 +226,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   null,
                   null,
                   List.from(
-                    (state as StoreTransactionsLoaded).bonusTransactions!,
+                    (state as StoreTransactionsLoaded).bonusTransactions ?? const [],
                   )..addAll(apiResponse.result),
                 ),
               );
@@ -238,12 +250,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         event.limit,
         event.search,
       );
+      if (apiResponse == null) {
+        return emit(StoreFailed(error: 'Không tải được dữ liệu cửa hàng.'));
+      }
       // bool hasReachedMax = false;
 
       emit(
         StoreCampaignVoucherLoaded(
           campaignStoreCart: CampaignStoreCartModel(
-            campaignVouchers: apiResponse!.result,
+            campaignVouchers: apiResponse.result,
           ),
         ),
       );
