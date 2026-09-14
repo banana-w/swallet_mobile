@@ -1,16 +1,21 @@
-import 'package:http/http.dart' as http;
+import 'package:swallet_mobile/data/datasource/api_client.dart';
 import 'dart:convert';
 
 import 'package:swallet_mobile/data/interface_repositories/student_features/wheel_repository.dart';
 
 class SpinHistoryRepositoryImpl implements SpinHistoryRepository {
+  /// Cho phep test tiem client gia; app dung client dung chung.
+  SpinHistoryRepositoryImpl({ApiClient? api}) : _api = api ?? ApiClient.public;
+
+  final ApiClient _api;
+
   final String baseUrl =
       "https://swallet-api-2025-capstoneproject.onrender.com/api/LuckyWheel"; // URL backend
 
   @override
   Future<int> getSpinCount(String studentId, DateTime date) async {
     final formattedDate = date.toIso8601String().split('T')[0]; // YYYY-MM-DD
-    final response = await http.get(
+    final response = await _api.get(
       Uri.parse('$baseUrl/spin-count/$studentId/$formattedDate'),
       headers: {'Content-Type': 'application/json'},
     );
@@ -26,7 +31,7 @@ class SpinHistoryRepositoryImpl implements SpinHistoryRepository {
   @override
   Future<void> incrementSpinCount(String studentId, DateTime date) async {
     final formattedDate = date.toIso8601String().split('T')[0]; // YYYY-MM-DD
-    final response = await http.post(
+    final response = await _api.post(
       Uri.parse('$baseUrl/increment-spin-count'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'studentId': studentId, 'date': formattedDate}),
@@ -40,7 +45,7 @@ class SpinHistoryRepositoryImpl implements SpinHistoryRepository {
   @override
   Future<int> getBonusSpins(String studentId, DateTime date) async {
     final formattedDate = date.toIso8601String().split('T')[0]; // YYYY-MM-DD
-    final response = await http.get(
+    final response = await _api.get(
       Uri.parse('$baseUrl/bonus-spins/$studentId/$formattedDate'),
       headers: {'Content-Type': 'application/json'},
     );
@@ -56,7 +61,7 @@ class SpinHistoryRepositoryImpl implements SpinHistoryRepository {
   @override
   Future<void> incrementBonusSpins(String studentId, DateTime date) async {
     final formattedDate = date.toIso8601String().split('T')[0]; // YYYY-MM-DD
-    final response = await http.post(
+    final response = await _api.post(
       Uri.parse('$baseUrl/increment-bonus-spins'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'studentId': studentId, 'date': formattedDate}),

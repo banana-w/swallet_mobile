@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:swallet_mobile/data/datasource/api_client.dart';
+import 'package:swallet_mobile/data/datasource/api_exceptions.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/brand_model.dart';
@@ -10,6 +12,11 @@ import 'package:swallet_mobile/data/interface_repositories/student_features/bran
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
 class BrandRepositoryImp implements BrandRepository {
+  /// Cho phep test tiem client gia; app dung client dung chung.
+  BrandRepositoryImp({ApiClient? api}) : _api = api ?? ApiClient.instance;
+
+  final ApiClient _api;
+
   String endPoint = '${baseURL}Brand';
   String sort = 'Id%2Cdesc';
   int page = 1;
@@ -40,7 +47,7 @@ class BrandRepositoryImp implements BrandRepository {
         '${baseURL}Brand?page=$page&size=$size&status=$status',
       );
 
-      http.Response response = await http.get(url, headers: headers);
+      http.Response response = await _api.get(url, headers: headers);
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
@@ -53,6 +60,8 @@ class BrandRepositoryImp implements BrandRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -67,7 +76,7 @@ class BrandRepositoryImp implements BrandRepository {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       };
-      http.Response response = await http.get(
+      http.Response response = await _api.get(
         Uri.parse('$endPoint/$id'),
         headers: headers,
       );
@@ -79,6 +88,8 @@ class BrandRepositoryImp implements BrandRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -96,7 +107,7 @@ class BrandRepositoryImp implements BrandRepository {
       page ??= this.page;
       limit ??= this.limit;
 
-      http.Response response = await http.get(
+      http.Response response = await _api.get(
         Uri.parse(
           '$endPoint/$id/vouchers?state=$state&sort=$sort&page=$page&limit=$limit',
         ),
@@ -114,6 +125,8 @@ class BrandRepositoryImp implements BrandRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -132,7 +145,7 @@ class BrandRepositoryImp implements BrandRepository {
       limit ??= this.limit;
       final studentModel = await AuthenLocalDataSource.getStudent();
       if (studentModel == null) {
-        http.Response response = await http.get(
+        http.Response response = await _api.get(
           Uri.parse(
             '$endPoint/$id/campaigns?stateIds=3&sort=$sort&page=$page&limit=$limit',
           ),
@@ -152,7 +165,7 @@ class BrandRepositoryImp implements BrandRepository {
         }
       } else {
         String campusId = studentModel.campusId ?? '';
-        http.Response response = await http.get(
+        http.Response response = await _api.get(
           Uri.parse(
             '$endPoint/$id/campaigns?campusIds=$campusId&stateIds=3&sort=$sort&page=$page&limit=$limit',
           ),
@@ -171,6 +184,8 @@ class BrandRepositoryImp implements BrandRepository {
           return null;
         }
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -199,7 +214,7 @@ class BrandRepositoryImp implements BrandRepository {
         '${baseURL}Campaign/brand-mobile/$id?page=$page&size=$size',
       );
 
-      http.Response response = await http.get(url, headers: headers);
+      http.Response response = await _api.get(url, headers: headers);
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
@@ -212,6 +227,8 @@ class BrandRepositoryImp implements BrandRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }

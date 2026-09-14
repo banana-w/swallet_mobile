@@ -14,8 +14,15 @@ import 'package:swallet_mobile/data/interface_repositories/store_features/store_
 import '../../../presentation/config/constants.dart';
 import '../../datasource/authen_local_datasource.dart';
 import 'package:http/http.dart' as http;
+import 'package:swallet_mobile/data/datasource/api_client.dart';
+import 'package:swallet_mobile/data/datasource/api_exceptions.dart';
 
 class StoreRepositoryImp extends StoreRepository {
+  /// Cho phep test tiem client gia; app dung client dung chung.
+  StoreRepositoryImp({ApiClient? api}) : _api = api ?? ApiClient.instance;
+
+  final ApiClient _api;
+
   String endPoint = '${baseURL}Store';
   String sort = 'Id%2Cdesc';
   int page = 1;
@@ -38,7 +45,7 @@ class StoreRepositoryImp extends StoreRepository {
         'Authorization': 'Bearer $token',
       };
       if (typeIds == 0) {
-        http.Response response = await http.get(
+        http.Response response = await _api.get(
           Uri.parse(
             '$endPoint/$id/histories?state=$state&sort=$sort&page=$page&limit=$limit',
           ),
@@ -57,7 +64,7 @@ class StoreRepositoryImp extends StoreRepository {
           return null;
         }
       } else {
-        http.Response response = await http.get(
+        http.Response response = await _api.get(
           Uri.parse(
             '$endPoint/$id/histories?state=$state&typeIds=$typeIds&sort=$sort&page=$page&limit=$limit',
           ),
@@ -76,6 +83,8 @@ class StoreRepositoryImp extends StoreRepository {
           return null;
         }
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -91,7 +100,7 @@ class StoreRepositoryImp extends StoreRepository {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       };
-      http.Response response = await http.get(
+      http.Response response = await _api.get(
         Uri.parse('$endPoint/$storeId/campaign-ranking'),
         headers: headers,
       );
@@ -104,6 +113,8 @@ class StoreRepositoryImp extends StoreRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -119,7 +130,7 @@ class StoreRepositoryImp extends StoreRepository {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       };
-      http.Response response = await http.get(
+      http.Response response = await _api.get(
         Uri.parse('$endPoint/$storeId/student-ranking'),
         headers: headers,
       );
@@ -132,6 +143,8 @@ class StoreRepositoryImp extends StoreRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -146,7 +159,7 @@ class StoreRepositoryImp extends StoreRepository {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       };
-      http.Response response = await http.get(
+      http.Response response = await _api.get(
         Uri.parse('$endPoint/account/$accountId'),
         headers: headers,
       );
@@ -160,6 +173,8 @@ class StoreRepositoryImp extends StoreRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -181,9 +196,13 @@ class StoreRepositoryImp extends StoreRepository {
       const String endPoint =
           '${baseURL}CampaignDetail/get-all-campaign-detail-by-storeId';
 
+      if (store == null) {
+        throw const SessionExpiredException();
+      }
+
       // Xây dựng URL với query parameters
       final Map<String, String> queryParams = {
-        'storeId': store!.id,
+        'storeId': store.id,
         'page': page?.toString() ?? '1',
         'size': limit?.toString() ?? '10',
       };
@@ -197,7 +216,7 @@ class StoreRepositoryImp extends StoreRepository {
       final Uri uri = Uri.parse(endPoint).replace(queryParameters: queryParams);
 
       // Gửi request
-      http.Response response = await http.get(uri, headers: headers);
+      http.Response response = await _api.get(uri, headers: headers);
 
       // Xử lý response
       if (response.statusCode == 200) {
@@ -214,6 +233,8 @@ class StoreRepositoryImp extends StoreRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -245,7 +266,7 @@ class StoreRepositoryImp extends StoreRepository {
       const String endPoint = '${baseURL}Activity/UseVoucher';
 
       // Gửi request POST
-      var response = await http.post(
+      var response = await _api.post(
         Uri.parse(endPoint),
         headers: headers,
         body: jsonEncode(body),
@@ -260,6 +281,8 @@ class StoreRepositoryImp extends StoreRepository {
         mapResult[false] = "Lỗi QR code không hợp lệ";
         return mapResult;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -274,7 +297,7 @@ class StoreRepositoryImp extends StoreRepository {
   //       'Content-Type': 'application/json',
   //       'Authorization': 'Bearer $token'
   //     };
-  //     http.Response response = await http.get(
+  //     http.Response response = await _api.get(
   //         Uri.parse('$endPoint/$storeId/campaign-ranking'),
   //         headers: headers);
 
@@ -313,7 +336,7 @@ class StoreRepositoryImp extends StoreRepository {
   //       'state': true
   //     };
 
-  //     http.Response response = await http.post(
+  //     http.Response response = await _api.post(
   //         Uri.parse('$endPoint/$storeId/bonuses'),
   //         headers: headers,
   //         body: jsonEncode(body));
@@ -341,7 +364,7 @@ class StoreRepositoryImp extends StoreRepository {
   //       'Content-Type': 'application/json',
   //       'Authorization': 'Bearer $token'
   //     };
-  //     http.Response response = await http.get(
+  //     http.Response response = await _api.get(
   //         Uri.parse(
   //             '$endPoint/$storeId/campaign-details/$campaignVoucherDetailId'),
   //         headers: headers);
@@ -403,7 +426,7 @@ class StoreRepositoryImp extends StoreRepository {
       });
 
       //gửi request
-      var streamedResponse = await request.send();
+      var streamedResponse = await _api.send(request);
       var response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
@@ -432,7 +455,7 @@ class StoreRepositoryImp extends StoreRepository {
   //       'Content-Type': 'application/json',
   //       'Authorization': 'Bearer $token'
   //     };
-  //     http.Response response = await http.get(
+  //     http.Response response = await _api.get(
   //         Uri.parse('$endPoint/$storeId/student-ranking'),
   //         headers: headers);
 

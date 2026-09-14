@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:swallet_mobile/data/datasource/api_client.dart';
+import 'package:swallet_mobile/data/datasource/api_exceptions.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
@@ -12,6 +14,11 @@ import 'package:swallet_mobile/data/interface_repositories/student_features/camp
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
 class CampaignRepositoryImp implements CampaignRepository {
+  /// Cho phep test tiem client gia; app dung client dung chung.
+  CampaignRepositoryImp({ApiClient? api}) : _api = api ?? ApiClient.instance;
+
+  final ApiClient _api;
+
   String endPoint = '${baseURL}Campaign';
   String sort = 'Id%2Cdesc';
   int page = 1;
@@ -46,7 +53,7 @@ class CampaignRepositoryImp implements CampaignRepository {
       ).replace(queryParameters: queryParams);
 
       // Gửi yêu cầu HTTP GET
-      final response = await http.get(uri, headers: headers);
+      final response = await _api.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         // Giả định response là JSON dù header accept là text/plain
@@ -59,6 +66,8 @@ class CampaignRepositoryImp implements CampaignRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -73,7 +82,7 @@ class CampaignRepositoryImp implements CampaignRepository {
         'Authorization': 'Bearer $token',
       };
 
-      http.Response response = await http.get(
+      http.Response response = await _api.get(
         Uri.parse('$endPoint/$id'),
         headers: headers,
       );
@@ -87,6 +96,8 @@ class CampaignRepositoryImp implements CampaignRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -124,7 +135,7 @@ class CampaignRepositoryImp implements CampaignRepository {
       ).replace(queryParameters: queryParams);
 
       // Gửi yêu cầu HTTP GET
-      final response = await http.get(uri, headers: headers);
+      final response = await _api.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
@@ -136,6 +147,8 @@ class CampaignRepositoryImp implements CampaignRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -167,7 +180,7 @@ class CampaignRepositoryImp implements CampaignRepository {
       ).replace(queryParameters: queryParams);
 
       // Gửi yêu cầu HTTP GET
-      final response = await http.get(uri, headers: headers);
+      final response = await _api.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final result =
@@ -183,6 +196,8 @@ class CampaignRepositoryImp implements CampaignRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -208,7 +223,7 @@ class CampaignRepositoryImp implements CampaignRepository {
       ).replace(queryParameters: queryParams);
 
       // Gửi yêu cầu HTTP GET
-      final response = await http.get(uri, headers: headers);
+      final response = await _api.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final result = jsonDecode(utf8.decode(response.bodyBytes));
@@ -218,6 +233,8 @@ class CampaignRepositoryImp implements CampaignRepository {
       } else {
         return null;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -245,7 +262,7 @@ class CampaignRepositoryImp implements CampaignRepository {
         'cost': cost,
         'quantity': quantity,
       };
-      final response = await http.post(
+      final response = await _api.post(
         Uri.parse('${baseURL}Activity/RedeemVoucher'),
         body: jsonEncode(body),
         headers: headers,
@@ -256,6 +273,8 @@ class CampaignRepositoryImp implements CampaignRepository {
       } else {
         return response.body;
       }
+    } on AppException {
+      rethrow; // loi da co thong diep cho nguoi dung
     } catch (e) {
       throw Exception(e.toString());
     }

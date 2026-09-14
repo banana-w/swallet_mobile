@@ -1,16 +1,21 @@
-import 'package:http/http.dart' as http;
+import 'package:swallet_mobile/data/datasource/api_client.dart';
 import 'dart:convert';
 
 import 'package:swallet_mobile/data/interface_repositories/student_features/check_in_repository.dart';
 
 class CheckInRepositoryImpl implements CheckInRepository {
+  /// Cho phep test tiem client gia; app dung client dung chung.
+  CheckInRepositoryImpl({ApiClient? api}) : _api = api ?? ApiClient.public;
+
+  final ApiClient _api;
+
   final String baseUrl =
       "https://swallet-api-2025-capstoneproject.onrender.com/api/CheckIn"; // Cập nhật baseUrl
 
   @override
   Future<CheckInData> getCheckInData(String studentId) async {
     try {
-      final response = await http.get(
+      final response = await _api.get(
         Uri.parse(
           '$baseUrl/get-check-in-data/$studentId',
         ), // Gọi endpoint GET /api/check-in/{studentId}
@@ -37,7 +42,7 @@ class CheckInRepositoryImpl implements CheckInRepository {
   @override
   Future<CheckInData> checkIn(String studentId) async {
     try {
-      final response = await http.post(
+      final response = await _api.post(
         Uri.parse(
           '$baseUrl/check-in/$studentId',
         ), // Gọi endpoint POST /api/check-in/{studentId}
