@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:swallet_mobile/data/models/api_response.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/campaign_repository.dart';
@@ -11,46 +11,44 @@ part 'campaign_state.dart';
 class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
   final CampaignRepository campaignRepository;
 
-  CampaignBloc({required this.campaignRepository}) : super(CampaignInitial()) {
-    scrollController.addListener(() {
-      add(LoadMoreCampaigns());
-    });
+  CampaignBloc({required this.campaignRepository})
+    : super(const CampaignInitial()) {
     on<LoadCampaigns>(_onLoadCampaigns);
     on<LoadMoreCampaigns>(_onLoadMoreCampaigns);
     on<LoadCampaignById>(_onLoadCampaignById);
-    on<RedeemCampaignVoucher>(_onRedeemCampaignVoucher);
   }
 
-  ScrollController scrollController = ScrollController();
-  var isLoadingMore = false;
+  static const String _loadError = 'Không tải được dữ liệu chiến dịch.';
 
-  int page = 1;
+  int _page = 1;
+  int _pageSize = 20;
+  bool _isLoadingMore = false;
 
   //Function--------
   Future<void> _onLoadCampaigns(
     LoadCampaigns event,
     Emitter<CampaignState> emit,
   ) async {
-    emit(CampaignLoading());
+    emit(const CampaignLoading());
+    // Mọi lần tải lại đều bắt đầu lại từ đầu, nếu không trang kế tiếp sẽ lệch.
+    _page = event.page;
+    _pageSize = event.limit;
+    _isLoadingMore = false;
     try {
-      var apiResponse = await campaignRepository.fecthCampaigns(
+      final apiResponse = await campaignRepository.fecthCampaigns(
         searchName: null,
         page: event.page,
         size: event.limit,
       );
       if (apiResponse == null) {
-        return emit(CampaignsFailed(error: 'Không tải được dữ liệu chiến dịch.'));
+        return emit(const CampaignsFailed(error: _loadError));
       }
-      if (apiResponse.totalPages < apiResponse.size) {
-        emit(
-          CampaignsLoaded(
-            campaigns: apiResponse.result.toList(),
-            hasReachMax: true,
-          ),
-        );
-      } else {
-        emit(CampaignsLoaded(campaigns: apiResponse.result.toList()));
-      }
+      emit(
+        CampaignsLoaded(
+          campaigns: apiResponse.result,
+          hasReachMax: _hasReachedMax(apiResponse),
+        ),
+      );
     } catch (e) {
       emit(CampaignsFailed(error: e.toString()));
     }
@@ -60,88 +58,55 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
     LoadMoreCampaigns event,
     Emitter<CampaignState> emit,
   ) async {
+    final current = state;
+    if (current is! CampaignsLoaded || current.hasReachMax || _isLoadingMore) {
+      return;
+    }
+    _isLoadingMore = true;
     try {
-      if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
-        if ((state as CampaignsLoaded).hasReachMax) {
-          emit(
-            CampaignsLoaded(
-              campaigns: List.from((state as CampaignsLoaded).campaigns),
-              hasReachMax: true,
-            ),
-          );
-        } else {
-          isLoadingMore = true;
-          page++;
-          var apiResponse = await campaignRepository.fecthCampaigns(
-            page: page,
-            size: event.limit,
-          );
-          if (apiResponse == null) {
-            return emit(CampaignsFailed(error: 'Không tải được dữ liệu chiến dịch.'));
-          }
-          if (apiResponse.result.isEmpty) {
-            emit(
-              CampaignsLoaded(
-                campaigns: List.from((state as CampaignsLoaded).campaigns)
-                  ..addAll(apiResponse.result),
-                hasReachMax: true,
-              ),
-            );
-            page = 1;
-          } else {
-            emit(
-              CampaignsLoaded(
-                campaigns: List.from((state as CampaignsLoaded).campaigns)
-                  ..addAll(apiResponse.result),
-              ),
-            );
-          }
-        }
+      final apiResponse = await campaignRepository.fecthCampaigns(
+        page: _page + 1,
+        size: _pageSize,
+      );
+      // Trang kế tiếp lỗi thì giữ nguyên danh sách đang có, chỉ dừng tải thêm.
+      if (apiResponse == null) {
+        return emit(
+          CampaignsLoaded(campaigns: current.campaigns, hasReachMax: true),
+        );
       }
-    } catch (e) {
-      emit(CampaignsFailed(error: e.toString()));
+      _page++;
+      emit(
+        CampaignsLoaded(
+          campaigns: [...current.campaigns, ...apiResponse.result],
+          hasReachMax: _hasReachedMax(apiResponse),
+        ),
+      );
+    } catch (_) {
+      emit(CampaignsLoaded(campaigns: current.campaigns, hasReachMax: true));
+    } finally {
+      _isLoadingMore = false;
     }
   }
+
+  bool _hasReachedMax(ApiResponse<List<CampaignModel>> response) =>
+      response.result.isEmpty ||
+      (response.totalPages > 0 && _page >= response.totalPages);
 
   Future<void> _onLoadCampaignById(
     LoadCampaignById event,
     Emitter<CampaignState> emit,
   ) async {
-    emit(CampaignLoading());
+    emit(const CampaignLoading());
     try {
-      var campaignModel = await campaignRepository.fecthCampaignById(
+      final campaignModel = await campaignRepository.fecthCampaignById(
         id: event.id,
       );
       if (campaignModel == null) {
-        return emit(CampaignsFailed(error: 'Không tải được dữ liệu chiến dịch.'));
+        return emit(const CampaignsFailed(error: _loadError));
       }
       emit(CampaignByIdLoaded(campaignDetailModel: campaignModel));
     } catch (e) {
       emit(CampaignsFailed(error: e.toString()));
-    }
-  }
-
-  Future<void> _onRedeemCampaignVoucher(
-    RedeemCampaignVoucher event,
-    Emitter<CampaignState> emit,
-  ) async {
-    emit(RedeemVoucherLoading());
-    try {
-      var result = await campaignRepository.redeemCampaignVoucher(
-        campaignId: event.campaignId,
-        studentId: event.studentId,
-        voucherId: event.voucherId,
-        cost: event.cost,
-        quantity: event.quantity,
-      );
-      if (result != null) {
-        emit(RedeemVoucherFailed(error: result));
-      } else {
-        emit(RedeemVoucherSuccess(text: 'Thành công'));
-      }
-    } catch (e) {
-      emit(RedeemVoucherFailed(error: 'Giao dịch thất bại!'));
     }
   }
 }

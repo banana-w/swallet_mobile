@@ -27,11 +27,6 @@ final class CampaignsLoaded extends CampaignState {
   List<Object?> get props => [campaigns, hasReachMax];
 }
 
-final class CampaignPaging extends CampaignState {
-  @override
-  List<Object?> get props => [];
-}
-
 final class CampaignsFailed extends CampaignState {
   final String error;
 
@@ -47,28 +42,4 @@ final class CampaignByIdLoaded extends CampaignState {
 
   @override
   List<Object?> get props => [campaignDetailModel];
-}
-
-
-final class RedeemVoucherLoading extends CampaignState {
-  @override
-  List<Object?> get props => [];
-}
-
-final class RedeemVoucherSuccess extends CampaignState {
-  final String text;
-
-  const RedeemVoucherSuccess({required this.text});
-
-  @override
-  List<Object?> get props => [text];
-}
-
-final class RedeemVoucherFailed extends CampaignState {
-  final String error;
-
-  const RedeemVoucherFailed({required this.error});
-
-  @override
-  List<Object?> get props => [error];
 }

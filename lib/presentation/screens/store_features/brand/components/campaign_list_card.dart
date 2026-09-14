@@ -23,6 +23,8 @@ class CampaignListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+
     return Stack(
       children: [
         Container(
@@ -63,6 +65,9 @@ class CampaignListCard extends StatelessWidget {
                     child: Image.network(
                       campaignModel.image,
                       fit: BoxFit.fill,
+                      // Ảnh chỉ hiển thị ở 120*fem nên không cần giải mã ảnh
+                      // gốc: tiết kiệm phần lớn bộ nhớ khi cuộn danh sách.
+                      cacheWidth: (120 * fem * devicePixelRatio).round(),
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) {
                           return child;
