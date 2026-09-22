@@ -124,22 +124,37 @@ class _FormBody3State extends State<FormBody3> {
     );
   }
 
-  void _submitForm(BuildContext context, genderController) async {
+  Future<void> _submitForm(
+    BuildContext context,
+    TextEditingController genderController,
+  ) async {
+    final gender = int.parse(genderController.text.trim());
+    final dateOfBirth = widget.dobController.text.trim();
     final authenModel = await AuthenLocalDataSource.getAuthen();
+    if (!mounted) return;
+
     if (authenModel == null) {
       final createAuthenModel = await AuthenLocalDataSource.getCreateAuthen();
-      createAuthenModel!.gender = int.parse(genderController.text.trim());
-      createAuthenModel.dateofBirth = widget.dobController.text.trim();
-      String createAuthenString = jsonEncode(createAuthenModel);
-      AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
-      Navigator.pushNamed(context, SignUp3Screen.routeName);
+      // Trước đây dùng `!` trên dữ liệu đọc từ bộ nhớ cục bộ.
+      if (createAuthenModel == null) return;
+      createAuthenModel.gender = gender;
+      createAuthenModel.dateofBirth = dateOfBirth;
+      // Lưu là async, trước đây không await nên có thể sang bước sau trước
+      // khi dữ liệu kịp ghi.
+      await AuthenLocalDataSource.saveCreateAuthen(
+        jsonEncode(createAuthenModel),
+      );
     } else {
       final verifyAuthenModel = await AuthenLocalDataSource.getVerifyAuthen();
-      verifyAuthenModel!.gender = int.parse(genderController.text.trim());
-      verifyAuthenModel.dateofBirth = widget.dobController.text.trim();
-      String verifyAuthenString = jsonEncode(verifyAuthenModel);
-      AuthenLocalDataSource.saveVerifyAuthen(verifyAuthenString);
-      Navigator.pushNamed(context, SignUp3Screen.routeName);
+      if (verifyAuthenModel == null) return;
+      verifyAuthenModel.gender = gender;
+      verifyAuthenModel.dateofBirth = dateOfBirth;
+      await AuthenLocalDataSource.saveVerifyAuthen(
+        jsonEncode(verifyAuthenModel),
+      );
     }
+
+    if (!mounted) return;
+    Navigator.pushNamed(context, SignUp3Screen.routeName);
   }
 }

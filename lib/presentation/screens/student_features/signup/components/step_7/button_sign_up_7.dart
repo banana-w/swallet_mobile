@@ -11,10 +11,17 @@ class ButtonSignUp7 extends StatelessWidget {
     super.key,
     required this.widget,
     required this.onPressed,
+    this.isLoading = false,
   });
 
   final FormBody7 widget;
-  final VoidCallback onPressed;
+
+  /// `null` khi đang tạo tài khoản — nút tự khoá.
+  final VoidCallback? onPressed;
+
+  /// Đang gọi API tạo tài khoản (ngoài vòng xoay của bước kiểm tra số điện
+  /// thoại do [ValidationCubit] quản lý).
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +36,8 @@ class ButtonSignUp7 extends StatelessWidget {
         ),
         child: BlocBuilder<ValidationCubit, ValidationState>(
           builder: (context, state) {
-            if (state is ValidationInProcess) {
-              return Center(
+            if (isLoading || state is ValidationInProcess) {
+              return const Center(
                 child: CircularProgressIndicator(color: Colors.white),
               );
             }

@@ -223,14 +223,9 @@ class _FormBody1State extends State<FormBody1> {
               return ButtonSignUp1(
                 widget: widget,
                 onPress: () {
-                  if (state is CheckEmailFailed) {
-                    if (_formKey.currentState!.validate()) {
-                      _submitForm(context, emailController, nameController);
-                    }
-                  } else {
-                    if (_formKey.currentState!.validate()) {
-                      _submitForm(context, emailController, nameController);
-                    }
+                  // Hai nhánh if/else cũ chạy đúng cùng một đoạn lệnh.
+                  if (_formKey.currentState!.validate()) {
+                    _submitForm(context, emailController, nameController);
                   }
                 },
               );
@@ -242,38 +237,41 @@ class _FormBody1State extends State<FormBody1> {
   }
 }
 
-void _submitForm(BuildContext context, emailController, nameController) async {
+Future<void> _submitForm(
+  BuildContext context,
+  TextEditingController emailController,
+  TextEditingController nameController,
+) async {
   final authenModel = await AuthenLocalDataSource.getAuthen();
+  if (!context.mounted) return;
+
   if (authenModel == null) {
-    context.read<ValidationCubit>().validateEmail(emailController.text).then((
-      value,
-    ) async {
-      if (value == '') {
-        final createAuthenModel = await AuthenLocalDataSource.getCreateAuthen();
-        createAuthenModel!.email = emailController.text.trim();
-        createAuthenModel.fullName = nameController.text.trim();
-        String createAuthenString = jsonEncode(createAuthenModel);
-        AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
-        Navigator.pushNamed(
-          context,
-          SignUp2Screen.routeName,
-          arguments: SignUp1Screen.defaultRegister,
-        );
-      } else {
-        return null;
-      }
-    });
+    final validationError = await context.read<ValidationCubit>().validateEmail(
+      emailController.text,
+    );
+    if (!context.mounted || validationError != '') return;
+
+    final createAuthenModel = await AuthenLocalDataSource.getCreateAuthen();
+    // Trước đây dùng `!`: mất dữ liệu nháp là app ném lỗi null ngay tại đây.
+    if (createAuthenModel == null) return;
+    createAuthenModel.email = emailController.text.trim();
+    createAuthenModel.fullName = nameController.text.trim();
+    // Lời gọi lưu là async nhưng trước đây không await: màn kế tiếp có thể
+    // đọc phải bản nháp cũ.
+    await AuthenLocalDataSource.saveCreateAuthen(jsonEncode(createAuthenModel));
+    if (!context.mounted) return;
   } else {
-    VerifyAuthenModel verifyAuthenModel = VerifyAuthenModel(
+    final verifyAuthenModel = VerifyAuthenModel(
       email: emailController.text.trim(),
       fullName: nameController.text.trim(),
     );
-    String verifyAuthenString = jsonEncode(verifyAuthenModel);
-    AuthenLocalDataSource.saveVerifyAuthen(verifyAuthenString);
-    Navigator.pushNamed(
-      context,
-      SignUp2Screen.routeName,
-      arguments: SignUp1Screen.defaultRegister,
-    );
+    await AuthenLocalDataSource.saveVerifyAuthen(jsonEncode(verifyAuthenModel));
+    if (!context.mounted) return;
   }
+
+  Navigator.pushNamed(
+    context,
+    SignUp2Screen.routeName,
+    arguments: SignUp1Screen.defaultRegister,
+  );
 }

@@ -96,21 +96,27 @@ class _FormBody2State extends State<FormBody2> {
   }
 }
 
-void _submitForm(BuildContext context, campusController) async {
+Future<void> _submitForm(
+  BuildContext context,
+  TextEditingController campusController,
+) async {
+  final campusId = campusController.text;
   final authenModel = await AuthenLocalDataSource.getAuthen();
+
   if (authenModel == null) {
     final createAuthenModel = await AuthenLocalDataSource.getCreateAuthen();
-    createAuthenModel!.campusId = campusController.text;
-    String createAuthenString = jsonEncode(createAuthenModel);
-    AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
-    if (context.mounted) {
-      Navigator.pushNamed(context, SignUp4Screen.routeName);
-    }
+    // Trước đây dùng `!` trên dữ liệu đọc từ bộ nhớ cục bộ.
+    if (createAuthenModel == null) return;
+    createAuthenModel.campusId = campusId;
+    // Lưu là async, trước đây không await.
+    await AuthenLocalDataSource.saveCreateAuthen(jsonEncode(createAuthenModel));
   } else {
     final verifyAuthenModel = await AuthenLocalDataSource.getVerifyAuthen();
-    verifyAuthenModel!.campusId = campusController.text;
-    String verifyString = jsonEncode(verifyAuthenModel);
-    AuthenLocalDataSource.saveVerifyAuthen(verifyString);
-    Navigator.pushNamed(context, SignUp4Screen.routeName);
+    if (verifyAuthenModel == null) return;
+    verifyAuthenModel.campusId = campusId;
+    await AuthenLocalDataSource.saveVerifyAuthen(jsonEncode(verifyAuthenModel));
   }
+
+  if (!context.mounted) return;
+  Navigator.pushNamed(context, SignUp4Screen.routeName);
 }

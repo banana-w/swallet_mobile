@@ -4,7 +4,6 @@ import 'package:swallet_mobile/data/datasource/api_exceptions.dart';
 import 'package:swallet_mobile/data/firebase/notification_service.dart';
 import 'package:swallet_mobile/domain/entities/account_role.dart';
 import 'package:swallet_mobile/data/models/student_features/create_model/create_authen_model.dart';
-import 'package:swallet_mobile/data/models/student_features/verify_authen_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/authentication_repository.dart';
 
 part 'authentication_event.dart';
@@ -18,8 +17,8 @@ class AuthenticationBloc
     on<StartAuthen>(_onStartAuthen);
     on<LoginAccount>(_onLoginAccount);
     on<RegisterAccount>(_onRegisterAccount);
-    // on<VerifyAccount>(_onVerifyAccount);
   }
+
   Future<void> _onStartAuthen(
     StartAuthen event,
     Emitter<AuthenticationState> emit,
@@ -37,6 +36,10 @@ class AuthenticationBloc
     LoginAccount event,
     Emitter<AuthenticationState> emit,
   ) async {
+    // Nút đăng nhập chỉ đổi sang vòng xoay chứ không bị khoá, nên người dùng
+    // bấm liên tục là bắn nhiều request đăng nhập song song, mỗi request lại
+    // kéo theo một lần điều hướng và một lần đăng ký topic thông báo.
+    if (state is AuthenticationInProcess) return;
     emit(AuthenticationInProcess());
     try {
       var authenModel = await authenticationRepository.loginWithAccount(
@@ -96,13 +99,15 @@ class AuthenticationBloc
     RegisterAccount event,
     Emitter<AuthenticationState> emit,
   ) async {
+    // Tạo tài khoản là thao tác không hoàn tác được: chặn bấm nhiều lần.
+    if (state is AuthenticationInProcess) return;
     emit(AuthenticationInProcess());
     try {
       var registerCheck = await authenticationRepository.registerAccount(
         event.createAuthenModel,
       );
       if (registerCheck) {
-        emit(AuthenticationSuccess());
+        emit(RegistrationSuccess());
       } else {
         emit(AuthenticationFailed(error: 'Đăng ký thất bại!'));
       }
@@ -112,23 +117,4 @@ class AuthenticationBloc
       emit(AuthenticationFailed(error: e.toString()));
     }
   }
-
-  // Future<void> _onVerifyAccount(
-  //   VerifyAccount event,
-  //   Emitter<AuthenticationState> emit,
-  // ) async {
-  //   emit(AuthenticationInProcess());
-  //   try {
-  //     var verifyCheck = await authenticationRepository.verifyAccount(
-  //       event.verifyAuthenModel,
-  //     );
-  //     if (verifyCheck) {
-  //       emit(AuthenticationSuccess());
-  //     } else {
-  //       emit(AuthenticationFailed(error: 'Đăng ký thất bại!'));
-  //     }
-  //   } catch (e) {
-  //     emit(AuthenticationFailed(error: e.toString()));
-  //   }
-  // }
 }

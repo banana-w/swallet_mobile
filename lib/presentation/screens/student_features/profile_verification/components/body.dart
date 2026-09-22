@@ -12,407 +12,187 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
-    double baseHeight = 812;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
-    return CustomScrollView(
-      slivers: [
-        SliverList(
-          delegate: SliverChildListDelegate([
-            Column(
+    final size = MediaQuery.sizeOf(context);
+    final fem = size.width / 375;
+    final hem = size.height / 812;
+    final ffem = fem * 0.97;
+
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(height: 20 * hem),
+          Text(
+            'Thông tin xác minh',
+            style: GoogleFonts.openSans(
+              textStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 18 * ffem,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          SizedBox(height: 20 * hem),
+          Container(
+            width: size.width,
+            margin: EdgeInsets.symmetric(horizontal: 15 * fem),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.white,
+            ),
+            child: Column(
               children: [
-                SizedBox(height: 20 * hem),
+                const SizedBox(height: 20),
+                _ReadOnlyField(
+                  fem: fem,
+                  hem: hem,
+                  ffem: ffem,
+                  label: 'MÃ SỐ SINH VIÊN',
+                  value: studentModel.code,
+                ),
+                const SizedBox(height: 20),
+                _ReadOnlyField(
+                  fem: fem,
+                  hem: hem,
+                  ffem: ffem,
+                  label: 'EMAIL SINH VIÊN',
+                  value: studentModel.studentEmail,
+                ),
+                const SizedBox(height: 20),
                 Text(
-                  'Thông tin xác minh',
+                  'MẶT TRƯỚC THẺ SINH VIÊN',
                   style: GoogleFonts.openSans(
                     textStyle: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18 * ffem,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 13 * ffem,
+                      fontWeight: FontWeight.bold,
+                      color: kPrimaryColor,
                     ),
                   ),
                 ),
-                SizedBox(height: 20 * hem),
-                Column(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.only(left: 15 * fem, right: 15 * fem),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.white,
+                SizedBox(height: 10 * fem),
+                Container(
+                  width: 300 * fem,
+                  height: 300 * fem,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: klightPrimaryColor),
+                    borderRadius: BorderRadius.circular(15 * fem),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0x0c000000),
+                        offset: Offset(0 * fem, 10 * fem),
+                        blurRadius: 5 * fem,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 20),
-                          SizedBox(
-                            width: 272 * fem,
-                            // color: Colors.red,
-                            child: TextFormField(
-                              readOnly: true,
-                              initialValue: studentModel.code,
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15 * ffem,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              decoration: InputDecoration(
-                                labelText: 'MÃ SỐ SINH VIÊN',
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.always,
-                                labelStyle: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
-                                    color: kPrimaryColor,
-                                    fontSize: 15 * ffem,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                                hintStyle: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
-                                    color: kLowTextColor,
-                                    fontSize: 15 * ffem,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 26 * fem,
-                                  vertical: 10 * hem,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(28 * fem),
-                                  borderSide: BorderSide(
-                                    width: 2,
-                                    color: const Color.fromARGB(
-                                      255,
-                                      220,
-                                      220,
-                                      220,
-                                    ),
-                                  ),
-                                  gapPadding: 10,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(28 * fem),
-                                  borderSide: BorderSide(
-                                    width: 2,
-                                    color: const Color.fromARGB(
-                                      255,
-                                      220,
-                                      220,
-                                      220,
-                                    ),
-                                  ),
-                                  gapPadding: 10,
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(28 * fem),
-                                  borderSide: BorderSide(
-                                    width: 2,
-                                    color: const Color.fromARGB(
-                                      255,
-                                      220,
-                                      220,
-                                      220,
-                                    ),
-                                  ),
-                                  gapPadding: 10,
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          SizedBox(height: 20), // Khoảng cách giữa các field
-                          SizedBox(
-                            width: 272 * fem,
-                            child: TextFormField(
-                              readOnly: true,
-                              initialValue: studentModel.studentEmail,
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15 * ffem,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              decoration: InputDecoration(
-                                labelText: 'EMAIL SINH VIÊN',
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.always,
-                                labelStyle: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
-                                    color: kPrimaryColor,
-                                    fontSize: 15 * ffem,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                                hintStyle: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
-                                    color: kLowTextColor,
-                                    fontSize: 15 * ffem,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 26 * fem,
-                                  vertical: 10 * hem,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(28 * fem),
-                                  borderSide: BorderSide(
-                                    width: 2,
-                                    color: const Color.fromARGB(
-                                      255,
-                                      220,
-                                      220,
-                                      220,
-                                    ),
-                                  ),
-                                  gapPadding: 10,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(28 * fem),
-                                  borderSide: BorderSide(
-                                    width: 2,
-                                    color: const Color.fromARGB(
-                                      255,
-                                      220,
-                                      220,
-                                      220,
-                                    ),
-                                  ),
-                                  gapPadding: 10,
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(28 * fem),
-                                  borderSide: BorderSide(
-                                    width: 2,
-                                    color: const Color.fromARGB(
-                                      255,
-                                      220,
-                                      220,
-                                      220,
-                                    ),
-                                  ),
-                                  gapPadding: 10,
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          SizedBox(height: 20),
-                          Text(
-                            'MẶT TRƯỚC THẺ SINH VIÊN',
-                            style: GoogleFonts.openSans(
-                              textStyle: TextStyle(
-                                fontSize: 13 * ffem,
-                                fontWeight: FontWeight.bold,
-                                color: kPrimaryColor,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10 * fem),
-                          Container(
-                            width: 300 * fem,
-                            height: 300 * fem,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: klightPrimaryColor),
-                              borderRadius: BorderRadius.circular(15 * fem),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0x0c000000),
-                                  offset: Offset(0 * fem, 10 * fem),
-                                  blurRadius: 5 * fem,
-                                ),
-                              ],
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: SizedBox(
-                                height: 250,
-                                width: double.infinity,
-                                child: Image.network(
-                                  studentModel.studentCardFront,
-                                  fit: BoxFit.fill,
-                                  loadingBuilder: (
-                                    context,
-                                    child,
-                                    loadingProgress,
-                                  ) {
-                                    if (loadingProgress == null) {
-                                      return child;
-                                    }
-                                    return ShimmerWidget.rectangular(
-                                      height: 250 * hem,
-                                    );
-                                  },
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Image.asset(
-                                      'assets/images/ava_signup.png',
-                                      width: 100 * fem,
-                                      height: 100 * hem,
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          // Text(
-                          //   'MẶT SAU',
-                          //   style: GoogleFonts.openSans(
-                          //     textStyle: TextStyle(
-                          //       fontSize: 13 * ffem,
-                          //       fontWeight: FontWeight.bold,
-                          //       color: kPrimaryColor,
-                          //     ),
-                          //   ),
-                          // ),
-                          // SizedBox(height: 10 * fem),
-                          // Container(
-                          //   width: 300 * fem,
-                          //   height: 300 * fem,
-                          //   decoration: BoxDecoration(
-                          //     border: Border.all(color: klightPrimaryColor),
-                          //     borderRadius: BorderRadius.circular(15 * fem),
-                          //     color: Colors.white,
-                          //     boxShadow: [
-                          //       BoxShadow(
-                          //         color: Color(0x0c000000),
-                          //         offset: Offset(0 * fem, 10 * fem),
-                          //         blurRadius: 5 * fem,
-                          //       ),
-                          //     ],
-                          //   ),
-                          //   child: ClipRRect(
-                          //     borderRadius: BorderRadius.circular(10),
-                          //     child: Container(
-                          //       height: 250,
-                          //       width: double.infinity,
-                          //       child: Image.network(
-                          //         '${studentModel.studentCardBack}',
-                          //         fit: BoxFit.fill,
-                          //         loadingBuilder: (
-                          //           context,
-                          //           child,
-                          //           loadingProgress,
-                          //         ) {
-                          //           if (loadingProgress == null) {
-                          //             return child;
-                          //           }
-                          //           return ShimmerWidget.rectangular(
-                          //             height: 250 * hem,
-                          //           );
-                          //         },
-                          //         errorBuilder: (context, error, stackTrace) {
-                          //           return Image.asset(
-                          //             'assets/images/ava_signup.png',
-                          //             width: 100 * fem,
-                          //             height: 100 * hem,
-                          //           );
-                          //         },
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
-                          SizedBox(height: 20),
-                        ],
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: SizedBox(
+                      height: 250,
+                      width: double.infinity,
+                      child: Image.network(
+                        studentModel.studentCardFront,
+                        fit: BoxFit.fill,
+                        // Ảnh thẻ sinh viên là ảnh chụp từ máy, thường vài
+                        // nghìn pixel, trong khi khung chỉ rộng 300*fem.
+                        cacheWidth:
+                            (300 * fem * MediaQuery.devicePixelRatioOf(context))
+                                .round(),
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+                          return ShimmerWidget.rectangular(height: 250 * hem);
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                            'assets/images/ava_signup.png',
+                            width: 100 * fem,
+                            height: 100 * hem,
+                          );
+                        },
                       ),
                     ),
-                    SizedBox(height: 10),
-                  ],
+                  ),
                 ),
+                const SizedBox(height: 20),
               ],
             ),
-          ]),
-        ),
-      ],
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
     );
   }
+}
 
-  Widget checkVerification(
-    StudentModel studentModel,
-    double fem,
-    double hem,
-    double ffem,
-  ) {
-    if (studentModel.status && studentModel.state == 1) {
-      return Container(
-        padding: EdgeInsets.only(right: 5 * fem, left: 5 * fem),
-        height: 30 * hem,
-        width: 100 * fem,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: Color(0xffb7eb8f)),
-          color: Color(0xfff6ffed),
-        ),
-        child: Center(
-          child: Text(
-            'Đã xác minh',
-            style: GoogleFonts.openSans(
-              textStyle: TextStyle(
-                fontSize: 13 * ffem,
-                height: 1.3625 * ffem / fem,
-                fontWeight: FontWeight.w600,
-                color: kPrimaryColor,
-              ),
-            ),
+/// Ô thông tin chỉ đọc của màn xác minh.
+///
+/// Hai ô mã số và email trước đây chép nguyên một khối `InputDecoration` dài
+/// 70 dòng — ba viền giống hệt nhau, khác mỗi nhãn và giá trị.
+class _ReadOnlyField extends StatelessWidget {
+  const _ReadOnlyField({
+    required this.fem,
+    required this.hem,
+    required this.ffem,
+    required this.label,
+    required this.value,
+  });
+
+  final double fem;
+  final double hem;
+  final double ffem;
+  final String label;
+  final String? value;
+
+  @override
+  Widget build(BuildContext context) {
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(28 * fem),
+      borderSide: const BorderSide(
+        width: 2,
+        color: Color.fromARGB(255, 220, 220, 220),
+      ),
+      gapPadding: 10,
+    );
+
+    return SizedBox(
+      width: 272 * fem,
+      child: TextFormField(
+        readOnly: true,
+        initialValue: value,
+        style: GoogleFonts.openSans(
+          textStyle: TextStyle(
+            color: Colors.black,
+            fontSize: 15 * ffem,
+            fontWeight: FontWeight.bold,
           ),
         ),
-      );
-    } else if (studentModel.status && studentModel.state == 2) {
-      return Container(
-        padding: EdgeInsets.only(right: 5 * fem, left: 5 * fem),
-        height: 30 * hem,
-        width: 120 * fem,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: Color(0xffffe58f)),
-          color: kbgYellow,
-        ),
-        child: Center(
-          child: Text(
-            'Đang chờ duyệt',
-            style: GoogleFonts.openSans(
-              textStyle: TextStyle(
-                fontSize: 13 * ffem,
-                height: 1.3625 * ffem / fem,
-                fontWeight: FontWeight.w600,
-                color: kYellow,
-              ),
+        decoration: InputDecoration(
+          labelText: label,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          labelStyle: GoogleFonts.openSans(
+            textStyle: TextStyle(
+              color: kPrimaryColor,
+              fontSize: 15 * ffem,
+              fontWeight: FontWeight.w900,
             ),
           ),
-        ),
-      );
-    } else {
-      return Container(
-        padding: EdgeInsets.only(right: 5 * fem, left: 5 * fem),
-        height: 30 * hem,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: Color(0xffffe58f)),
-          color: kbgYellow,
-        ),
-        child: Center(
-          child: Text(
-            'Xác minh thất bại',
-            style: GoogleFonts.openSans(
-              textStyle: TextStyle(
-                fontSize: 13 * ffem,
-                height: 1.3625 * ffem / fem,
-                fontWeight: FontWeight.w600,
-                color: kYellow,
-              ),
+          hintStyle: GoogleFonts.openSans(
+            textStyle: TextStyle(
+              color: kLowTextColor,
+              fontSize: 15 * ffem,
+              fontWeight: FontWeight.w700,
             ),
           ),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 26 * fem,
+            vertical: 10 * hem,
+          ),
+          enabledBorder: border,
+          focusedBorder: border,
+          errorBorder: border,
         ),
-      );
-    }
+      ),
+    );
   }
 }
