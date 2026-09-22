@@ -1,22 +1,17 @@
-import 'dart:convert';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
-import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
+import 'package:swallet_mobile/data/interface_repositories/student_features/check_in_repository.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/wheel_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
-import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
-import 'package:swallet_mobile/presentation/screens/store_features/qr_view/components/qr_scanner_overlay.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/check_in/check_in_failed.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/check_in/check_in_success.dart';
-
-const String baseUrl =
-    "https://swallet-api-2025-capstoneproject.onrender.com/api/";
+import 'package:swallet_mobile/presentation/screens/student_features/qr_view/components/qr_scanner_overlay.dart';
+import 'package:swallet_mobile/presentation/widgets/internet_listener.dart';
+import 'package:swallet_mobile/presentation/widgets/scanner_app_bar.dart';
 
 class CheckInScreen extends StatefulWidget {
   static const String routeName = '/check-in';
@@ -25,25 +20,26 @@ class CheckInScreen extends StatefulWidget {
 
   static Route route() {
     return PageRouteBuilder(
-      pageBuilder: (_, _, _) => CheckInScreen(),
-      transitionDuration: Duration(milliseconds: 400),
+      pageBuilder: (_, _, _) => const CheckInScreen(),
+      transitionDuration: const Duration(milliseconds: 400),
       transitionsBuilder: (_, animation, _, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
-        var tween = Tween(begin: begin, end: end);
-        var offsetAnimation = animation.drive(tween);
-        return SlideTransition(position: offsetAnimation, child: child);
+        final tween = Tween(begin: begin, end: end);
+        return SlideTransition(position: animation.drive(tween), child: child);
       },
       settings: const RouteSettings(name: routeName),
     );
   }
 
   @override
-  _CheckInScreenState createState() => _CheckInScreenState();
+  State<CheckInScreen> createState() => _CheckInScreenState();
 }
 
 class _CheckInScreenState extends State<CheckInScreen> {
-  MobileScannerController cameraController = MobileScannerController();
+  final MobileScannerController cameraController = MobileScannerController(
+    detectionSpeed: DetectionSpeed.noDuplicates,
+  );
 
   @override
   void dispose() {
@@ -59,123 +55,42 @@ class _CheckInScreenState extends State<CheckInScreen> {
   }
 }
 
-class CheckInBody extends StatefulWidget {
+class CheckInBody extends StatelessWidget {
   const CheckInBody({super.key, required this.cameraController});
 
   final MobileScannerController cameraController;
 
   @override
-  _CheckInBodyState createState() => _CheckInBodyState();
-}
-
-class _CheckInBodyState extends State<CheckInBody> {
-  @override
   Widget build(BuildContext context) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
-    double baseHeight = 812;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
+    final size = MediaQuery.sizeOf(context);
+    final fem = size.width / 375;
+    final ffem = fem * 0.97;
+    final hem = size.height / 812;
 
-    return BlocListener<InternetBloc, InternetState>(
-      listener: (context, state) {
-        if (state is Connected) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                elevation: 0,
-                duration: const Duration(milliseconds: 2000),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Internet connected',
-                  message: 'You\'re back online!',
-                  contentType: ContentType.success,
-                ),
-              ),
-            );
-        } else if (state is NotConnected) {
-          showDialog(
-            context: context,
-            builder:
-                (context) => AlertDialog(
-                  title: Text('No Internet Connection'),
-                  content: Text(
-                    'Please connect to the internet to scan QR codes',
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('OK'),
-                    ),
-                  ],
-                ),
-          );
-        }
-      },
+    return InternetListener(
       child: BlocBuilder<InternetBloc, InternetState>(
         builder: (context, state) {
-          if (state is Connected) {
-            return Column(
-              children: [
-                Container(
-                  height: 80 * hem,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/background_splash.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 10 * hem),
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: IconButton(
-                            icon: Icon(Icons.arrow_back, color: Colors.white),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Check-in bằng QR',
-                            style: GoogleFonts.openSans(
-                              textStyle: TextStyle(
-                                fontSize: 22 * ffem,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: BlocProvider(
-                    create:
-                        (context) => StudentBloc(
-                          studentRepository: context.read<StudentRepository>(),
-                        ),
-                    child: CheckInQRScanner(
-                      cameraController: widget.cameraController,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          } else {
-            return Center(
+          if (state is! Connected) {
+            return const Center(
               child: Text(
-                'No Internet Connection',
+                'Không có kết nối Internet',
                 style: TextStyle(fontSize: 18),
               ),
             );
           }
+          return Column(
+            children: [
+              ScannerAppBar(
+                title: 'Check-in bằng QR',
+                fem: fem,
+                hem: hem,
+                ffem: ffem,
+              ),
+              Expanded(
+                child: CheckInQRScanner(cameraController: cameraController),
+              ),
+            ],
+          );
         },
       ),
     );
@@ -188,121 +103,107 @@ class CheckInQRScanner extends StatefulWidget {
   final MobileScannerController cameraController;
 
   @override
-  _CheckInQRScannerState createState() => _CheckInQRScannerState();
+  State<CheckInQRScanner> createState() => _CheckInQRScannerState();
 }
 
 class _CheckInQRScannerState extends State<CheckInQRScanner> {
   bool _hasScanned = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _hasScanned = false;
-  }
-
   Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Dịch vụ định vị bị tắt. Vui lòng bật định vị.'),
-          action: SnackBarAction(
-            label: 'Mở cài đặt',
-            onPressed: () => Geolocator.openLocationSettings(),
-          ),
-        ),
+    if (!await Geolocator.isLocationServiceEnabled()) {
+      _showLocationSnackBar(
+        'Dịch vụ định vị bị tắt. Vui lòng bật định vị.',
+        onSettings: Geolocator.openLocationSettings,
       );
-      throw 'Dịch vụ định vị bị tắt.';
+      throw const CheckInException('Dịch vụ định vị bị tắt.');
     }
 
-    permission = await Geolocator.checkPermission();
+    var permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Quyền định vị bị từ chối.')));
-        throw 'Quyền định vị bị từ chối.';
+        _showLocationSnackBar('Quyền định vị bị từ chối.');
+        throw const CheckInException('Quyền định vị bị từ chối.');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Quyền định vị bị từ chối vĩnh viễn. Vui lòng cấp quyền trong cài đặt.',
-          ),
-          action: SnackBarAction(
-            label: 'Mở cài đặt',
-            onPressed: () => Geolocator.openAppSettings(),
-          ),
-        ),
+      _showLocationSnackBar(
+        'Quyền định vị bị từ chối vĩnh viễn. Vui lòng cấp quyền trong cài đặt.',
+        onSettings: Geolocator.openAppSettings,
       );
-      throw 'Quyền định vị bị từ chối vĩnh viễn.';
+      throw const CheckInException('Quyền định vị bị từ chối vĩnh viễn.');
     }
 
-    return await Geolocator.getCurrentPosition();
+    return Geolocator.getCurrentPosition();
+  }
+
+  /// Mọi lời gọi ở đây đều nằm sau một `await`, nên phải kiểm tra `mounted`
+  /// trước khi chạm vào `context`.
+  void _showLocationSnackBar(String message, {VoidCallback? onSettings}) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          action:
+              onSettings == null
+                  ? null
+                  : SnackBarAction(label: 'Mở cài đặt', onPressed: onSettings),
+        ),
+      );
   }
 
   Future<void> _checkInWithQR(String qrCode) async {
-    final student = await AuthenLocalDataSource.getStudent();
-    final studentId = student?.id;
-
     try {
-      Position position = await _determinePosition();
+      final student = await AuthenLocalDataSource.getStudent();
+      if (student == null) {
+        // Trước đây dùng `studentId!` ở đây: hết phiên đăng nhập là văng lỗi
+        // null thay vì báo cho người dùng biết.
+        throw const CheckInException(
+          'Không tìm thấy thông tin sinh viên, vui lòng đăng nhập lại',
+        );
+      }
+      if (!mounted) return;
 
-      final response = await http.post(
-        Uri.parse('${baseUrl}CheckIn/qr'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'studentId': studentId,
-          'qrCode': qrCode,
-          'latitude': position.latitude,
-          'longitude': position.longitude,
-        }),
+      final position = await _determinePosition();
+      if (!mounted) return;
+
+      final pointsAwarded = await context
+          .read<CheckInRepository>()
+          .checkInWithQr(
+            studentId: student.id,
+            qrCode: qrCode,
+            latitude: position.latitude,
+            longitude: position.longitude,
+          );
+      if (!mounted) return;
+
+      await context.read<SpinHistoryRepository>().incrementBonusSpins(
+        student.id,
+        DateTime.now(),
       );
+      if (!mounted) return;
 
-      var data = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        await context.read<SpinHistoryRepository>().incrementBonusSpins(
-          studentId!,
-          DateTime.now(),
-        );
-
-        Navigator.push(
-          context,
-          CheckInSuccessScreen.route(
-            pointsAwarded: data['pointsAwarded'] ?? 10,
-          ),
-        );
-      } else {
-        print('API Error: ${response.statusCode} - ${data['message']}');
-        throw Exception(data['message'] ?? 'Check-in thất bại');
-      }
-    } catch (e) {
-      print('Check-in Error: $e');
-      String errorMessage;
-      if (e.toString().contains("Bạn không ở gần địa điểm này để check-in")) {
-        errorMessage = 'Bạn không ở gần địa điểm này để check-in';
-      } else if (e.toString().contains(
-        "Bạn đã check-in tại địa điểm này hôm nay",
-      )) {
-        errorMessage = 'Bạn đã check-in tại địa điểm này hôm nay';
-      } else {
-        errorMessage = e.toString().replaceFirst('Exception: ', '');
-      }
-
-      Navigator.push(
+      await Navigator.push(
         context,
-        CheckInFailedScreen.route(failedReason: errorMessage),
+        CheckInSuccessScreen.route(pointsAwarded: pointsAwarded),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      // Ba nhánh if/else cũ đều gán đúng chuỗi mà chúng vừa so khớp, nên rút
+      // gọn lại còn một dòng.
+      await Navigator.push(
+        context,
+        CheckInFailedScreen.route(
+          failedReason: e.toString().replaceFirst('Exception: ', ''),
+        ),
       );
     } finally {
-      setState(() {
-        _hasScanned = false;
-      });
+      if (mounted) {
+        setState(() => _hasScanned = false);
+      }
     }
   }
 
@@ -314,13 +215,11 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
           controller: widget.cameraController,
           onDetect: (capture) {
             if (_hasScanned) return;
-            final barcodes = capture.barcodes;
-            for (final barcode in barcodes) {
-              if (barcode.rawValue != null) {
-                setState(() {
-                  _hasScanned = true;
-                });
-                _checkInWithQR(barcode.rawValue!);
+            for (final barcode in capture.barcodes) {
+              final rawValue = barcode.rawValue;
+              if (rawValue != null) {
+                setState(() => _hasScanned = true);
+                _checkInWithQR(rawValue);
                 break;
               }
             }
@@ -345,11 +244,12 @@ class _CheckInQRScannerState extends State<CheckInQRScanner> {
           child: Center(
             child: Text(
               'Quét mã QR tại địa điểm để check-in!',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                backgroundColor: Colors.transparent,
+              style: GoogleFonts.openSans(
+                textStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
