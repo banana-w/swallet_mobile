@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swallet_mobile/data/models/lecture_features/lecture_model.dart';
 import 'package:swallet_mobile/data/models/lecture_features/qr_response.dart';
 import 'package:swallet_mobile/data/models/store_features/store_model.dart';
+import 'package:swallet_mobile/data/models/store_features/transact_result_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/landing_screen/landing_lecture_screen.dart';
 import 'package:swallet_mobile/presentation/screens/lecture_features/profile_update_detail/profile_update_detail_screen.dart';
@@ -9,10 +10,12 @@ import 'package:swallet_mobile/presentation/screens/lecture_features/qr_generate
 import 'package:swallet_mobile/presentation/screens/store_features/brand/brand_detail_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_detail/campaign_detail_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_voucher_detail/campaign_voucher_detail_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/campaign_voucher_list/campaign_voucher_list_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/failed_scan_voucher/failed_scan_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/landing_screen/landing_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/profile_update_detail/profile_update_detail_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/qr_view/qr_view_screen.dart';
+import 'package:swallet_mobile/presentation/screens/store_features/transact/success_transact_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/transact/transact_screen.dart';
 import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 import 'package:swallet_mobile/presentation/screens/splash/onboarding_screen.dart';
@@ -285,6 +288,18 @@ class AppRouter {
       case TransactScreen.routeName:
         List<dynamic> args = settings.arguments as List<dynamic>;
         return TransactScreen.route(studentModel: args[0], brandId: args[1]);
+
+      // Hai route dưới đây đã được các màn hình phía cửa hàng gọi bằng
+      // `pushNamed` nhưng chưa từng được khai báo, nên rơi vào `_errorRoute`.
+      case CampaignVoucherListScreen.routeName:
+        return CampaignVoucherListScreen.route(
+          search: settings.arguments as String,
+        );
+
+      case SuccessTransactScreen.routeName:
+        return SuccessTransactScreen.route(
+          transactResultModel: settings.arguments as TransactResultModel,
+        );
 
       // case CampaignVoucherInformationScreen.routeName:
       //   return CampaignVoucherInformationScreen.route(

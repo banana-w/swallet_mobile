@@ -13,19 +13,18 @@ class CampaignStoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => StoreBloc(
-        storeRepository: context.read<StoreRepository>(),
-      )..add(LoadStoreCampaignVouchers()), // Khởi tạo StoreBloc và gọi sự kiện
-      child: Builder(
-        builder: (context) {
-          final roleState = context.watch<RoleAppBloc>().state;
+      create:
+          (context) =>
+              StoreBloc(storeRepository: context.read<StoreRepository>())
+                ..add(LoadStoreCampaignVouchers()),
+      child: BlocBuilder<RoleAppBloc, RoleAppState>(
+        builder: (context, roleState) {
           if (roleState is StoreRole) {
             return Body(storeModel: roleState.storeModel);
-          } else {
-            return Center(
-              child: Lottie.asset('assets/animations/loading-screen.json'),
-            );
           }
+          return Center(
+            child: Lottie.asset('assets/animations/loading-screen.json'),
+          );
         },
       ),
     );

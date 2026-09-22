@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:swallet_mobile/data/models/store_features/campagin_ranking_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/store_features/store_repository.dart';
+import 'package:swallet_mobile/data/models/store_features/campagin_ranking_model.dart';
+import 'package:swallet_mobile/data/models/student_features/student_ranking_model.dart';
 import 'package:swallet_mobile/presentation/blocs/ranking/ranking_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -18,472 +18,304 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  late TooltipBehavior _tooltip;
+  late final TooltipBehavior _tooltip;
 
   @override
   void initState() {
-    _tooltip = TooltipBehavior(enable: true);
     super.initState();
+    _tooltip = TooltipBehavior(enable: true);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RankingBloc, RankingState>(
       builder: (context, state) {
-        if (state is CampaignRankingLoaded) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              context.read<RankingBloc>().add(LoadCampaignRanking());
-            },
-            child: CustomScrollView(
-              slivers: [
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    SizedBox(height: 20),
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          BlocProvider(
-                            create:
-                                (context) => RankingBloc(
-                                  storeRepository:
-                                      context.read<StoreRepository>(),
-                                )..add(LoadStudentRanking()),
-                            child: BlocBuilder<RankingBloc, RankingState>(
-                              builder: (context, stateStudent) {
-                                if (stateStudent is StudentRankingLoaded) {
-                                  if (stateStudent.studentRankings.isEmpty) {
-                                    return Column(
-                                      children: [
-                                        Text(
-                                          'BẢNG XẾP HẠNG SINH VIÊN',
-                                          style: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        Card(
-                                          color: kbgYellow,
-                                          child: Container(
-                                            width: double.infinity,
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      'SỐ LƯỢNG SINH VIÊN: ${stateStudent.studentRankings.length}',
-                                                      style:
-                                                          GoogleFonts.openSans(
-                                                            textStyle:
-                                                                TextStyle(
-                                                                  fontSize: 15,
-                                                                  color:
-                                                                      kYellow,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                          ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(height: 8.0),
-                                                Text(
-                                                  'Không có sinh viên nào \nđang tham gia',
-                                                  textAlign: TextAlign.center,
-                                                  style: GoogleFonts.openSans(
-                                                    textStyle: TextStyle(
-                                                      fontSize: 15,
-                                                      color: kYellow,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  } else {
-                                    return Column(
-                                      children: [
-                                        Text(
-                                          'BẢNG XẾP HẠNG SINH VIÊN',
-                                          style: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        Card(
-                                          color: kbgYellow,
-                                          child: Container(
-                                            width: double.infinity,
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      'SỐ LƯỢNG SINH VIÊN: ${stateStudent.studentRankings.length}',
-                                                      style:
-                                                          GoogleFonts.openSans(
-                                                            textStyle:
-                                                                TextStyle(
-                                                                  fontSize: 15,
-                                                                  color:
-                                                                      kYellow,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                          ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(height: 8.0),
-                                                ListView.builder(
-                                                  physics:
-                                                      NeverScrollableScrollPhysics(),
-                                                  shrinkWrap: true,
-                                                  itemCount:
-                                                      stateStudent
-                                                          .studentRankings
-                                                          .length,
-                                                  itemBuilder: (
-                                                    context,
-                                                    index,
-                                                  ) {
-                                                    var studentRanking =
-                                                        stateStudent
-                                                            .studentRankings[index];
-                                                    return Container(
-                                                      margin: EdgeInsets.only(
-                                                        bottom: 10,
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          Stack(
-                                                            children: [
-                                                              Icon(
-                                                                Icons.star,
-                                                                color: kYellow,
-                                                                size: 40,
-                                                              ),
-                                                              Positioned.fill(
-                                                                top: 12,
-                                                                child: Text(
-                                                                  '${studentRanking.rank}',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style: GoogleFonts.openSans(
-                                                                    textStyle: TextStyle(
-                                                                      fontSize:
-                                                                          12,
-                                                                      color:
-                                                                          Colors
-                                                                              .white,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .normal,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  50,
-                                                                ),
-                                                            child: Image.network(
-                                                              studentRanking.image,
-                                                              // 'assets/images/ava_signup.png',
-                                                              width: 55,
-                                                              height: 55,
-                                                              fit: BoxFit.fill,
-                                                              errorBuilder: (
-                                                                context,
-                                                                error,
-                                                                stackTrace,
-                                                              ) {
-                                                                return Image.asset(
-                                                                  'assets/images/ava_signup.png',
-                                                                  width: 55,
-                                                                  height: 55,
-                                                                );
-                                                              },
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                        30,
-                                                                      ),
-                                                                  color:
-                                                                      kYellow,
-                                                                ),
-                                                            width: 200,
-                                                            height: 45,
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceEvenly,
-                                                              children: [
-                                                                Text(
-                                                                  studentRanking.name,
-                                                                  style: GoogleFonts.openSans(
-                                                                    textStyle: TextStyle(
-                                                                      fontSize:
-                                                                          12,
-                                                                      color:
-                                                                          Colors
-                                                                              .white,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                Row(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .center,
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Text(
-                                                                      formatter.format(studentRanking.value),
-                                                                      style: GoogleFonts.openSans(
-                                                                        textStyle: TextStyle(
-                                                                          fontSize:
-                                                                              12,
-                                                                          color:
-                                                                              Colors.white,
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: EdgeInsets.only(
-                                                                        left: 2,
-                                                                        top: 4,
-                                                                        bottom:
-                                                                            2,
-                                                                      ),
-                                                                      child: SvgPicture.asset(
-                                                                        'assets/icons/coin.svg',
-                                                                        width:
-                                                                            24,
-                                                                        height:
-                                                                            22,
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                }
-
-                                return Center(
-                                  child: Lottie.asset(
-                                    'assets/animations/loading-screen.json',
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          SizedBox(height: 25),
-                          Column(
-                            children: [
-                              Text(
-                                'BẢNG XẾP HẠNG CHIẾN DỊCH',
-                                style: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Card(
-                                color: Color(0xfff6ffed),
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width - 10,
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'SỐ LƯỢNG CHIẾN DỊCH \nTRONG THƯƠNG HIỆU: ${state.campaignRankings.length}',
-                                            style: GoogleFonts.openSans(
-                                              textStyle: TextStyle(
-                                                fontSize: 15,
-                                                color: kPrimaryColor,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 8.0),
-                                      SfCartesianChart(
-                                        primaryXAxis: CategoryAxis(
-                                          labelStyle: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
-                                              fontSize: 12,
-                                              color: kPrimaryColor,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                          maximumLabelWidth: 50,
-                                        ),
-                                        primaryYAxis: NumericAxis(
-                                          labelStyle: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
-                                              fontSize: 12,
-                                              color: kPrimaryColor,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                        tooltipBehavior: _tooltip,
-                                        series: <
-                                          CartesianSeries<
-                                            CampaignRankingModel,
-                                            String
-                                          >
-                                        >[
-                                          BarSeries<
-                                            CampaignRankingModel,
-                                            String
-                                          >(
-                                            dataSource: state.campaignRankings,
-                                            xValueMapper:
-                                                (
-                                                  CampaignRankingModel data,
-                                                  _,
-                                                ) => data.name,
-                                            yValueMapper:
-                                                (
-                                                  CampaignRankingModel data,
-                                                  _,
-                                                ) => data.value,
-                                            name: 'Chiến dịch',
-                                            color: kPrimaryColor,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 25),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 150),
-                  ]),
-                ),
-              ],
-            ),
-          );
-        } else if (state is CampaignRankingLoading) {
+        if (state is CampaignRankingLoading) {
           return Center(
             child: Lottie.asset('assets/animations/loading-screen.json'),
           );
         }
-        return Center(child: Text('Đã xảy ra lỗi!'));
+        if (state is! CampaignRankingLoaded) {
+          return const Center(child: Text('Đã xảy ra lỗi!'));
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            context.read<RankingBloc>().add(LoadCampaignRanking());
+          },
+          child: ListView(
+            padding: const EdgeInsets.only(top: 20, bottom: 150),
+            children: [
+              BlocProvider(
+                create:
+                    (context) => RankingBloc(
+                      storeRepository: context.read<StoreRepository>(),
+                    )..add(LoadStudentRanking()),
+                child: const _StudentRankingCard(),
+              ),
+              const SizedBox(height: 25),
+              _CampaignRankingCard(
+                campaignRankings: state.campaignRankings,
+                tooltip: _tooltip,
+              ),
+              const SizedBox(height: 25),
+            ],
+          ),
+        );
       },
     );
   }
 }
 
-class SparkbarChart extends StatelessWidget {
-  const SparkbarChart({super.key, required this.campaignRankings});
-  final List<CampaignRankingModel> campaignRankings;
+/// Bảng xếp hạng sinh viên; dùng bloc riêng nên tải độc lập với phần chiến dịch.
+class _StudentRankingCard extends StatelessWidget {
+  const _StudentRankingCard();
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 320,
-      height: 200,
-      child: SfSparkBarChart.custom(
-        dataCount: campaignRankings.length,
-        xValueMapper:
-            (int index) => campaignRankings[index].name, // x-axis value mapper
-        yValueMapper:
-            (int index) => campaignRankings[index].value, // y-axis value mapper
-        axisLineWidth: 1,
-        axisLineColor: Colors.white,
-        color: Colors.white,
-        labelDisplayMode: SparkChartLabelDisplayMode.all,
-        trackball: SparkChartTrackball(
-          activationMode: SparkChartActivationMode.tap,
-          width: 1,
-          labelStyle: GoogleFonts.openSans(
-            textStyle: TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
+    return BlocBuilder<RankingBloc, RankingState>(
+      builder: (context, state) {
+        if (state is! StudentRankingLoaded) {
+          return Center(
+            child: Lottie.asset('assets/animations/loading-screen.json'),
+          );
+        }
+
+        final rankings = state.studentRankings;
+
+        return Column(
+          children: [
+            Text(
+              'BẢNG XẾP HẠNG SINH VIÊN',
+              style: GoogleFonts.openSans(
+                textStyle: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Card(
+              color: kbgYellow,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'SỐ LƯỢNG SINH VIÊN: ${rankings.length}',
+                      style: GoogleFonts.openSans(
+                        textStyle: const TextStyle(
+                          fontSize: 15,
+                          color: kYellow,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    if (rankings.isEmpty)
+                      Center(
+                        child: Text(
+                          'Không có sinh viên nào \nđang tham gia',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.openSans(
+                            textStyle: const TextStyle(
+                              fontSize: 15,
+                              color: kYellow,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      )
+                    else
+                      for (final ranking in rankings)
+                        _StudentRankingRow(ranking: ranking),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _StudentRankingRow extends StatelessWidget {
+  const _StudentRankingRow({required this.ranking});
+
+  final StudentRankingModel ranking;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Stack(
+            children: [
+              const Icon(Icons.star, color: kYellow, size: 40),
+              Positioned.fill(
+                top: 12,
+                child: Text(
+                  '${ranking.rank}',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.openSans(
+                    textStyle: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Image.network(
+              ranking.image,
+              width: 55,
+              height: 55,
+              fit: BoxFit.fill,
+              // Ảnh chỉ 55x55, không cần giải mã bản gốc.
+              cacheWidth: (55 * MediaQuery.devicePixelRatioOf(context)).round(),
+              errorBuilder:
+                  (context, error, stackTrace) => Image.asset(
+                    'assets/images/ava_signup.png',
+                    width: 55,
+                    height: 55,
+                  ),
             ),
           ),
-          borderWidth: 1,
-        ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: kYellow,
+            ),
+            width: 200,
+            height: 45,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  ranking.name,
+                  style: GoogleFonts.openSans(
+                    textStyle: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      formatter.format(ranking.value),
+                      style: GoogleFonts.openSans(
+                        textStyle: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 2, top: 4, bottom: 2),
+                      child: SvgPicture.asset(
+                        'assets/icons/coin.svg',
+                        width: 24,
+                        height: 22,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-String shortenName(String fullName) {
-  const maxLength = 10;
+/// Biểu đồ cột xếp hạng các chiến dịch trong thương hiệu.
+class _CampaignRankingCard extends StatelessWidget {
+  const _CampaignRankingCard({
+    required this.campaignRankings,
+    required this.tooltip,
+  });
 
-  if (fullName.length > maxLength) {
-    return fullName.substring(0, maxLength);
-  } else {
-    return fullName;
+  final List<CampaignRankingModel> campaignRankings;
+  final TooltipBehavior tooltip;
+
+  @override
+  Widget build(BuildContext context) {
+    final axisLabelStyle = GoogleFonts.openSans(
+      textStyle: const TextStyle(
+        fontSize: 12,
+        color: kPrimaryColor,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+
+    return Column(
+      children: [
+        Text(
+          'BẢNG XẾP HẠNG CHIẾN DỊCH',
+          style: GoogleFonts.openSans(
+            textStyle: const TextStyle(
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Card(
+          color: const Color(0xfff6ffed),
+          child: Container(
+            width: MediaQuery.sizeOf(context).width - 10,
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'SỐ LƯỢNG CHIẾN DỊCH \nTRONG THƯƠNG HIỆU: '
+                  '${campaignRankings.length}',
+                  style: GoogleFonts.openSans(
+                    textStyle: const TextStyle(
+                      fontSize: 15,
+                      color: kPrimaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                SfCartesianChart(
+                  primaryXAxis: CategoryAxis(
+                    labelStyle: axisLabelStyle,
+                    maximumLabelWidth: 50,
+                  ),
+                  primaryYAxis: NumericAxis(labelStyle: axisLabelStyle),
+                  tooltipBehavior: tooltip,
+                  series: <CartesianSeries<CampaignRankingModel, String>>[
+                    BarSeries<CampaignRankingModel, String>(
+                      dataSource: campaignRankings,
+                      xValueMapper: (data, _) => data.name,
+                      yValueMapper: (data, _) => data.value,
+                      name: 'Chiến dịch',
+                      color: kPrimaryColor,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

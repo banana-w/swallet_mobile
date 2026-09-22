@@ -5,13 +5,14 @@ import 'package:swallet_mobile/data/models/student_features/campaign_detail_mode
 import '../../../../config/constants.dart';
 
 class CampaignDetailShowdal extends StatelessWidget {
-  const CampaignDetailShowdal(
-      {super.key,
-      required this.fem,
-      required this.hem,
-      required this.ffem,
-      required this.onTap,
-      required this.campaignDetailModel});
+  const CampaignDetailShowdal({
+    super.key,
+    required this.fem,
+    required this.hem,
+    required this.ffem,
+    required this.onTap,
+    required this.campaignDetailModel,
+  });
 
   final double fem;
   final double hem;
@@ -29,10 +30,16 @@ class CampaignDetailShowdal extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(right: 15 * fem, left: 15 * fem),
         padding: EdgeInsets.only(
-            right: 10 * fem, left: 10 * fem, top: 15 * hem, bottom: 15 * hem),
-        width: MediaQuery.of(context).size.width,
+          right: 10 * fem,
+          left: 10 * fem,
+          top: 15 * hem,
+          bottom: 15 * hem,
+        ),
+        width: MediaQuery.sizeOf(context).width,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10), color: Colors.white),
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -42,11 +49,12 @@ class CampaignDetailShowdal extends StatelessWidget {
               child: Text(
                 'Thể lệ chiến dịch',
                 style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                  fontSize: 15 * ffem,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                )),
+                  textStyle: TextStyle(
+                    fontSize: 15 * ffem,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
             Container(
@@ -63,9 +71,7 @@ class CampaignDetailShowdal extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: 10 * hem,
-            ),
+            SizedBox(height: 10 * hem),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,21 +79,23 @@ class CampaignDetailShowdal extends StatelessWidget {
                 Text(
                   'Xem thêm',
                   style: GoogleFonts.openSans(
-                      textStyle: TextStyle(
-                    fontSize: 14 * ffem,
-                    color: kPrimaryColor,
-                    fontWeight: FontWeight.w600,
-                  )),
+                    textStyle: TextStyle(
+                      fontSize: 14 * ffem,
+                      color: kPrimaryColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
                 Padding(
-                    padding: EdgeInsets.only(left: 3 * fem, top: 2 * hem),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 15,
-                      color: kPrimaryColor,
-                    ))
+                  padding: EdgeInsets.only(left: 3 * fem, top: 2 * hem),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
+                    color: kPrimaryColor,
+                  ),
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),

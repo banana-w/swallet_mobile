@@ -32,554 +32,396 @@ class InformationCardProfile extends StatefulWidget {
 }
 
 class _InformationCardProfileState extends State<InformationCardProfile> {
-  final _formKey = GlobalKey<FormState>();
   File? _selectedAvatar;
-  StoreModel? store;
+
+  double get fem => widget.fem;
+  double get hem => widget.hem;
+  double get ffem => widget.ffem;
+
+  void _onStoreState(BuildContext context, StoreState state) {
+    if (state is StoreUpding) {
+      showDialog<void>(
+        context: context,
+        builder:
+            (_) => const AlertDialog(
+              content: SizedBox(
+                width: 250,
+                height: 250,
+                child: Center(
+                  child: CircularProgressIndicator(color: kPrimaryColor),
+                ),
+              ),
+            ),
+      );
+      return;
+    }
+
+    final isSuccess = state is StoreUpdateSuccess;
+    if (!isSuccess && state is! StoreUpdateFailed) return;
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          elevation: 0,
+          duration: const Duration(milliseconds: 2000),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: isSuccess ? 'Cập nhật thành công' : 'Cập nhật thất bại',
+            message:
+                isSuccess
+                    ? 'Cập nhật ảnh đại diện thành công!'
+                    : 'Cập nhật ảnh đại diện thất bại!',
+            contentType: isSuccess ? ContentType.success : ContentType.failure,
+          ),
+        ),
+      );
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/landing-screen-store',
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<StoreBloc, StoreState>(
-      listener: (context, state) {
-        if (state is StoreUpdateSuccess) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                elevation: 0,
-                duration: const Duration(milliseconds: 2000),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Cập nhật thành công',
-                  message: 'Cập nhật ảnh đại diện thành công!',
-                  contentType: ContentType.success,
-                ),
-              ),
-            );
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/landing-screen-store',
-            (Route<dynamic> route) => false,
-          );
-        } else if (state is StoreUpdateFailed) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                elevation: 0,
-                duration: const Duration(milliseconds: 2000),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Cập nhật thất bại',
-                  message: 'Cập nhật ảnh đại diện thất bại!',
-                  contentType: ContentType.failure,
-                ),
-              ),
-            );
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/landing-screen-store',
-            (Route<dynamic> route) => false,
-          );
-        } else if (state is StoreUpding) {
-          showDialog<String>(
-            context: context,
-            builder: (BuildContext context) {
-              Future.delayed(Duration(seconds: 10), () {
-                Navigator.of(context).pop();
-              });
-              return AlertDialog(
-                content: SizedBox(
-                  width: 250,
-                  height: 250,
-                  child: Center(
-                    child: CircularProgressIndicator(color: kPrimaryColor),
-                  ),
-                ),
-              );
-            },
-          );
-        }
-      },
-      child: Form(
-        key: _formKey,
-        child: Container(
-          width: 324 * widget.fem,
-          height: 200 * widget.hem,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15 * widget.fem),
-            color: Colors.white,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(height: 10 * widget.hem),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(width: 25 * widget.fem),
-
-                  //avatar
-                  InkWell(
-                    onTap: () {
-                      _imageModelBottomSheet(context, _selectedAvatar);
+      listener: _onStoreState,
+      child: Container(
+        width: 324 * fem,
+        height: 200 * hem,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15 * fem),
+          color: Colors.white,
+        ),
+        child: Column(
+          children: [
+            SizedBox(height: 10 * hem),
+            Row(
+              children: [
+                SizedBox(width: 25 * fem),
+                InkWell(
+                  onTap: _showAvatarPicker,
+                  child: BlocBuilder<StoreBloc, StoreState>(
+                    builder: (context, state) {
+                      // Chưa tải xong hồ sơ thì dùng tạm ảnh mặc định.
+                      final avatarUrl =
+                          state is StoreByIdLoaed
+                              ? state.storeModel.avatar
+                              : null;
+                      return _Avatar(
+                        avatarUrl: avatarUrl,
+                        selectedAvatar: _selectedAvatar,
+                        fem: fem,
+                        hem: hem,
+                      );
                     },
-                    child: BlocBuilder<StoreBloc, StoreState>(
-                      builder: (context, state) {
-                        if (state is StoreByIdLoaed) {
-                          final store = state.storeModel;
-                          return Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child:
-                                    _selectedAvatar == null
-                                        ? Image.network(
-                                          store.avatar,
-                                          // 'assets/images/ava_signup.png',
-                                          width: 80 * widget.fem,
-                                          height: 80 * widget.hem,
-                                          fit: BoxFit.fill,
-                                          errorBuilder: (
-                                            context,
-                                            error,
-                                            stackTrace,
-                                          ) {
-                                            return Image.asset(
-                                              'assets/images/ava_signup.png',
-                                              width: 80 * widget.fem,
-                                              height: 80 * widget.hem,
-                                            );
-                                          },
-                                        )
-                                        : Container(
-                                          width: 80 * widget.fem,
-                                          height: 80 * widget.hem,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: FileImage(
-                                                _selectedAvatar!,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                              ),
-                              Positioned(
-                                bottom: 0 * widget.hem,
-                                right: 0 * widget.fem,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: klighGreyColor,
-                                  ),
-                                  padding: EdgeInsets.all(5),
-                                  child: Icon(
-                                    Icons.camera_alt_outlined,
-                                    weight: 1,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                        return Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child:
-                                  _selectedAvatar == null
-                                      ? Image.asset(
-                                        'assets/images/ava_signup.png',
-                                        // 'assets/images/ava_signup.png',
-                                        width: 80 * widget.fem,
-                                        height: 80 * widget.hem,
-                                        fit: BoxFit.fill,
-                                      )
-                                      : Container(
-                                        width: 80 * widget.fem,
-                                        height: 80 * widget.hem,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: FileImage(_selectedAvatar!),
-                                          ),
-                                        ),
-                                      ),
-                            ),
-                            Positioned(
-                              bottom: 0 * widget.hem,
-                              right: 0 * widget.fem,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: klighGreyColor,
-                                ),
-                                padding: EdgeInsets.all(5),
-                                child: Icon(
-                                  Icons.camera_alt_outlined,
-                                  weight: 1,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
                   ),
-
-                  SizedBox(width: 20 * widget.fem),
-
-                  SizedBox(
-                    // color: Colors.red,
-                    child: Column(
+                ),
+                SizedBox(width: 20 * fem),
+                BlocBuilder<StoreBloc, StoreState>(
+                  builder: (context, state) {
+                    final store =
+                        state is StoreByIdLoaed
+                            ? state.storeModel
+                            : widget.storeModel;
+                    return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        //Name
-                        BlocBuilder<StoreBloc, StoreState>(
-                          builder: (context, state) {
-                            if (state is StoreByIdLoaed) {
-                              return NameProfile(
-                                fem: widget.fem,
-                                ffem: widget.ffem,
-                                hem: widget.hem,
-                                name: state.storeModel.storeName,
-                              );
-                            }
-                            return NameProfile(
-                              fem: widget.fem,
-                              ffem: widget.ffem,
-                              hem: widget.hem,
-                              name:
-                                  store == null
-                                      ? widget.storeModel.storeName
-                                      : store!.storeName,
-                            );
-                          },
+                        NameProfile(
+                          fem: fem,
+                          ffem: ffem,
+                          hem: hem,
+                          name: store.storeName,
                         ),
-                        //email
-                        BlocBuilder<StoreBloc, StoreState>(
-                          builder: (context, state) {
-                            if (state is StoreByIdLoaed) {
-                              return SizedBox(
-                                width: 150 * widget.fem,
-                                child: Text(
-                                  state.storeModel.email,
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.openSans(
-                                    textStyle: TextStyle(
-                                      fontSize: 13 * widget.ffem,
-                                      fontWeight: FontWeight.normal,
-                                      color: klowTextGrey,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }
-                            return SizedBox(
-                              width: 150 * widget.fem,
-                              child: Text(
-                                store == null
-                                    ? widget.storeModel.email
-                                    : store!.email,
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 13 * widget.ffem,
-                                    fontWeight: FontWeight.normal,
-                                    color: klowTextGrey,
-                                  ),
-                                ),
+                        SizedBox(
+                          width: 150 * fem,
+                          child: Text(
+                            store.email,
+                            maxLines: 1,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.openSans(
+                              textStyle: TextStyle(
+                                fontSize: 13 * ffem,
+                                fontWeight: FontWeight.normal,
+                                color: klowTextGrey,
                               ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
                       ],
-                    ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 10 * fem),
+            SizedBox(
+              width: 280 * fem,
+              child: Divider(
+                thickness: 1 * fem,
+                color: const Color.fromARGB(255, 225, 223, 223),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 10 * hem),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _CountChip(
+                    icon: 'assets/icons/campaign-navbar-icon.svg',
+                    iconSize: 18,
+                    label: '${widget.storeModel.numberOfCampaigns} chiến dịch',
+                    fem: fem,
+                    ffem: ffem,
+                    hem: hem,
+                  ),
+                  _CountChip(
+                    icon: 'assets/icons/voucher-navbar-icon.svg',
+                    iconSize: 15,
+                    label: '${widget.storeModel.numberOfVouchers} ưu đãi',
+                    fem: fem,
+                    ffem: ffem,
+                    hem: hem,
                   ),
                 ],
               ),
-              SizedBox(height: 10 * widget.fem),
-              SizedBox(
-                width: 280 * widget.fem,
-                child: Divider(
-                  thickness: 1 * widget.fem,
-                  color: const Color.fromARGB(255, 225, 223, 223),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10 * widget.hem),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        padding: EdgeInsets.only(
-                          left: 5 * widget.fem,
-                          right: 5 * widget.fem,
-                        ),
-                        width: 140 * widget.fem,
-                        height: 40 * widget.hem,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.grey[100],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: SvgPicture.asset(
-                                'assets/icons/campaign-navbar-icon.svg',
-                                colorFilter: ColorFilter.mode(
-                                  kPrimaryColor,
-                                  BlendMode.srcIn,
-                                ),
-                                height: 18 * widget.fem,
-                                width: 18 * widget.fem,
-                              ),
-                            ),
-                            SizedBox(width: 5 * widget.fem),
-                            Text(
-                              '${widget.storeModel.numberOfCampaigns} chiến dịch',
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 12 * widget.fem,
-                                  fontWeight: FontWeight.bold,
-                                  height: 1.3625 * widget.ffem / widget.fem,
-                                  color: kPrimaryColor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        padding: EdgeInsets.only(
-                          left: 5 * widget.fem,
-                          right: 5 * widget.fem,
-                        ),
-                        width: 140 * widget.fem,
-                        height: 40 * widget.hem,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.grey[100],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: SvgPicture.asset(
-                                'assets/icons/voucher-navbar-icon.svg',
-                                colorFilter: ColorFilter.mode(
-                                  kPrimaryColor,
-                                  BlendMode.srcIn,
-                                ),
-                                height: 15 * widget.fem,
-                                width: 15 * widget.fem,
-                              ),
-                            ),
-                            SizedBox(width: 5 * widget.fem),
-                            Text(
-                              '${widget.storeModel.numberOfVouchers} ưu đãi',
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 12 * widget.fem,
-                                  fontWeight: FontWeight.bold,
-                                  height: 1.3625 * widget.ffem / widget.fem,
-                                  color: kPrimaryColor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Future<void> getStore() async {
+  /// Chọn ảnh rồi gửi ngay lên server. Trả về `false` nếu người dùng huỷ.
+  Future<void> _pickAndUpload(ImageSource source) async {
+    final returnedImage = await ImagePicker().pickImage(source: source);
+    if (returnedImage == null) return;
+
+    if (!mounted) return;
+    setState(() => _selectedAvatar = File(returnedImage.path));
+    Navigator.pop(context);
+
     final storeModel = await AuthenLocalDataSource.getStore();
-    setState(() {
-      store = storeModel;
-    });
-  }
-
-  Future _pickerImageFromGallery(
-    File? selectedImage,
-    BuildContext context,
-  ) async {
-    final returnedImage = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
+    if (!mounted || storeModel == null) return;
+    context.read<StoreBloc>().add(
+      UpdateStore(
+        storeId: storeModel.id,
+        areaId: storeModel.areaId,
+        storeName: storeModel.storeName,
+        address: storeModel.address,
+        openHours: storeModel.openingHours,
+        closeHours: storeModel.closingHours,
+        description: storeModel.description,
+        avatar: returnedImage.path,
+        state: true,
+      ),
     );
-
-    if (returnedImage == null) return;
-
-    selectedImage = File(returnedImage.path);
-
-    setState(() {
-      _selectedAvatar = selectedImage;
-    });
-    Navigator.pop(context);
   }
 
-  Future _pickerImageFromCamera(
-    File? selectedImage,
-    BuildContext context,
-  ) async {
-    final returnedImage = await ImagePicker().pickImage(
-      source: ImageSource.camera,
-    );
+  void _showAvatarPicker() {
+    final size = MediaQuery.sizeOf(context);
 
-    if (returnedImage == null) return;
-
-    selectedImage = File(returnedImage.path);
-
-    setState(() {
-      _selectedAvatar = selectedImage;
-    });
-    Navigator.pop(context);
-  }
-
-  void _imageModelBottomSheet(BuildContext context, File? selectedImage) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
-    double baseHeight = 812;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
-
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
-      builder: (_) {
-        return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.2,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  _pickerImageFromCamera(selectedImage, context).then((
-                    value,
-                  ) async {
-                    final storeModel = await AuthenLocalDataSource.getStore();
-                    context.read<StoreBloc>().add(
-                      UpdateStore(
-                        storeId: storeModel!.id,
-                        areaId: storeModel.areaId,
-                        storeName: storeModel.storeName,
-                        address: storeModel.address,
-                        openHours: storeModel.openingHours,
-                        closeHours: storeModel.closingHours,
-                        description: storeModel.description,
-                        avatar: _selectedAvatar!.path,
-                        state: true,
-                      ),
-                    );
-                  });
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.camera_alt,
-                      color: kPrimaryColor,
-                      size: 30 * fem,
-                    ),
-                    SizedBox(width: 5 * fem),
-                    Text(
-                      'Chụp ảnh',
-                      style: GoogleFonts.openSans(
-                        textStyle: TextStyle(
-                          fontSize: 20 * ffem,
-                          fontWeight: FontWeight.bold,
-                          height: 1.3625 * ffem / fem,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
+      builder:
+          (_) => SizedBox(
+            height: size.height * 0.2,
+            width: size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _PickerOption(
+                  icon: Icons.camera_alt,
+                  label: 'Chụp ảnh',
+                  fem: fem,
+                  ffem: ffem,
+                  onTap: () => _pickAndUpload(ImageSource.camera),
                 ),
-              ),
-              SizedBox(height: 18 * hem),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: Divider(
-                  color: kLowTextColor,
-                  thickness: 2 * fem,
-                  // height: 300*fem,
+                SizedBox(height: 18 * hem),
+                SizedBox(
+                  width: size.width * 0.7,
+                  child: Divider(color: kLowTextColor, thickness: 2 * fem),
                 ),
-              ),
-              SizedBox(height: 18 * hem),
-              GestureDetector(
-                onTap: () {
-                  _pickerImageFromGallery(selectedImage, context).then((
-                    value,
-                  ) async {
-                    final storeModel = await AuthenLocalDataSource.getStore();
-                    context.read<StoreBloc>().add(
-                      UpdateStore(
-                        storeId: storeModel!.id,
-                        areaId: storeModel.areaId,
-                        storeName: storeModel.storeName,
-                        address: storeModel.address,
-                        openHours: storeModel.openingHours,
-                        closeHours: storeModel.closingHours,
-                        description: storeModel.description,
-                        avatar: _selectedAvatar!.path,
-                        state: true,
-                      ),
-                    );
-                  });
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.photo_size_select_actual_rounded,
-                      color: kPrimaryColor,
-                      size: 30 * fem,
-                    ),
-                    SizedBox(width: 5 * fem),
-                    Text(
-                      'Chọn sẵn có',
-                      style: GoogleFonts.openSans(
-                        textStyle: TextStyle(
-                          fontSize: 20 * ffem,
-                          fontWeight: FontWeight.bold,
-                          height: 1.3625 * ffem / fem,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
+                SizedBox(height: 18 * hem),
+                _PickerOption(
+                  icon: Icons.photo_size_select_actual_rounded,
+                  label: 'Chọn sẵn có',
+                  fem: fem,
+                  ffem: ffem,
+                  onTap: () => _pickAndUpload(ImageSource.gallery),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        );
-      },
+    );
+  }
+}
+
+/// Ảnh đại diện kèm huy hiệu máy ảnh; ưu tiên ảnh vừa chọn trong máy.
+class _Avatar extends StatelessWidget {
+  const _Avatar({
+    required this.avatarUrl,
+    required this.selectedAvatar,
+    required this.fem,
+    required this.hem,
+  });
+
+  final String? avatarUrl;
+  final File? selectedAvatar;
+  final double fem;
+  final double hem;
+
+  @override
+  Widget build(BuildContext context) {
+    final width = 80 * fem;
+    final height = 80 * hem;
+
+    Widget image;
+    if (selectedAvatar != null) {
+      image = Image.file(
+        selectedAvatar!,
+        width: width,
+        height: height,
+        fit: BoxFit.cover,
+      );
+    } else if (avatarUrl != null) {
+      image = Image.network(
+        avatarUrl!,
+        width: width,
+        height: height,
+        fit: BoxFit.fill,
+        errorBuilder:
+            (context, error, stackTrace) => Image.asset(
+              'assets/images/ava_signup.png',
+              width: width,
+              height: height,
+            ),
+      );
+    } else {
+      image = Image.asset(
+        'assets/images/ava_signup.png',
+        width: width,
+        height: height,
+        fit: BoxFit.fill,
+      );
+    }
+
+    return Stack(
+      children: [
+        ClipRRect(borderRadius: BorderRadius.circular(50), child: image),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              color: klighGreyColor,
+            ),
+            padding: const EdgeInsets.all(5),
+            child: const Icon(Icons.camera_alt_outlined, size: 20),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Ô đếm "n chiến dịch" / "n ưu đãi".
+class _CountChip extends StatelessWidget {
+  const _CountChip({
+    required this.icon,
+    required this.iconSize,
+    required this.label,
+    required this.fem,
+    required this.ffem,
+    required this.hem,
+  });
+
+  final String icon;
+  final double iconSize;
+  final String label;
+  final double fem;
+  final double ffem;
+  final double hem;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 5 * fem),
+      width: 140 * fem,
+      height: 40 * hem,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: Colors.grey[100],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            icon,
+            colorFilter: const ColorFilter.mode(kPrimaryColor, BlendMode.srcIn),
+            height: iconSize * fem,
+            width: iconSize * fem,
+          ),
+          SizedBox(width: 5 * fem),
+          Text(
+            label,
+            style: GoogleFonts.openSans(
+              textStyle: TextStyle(
+                fontSize: 12 * fem,
+                fontWeight: FontWeight.bold,
+                height: 1.3625 * ffem / fem,
+                color: kPrimaryColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Một lựa chọn trong bảng chọn ảnh đại diện.
+class _PickerOption extends StatelessWidget {
+  const _PickerOption({
+    required this.icon,
+    required this.label,
+    required this.fem,
+    required this.ffem,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final double fem;
+  final double ffem;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: kPrimaryColor, size: 30 * fem),
+          SizedBox(width: 5 * fem),
+          Text(
+            label,
+            style: GoogleFonts.openSans(
+              textStyle: TextStyle(
+                fontSize: 20 * ffem,
+                fontWeight: FontWeight.bold,
+                height: 1.3625 * ffem / fem,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -18,16 +18,18 @@ class VoucherCardList extends StatelessWidget {
   final CampaignVoucherStoreModel voucher;
   final double ffem;
 
+  void _openDetail(BuildContext context) {
+    Navigator.pushNamed(
+      context,
+      CampaignVoucherDetailStoreScreen.routeName,
+      arguments: <dynamic>[voucher.campaignId, voucher.voucherId],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () async {
-        Navigator.pushNamed(
-          context,
-          CampaignVoucherDetailStoreScreen.routeName,
-          arguments: <dynamic>[voucher.campaignId, voucher.voucherId],
-        );
-      },
+      onTap: () => _openDetail(context),
       child: Stack(
         children: [
           Container(
@@ -46,18 +48,17 @@ class VoucherCardList extends StatelessWidget {
               border: Border.all(color: klighGreyColor),
               boxShadow: [
                 BoxShadow(
-                  color: Color(0x0c000000),
+                  color: const Color(0x0c000000),
                   offset: Offset(0 * fem, 0 * fem),
                   blurRadius: 5 * fem,
                 ),
               ],
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: EdgeInsets.all(5),
+                Padding(
+                  padding: const EdgeInsets.all(5),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: SizedBox(
@@ -70,16 +71,15 @@ class VoucherCardList extends StatelessWidget {
                         cacheWidth:
                             (120 * fem * MediaQuery.devicePixelRatioOf(context))
                                 .round(),
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.asset('assets/images/image-404.jpg');
-                        },
+                        errorBuilder:
+                            (context, error, stackTrace) =>
+                                Image.asset('assets/images/image-404.jpg'),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8 * fem),
                 Column(
-                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 5 * hem),
@@ -123,13 +123,7 @@ class VoucherCardList extends StatelessWidget {
             bottom: 12 * hem,
             right: 20 * fem,
             child: InkWell(
-              onTap: () async {
-                Navigator.pushNamed(
-                  context,
-                  CampaignVoucherDetailStoreScreen.routeName,
-                  arguments: <dynamic>[voucher.campaignId, voucher.voucherId],
-                );
-              },
+              onTap: () => _openDetail(context),
               child: Container(
                 width: 85 * fem,
                 height: 32 * hem,
@@ -142,7 +136,7 @@ class VoucherCardList extends StatelessWidget {
                   child: Text(
                     'Xem ngay',
                     style: GoogleFonts.openSans(
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: kPrimaryColor,

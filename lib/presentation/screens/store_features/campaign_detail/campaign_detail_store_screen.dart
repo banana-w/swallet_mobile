@@ -8,10 +8,8 @@ class CampaignDetailStoreScreen extends StatelessWidget {
 
   static Route route({required String campaignId}) {
     return MaterialPageRoute(
-      builder: (_) => CampaignDetailStoreScreen(
-        campaignId: campaignId,
-      ),
-      settings: const RouteSettings(arguments: routeName),
+      builder: (_) => CampaignDetailStoreScreen(campaignId: campaignId),
+      settings: const RouteSettings(name: routeName),
     );
   }
 
@@ -21,10 +19,9 @@ class CampaignDetailStoreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double baseHeight = 812;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
+    final size = MediaQuery.sizeOf(context);
+    final fem = size.width / 375;
+    final hem = size.height / 812;
 
     return SafeArea(
       child: Scaffold(
@@ -34,15 +31,17 @@ class CampaignDetailStoreScreen extends StatelessWidget {
           toolbarHeight: 50 * hem,
           leading: Container(
             margin: EdgeInsets.only(left: 20 * fem),
+            // leadingWidth vô hạn nên cần Row để icon bám mép trái.
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 InkWell(
-                  onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(context,
-                        '/landing-screen-store', (Route<dynamic> route) => false);
-                  },
+                  onTap:
+                      () => Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/landing-screen-store',
+                        (route) => false,
+                      ),
                   child: Icon(
                     Icons.arrow_back_rounded,
                     color: Colors.white,
@@ -57,9 +56,7 @@ class CampaignDetailStoreScreen extends StatelessWidget {
         ),
         backgroundColor: klighGreyColor,
         extendBodyBehindAppBar: true,
-        body: Body(
-          id: campaignId,
-        ),
+        body: Body(id: campaignId),
       ),
     );
   }

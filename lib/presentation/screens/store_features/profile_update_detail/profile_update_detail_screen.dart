@@ -10,6 +10,7 @@ import 'components/body.dart';
 
 class ProfileUpdateDetailStoreScreen extends StatelessWidget {
   static const String routeName = '/profile-update-detail-store';
+
   static Route route({required StoreModel storeModel}) {
     return MaterialPageRoute(
       builder:
@@ -19,7 +20,7 @@ class ProfileUpdateDetailStoreScreen extends StatelessWidget {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   LoginScreen.routeName,
-                  (Route<dynamic> route) => false,
+                  (route) => false,
                 );
               }
             },
@@ -29,16 +30,17 @@ class ProfileUpdateDetailStoreScreen extends StatelessWidget {
     );
   }
 
-  final StoreModel storeModel;
   const ProfileUpdateDetailStoreScreen({super.key, required this.storeModel});
+
+  final StoreModel storeModel;
 
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
-    double baseHeight = 812;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
+    final size = MediaQuery.sizeOf(context);
+    final fem = size.width / 375;
+    final ffem = fem * 0.97;
+    final hem = size.height / 812;
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -52,15 +54,13 @@ class ProfileUpdateDetailStoreScreen extends StatelessWidget {
             ),
           ),
           centerTitle: true,
-          title: Container(
-            child: Text(
-              'Sửa thông tin',
-              style: GoogleFonts.openSans(
-                textStyle: TextStyle(
-                  fontSize: 20 * ffem,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                ),
+          title: Text(
+            'Sửa thông tin',
+            style: GoogleFonts.openSans(
+              textStyle: TextStyle(
+                fontSize: 20 * ffem,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
               ),
             ),
           ),
@@ -68,9 +68,7 @@ class ProfileUpdateDetailStoreScreen extends StatelessWidget {
           leading: Container(
             margin: EdgeInsets.only(left: 20 * fem),
             child: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
+              onTap: () => Navigator.pop(context),
               child: Icon(
                 Icons.arrow_back_rounded,
                 color: Colors.white,
