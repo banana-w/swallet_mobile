@@ -64,7 +64,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
   final String studentId;
   final String storeId;
   final String voucherItemId;
-  
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 375;
@@ -127,7 +127,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                   voucherId: voucherModel.id,
                   studentId: studentId,
                   storeId: storeId,
-                  voucherItemId: voucherItemId,             
+                  voucherItemId: voucherItemId,
                 ),
               );
             },
@@ -208,6 +208,10 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                         child: Image.network(
                           voucherModel.image,
                           fit: BoxFit.fill,
+                          cacheWidth:
+                              (MediaQuery.sizeOf(context).width *
+                                      MediaQuery.devicePixelRatioOf(context))
+                                  .round(),
                           errorBuilder: (context, error, stackTrace) {
                             return Image.asset(
                               'assets/images/background_splash.png',
@@ -286,7 +290,6 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                
                               ],
                             ),
                           ],
@@ -359,6 +362,14 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                     child: Image.network(
                                       campaignModel.image,
                                       fit: BoxFit.fill,
+                                      // Ảnh hiển thị ở 120*fem.
+                                      cacheWidth:
+                                          (120 *
+                                                  fem *
+                                                  MediaQuery.devicePixelRatioOf(
+                                                    context,
+                                                  ))
+                                              .round(),
                                       errorBuilder: (
                                         context,
                                         error,
@@ -381,8 +392,7 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
                                       child: SizedBox(
                                         width: 200 * fem,
                                         child: Text(
-                                          campaignModel
-                                              .campaignName
+                                          campaignModel.campaignName
                                               .toUpperCase(),
                                           softWrap: true,
                                           maxLines: 2,

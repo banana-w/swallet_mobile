@@ -4,7 +4,6 @@ import 'package:swallet_mobile/data/models/store_features/campaign_voucher_store
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/campaign_voucher_detail/campaign_voucher_detail_screen.dart';
 
-
 class VoucherCardList extends StatelessWidget {
   const VoucherCardList({
     super.key,
@@ -67,6 +66,10 @@ class VoucherCardList extends StatelessWidget {
                       child: Image.network(
                         voucher.voucherImage,
                         fit: BoxFit.fill,
+                        // Ảnh hiển thị ở 120*fem, không cần giữ bản gốc.
+                        cacheWidth:
+                            (120 * fem * MediaQuery.devicePixelRatioOf(context))
+                                .round(),
                         errorBuilder: (context, error, stackTrace) {
                           return Image.asset('assets/images/image-404.jpg');
                         },

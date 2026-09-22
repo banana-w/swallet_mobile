@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:swallet_mobile/data/repositories/student_features/campaign_repository_imp.dart';
+import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/campaign_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign_store/campaign_store_bloc.dart';
@@ -104,6 +104,9 @@ class Body extends StatelessWidget {
                               child: Image.network(
                                 state.campaignDetailModel.image,
                                 fit: BoxFit.cover,
+                                cacheWidth: (MediaQuery.sizeOf(context).width *
+                                        MediaQuery.devicePixelRatioOf(context))
+                                    .round(),
                                 loadingBuilder:
                                     (context, child, loadingProgress) {
                                   if (loadingProgress == null) {
@@ -186,8 +189,15 @@ class Body extends StatelessWidget {
                                         width: 50 * fem,
                                         child: Image.network(
                                           state.campaignDetailModel.brandLogo,
-                                          // state.campaignDetailModel.image,
                                           fit: BoxFit.fill,
+                                          // Logo chỉ 50x50, không cần ảnh gốc.
+                                          cacheWidth: (50 *
+                                                  fem *
+                                                  MediaQuery
+                                                      .devicePixelRatioOf(
+                                                    context,
+                                                  ))
+                                              .round(),
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                             return Image.asset(
@@ -361,7 +371,36 @@ class Body extends StatelessWidget {
               );
             }
             return Center(
-              child: Text('Error'),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30 * fem),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      state is CampaignsFailed
+                          ? state.error
+                          : 'Không tải được chiến dịch.',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.openSans(
+                        textStyle: TextStyle(
+                          fontSize: 15 * ffem,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => context.read<CampaignBloc>().add(
+                            LoadCampaignById(id: id),
+                          ),
+                      child: Text(
+                        'Thử lại',
+                        style: TextStyle(color: kPrimaryColor),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             );
           },
         ),
@@ -370,7 +409,10 @@ class Body extends StatelessWidget {
   }
 }
 
-void _detailModelBottomSheet(context, campaignModel) {
+void _detailModelBottomSheet(
+  BuildContext context,
+  CampaignDetailModel campaignModel,
+) {
   double baseWidth = 375;
   double fem = MediaQuery.of(context).size.width / baseWidth;
   double ffem = fem * 0.97;
@@ -380,19 +422,19 @@ void _detailModelBottomSheet(context, campaignModel) {
   showModalBottomSheet(
     context: context,
     builder: (context) {
-      return RepositoryProvider<CampaignRepository>(
-        create: (context) => CampaignRepositoryImp(),
-        child: Container(
-          height: 500 * hem,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15 * fem),
-              color: klighGreyColor),
-          child: DetailShowdalBottom(
-            hem: hem,
-            fem: fem,
-            ffem: ffem,
-            campaignDetailModel: campaignModel,
-          ),
+      // Trước đây chỗ này `create: (_) => CampaignRepositoryImp()`, tức mỗi lần
+      // mở sheet lại dựng một repository mới nằm ngoài ApiClient dùng chung.
+      return Container(
+        height: 500 * hem,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15 * fem),
+          color: klighGreyColor,
+        ),
+        child: DetailShowdalBottom(
+          hem: hem,
+          fem: fem,
+          ffem: ffem,
+          campaignDetailModel: campaignModel,
         ),
       );
     },

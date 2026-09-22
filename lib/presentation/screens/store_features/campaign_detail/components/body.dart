@@ -98,6 +98,9 @@ class Body extends StatelessWidget {
                               child: Image.network(
                                 state.campaignDetailModel.image,
                                 fit: BoxFit.cover,
+                                cacheWidth: (MediaQuery.sizeOf(context).width *
+                                        MediaQuery.devicePixelRatioOf(context))
+                                    .round(),
                                 loadingBuilder:
                                     (context, child, loadingProgress) {
                                   if (loadingProgress == null) {
@@ -182,6 +185,14 @@ class Body extends StatelessWidget {
                                           // state.campaignDetailModel.brandLogo,
                                           state.campaignDetailModel.image,
                                           fit: BoxFit.fill,
+                                          // Ảnh chỉ 35x35.
+                                          cacheWidth: (35 *
+                                                  fem *
+                                                  MediaQuery
+                                                      .devicePixelRatioOf(
+                                                    context,
+                                                  ))
+                                              .round(),
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                             return Image.asset(

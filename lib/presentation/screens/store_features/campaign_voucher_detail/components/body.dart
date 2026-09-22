@@ -80,6 +80,10 @@ class Body extends StatelessWidget {
                           child: Image.network(
                             campaignVoucherDetail.image,
                             fit: BoxFit.fill,
+                            cacheWidth:
+                                (MediaQuery.sizeOf(context).width *
+                                        MediaQuery.devicePixelRatioOf(context))
+                                    .round(),
                             errorBuilder: (context, error, stackTrace) {
                               return Image.asset(
                                 'assets/images/background_splash.png',
@@ -135,7 +139,9 @@ class Body extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        formatter.format((campaignVoucherDetail.price)),
+                                        formatter.format(
+                                          (campaignVoucherDetail.price),
+                                        ),
                                         style: GoogleFonts.openSans(
                                           textStyle: TextStyle(
                                             fontSize: 22 * ffem,
@@ -158,7 +164,6 @@ class Body extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  
                                 ],
                               ),
                               Text(
@@ -278,15 +283,6 @@ class Body extends StatelessWidget {
       ),
     );
   }
-}
-
-Duration getDuration(String endOn) {
-  DateTime dateStartOn = DateTime.parse(endOn);
-  Duration duration = dateStartOn.difference(DateTime.now());
-  print(DateTime.now());
-  print(duration);
-  print(dateStartOn);
-  return duration;
 }
 
 Widget buildCampaignVoucherShimmer(double fem, double hem) {
