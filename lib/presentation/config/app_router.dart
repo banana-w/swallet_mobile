@@ -157,7 +157,7 @@ class AppRouter {
 
       case ChallengeScreen.routeName:
         return ChallengeScreen.route();
-      
+
       case ChallengeDailyScreen.routeName:
         return ChallengeDailyScreen.route();
 
@@ -180,16 +180,13 @@ class AppRouter {
         );
       case VoucherScreen.routeName:
         return VoucherScreen.route();
-      
+
       case LocationListScreen.routeName:
         return LocationListScreen.route();
 
       case VoucherListScreen.routeName:
         List<dynamic> args = settings.arguments as List<dynamic>;
-        return VoucherListScreen.route(
-          search: args[0],
-          studentId: args[1],
-        );  
+        return VoucherListScreen.route(search: args[0], studentId: args[1]);
 
       case VoucherItemDetailScreen.routeName:
         final args = settings.arguments as Map<String, String>;
@@ -197,7 +194,7 @@ class AppRouter {
           campaignId: args['campaignId']!,
           voucherId: args['voucherId']!,
         );
-        
+
       case VoucherHistoryScreen.routeName:
         return VoucherHistoryScreen.route(
           studentId: settings.arguments as String,
@@ -205,7 +202,7 @@ class AppRouter {
 
       case VoucherHistoryScreenStore.routeName:
         return VoucherHistoryScreenStore.route();
-          
+
       case RedeemVoucherScreen.routeName:
         List<dynamic> args = settings.arguments as List<dynamic>;
 
@@ -214,11 +211,10 @@ class AppRouter {
           campaignDetailId: args[1],
           studentId: args[2],
           quantity: args[3],
-          description: args[4],
-          campaignName: args[5],
-          total: args[6],
-          voucherName: args[7],
-          priceVoucher: args[8],
+          campaignName: args[4],
+          total: args[5],
+          voucherName: args[6],
+          priceVoucher: args[7],
         );
 
       case SuccessRedeemVoucherScreen.routeName:
@@ -304,7 +300,7 @@ class AppRouter {
         return FailedScanVoucherScreen.route(
           failed: settings.arguments as String,
         );
-        
+
       case CampaignVoucherScreen.routeName:
         List<dynamic> args = settings.arguments as List<dynamic>;
 

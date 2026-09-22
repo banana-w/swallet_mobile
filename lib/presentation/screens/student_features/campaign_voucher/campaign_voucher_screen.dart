@@ -381,7 +381,6 @@ class CampaignVoucherScreen extends StatelessWidget {
               campaignVoucherModel.id,
               localStudent.id,
               state.counterValue,
-              'string',
               campaignDetailModel.campaignName,
               totalPrice,
               campaignVoucherModel.voucherName,
