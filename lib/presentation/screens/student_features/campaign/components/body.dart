@@ -6,9 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
-import 'package:swallet_mobile/data/models/student_features/campaign_model.dart';
-import 'package:swallet_mobile/data/models/student_features/student_model.dart';
 import 'package:swallet_mobile/presentation/blocs/brand/brand_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/checkin_bloc/check_in_bloc.dart';
@@ -22,30 +19,24 @@ import 'package:swallet_mobile/presentation/screens/student_features/campaign/co
 import 'package:swallet_mobile/presentation/screens/student_features/campaign/components/membership_card.dart';
 import 'package:swallet_mobile/presentation/screens/student_features/campaign_detail/campaign_detail_screen.dart';
 import 'package:swallet_mobile/presentation/widgets/card_for_unverified.dart';
-import 'package:swallet_mobile/presentation/widgets/unverified_screen.dart';
+import 'package:swallet_mobile/presentation/widgets/role_navigation.dart';
 
 class CampaignScreenBody extends StatefulWidget {
   const CampaignScreenBody({super.key});
 
   @override
-  State<CampaignScreenBody> createState() => _BodyState();
+  State<CampaignScreenBody> createState() => _CampaignScreenBodyState();
 }
 
-class _BodyState extends State<CampaignScreenBody>
-    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  // Constants
-  static const double _baseWidth = 375;
-  static const double _baseHeight = 812;
+class _CampaignScreenBodyState extends State<CampaignScreenBody>
+    with AutomaticKeepAliveClientMixin {
+  /// Khoảng cách tới đáy (px) bắt đầu tải thêm chiến dịch.
+  static const double _loadMoreThreshold = 200;
 
-  // State variables
-  StudentModel? studentModel;
-  late AnimationController _animationController;
-  bool _isAnimationPlaying = false;
-  ResponsiveValues? _cachedResponsiveValues;
+  final ScrollController _scrollController = ScrollController();
 
-  // Optimizing scroll loading
-  final ScrollController _campaignScrollController = ScrollController();
-  bool _isLoadingMore = false;
+  late ResponsiveValues _responsive;
+  bool _isNoInternetDialogOpen = false;
 
   @override
   bool get wantKeepAlive => true;
@@ -53,200 +44,101 @@ class _BodyState extends State<CampaignScreenBody>
   @override
   void initState() {
     super.initState();
-    _initAnimationController();
-    _loadStudentData();
-    _setupScrollListener();
+    _scrollController.addListener(_onScroll);
+    // Trước đây event này được bắn từ trong builder của RoleAppBloc nên mỗi lần
+    // role đổi state lại gọi API điểm danh một lần. Chỉ cần nạp một lần ở đây.
+    context.read<CheckInBloc>().add(LoadCheckInData());
   }
 
-  void _initAnimationController() {
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-  }
-
-  void _setupScrollListener() {
-    // Optimize the scroll listener to avoid excessive rebuilds
-    _campaignScrollController.addListener(() {
-      final maxScroll = _campaignScrollController.position.maxScrollExtent;
-      final currentScroll = _campaignScrollController.position.pixels;
-
-      // Only trigger load more when we're near the end and not already loading
-      if (currentScroll > maxScroll - 200 && !_isLoadingMore) {
-        final campaignState = context.read<CampaignBloc>().state;
-        if (campaignState is CampaignsLoaded && !campaignState.hasReachMax) {
-          _isLoadingMore = true;
-          context.read<CampaignBloc>().add(LoadMoreCampaigns());
-        }
-      }
-    });
-  }
-
-  Future<void> _loadStudentData() async {
-    final student = await AuthenLocalDataSource.getStudent();
-    if (mounted) {
-      setState(() => studentModel = student);
-    }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Chỉ tính lại khi kích thước màn hình thật sự đổi (xoay máy, split screen).
+    _responsive = ResponsiveValues.of(context);
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
-    _campaignScrollController.dispose();
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
     super.dispose();
   }
 
-  // Cached responsive values to prevent recalculation
-  ResponsiveValues _getResponsiveValues(BuildContext context) {
-    if (_cachedResponsiveValues != null) return _cachedResponsiveValues!;
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final position = _scrollController.position;
+    if (position.pixels < position.maxScrollExtent - _loadMoreThreshold) return;
 
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-
-    final fem = width / _baseWidth;
-    final ffem = fem * 0.97;
-    final hem = height / _baseHeight;
-    final heightText = 1.3625 * ffem / fem;
-
-    _cachedResponsiveValues = ResponsiveValues(
-      fem: fem,
-      ffem: ffem,
-      hem: hem,
-      heightText: heightText,
-    );
-    return _cachedResponsiveValues!;
+    final campaignBloc = context.read<CampaignBloc>();
+    final state = campaignBloc.state;
+    // Bloc tự chặn request trùng nên không cần cờ _isLoadingMore ở đây nữa.
+    if (state is CampaignsLoaded && !state.hasReachMax) {
+      campaignBloc.add(const LoadMoreCampaigns());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final responsiveValues = _getResponsiveValues(context);
+    final responsive = _responsive;
+    final gap = SliverToBoxAdapter(child: SizedBox(height: 5 * responsive.hem));
 
     return BlocListener<InternetBloc, InternetState>(
       listener: _handleInternetState,
       child: RefreshIndicator(
-        onRefresh: () async {
-          _isLoadingMore = false;
-          return _refreshData(context);
-        },
-        // Use a separate scroll controller optimized for infinite scrolling
+        onRefresh: _refreshData,
         child: CustomScrollView(
-          controller: _campaignScrollController,
+          controller: _scrollController,
           slivers: [
             SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _MembershipSection(responsiveValues: responsiveValues),
-                  SizedBox(height: 5 * responsiveValues.hem),
-                  _DailyCheckInSection(
-                    responsiveValues: responsiveValues,
-                    animationController: _animationController,
-                    onDayTap: (state) => _handleDayTap(context, state),
-                    onCheckInStateChanged:
-                        (context, state) => _handleCheckInState(context, state),
-                  ),
-                  SizedBox(height: 5 * responsiveValues.hem),
-                  _TodayCampaignsSection(responsiveValues: responsiveValues),
-                  SizedBox(height: 5 * responsiveValues.hem),
-                  _BrandsSection(responsiveValues: responsiveValues),
-                  SizedBox(height: 5 * responsiveValues.hem),
-                  _CampaignsSection(responsiveValues: responsiveValues),
-                ],
-              ),
+              child: _MembershipSection(responsive: responsive),
             ),
+            gap,
+            SliverToBoxAdapter(
+              child: _DailyCheckInSection(responsive: responsive),
+            ),
+            gap,
+            SliverToBoxAdapter(
+              child: _TodayCampaignsSection(responsive: responsive),
+            ),
+            gap,
+            SliverToBoxAdapter(child: _BrandsSection(responsive: responsive)),
+            gap,
+            _CampaignsSection(responsive: responsive),
           ],
         ),
       ),
     );
   }
 
-  // Animation control methods
-  void _startBounceAnimation() {
-    if (!_isAnimationPlaying) {
-      _isAnimationPlaying = true;
-      _animationController.forward(from: 0).then((_) {
-        _isAnimationPlaying = false;
-      });
-    }
-  }
-
-  // CheckIn handling
-  void _handleDayTap(BuildContext context, CheckInLoaded state) {
-    if (state.canCheckInToday) {
-      context.read<CheckInBloc>().add(CheckIn());
-    } else {
-      _showWarningSnackBar(
-        context,
-        'Thông báo',
-        'Bạn đã điểm danh hôm nay rồi!',
-      );
-    }
-  }
-
-  void _handleCheckInState(BuildContext context, CheckInState state) {
-    if (state is CheckInSuccess) {
-      context.read<RoleAppBloc>().add(RoleAppStart());
-    }
-    if (state is CheckInLoaded && !state.canCheckInToday) {
-      final previousState = context.read<CheckInBloc>().state;
-
-      if (previousState is CheckInLoaded && previousState.canCheckInToday) {
-        String message;
-        if (state.streak >= 7) {
-          message =
-              'Bạn đã đạt chuỗi 7 ngày! Nhận 70 điểm mỗi ngày nếu giữ chuỗi!';
-        } else {
-          message = 'Bạn nhận được ${state.rewardPoints} điểm!';
-        }
-        _showSuccessSnackBar(context, 'Điểm danh thành công', message);
-      }
-    } else if (state is CheckInError) {
-      _showErrorSnackBar(context, 'Lỗi', state.message);
-    }
-  }
-
   // Internet state handling
   void _handleInternetState(BuildContext context, InternetState state) {
     if (state is Connected) {
-      _showConnectedSnackBar(context);
-    } else if (state is NotConnected) {
+      _showAppSnackBar(
+        context,
+        title: 'Đã kết nối internet',
+        message: 'Đã kết nối internet!',
+        contentType: ContentType.success,
+      );
+    } else if (state is NotConnected && !_isNoInternetDialogOpen) {
       _showNoInternetDialog(context);
     }
   }
 
-  // Snackbar methods
-  void _showConnectedSnackBar(BuildContext context) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          elevation: 0,
-          duration: const Duration(milliseconds: 2000),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'Đã kết nối internet',
-            message: 'Đã kết nối internet!',
-            contentType: ContentType.success,
-          ),
-        ),
-      );
-  }
-
-  void _showNoInternetDialog(BuildContext context) {
-    showCupertinoDialog(
+  Future<void> _showNoInternetDialog(BuildContext context) async {
+    _isNoInternetDialogOpen = true;
+    await showCupertinoDialog<void>(
       context: context,
       builder:
-          (context) => CupertinoAlertDialog(
+          (dialogContext) => CupertinoAlertDialog(
             title: const Text('Không kết nối Internet'),
             content: const Text('Vui lòng kết nối Internet'),
             actions: [
               TextButton(
                 onPressed: () {
-                  final stateInternet = context.read<InternetBloc>().state;
-                  if (stateInternet is Connected) {
-                    Navigator.pop(context);
+                  if (dialogContext.read<InternetBloc>().state is Connected) {
+                    Navigator.pop(dialogContext);
                   }
                 },
                 child: const Text('Đồng ý'),
@@ -254,459 +146,297 @@ class _BodyState extends State<CampaignScreenBody>
             ],
           ),
     );
-  }
-
-  void _showSuccessSnackBar(
-    BuildContext context,
-    String title,
-    String message,
-  ) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          elevation: 0,
-          duration: const Duration(milliseconds: 2000),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: title,
-            message: message,
-            contentType: ContentType.success,
-          ),
-        ),
-      );
-  }
-
-  void _showErrorSnackBar(BuildContext context, String title, String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          elevation: 0,
-          duration: const Duration(milliseconds: 2000),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: title,
-            message: message,
-            contentType: ContentType.failure,
-          ),
-        ),
-      );
-  }
-
-  void _showWarningSnackBar(
-    BuildContext context,
-    String title,
-    String message,
-  ) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          elevation: 0,
-          duration: const Duration(milliseconds: 2000),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: title,
-            message: message,
-            contentType: ContentType.warning,
-          ),
-        ),
-      );
+    _isNoInternetDialogOpen = false;
   }
 
   // Data operations
-  Future<void> _refreshData(BuildContext context) async {
-    context.read<CampaignBloc>().add(LoadCampaigns());
-    context.read<BrandBloc>().add(LoadBrands(page: 1, size: 10));
+  Future<void> _refreshData() async {
+    final campaignBloc = context.read<CampaignBloc>();
+    campaignBloc.add(const LoadCampaigns());
+    context.read<BrandBloc>().add(const LoadBrands(page: 1, size: 10));
     context.read<CheckInBloc>().add(LoadCheckInData());
-    context.read<RoleAppBloc>().add(RoleAppStart());
+    context.read<RoleAppBloc>().add(const RoleAppStart());
+
+    // Giữ vòng xoay của RefreshIndicator tới khi danh sách thật sự tải xong.
+    await campaignBloc.stream
+        .firstWhere((state) => state is! CampaignLoading)
+        .timeout(
+          const Duration(seconds: 15),
+          onTimeout: () => campaignBloc.state,
+        );
   }
 }
 
-// Separated section widgets for better performance
-class _MembershipSection extends StatelessWidget {
-  const _MembershipSection({required this.responsiveValues});
+// ---------------------------------------------------------------------------
+// Thẻ thành viên
+// ---------------------------------------------------------------------------
 
-  final ResponsiveValues responsiveValues;
+class _MembershipSection extends StatelessWidget {
+  const _MembershipSection({required this.responsive});
+
+  final ResponsiveValues responsive;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RoleAppBloc, RoleAppState>(
+      buildWhen:
+          (previous, current) =>
+              current is Verified ||
+              current is Unverified ||
+              current is RoleAppLoading,
       builder: (context, state) {
+        final Widget card;
         if (state is Unverified) {
-          context.read<CheckInBloc>().add(LoadCheckInData());
-          return _buildUnverifiedCard();
+          card = CardForUnVerified(
+            fem: responsive.fem,
+            hem: responsive.hem,
+            ffem: responsive.ffem,
+          );
         } else if (state is Verified) {
-          context.read<CheckInBloc>().add(LoadCheckInData());
-          return _buildMembershipCard(state.studentModel);
+          card = MemberShipCard(
+            fem: responsive.fem,
+            hem: responsive.hem,
+            ffem: responsive.ffem,
+            heightText: responsive.heightText,
+            studentModel: state.studentModel,
+          );
+        } else {
+          return _LoadingLottie(responsive: responsive);
         }
-        return _buildLoadingIndicator();
+
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 15 * responsive.fem),
+          color: kbgWhiteColor,
+          child: card,
+        );
       },
-    );
-  }
-
-  Widget _buildUnverifiedCard() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 15 * responsiveValues.fem),
-      color: kbgWhiteColor,
-      child: CardForUnVerified(
-        fem: responsiveValues.fem,
-        hem: responsiveValues.hem,
-        ffem: responsiveValues.ffem,
-      ),
-    );
-  }
-
-  Widget _buildMembershipCard(StudentModel student) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 15 * responsiveValues.fem),
-      color: kbgWhiteColor,
-      child: MemberShipCard(
-        fem: responsiveValues.fem,
-        hem: responsiveValues.hem,
-        ffem: responsiveValues.ffem,
-        heightText: responsiveValues.heightText,
-        studentModel: student,
-      ),
-    );
-  }
-
-  Widget _buildLoadingIndicator() {
-    return Center(
-      child: Lottie.asset(
-        'assets/animations/loading-screen.json',
-        width: 50 * responsiveValues.fem,
-        height: 50 * responsiveValues.hem,
-      ),
     );
   }
 }
 
-class _DailyCheckInSection extends StatelessWidget {
-  const _DailyCheckInSection({
-    required this.responsiveValues,
-    required this.animationController,
-    required this.onDayTap,
-    required this.onCheckInStateChanged,
-  });
+// ---------------------------------------------------------------------------
+// Điểm danh hằng ngày
+// ---------------------------------------------------------------------------
 
-  final ResponsiveValues responsiveValues;
-  final AnimationController animationController;
-  final Function(CheckInLoaded) onDayTap;
-  final Function(BuildContext, CheckInState) onCheckInStateChanged;
+class _DailyCheckInSection extends StatelessWidget {
+  const _DailyCheckInSection({required this.responsive});
+
+  final ResponsiveValues responsive;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        vertical: 10 * responsiveValues.fem,
-        horizontal: 10 * responsiveValues.fem,
+        vertical: 10 * responsive.fem,
+        horizontal: 10 * responsive.fem,
       ),
       width: double.infinity,
       color: kbgWhiteColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle('ĐIỂM DANH HẰNG NGÀY'),
-          SizedBox(height: 10 * responsiveValues.hem),
-          _buildCheckInContent(context),
+          Text('ĐIỂM DANH HẰNG NGÀY', style: responsive.sectionTitle),
+          SizedBox(height: 10 * responsive.hem),
+          RepaintBoundary(
+            child: BlocConsumer<CheckInBloc, CheckInState>(
+              // CheckInBloc emit CheckInSuccess rồi mới emit CheckInLoaded kèm
+              // điểm thưởng, nên chỉ bắt đúng chuyển tiếp đó để báo thành công.
+              listenWhen:
+                  (previous, current) =>
+                      current is CheckInError ||
+                      (previous is CheckInSuccess && current is CheckInLoaded),
+              listener: _onCheckInStateChanged,
+              builder: (context, state) {
+                if (state is CheckInLoaded) {
+                  return _buildCalendar(context, state);
+                }
+                return Center(
+                  child: CircularProgressIndicator(color: kPrimaryColor),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildCheckInContent(BuildContext context) {
-    return RepaintBoundary(
-      child: BlocConsumer<CheckInBloc, CheckInState>(
-        listener: (context, state) {
-          onCheckInStateChanged(context, state);
-          if (state is CheckInSuccess) {
-            // Reload dữ liệu sau khi điểm danh thành công
-            context.read<CheckInBloc>().add(LoadCheckInData());
-          }
-        },
-        builder: (context, state) {
-          if (state is CheckInSuccess) {
-            context.read<RoleAppBloc>().add(RoleAppStart());
-          }
-          if (state is CheckInLoaded) {
-            return _buildCheckInCalendar(context, state);
-          }
-          return Center(child: CircularProgressIndicator(color: kPrimaryColor));
-        },
-      ),
+  void _onCheckInStateChanged(BuildContext context, CheckInState state) {
+    if (state is CheckInError) {
+      _showAppSnackBar(
+        context,
+        title: 'Lỗi',
+        message: state.message,
+        contentType: ContentType.failure,
+      );
+      return;
+    }
+    if (state is! CheckInLoaded) return;
+
+    // Điểm danh xong thì số dư điểm thay đổi, nạp lại thông tin thành viên.
+    context.read<RoleAppBloc>().add(const RoleAppStart());
+    _showAppSnackBar(
+      context,
+      title: 'Điểm danh thành công',
+      message:
+          state.streak >= 7
+              ? 'Bạn đã đạt chuỗi 7 ngày! Nhận 70 điểm mỗi ngày nếu giữ chuỗi!'
+              : 'Bạn nhận được ${state.rewardPoints} điểm!',
+      contentType: ContentType.success,
     );
   }
 
-  Widget _buildCheckInCalendar(BuildContext context, CheckInLoaded state) {
+  void _onDayTap(BuildContext context, CheckInLoaded state) {
+    if (state.canCheckInToday) {
+      context.read<CheckInBloc>().add(CheckIn());
+    } else {
+      _showAppSnackBar(
+        context,
+        title: 'Thông báo',
+        message: 'Bạn đã điểm danh hôm nay rồi!',
+        contentType: ContentType.warning,
+      );
+    }
+  }
+
+  Widget _buildCalendar(BuildContext context, CheckInLoaded state) {
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(7, (index) {
             final isChecked =
-                state.checkInHistory.length > index &&
+                index < state.checkInHistory.length &&
                 state.checkInHistory[index];
-            final isCurrentDay = index == state.currentDayIndex;
+            final isToday =
+                index == state.currentDayIndex && state.canCheckInToday;
 
             return GestureDetector(
-              onTap:
-                  isCurrentDay && state.canCheckInToday
-                      ? () => onDayTap(state)
-                      : null,
+              onTap: isToday ? () => _onDayTap(context, state) : null,
               child: _buildDayItem(
-                isChecked,
-                isCurrentDay && state.canCheckInToday,
-                state,
-                index,
+                index: index,
+                isChecked: isChecked,
+                isToday: isToday,
               ),
             );
           }),
         ),
-        SizedBox(height: 10 * responsiveValues.hem),
-        _buildStreakCounter(state),
+        SizedBox(height: 10 * responsive.hem),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10 * responsive.hem),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                'Chuỗi: ${state.streak} ngày',
+                style: responsive.streakCounter,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildDayItem(
-    bool isChecked,
-    bool isToday,
-    CheckInLoaded state,
-    int index,
-  ) {
-    // Only animate the current day that needs attention
-    if (isToday && !isChecked && state.canCheckInToday) {
-      return AnimatedBuilder(
-        animation: animationController,
-        builder: (context, child) {
-          return _buildDayItemContent(
-            isChecked,
-            isToday,
-            state,
-            index,
-            offset: -animationController.value * 10,
-          );
-        },
-      );
-    }
-
-    // For other days, no need to rebuild with animation
-    return _buildDayItemContent(isChecked, isToday, state, index, offset: 0);
-  }
-
-  Widget _buildDayItemContent(
-    bool isChecked,
-    bool isToday,
-    CheckInLoaded state,
-    int index, {
-    double offset = 0,
+  Widget _buildDayItem({
+    required int index,
+    required bool isChecked,
+    required bool isToday,
   }) {
-    return Transform.translate(
-      offset: Offset(0, offset),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              boxShadow: [
+    final isHighlighted = isChecked || isToday;
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 5,
+                offset: const Offset(0, 2),
+              ),
+              if (isToday)
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 5,
-                  offset: Offset(0, 2),
+                  color: Colors.yellow.withValues(alpha: 0.5),
+                  blurRadius: 10,
+                  spreadRadius: 2,
                 ),
-                if (isToday && state.canCheckInToday)
-                  BoxShadow(
-                    color: Colors.yellow.withValues(alpha: 0.5),
-                    blurRadius: 10,
-                    spreadRadius: 2,
-                  ),
-              ],
-            ),
-            child: SvgPicture.asset(
-              isChecked
-                  ? 'assets/images/gift_checked.svg'
-                  : (isToday && state.canCheckInToday
-                      ? 'assets/images/gift_checked.svg'
-                      : 'assets/images/gift_unchecked.svg'),
-              width: 40 * responsiveValues.fem,
-              height: 40 * responsiveValues.hem,
-              fit: BoxFit.contain,
-            ),
+            ],
           ),
-          Positioned(
-            bottom: 7 * responsiveValues.hem,
-            child: Text(
-              'Ngày ${index + 1}',
-              style: GoogleFonts.openSans(
-                textStyle: TextStyle(
-                  fontSize: 9 * responsiveValues.ffem,
-                  color:
-                      isChecked
-                          ? Colors.white
-                          : (isToday && state.canCheckInToday
-                              ? Colors.white
-                              : Colors.grey),
-                  fontWeight: FontWeight.w900,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black.withValues(alpha: 0.5),
-                      offset: Offset(1, 1),
-                      blurRadius: 2,
-                    ),
-                  ],
-                ),
-              ),
-              textAlign: TextAlign.center,
-            ),
+          child: SvgPicture.asset(
+            isHighlighted
+                ? 'assets/images/gift_checked.svg'
+                : 'assets/images/gift_unchecked.svg',
+            width: 40 * responsive.fem,
+            height: 40 * responsive.hem,
+            fit: BoxFit.contain,
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStreakCounter(CheckInLoaded state) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10 * responsiveValues.hem),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text(
-            'Chuỗi: ${state.streak} ngày',
-            style: GoogleFonts.openSans(
-              textStyle: TextStyle(
-                fontSize: 12 * responsiveValues.ffem,
-                color: kPrimaryColor,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: GoogleFonts.openSans(
-        textStyle: TextStyle(
-          fontSize: 15 * responsiveValues.ffem,
-          height: responsiveValues.heightText,
-          color: Colors.black,
-          fontWeight: FontWeight.w800,
         ),
-      ),
+        Positioned(
+          bottom: 7 * responsive.hem,
+          child: Text(
+            'Ngày ${index + 1}',
+            textAlign: TextAlign.center,
+            style:
+                isHighlighted
+                    ? responsive.dayLabelActive
+                    : responsive.dayLabelInactive,
+          ),
+        ),
+      ],
     );
   }
 }
 
-class _TodayCampaignsSection extends StatelessWidget {
-  const _TodayCampaignsSection({required this.responsiveValues});
+// ---------------------------------------------------------------------------
+// Hôm nay có gì
+// ---------------------------------------------------------------------------
 
-  final ResponsiveValues responsiveValues;
+class _TodayCampaignsSection extends StatelessWidget {
+  const _TodayCampaignsSection({required this.responsive});
+
+  final ResponsiveValues responsive;
 
   @override
   Widget build(BuildContext context) {
-    final roleState = context.watch<RoleAppBloc>().state;
-
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10 * responsiveValues.fem),
+      padding: EdgeInsets.symmetric(vertical: 10 * responsive.fem),
       width: double.infinity,
       color: kbgWhiteColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 10 * responsiveValues.hem),
-            child: _buildSectionTitle('HÔM NAY CÓ GÌ'),
+            padding: EdgeInsets.only(left: 10 * responsive.hem),
+            child: Text('HÔM NAY CÓ GÌ', style: responsive.sectionTitle),
           ),
-          SizedBox(height: 10 * responsiveValues.hem),
-          _buildTodayCampaigns(context, roleState),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTodayCampaigns(BuildContext context, RoleAppState roleState) {
-    return BlocBuilder<CampaignBloc, CampaignState>(
-      buildWhen: (previous, current) {
-        // Only rebuild when the campaigns list changes
-        if (previous is CampaignsLoaded && current is CampaignsLoaded) {
-          return previous.campaigns != current.campaigns;
-        }
-        return previous != current;
-      },
-      builder: (context, state) {
-        if (state is CampaignsLoaded) {
-          if (state.campaigns.isEmpty) {
-            return _buildEmptyCampaignMessage();
-          } else {
-            return Container(
-              margin: EdgeInsets.only(left: 10),
-              width: MediaQuery.of(context).size.width,
-              child: CampaignCarousel(
-                campaigns: state.campaigns,
-                roleState: roleState,
-              ),
-            );
-          }
-        }
-        return Center(child: CircularProgressIndicator(color: kPrimaryColor));
-      },
-    );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: GoogleFonts.openSans(
-        textStyle: TextStyle(
-          fontSize: 15 * responsiveValues.ffem,
-          height: responsiveValues.heightText,
-          color: Colors.black,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyCampaignMessage() {
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.symmetric(horizontal: 15 * responsiveValues.fem),
-      height: 220 * responsiveValues.hem,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            'assets/icons/campaign-navbar-icon.svg',
-            width: 60 * responsiveValues.fem,
-            colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
-          ),
-          Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: 5),
-              child: Text(
-                'Không có chiến dịch nào \nđang diễn ra!',
-                style: GoogleFonts.openSans(
-                  textStyle: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ),
+          SizedBox(height: 10 * responsive.hem),
+          BlocBuilder<CampaignBloc, CampaignState>(
+            buildWhen: _campaignListBuildWhen,
+            builder: (context, state) {
+              if (state is CampaignsFailed) {
+                // Nút thử lại chỉ đặt ở mục "Chiến dịch ưu đãi" bên dưới để
+                // không hiện hai nút cho cùng một lần tải hỏng.
+                return _CampaignsError(
+                  responsive: responsive,
+                  message: state.error,
+                  showRetry: false,
+                );
+              }
+              if (state is! CampaignsLoaded) {
+                return Center(
+                  child: CircularProgressIndicator(color: kPrimaryColor),
+                );
+              }
+              if (state.campaigns.isEmpty) {
+                return _EmptyCampaigns(responsive: responsive);
+              }
+              return Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: CampaignCarousel(campaigns: state.campaigns),
+              );
+            },
           ),
         ],
       ),
@@ -714,135 +444,109 @@ class _TodayCampaignsSection extends StatelessWidget {
   }
 }
 
-class _BrandsSection extends StatelessWidget {
-  const _BrandsSection({required this.responsiveValues});
+// ---------------------------------------------------------------------------
+// Thương hiệu
+// ---------------------------------------------------------------------------
 
-  final ResponsiveValues responsiveValues;
+class _BrandsSection extends StatelessWidget {
+  const _BrandsSection({required this.responsive});
+
+  final ResponsiveValues responsive;
 
   @override
   Widget build(BuildContext context) {
-    final roleState = context.watch<RoleAppBloc>().state;
-
     return Container(
       color: kbgWhiteColor,
-      padding: EdgeInsets.symmetric(vertical: 15 * responsiveValues.fem),
+      padding: EdgeInsets.symmetric(vertical: 15 * responsive.fem),
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(left: 10 * responsiveValues.fem),
+            margin: EdgeInsets.only(left: 10 * responsive.fem),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                _buildSectionTitle('THƯƠNG HIỆU'),
-                _buildViewMoreButton(context, roleState),
+                Text('THƯƠNG HIỆU', style: responsive.sectionTitle),
+                _buildViewMoreButton(context),
               ],
             ),
           ),
-          SizedBox(height: 12 * responsiveValues.hem),
-          _buildBrandsList(context, roleState),
+          SizedBox(height: 12 * responsive.hem),
+          BlocBuilder<BrandBloc, BrandState>(
+            builder: (context, state) {
+              if (state is! BrandsLoaded) {
+                return _LoadingLottie(responsive: responsive);
+              }
+              return SizedBox(
+                height: 160 * responsive.hem,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  addAutomaticKeepAlives: false,
+                  itemCount: state.brands.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == state.brands.length) {
+                      return _buildViewMoreBrandsItem(context);
+                    }
+                    final brand = state.brands[index];
+                    return BrandCard(
+                      fem: responsive.fem,
+                      hem: responsive.hem,
+                      ffem: responsive.ffem,
+                      brandModel: brand,
+                    );
+                  },
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildViewMoreButton(BuildContext context, RoleAppState roleState) {
+  Widget _buildViewMoreButton(BuildContext context) {
     return InkWell(
-      onTap:
-          () => _navigateBasedOnRole(
-            context,
-            roleState,
-            UnverifiedScreen.routeName,
-            BrandListScreen.routeName,
-          ),
+      onTap: () => openByRole(context, BrandListScreen.routeName),
       child: Container(
-        height: 22 * responsiveValues.hem,
-        width: 22 * responsiveValues.fem,
-        margin: EdgeInsets.only(left: 8 * responsiveValues.fem),
+        height: 22 * responsive.hem,
+        width: 22 * responsive.fem,
+        margin: EdgeInsets.only(left: 8 * responsive.fem),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(80),
         ),
         child: Icon(
           Icons.arrow_forward_rounded,
-          size: 18 * responsiveValues.fem,
+          size: 18 * responsive.fem,
           color: kDarkPrimaryColor,
         ),
       ),
     );
   }
 
-  Widget _buildBrandsList(BuildContext context, RoleAppState roleState) {
-    // Using separate BlocProvider to prevent unnecessary rebuilds
-    return BlocBuilder<BrandBloc, BrandState>(
-      builder: (context, state) {
-        if (state is BrandsLoaded) {
-          return SizedBox(
-            height: 160 * responsiveValues.hem,
-            width: MediaQuery.of(context).size.width,
-            child: ListView.builder(
-              // Horizontal scrolling is better for performance than vertical
-              scrollDirection: Axis.horizontal,
-              itemCount: state.brands.length + 1,
-              itemBuilder: (context, index) {
-                if (index == state.brands.length) {
-                  return _buildViewMoreBrandsItem(context, roleState);
-                } else {
-                  return BrandCard(
-                    fem: responsiveValues.fem,
-                    hem: responsiveValues.hem,
-                    ffem: responsiveValues.ffem,
-                    brandModel: state.brands[index],
-                  );
-                }
-              },
-            ),
-          );
-        }
-        return _buildLoadingIndicator();
-      },
-    );
-  }
-
-  Widget _buildViewMoreBrandsItem(
-    BuildContext context,
-    RoleAppState roleState,
-  ) {
+  Widget _buildViewMoreBrandsItem(BuildContext context) {
     return InkWell(
-      onTap:
-          () => _navigateBasedOnRole(
-            context,
-            roleState,
-            UnverifiedScreen.routeName,
-            BrandListScreen.routeName,
-          ),
+      onTap: () => openByRole(context, BrandListScreen.routeName),
       child: Container(
-        width: 80 * responsiveValues.fem,
-        margin: EdgeInsets.symmetric(horizontal: 5 * responsiveValues.fem),
+        width: 80 * responsive.fem,
+        margin: EdgeInsets.symmetric(horizontal: 5 * responsive.fem),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(80 * responsiveValues.fem),
+              borderRadius: BorderRadius.circular(80 * responsive.fem),
               child: Container(
-                width: 80 * responsiveValues.fem,
-                height: 80 * responsiveValues.hem,
+                width: 80 * responsive.fem,
+                height: 80 * responsive.hem,
                 color: Colors.white,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.arrow_forward, size: 30),
+                    const Icon(Icons.arrow_forward, size: 30),
                     Text(
                       'Xem thêm',
                       textAlign: TextAlign.center,
                       maxLines: 2,
-                      style: GoogleFonts.openSans(
-                        textStyle: TextStyle(
-                          fontSize: 10 * responsiveValues.ffem,
-                          color: Colors.black,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
+                      style: responsive.viewMore,
                     ),
                   ],
                 ),
@@ -853,282 +557,356 @@ class _BrandsSection extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: GoogleFonts.openSans(
-        textStyle: TextStyle(
-          fontSize: 15 * responsiveValues.ffem,
-          height: responsiveValues.heightText,
-          color: Colors.black,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoadingIndicator() {
-    return Center(
-      child: Lottie.asset(
-        'assets/animations/loading-screen.json',
-        width: 50 * responsiveValues.fem,
-        height: 50 * responsiveValues.hem,
-      ),
-    );
-  }
-
-  void _navigateBasedOnRole(
-    BuildContext context,
-    RoleAppState roleState,
-    String unverifiedRoute,
-    String verifiedRoute,
-  ) {
-    if (roleState is Unverified) {
-      Navigator.pushNamed(context, unverifiedRoute);
-    } else {
-      Navigator.pushNamed(context, verifiedRoute);
-    }
-  }
 }
 
-// Use a separate stateful widget for campaigns list to better manage state
-class _CampaignsSection extends StatefulWidget {
-  const _CampaignsSection({required this.responsiveValues});
+// ---------------------------------------------------------------------------
+// Chiến dịch ưu đãi (sliver để danh sách dựng lazy theo scroll)
+// ---------------------------------------------------------------------------
 
-  final ResponsiveValues responsiveValues;
+class _CampaignsSection extends StatelessWidget {
+  const _CampaignsSection({required this.responsive});
 
-  @override
-  _CampaignsSectionState createState() => _CampaignsSectionState();
-}
-
-class _CampaignsSectionState extends State<_CampaignsSection> {
-  // Use a separate cache to prevent unnecessary rebuilds
-  List<CampaignModel>? _cachedCampaigns;
-  bool? _cachedHasReachedMax;
+  final ResponsiveValues responsive;
 
   @override
   Widget build(BuildContext context) {
-    final roleState = context.watch<RoleAppBloc>().state;
-
-    return Container(
-      color: kbgWhiteColor,
-      padding: EdgeInsets.symmetric(vertical: 15 * widget.responsiveValues.fem),
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(left: 10 * widget.responsiveValues.fem),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [_buildSectionTitle('CHIẾN DỊCH ƯU ĐÃI')],
+    return DecoratedSliver(
+      decoration: const BoxDecoration(color: kbgWhiteColor),
+      sliver: SliverMainAxisGroup(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: 15 * responsive.fem,
+                left: 10 * responsive.fem,
+                bottom: 12 * responsive.hem,
+              ),
+              child: Text('CHIẾN DỊCH ƯU ĐÃI', style: responsive.sectionTitle),
             ),
           ),
-          SizedBox(height: 12 * widget.responsiveValues.hem),
-          _buildCampaignsList(context, roleState),
-          SizedBox(height: 10 * widget.responsiveValues.hem),
+          BlocBuilder<CampaignBloc, CampaignState>(
+            buildWhen: _campaignListBuildWhen,
+            builder: (context, state) {
+              if (state is CampaignsFailed) {
+                return SliverToBoxAdapter(
+                  child: _CampaignsError(
+                    responsive: responsive,
+                    message: state.error,
+                  ),
+                );
+              }
+              if (state is! CampaignsLoaded) {
+                return SliverToBoxAdapter(
+                  child: _ShimmerCampaigns(responsive: responsive),
+                );
+              }
+              if (state.campaigns.isEmpty) {
+                return SliverToBoxAdapter(
+                  child: _EmptyCampaigns(responsive: responsive),
+                );
+              }
+
+              final campaigns = state.campaigns;
+              return SliverList.builder(
+                itemCount:
+                    state.hasReachMax ? campaigns.length : campaigns.length + 1,
+                itemBuilder: (context, index) {
+                  if (index >= campaigns.length) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: CircularProgressIndicator(color: kPrimaryColor),
+                      ),
+                    );
+                  }
+                  final campaign = campaigns[index];
+                  void openDetail() => openByRole(
+                    context,
+                    CampaignDetailStudentScreen.routeName,
+                    arguments: campaign.id,
+                  );
+
+                  return GestureDetector(
+                    onTap: openDetail,
+                    child: CampaignListCard(
+                      fem: responsive.fem,
+                      hem: responsive.hem,
+                      ffem: responsive.ffem,
+                      campaignModel: campaign,
+                      onTap: openDetail,
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(height: 15 * responsive.fem + 10 * responsive.hem),
+          ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildCampaignsList(BuildContext context, RoleAppState roleState) {
-    return BlocConsumer<CampaignBloc, CampaignState>(
-      listenWhen: (previous, current) {
-        // Only respond when loading more is completed
-        if (previous is CampaignsLoaded && current is CampaignsLoaded) {
-          return previous.campaigns.length < current.campaigns.length;
-        }
-        return false;
-      },
-      listener: (context, state) {
-        // Reset the loading flag when new data arrives
-        if (state is CampaignsLoaded) {
-          context.findAncestorStateOfType<_BodyState>()?._isLoadingMore = false;
-        }
-      },
-      buildWhen: (previous, current) {
-        // Avoid rebuilding when the data hasn't changed
-        if (previous is CampaignsLoaded && current is CampaignsLoaded) {
-          if (_cachedCampaigns == current.campaigns &&
-              _cachedHasReachedMax == current.hasReachMax) {
-            return false;
-          }
+// ---------------------------------------------------------------------------
+// Dùng chung
+// ---------------------------------------------------------------------------
 
-          _cachedCampaigns = current.campaigns;
-          _cachedHasReachedMax = current.hasReachMax;
-          return true;
-        }
-        return previous.runtimeType != current.runtimeType;
-      },
-      builder: (context, state) {
-        if (state is CampaignLoading) {
-          return _buildShimmerLoading();
-        } else if (state is CampaignsLoaded) {
-          if (state.campaigns.isEmpty) {
-            return _buildEmptyCampaignMessage();
-          } else {
-            return _buildCampaignsListView(context, state, roleState);
-          }
-        }
-        return Center(child: CircularProgressIndicator(color: kPrimaryColor));
-      },
-    );
-  }
+/// Chỉ dựng lại theo các state của danh sách chiến dịch.
+///
+/// [CampaignBloc] là bloc dùng chung toàn app, các state của luồng khác (ví dụ
+/// [CampaignByIdLoaded]) bị bỏ qua để danh sách không biến thành vòng xoay.
+bool _campaignListBuildWhen(CampaignState previous, CampaignState current) =>
+    current is CampaignsLoaded ||
+    current is CampaignLoading ||
+    current is CampaignsFailed;
 
-  Widget _buildCampaignsListView(
-    BuildContext context,
-    CampaignsLoaded state,
-    RoleAppState roleState,
-  ) {
-    // Extract the campaigns once to avoid multiple accesses
-    final campaigns = state.campaigns;
-    final hasReachedMax = state.hasReachMax;
-
-    // Use SliverList in a ListView to improve performance
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: hasReachedMax ? campaigns.length : campaigns.length + 1,
-      itemBuilder: (context, index) {
-        if (index >= campaigns.length) {
-          return Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: CircularProgressIndicator(color: kPrimaryColor),
-            ),
-          );
-        }
-
-        // Cache campaign for this index
-        final campaign = campaigns[index];
-
-        // Using RepaintBoundary to optimize rendering
-        return RepaintBoundary(
-          child: GestureDetector(
-            onTap:
-                () =>
-                    _navigateToDetailCampaign(context, roleState, campaign.id),
-            child: CampaignListCard(
-              fem: widget.responsiveValues.fem,
-              hem: widget.responsiveValues.hem,
-              ffem: widget.responsiveValues.ffem,
-              campaignModel: campaign,
-              onTap:
-                  () => _navigateToDetailCampaign(
-                    context,
-                    roleState,
-                    campaign.id,
-                  ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildShimmerLoading() {
-    return ListView.builder(
-      itemCount: 3,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return Shimmer.fromColors(
-          baseColor: Colors.grey.shade300,
-          highlightColor: Colors.grey.shade100,
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 10),
-            height: 160,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Colors.amber,
-              borderRadius: BorderRadius.circular(15),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: GoogleFonts.openSans(
-        textStyle: TextStyle(
-          fontSize: 15 * widget.responsiveValues.ffem,
-          height: widget.responsiveValues.heightText,
-          color: Colors.black,
-          fontWeight: FontWeight.w800,
+void _showAppSnackBar(
+  BuildContext context, {
+  required String title,
+  required String message,
+  required ContentType contentType,
+}) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(
+      SnackBar(
+        elevation: 0,
+        duration: const Duration(milliseconds: 2000),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: title,
+          message: message,
+          contentType: contentType,
         ),
       ),
     );
-  }
+}
 
-  Widget _buildEmptyCampaignMessage() {
+class _LoadingLottie extends StatelessWidget {
+  const _LoadingLottie({required this.responsive});
+
+  final ResponsiveValues responsive;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Lottie.asset(
+        'assets/animations/loading-screen.json',
+        width: 50 * responsive.fem,
+        height: 50 * responsive.hem,
+      ),
+    );
+  }
+}
+
+class _EmptyCampaigns extends StatelessWidget {
+  const _EmptyCampaigns({required this.responsive});
+
+  final ResponsiveValues responsive;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.symmetric(
-        horizontal: 15 * widget.responsiveValues.fem,
-      ),
-      height: 220 * widget.responsiveValues.hem,
+      margin: EdgeInsets.symmetric(horizontal: 15 * responsive.fem),
+      height: 220 * responsive.hem,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SvgPicture.asset(
             'assets/icons/campaign-navbar-icon.svg',
-            width: 60 * widget.responsiveValues.fem,
-            colorFilter: ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+            width: 60 * responsive.fem,
+            colorFilter: const ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
           ),
-          const Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: 5),
-              child: Text(
-                'Không có chiến dịch nào \nđang diễn ra!',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(
+              'Không có chiến dịch nào \nđang diễn ra!',
+              textAlign: TextAlign.center,
+              style: responsive.emptyMessage,
             ),
           ),
         ],
       ),
     );
   }
+}
 
-  void _navigateToDetailCampaign(
-    BuildContext context,
-    RoleAppState roleState,
-    String campaignId,
-  ) {
-    if (roleState is Unverified) {
-      Navigator.pushNamed(context, UnverifiedScreen.routeName);
-    } else {
-      Navigator.pushNamed(
-        context,
-        CampaignDetailStudentScreen.routeName,
-        arguments: campaignId,
-      );
-    }
+class _CampaignsError extends StatelessWidget {
+  const _CampaignsError({
+    required this.responsive,
+    required this.message,
+    this.showRetry = true,
+  });
+
+  final ResponsiveValues responsive;
+  final String message;
+  final bool showRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: 15 * responsive.fem),
+      padding: EdgeInsets.symmetric(vertical: 24 * responsive.hem),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.wifi_off_rounded,
+            size: 40 * responsive.fem,
+            color: kLowTextColor,
+          ),
+          SizedBox(height: 8 * responsive.hem),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16 * responsive.fem),
+            child: Text(
+              message,
+              textAlign: TextAlign.center,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: responsive.emptyMessage,
+            ),
+          ),
+          if (showRetry) ...[
+            SizedBox(height: 8 * responsive.hem),
+            TextButton(
+              onPressed:
+                  () => context.read<CampaignBloc>().add(const LoadCampaigns()),
+              child: const Text(
+                'Thử lại',
+                style: TextStyle(color: kPrimaryColor),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
   }
 }
 
-// Model class to store responsive values
-class ResponsiveValues {
-  final double fem;
-  final double ffem;
-  final double hem;
-  final double heightText;
+class _ShimmerCampaigns extends StatelessWidget {
+  const _ShimmerCampaigns({required this.responsive});
 
-  const ResponsiveValues({
+  final ResponsiveValues responsive;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(
+        3,
+        (_) => Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Container(
+            margin: EdgeInsets.only(
+              left: 15 * responsive.fem,
+              right: 15 * responsive.fem,
+              bottom: 15 * responsive.hem,
+            ),
+            height: 130 * responsive.hem,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15 * responsive.fem),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Hệ số responsive + các TextStyle dựng sẵn cho màn chiến dịch.
+///
+/// `GoogleFonts.openSans()` phải tra cứu font mỗi lần gọi, nên các style lặp
+/// lại được cache tại đây thay vì dựng lại trong từng `build`.
+class ResponsiveValues {
+  ResponsiveValues({
     required this.fem,
     required this.ffem,
     required this.hem,
     required this.heightText,
   });
+
+  factory ResponsiveValues.of(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final fem = size.width / _baseWidth;
+    final ffem = fem * 0.97;
+    return ResponsiveValues(
+      fem: fem,
+      ffem: ffem,
+      hem: size.height / _baseHeight,
+      heightText: 1.3625 * ffem / fem,
+    );
+  }
+
+  static const double _baseWidth = 375;
+  static const double _baseHeight = 812;
+
+  final double fem;
+  final double ffem;
+  final double hem;
+  final double heightText;
+
+  late final TextStyle sectionTitle = GoogleFonts.openSans(
+    textStyle: TextStyle(
+      fontSize: 15 * ffem,
+      height: heightText,
+      color: Colors.black,
+      fontWeight: FontWeight.w800,
+    ),
+  );
+
+  late final TextStyle streakCounter = GoogleFonts.openSans(
+    textStyle: TextStyle(
+      fontSize: 12 * ffem,
+      color: kPrimaryColor,
+      fontWeight: FontWeight.w900,
+    ),
+  );
+
+  late final TextStyle emptyMessage = GoogleFonts.openSans(
+    textStyle: const TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w600,
+      fontSize: 16,
+    ),
+  );
+
+  late final TextStyle viewMore = GoogleFonts.openSans(
+    textStyle: TextStyle(
+      fontSize: 10 * ffem,
+      color: Colors.black,
+      fontWeight: FontWeight.normal,
+    ),
+  );
+
+  late final TextStyle dayLabelActive = _dayLabel(Colors.white);
+  late final TextStyle dayLabelInactive = _dayLabel(Colors.grey);
+
+  TextStyle _dayLabel(Color color) => GoogleFonts.openSans(
+    textStyle: TextStyle(
+      fontSize: 9 * ffem,
+      color: color,
+      fontWeight: FontWeight.w900,
+      shadows: [
+        Shadow(
+          color: Colors.black.withValues(alpha: 0.5),
+          offset: const Offset(1, 1),
+          blurRadius: 2,
+        ),
+      ],
+    ),
+  );
 }

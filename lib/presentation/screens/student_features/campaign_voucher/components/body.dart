@@ -93,7 +93,7 @@ class Body extends StatelessWidget {
               return buildCampaignVoucherShimmer(fem, hem);
             } else if (state is CampaignVoucherByIdLoaded) {
               var campaignVoucherDetail = state.campaignVoucherDetail;
-              var duration = getDuration(campaignDetail.endOn);
+              final endTime = DateTime.parse(campaignDetail.endOn);
               return CustomScrollView(
                 slivers: [
                   SliverList(
@@ -107,6 +107,14 @@ class Body extends StatelessWidget {
                             child: Image.network(
                               campaignVoucherDetail.image,
                               fit: BoxFit.fill,
+                              // Giải mã ảnh theo bề ngang màn hình thay vì
+                              // kích thước gốc.
+                              cacheWidth:
+                                  (MediaQuery.sizeOf(context).width *
+                                          MediaQuery.devicePixelRatioOf(
+                                            context,
+                                          ))
+                                      .round(),
                               errorBuilder: (context, error, stackTrace) {
                                 return Image.asset(
                                   'assets/images/background_splash.png',
@@ -163,10 +171,10 @@ class Body extends StatelessWidget {
                                         CountDownTimerFormat
                                             .daysHoursMinutesSeconds,
                                     enableDescriptions: false,
-                                    endTime: DateTime.now().add(duration),
-                                    onEnd: () {
-                                      print("Timer finished");
-                                    },
+                                    // Mốc kết thúc là thời điểm cố định của
+                                    // chiến dịch, không tính lại theo `now`
+                                    // mỗi lần dựng lại widget.
+                                    endTime: endTime,
                                   ),
                                 ),
                               ],
@@ -219,7 +227,9 @@ class Body extends StatelessWidget {
                                     Row(
                                       children: [
                                         Text(
-                                          formatter.format((campaignVoucherModel.price)),
+                                          formatter.format(
+                                            (campaignVoucherModel.price),
+                                          ),
                                           style: GoogleFonts.openSans(
                                             textStyle: TextStyle(
                                               fontSize: 22 * ffem,
@@ -470,19 +480,10 @@ class Body extends StatelessWidget {
   }
 }
 
-Duration getDuration(String endOn) {
-  DateTime dateStartOn = DateTime.parse(endOn);
-  Duration duration = dateStartOn.difference(DateTime.now());
-  print(DateTime.now());
-  print(duration);
-  print(dateStartOn);
-  return duration;
-}
-
 void _detailModelBottomSheet(
-  context,
+  BuildContext context,
   CampaignVoucherDetailModel campaignVoucherDetail,
-  campaignModel,
+  CampaignDetailModel campaignModel,
 ) {
   double baseWidth = 375;
   double fem = MediaQuery.of(context).size.width / baseWidth;

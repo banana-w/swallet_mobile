@@ -15,7 +15,7 @@ class Body2 extends StatelessWidget {
     double hem = MediaQuery.of(context).size.height / baseHeight;
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
+        FocusScope.of(context).unfocus();
       },
       child: SingleChildScrollView(
         child: Container(

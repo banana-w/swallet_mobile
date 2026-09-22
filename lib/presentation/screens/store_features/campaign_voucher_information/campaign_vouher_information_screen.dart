@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:swallet_mobile/data/interface_repositories/store_features/store_repository.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/domain/entities/student_features/campaign_voucher_detail_model.dart';
-import 'package:swallet_mobile/data/interface_repositories/store_features/store_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/failed_scan_voucher/failed_scan_voucher_screen.dart';
 import 'package:swallet_mobile/presentation/screens/success_scan_voucher/success_scan_voucher_screen.dart';
 
 import '../../../config/constants.dart';
+import '../widgets/store_app_bar.dart';
+import '../widgets/store_bottom_button.dart';
+import '../widgets/voucher_rules_card.dart';
 
 class CampaignVoucherInformationScreen extends StatelessWidget {
   static const String routeName = '/campaign-voucher-information-store';
@@ -37,12 +39,11 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
               voucherItemId: voucherItemId,
             ),
           ),
-      transitionDuration: Duration(milliseconds: 400),
+      transitionDuration: const Duration(milliseconds: 400),
       transitionsBuilder: (_, animation, _, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
-        var tween = Tween(begin: begin, end: end);
-        var offsetAnimation = animation.drive(tween);
+        final offsetAnimation = animation.drive(Tween(begin: begin, end: end));
 
         return SlideTransition(position: offsetAnimation, child: child);
       },
@@ -64,436 +65,334 @@ class CampaignVoucherInformationScreen extends StatelessWidget {
   final String studentId;
   final String storeId;
   final String voucherItemId;
-  
+
+  void _onStoreState(BuildContext context, StoreState state) {
+    if (state is ScanVoucherFailed) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        FailedScanVoucherScreen.routeName,
+        (route) => false,
+        arguments: state.error,
+      );
+    } else if (state is ScanVoucherLoading) {
+      showDialog<void>(
+        context: context,
+        builder:
+            (_) => const AlertDialog(
+              content: SizedBox(
+                width: 250,
+                height: 250,
+                child: Center(
+                  child: CircularProgressIndicator(color: kPrimaryColor),
+                ),
+              ),
+            ),
+      );
+    } else if (state is ScanVoucherSuccess) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        SuccessScanVoucherScreen.routeName,
+        (route) => false,
+        arguments: state.result,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double baseHeight = 812;
-    double ffem = fem * 0.97;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
+    final size = MediaQuery.sizeOf(context);
+    final fem = size.width / 375;
+    final ffem = fem * 0.97;
+    final hem = size.height / 812;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: klighGreyColor,
-        appBar: AppBar(
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/background_splash.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          toolbarHeight: 40 * hem,
-          centerTitle: true,
-          title: Text(
-            'Chi tiết ưu đãi',
-            style: GoogleFonts.openSans(
-              textStyle: TextStyle(
-                fontSize: 20 * ffem,
-                fontWeight: FontWeight.w900,
-                height: 1.3625 * ffem / fem,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          actions: [
-            // SvgPicture.asset('assets/icons/notification-icon.svg')
-            Padding(
-              padding: EdgeInsets.only(right: 20 * fem),
-              child: IconButton(
-                icon: Icon(Icons.home, color: Colors.white, size: 30 * fem),
-                onPressed: () {
-                  context.read<CampaignBloc>().add(LoadCampaigns());
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/landing-screen-store',
-                    (Route<dynamic> route) => false,
-                  );
-                },
-              ),
-            ),
-          ],
+        appBar: StoreAppBar(
+          title: 'Chi tiết ưu đãi',
+          fem: fem,
+          ffem: ffem,
+          hem: hem,
+          toolbarHeight: 40,
+          onHome: () {
+            context.read<CampaignBloc>().add(const LoadCampaigns());
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/landing-screen-store',
+              (route) => false,
+            );
+          },
         ),
-        bottomNavigationBar: BottomAppBar(
-          color: klighGreyColor,
-          height: 80 * hem,
-          elevation: 5,
-          child: GestureDetector(
-            onTap: () async {
-              context.read<StoreBloc>().add(
+        bottomNavigationBar: StoreBottomButton(
+          label: 'Xác nhận',
+          width: 250,
+          fem: fem,
+          ffem: ffem,
+          hem: hem,
+          onTap:
+              () => context.read<StoreBloc>().add(
                 ScanVoucherCode(
                   voucherId: voucherModel.id,
                   studentId: studentId,
                   storeId: storeId,
-                  voucherItemId: voucherItemId,             
+                  voucherItemId: voucherItemId,
                 ),
-              );
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Container(
-                    width: 250 * fem,
-                    height: 45 * hem,
-                    decoration: BoxDecoration(
-                      color: kPrimaryColor,
-                      borderRadius: BorderRadius.circular(10 * fem),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Xác nhận',
-                        style: GoogleFonts.openSans(
-                          textStyle: TextStyle(
-                            fontSize: 17 * ffem,
-                            fontWeight: FontWeight.w600,
-                            height: 1.3625 * ffem / fem,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+              ),
         ),
         body: BlocListener<StoreBloc, StoreState>(
-          listener: (context, state) {
-            if (state is ScanVoucherFailed) {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                FailedScanVoucherScreen.routeName,
-                (Route<dynamic> route) => false,
-                arguments: state.error,
-              );
-            } else if (state is ScanVoucherLoading) {
-              showDialog<String>(
-                context: context,
-                builder: (BuildContext context) {
-                  Future.delayed(Duration(seconds: 5));
-                  return AlertDialog(
-                    content: SizedBox(
-                      width: 250,
-                      height: 250,
-                      child: Center(
-                        child: CircularProgressIndicator(color: kPrimaryColor),
-                      ),
-                    ),
-                  );
-                },
-              );
-            } else if (state is ScanVoucherSuccess) {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                SuccessScanVoucherScreen.routeName,
-                (Route<dynamic> route) => false,
-                arguments: state.result,
-              );
-            }
-          },
+          listener: _onStoreState,
           child: CustomScrollView(
             slivers: [
               SliverList(
                 delegate: SliverChildListDelegate([
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: double.infinity,
-                        height: 220 * hem,
-                        child: Image.network(
-                          voucherModel.image,
-                          fit: BoxFit.fill,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                              'assets/images/background_splash.png',
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        ),
-                      ),
-                      Container(
-                        color: Colors.white,
-                        width: double.infinity,
-                        padding: EdgeInsets.only(
-                          left: 15 * fem,
-                          top: 10 * hem,
-                          bottom: 15 * hem,
-                          right: 15 * fem,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              campaignModel.campaignName,
-                              textAlign: TextAlign.justify,
-                              softWrap: true,
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 15 * ffem,
-                                  color: klowTextGrey,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                top: 2 * hem,
-                                bottom: 5 * hem,
-                              ),
-                              child: Text(
-                                voucherModel.voucherName,
-                                textAlign: TextAlign.justify,
-                                softWrap: true,
-                                style: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 15 * ffem,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      formatter.format((voucherModel.price)),
-                                      style: GoogleFonts.openSans(
-                                        textStyle: TextStyle(
-                                          fontSize: 22 * ffem,
-                                          color: kPrimaryColor,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 5 * fem,
-                                        top: 2 * hem,
-                                        bottom: 0 * hem,
-                                      ),
-                                      child: SvgPicture.asset(
-                                        'assets/icons/coin.svg',
-                                        width: 25 * fem,
-                                        height: 25 * fem,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 5 * hem),
-                      Container(
-                        color: Colors.white,
-                        width: double.infinity,
-                        padding: EdgeInsets.only(
-                          left: 15 * fem,
-                          top: 15 * hem,
-                          bottom: 15 * hem,
-                        ),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icons/calendar-icon.svg',
-                              width: 25 * fem,
-                            ),
-                            SizedBox(width: 10 * fem),
-                            Text(
-                              'Hạn sử dụng: ${changeFormateDate(campaignModel.endOn)}',
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 15 * ffem,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 5 * hem),
-                      Container(
-                        color: Colors.white,
-                        width: double.infinity,
-                        padding: EdgeInsets.only(
-                          top: 15 * hem,
-                          bottom: 15 * hem,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 15 * fem),
-                              child: Text(
-                                'CHIẾN DỊCH CUNG CẤP',
-                                style: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 15 * ffem,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10 * hem),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(width: 15 * fem),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: SizedBox(
-                                    width: 120 * fem,
-                                    height: 120 * hem,
-                                    child: Image.network(
-                                      campaignModel.image,
-                                      fit: BoxFit.fill,
-                                      errorBuilder: (
-                                        context,
-                                        error,
-                                        stackTrace,
-                                      ) {
-                                        return Image.asset(
-                                          'assets/images/image-404.jpg',
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 10 * fem),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 5 * hem),
-                                      child: SizedBox(
-                                        width: 200 * fem,
-                                        child: Text(
-                                          campaignModel
-                                              .campaignName
-                                              .toUpperCase(),
-                                          softWrap: true,
-                                          maxLines: 2,
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
-                                              fontSize: 14 * ffem,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 5 * hem),
-                      GestureDetector(
-                        onTap: () {},
-                        // onTap: () {
-                        //   checkLength(campaignDetailModel.condition);
-                        // },
-                        child: Container(
-                          padding: EdgeInsets.only(
-                            right: 10 * fem,
-                            left: 10 * fem,
-                            top: 15 * hem,
-                            bottom: 15 * hem,
+                  SizedBox(
+                    width: double.infinity,
+                    height: 220 * hem,
+                    child: Image.network(
+                      voucherModel.image,
+                      fit: BoxFit.fill,
+                      cacheWidth:
+                          (size.width * MediaQuery.devicePixelRatioOf(context))
+                              .round(),
+                      errorBuilder:
+                          (context, error, stackTrace) => Image.asset(
+                            'assets/images/background_splash.png',
+                            fit: BoxFit.cover,
                           ),
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(color: Colors.white),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 0 * fem),
-                                child: Text(
-                                  'THỂ LỆ ƯU ĐÃI',
-                                  style: GoogleFonts.openSans(
-                                    textStyle: TextStyle(
-                                      fontSize: 15 * ffem,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(
-                                  left: 5 * fem,
-                                  top: 5 * hem,
-                                ),
-                                child: HtmlWidget(
-                                  voucherModel.condition,
-                                  textStyle: GoogleFonts.openSans(
-                                    textStyle: TextStyle(
-                                      fontSize: 14 * ffem,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 10 * hem),
-                              Padding(
-                                padding: EdgeInsets.only(left: 0 * fem),
-                                child: Text(
-                                  'NỘI DUNG ƯU ĐÃI',
-                                  style: GoogleFonts.openSans(
-                                    textStyle: TextStyle(
-                                      fontSize: 15 * ffem,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(
-                                  left: 5 * fem,
-                                  top: 5 * hem,
-                                ),
-                                child: HtmlWidget(
-                                  voucherModel.description,
-                                  textStyle: GoogleFonts.openSans(
-                                    textStyle: TextStyle(
-                                      fontSize: 14 * ffem,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 5 * hem),
-                    ],
+                    ),
                   ),
+                  _SummaryCard(
+                    campaignName: campaignModel.campaignName,
+                    voucherName: voucherModel.voucherName,
+                    price: voucherModel.price,
+                    fem: fem,
+                    ffem: ffem,
+                    hem: hem,
+                  ),
+                  SizedBox(height: 5 * hem),
+                  _ExpiryRow(
+                    endOn: campaignModel.endOn,
+                    fem: fem,
+                    ffem: ffem,
+                    hem: hem,
+                  ),
+                  SizedBox(height: 5 * hem),
+                  _CampaignCard(
+                    campaignModel: campaignModel,
+                    fem: fem,
+                    ffem: ffem,
+                    hem: hem,
+                  ),
+                  SizedBox(height: 5 * hem),
+                  VoucherRulesCard(
+                    condition: voucherModel.condition,
+                    description: voucherModel.description,
+                    fem: fem,
+                    ffem: ffem,
+                    hem: hem,
+                  ),
+                  SizedBox(height: 5 * hem),
                 ]),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _SummaryCard extends StatelessWidget {
+  const _SummaryCard({
+    required this.campaignName,
+    required this.voucherName,
+    required this.price,
+    required this.fem,
+    required this.ffem,
+    required this.hem,
+  });
+
+  final String campaignName;
+  final String voucherName;
+  final num price;
+  final double fem;
+  final double ffem;
+  final double hem;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      width: double.infinity,
+      padding: EdgeInsets.only(
+        left: 15 * fem,
+        right: 15 * fem,
+        top: 10 * hem,
+        bottom: 15 * hem,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            campaignName,
+            textAlign: TextAlign.justify,
+            softWrap: true,
+            style: GoogleFonts.openSans(
+              textStyle: TextStyle(
+                fontSize: 15 * ffem,
+                color: klowTextGrey,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 2 * hem, bottom: 5 * hem),
+            child: Text(
+              voucherName,
+              textAlign: TextAlign.justify,
+              softWrap: true,
+              style: GoogleFonts.openSans(
+                textStyle: TextStyle(
+                  fontSize: 15 * ffem,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+          VoucherPrice(
+            price: price,
+            fem: fem,
+            ffem: ffem,
+            hem: hem,
+            iconSize: 25,
+            iconLeftPadding: 5,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ExpiryRow extends StatelessWidget {
+  const _ExpiryRow({
+    required this.endOn,
+    required this.fem,
+    required this.ffem,
+    required this.hem,
+  });
+
+  final String endOn;
+  final double fem;
+  final double ffem;
+  final double hem;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      width: double.infinity,
+      padding: EdgeInsets.only(left: 15 * fem, top: 15 * hem, bottom: 15 * hem),
+      child: Row(
+        children: [
+          SvgPicture.asset('assets/icons/calendar-icon.svg', width: 25 * fem),
+          SizedBox(width: 10 * fem),
+          Text(
+            'Hạn sử dụng: ${changeFormateDate(endOn)}',
+            style: GoogleFonts.openSans(
+              textStyle: TextStyle(
+                fontSize: 15 * ffem,
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CampaignCard extends StatelessWidget {
+  const _CampaignCard({
+    required this.campaignModel,
+    required this.fem,
+    required this.ffem,
+    required this.hem,
+  });
+
+  final CampaignDetailModel campaignModel;
+  final double fem;
+  final double ffem;
+  final double hem;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 15 * hem),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 15 * fem),
+            child: Text(
+              'CHIẾN DỊCH CUNG CẤP',
+              style: GoogleFonts.openSans(
+                textStyle: TextStyle(
+                  fontSize: 15 * ffem,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 10 * hem),
+          Row(
+            children: [
+              SizedBox(width: 15 * fem),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: SizedBox(
+                  width: 120 * fem,
+                  height: 120 * hem,
+                  child: Image.network(
+                    campaignModel.image,
+                    fit: BoxFit.fill,
+                    // Ảnh hiển thị ở 120*fem.
+                    cacheWidth:
+                        (120 * fem * MediaQuery.devicePixelRatioOf(context))
+                            .round(),
+                    errorBuilder:
+                        (context, error, stackTrace) =>
+                            Image.asset('assets/images/image-404.jpg'),
+                  ),
+                ),
+              ),
+              SizedBox(width: 10 * fem),
+              Padding(
+                padding: EdgeInsets.only(top: 5 * hem),
+                child: SizedBox(
+                  width: 200 * fem,
+                  child: Text(
+                    campaignModel.campaignName.toUpperCase(),
+                    softWrap: true,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.openSans(
+                      textStyle: TextStyle(
+                        fontSize: 14 * ffem,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

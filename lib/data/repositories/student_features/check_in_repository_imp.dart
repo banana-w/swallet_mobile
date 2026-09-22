@@ -65,4 +65,31 @@ class CheckInRepositoryImpl implements CheckInRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<int> checkInWithQr({
+    required String studentId,
+    required String qrCode,
+    required double latitude,
+    required double longitude,
+  }) async {
+    final response = await _api.post(
+      Uri.parse('$baseUrl/qr'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'studentId': studentId,
+        'qrCode': qrCode,
+        'latitude': latitude,
+        'longitude': longitude,
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+    if (response.statusCode != 200) {
+      // Thông báo của máy chủ đã là tiếng Việt và hiển thị thẳng cho người
+      // dùng, nên giữ nguyên thay vì bọc thêm 'Exception: '.
+      throw CheckInException(data['message'] ?? 'Check-in thất bại');
+    }
+    return data['pointsAwarded'] ?? 10;
+  }
 }

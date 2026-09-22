@@ -1,13 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:swallet_mobile/data/models/store_features/campaign_voucher_store_model.dart';
 
-
 class CampaignStoreCartModel extends Equatable {
   final List<CampaignVoucherStoreModel> campaignVouchers;
 
   const CampaignStoreCartModel({required this.campaignVouchers});
 
-  Map voucherCampaign(List<CampaignVoucherStoreModel> campaignVouchers) {
+  /// Gom ưu đãi theo tên chiến dịch để màn danh sách dựng từng nhóm.
+  Map<String?, List<CampaignVoucherStoreModel>> voucherCampaign(
+    List<CampaignVoucherStoreModel> campaignVouchers,
+  ) {
     Map<String?, List<CampaignVoucherStoreModel>> filterCampaign = {};
 
     for (var campaignVoucher in campaignVouchers) {

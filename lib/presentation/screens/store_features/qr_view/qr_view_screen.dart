@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 
 import 'components/body.dart';
 
-class QrViewScreen extends StatefulWidget {
+class QrViewScreen extends StatelessWidget {
   static const String routeName = '/qr-view';
+
   static Route route({required String storeId}) {
     return PageRouteBuilder(
       pageBuilder: (_, _, _) => QrViewScreen(storeId: storeId),
-      transitionDuration: Duration(milliseconds: 400),
+      transitionDuration: const Duration(milliseconds: 400),
       transitionsBuilder: (_, animation, _, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
-        var tween = Tween(begin: begin, end: end);
-        var offsetAnimation = animation.drive(tween);
+        final offsetAnimation = animation.drive(Tween(begin: begin, end: end));
 
         return SlideTransition(position: offsetAnimation, child: child);
       },
@@ -22,20 +21,14 @@ class QrViewScreen extends StatefulWidget {
   }
 
   const QrViewScreen({super.key, required this.storeId});
+
   final String storeId;
-
-  @override
-  State<QrViewScreen> createState() => _QrViewScreenState();
-}
-
-class _QrViewScreenState extends State<QrViewScreen> {
-  MobileScannerController cameraController = MobileScannerController();
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 1,
-      child: SafeArea(child: Scaffold(body: Body(id: widget.storeId))),
+      child: SafeArea(child: Scaffold(body: Body(storeId: storeId))),
     );
   }
 }

@@ -16,6 +16,19 @@ final class AuthenticationSuccess extends AuthenticationState {
   List<Object?> get props => [];
 }
 
+/// Tạo tài khoản thành công — khác hẳn với đăng nhập thành công.
+///
+/// Trước đây đăng ký cũng phát [AuthenticationSuccess]. Màn đăng nhập nằm dưới
+/// các bước đăng ký trong stack nên `BlocListener` của nó vẫn sống và vẫn nghe:
+/// đăng ký xong là nó bắn `RoleAppStart` rồi đẩy thẳng vào `/landing-screen`,
+/// tranh chấp với điều hướng sang bước xác minh của chính màn đăng ký.
+final class RegistrationSuccess extends AuthenticationState {
+  const RegistrationSuccess();
+
+  @override
+  List<Object?> get props => [];
+}
+
 final class AuthenticationSuccessButNotVerified extends AuthenticationState {
   @override
   List<Object?> get props => [];
@@ -36,11 +49,6 @@ final class AuthenticationLectureSuccess extends AuthenticationState {
 }
 
 final class AuthenticationInProcess extends AuthenticationState {
-  @override
-  List<Object?> get props => [];
-}
-
-final class AuthenticationInProcessByGmail extends AuthenticationState {
   @override
   List<Object?> get props => [];
 }

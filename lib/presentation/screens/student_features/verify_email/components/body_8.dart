@@ -32,7 +32,7 @@ class Body8 extends StatelessWidget {
             border: Border(bottom: BorderSide(color: Colors.black))));
     return GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
+          FocusScope.of(context).unfocus();
         },
         child: CustomScrollView(
           slivers: [

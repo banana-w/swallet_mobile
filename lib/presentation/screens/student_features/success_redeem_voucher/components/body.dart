@@ -1,62 +1,80 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
+import 'package:swallet_mobile/presentation/widgets/transaction_detail_row.dart';
 
-class Body extends StatelessWidget {
+final _dateTimeFormat = DateFormat('HH:mm - dd/MM/yyyy');
+
+class Body extends StatefulWidget {
   const Body({super.key, required this.voucherName, required this.total});
 
   final String voucherName;
   final double total;
 
   @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  // Chốt mốc thời gian một lần khi vào màn. Trước đây gọi DateTime.now() ngay
+  // trong build nên mỗi lần dựng lại (xoay máy, đổi kích thước...) là "thời
+  // gian thanh toán" lại nhảy sang thời điểm hiện tại.
+  late final String _paidAt = _dateTimeFormat.format(DateTime.now());
+
+  @override
   Widget build(BuildContext context) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double baseHeight = 812;
-    double ffem = fem * 0.97;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
+    final size = MediaQuery.sizeOf(context);
+    final fem = size.width / 375;
+    final hem = size.height / 812;
+    final ffem = fem * 0.97;
+
+    final labelStyle = GoogleFonts.openSans(
+      textStyle: TextStyle(
+        fontSize: 15 * ffem,
+        fontWeight: FontWeight.w500,
+        color: Colors.grey,
+      ),
+    );
+    final valueStyle = GoogleFonts.openSans(
+      textStyle: TextStyle(
+        fontSize: 16 * ffem,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+    );
+
     return SingleChildScrollView(
       child: SizedBox(
-        width: MediaQuery.of(context).size.width,
+        width: size.width,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(
-              children: [
-                Container(
-                  color: klighGreyColor,
-                  height: 150 * hem,
-                  // width: ,
-                  child: Lottie.asset(
-                    'assets/animations/success-animation.json',
-                    repeat: false,
-                  ),
+            Container(
+              color: klighGreyColor,
+              height: 150 * hem,
+              child: Lottie.asset(
+                'assets/animations/success-animation.json',
+                repeat: false,
+              ),
+            ),
+            Text(
+              'Giao dịch thành công',
+              style: GoogleFonts.openSans(
+                textStyle: TextStyle(
+                  fontSize: 22 * ffem,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
-                Text(
-                  'Giao dịch thành công',
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                      fontSize: 22 * ffem,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
             SizedBox(height: 30 * hem),
             Container(
               width: double.infinity,
-              margin: EdgeInsets.only(left: 15 * fem, right: 15 * fem),
-              padding: EdgeInsets.only(
-                left: 15 * fem,
-                right: 15 * fem,
-                top: 5 * hem,
-                bottom: 5 * hem,
+              margin: EdgeInsets.symmetric(horizontal: 15 * fem),
+              padding: EdgeInsets.symmetric(
+                horizontal: 15 * fem,
+                vertical: 5 * hem,
               ),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -64,113 +82,48 @@ class Body extends StatelessWidget {
                 border: Border.all(color: kPrimaryColor),
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
+                  TransactionDetailRow(
                     height: 50 * hem,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Thời gian thanh toán',
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
-                              fontSize: 15 * ffem,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          _formatDateTime(DateTime.now()),
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
-                              fontSize: 16 * ffem,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ],
+                    label: 'Thời gian thanh toán',
+                    labelStyle: labelStyle,
+                    value: Text(_paidAt, style: valueStyle),
+                  ),
+                  TransactionDetailRow(
+                    height: 50 * hem,
+                    label: 'Ưu đãi',
+                    labelStyle: labelStyle,
+                    value: SizedBox(
+                      width: 120 * fem,
+                      child: Text(
+                        widget.voucherName,
+                        maxLines: 2,
+                        softWrap: true,
+                        textAlign: TextAlign.end,
+                        style: valueStyle,
+                      ),
                     ),
                   ),
-                  SizedBox(
+                  TransactionDetailRow(
                     height: 50 * hem,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Ưu đãi',
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
-                              fontSize: 15 * ffem,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                            ),
-                          ),
+                    label: 'Tổng coin',
+                    labelStyle: labelStyle,
+                    value: CoinAmount(
+                      amount: widget.total,
+                      style: GoogleFonts.openSans(
+                        textStyle: TextStyle(
+                          fontSize: 22 * ffem,
+                          fontWeight: FontWeight.bold,
+                          color: kPrimaryColor,
                         ),
-                        SizedBox(
-                          width: 120 * fem,
-                          child: Text(
-                            voucherName,
-                            maxLines: 2,
-                            softWrap: true,
-                            textAlign: TextAlign.end,
-                            style: GoogleFonts.openSans(
-                              textStyle: TextStyle(
-                                fontSize: 16 * ffem,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 50 * hem,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Tổng coin',
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
-                              fontSize: 15 * ffem,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              formatter.format(total),
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 22 * ffem,
-                                  fontWeight: FontWeight.bold,
-                                  color: kPrimaryColor,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: 5 * fem,
-                                top: 4 * hem,
-                                bottom: 2 * hem,
-                              ),
-                              child: SvgPicture.asset(
-                                'assets/icons/coin.svg',
-                                width: 26 * fem,
-                                height: 26 * fem,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
+                      iconSize: 26 * fem,
+                      iconPadding: EdgeInsets.only(
+                        left: 5 * fem,
+                        top: 4 * hem,
+                        bottom: 2 * hem,
+                      ),
                     ),
                   ),
                 ],
@@ -181,9 +134,4 @@ class Body extends StatelessWidget {
       ),
     );
   }
-}
-
-String _formatDateTime(DateTime datetime) {
-  String formattedDatetime = DateFormat("HH:mm - dd/MM/yyyy").format(datetime);
-  return formattedDatetime;
 }

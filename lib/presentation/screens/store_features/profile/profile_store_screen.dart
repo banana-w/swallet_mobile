@@ -13,16 +13,14 @@ class ProfileStoreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
-    double baseHeight = 812;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
-    final roleState = context.watch<RoleAppBloc>().state;
+    final size = MediaQuery.sizeOf(context);
+    final fem = size.width / 375;
+    final ffem = fem * 0.97;
+    final hem = size.height / 812;
 
     return BlocBuilder<RoleAppBloc, RoleAppState>(
       builder: (context, state) {
-        if (roleState is StoreRole) {
+        if (state is StoreRole) {
           return SafeArea(
             child: Scaffold(
               appBar: AppBar(
@@ -44,23 +42,24 @@ class ProfileStoreScreen extends StatelessWidget {
               ),
               extendBodyBehindAppBar: true,
               extendBody: true,
-              body: Body(),
+              body: const Body(),
             ),
           );
-        } else if (roleState is RoleAppLoading) {
+        }
+
+        if (state is RoleAppLoading) {
           return Scaffold(
             appBar: AppBarCampaign(hem: hem, ffem: ffem, fem: fem),
             body: Container(
               color: klighGreyColor,
               child: Center(
-                child: Container(
-                  child: Lottie.asset('assets/animations/loading-screen.json'),
-                ),
+                child: Lottie.asset('assets/animations/loading-screen.json'),
               ),
             ),
           );
         }
-        return Container();
+
+        return const SizedBox.shrink();
       },
     );
   }

@@ -13,13 +13,13 @@ final class LoadCampaigns extends CampaignEvent {
   List<Object?> get props => [page, limit];
 }
 
+/// Tải trang kế tiếp. Số trang và cỡ trang do bloc giữ, tiếp nối lần
+/// [LoadCampaigns] gần nhất.
 final class LoadMoreCampaigns extends CampaignEvent {
-  final int page;
-  final int limit;
+  const LoadMoreCampaigns();
 
-  const LoadMoreCampaigns({this.page = 1, this.limit = 3});
   @override
-  List<Object?> get props => [page, limit];
+  List<Object?> get props => [];
 }
 
 final class LoadCampaignById extends CampaignEvent {
@@ -29,23 +29,4 @@ final class LoadCampaignById extends CampaignEvent {
 
   @override
   List<Object?> get props => [id];
-}
-
-final class RedeemCampaignVoucher extends CampaignEvent {
-  final String campaignId;
-  final String studentId;
-  final String voucherId;
-  final int quantity;
-  final double cost;
-
-  const RedeemCampaignVoucher(
-      {required this.campaignId,
-      required this.studentId,
-      required this.voucherId,
-      required this.quantity,
-      required this.cost});
-
-  @override
-  List<Object?> get props =>
-      [campaignId, studentId, voucherId,quantity, cost];
 }

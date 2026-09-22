@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
 import 'package:swallet_mobile/data/models/store_features/transact_result_model.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 
 import '../../../config/constants.dart';
+import '../widgets/store_app_bar.dart';
+import '../widgets/store_bottom_button.dart';
+import '../widgets/store_result_view.dart';
 
 class SuccessTransactScreen extends StatelessWidget {
   static const String routeName = '/success-transact-store';
@@ -16,12 +16,11 @@ class SuccessTransactScreen extends StatelessWidget {
       pageBuilder:
           (_, _, _) =>
               SuccessTransactScreen(transactResultModel: transactResultModel),
-      transitionDuration: Duration(milliseconds: 400),
+      transitionDuration: const Duration(milliseconds: 400),
       transitionsBuilder: (_, animation, _, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
-        var tween = Tween(begin: begin, end: end);
-        var offsetAnimation = animation.drive(tween);
+        final offsetAnimation = animation.drive(Tween(begin: begin, end: end));
 
         return SlideTransition(position: offsetAnimation, child: child);
       },
@@ -33,290 +32,84 @@ class SuccessTransactScreen extends StatelessWidget {
 
   final TransactResultModel transactResultModel;
 
+  void _goHome(BuildContext context) {
+    context.read<CampaignBloc>().add(const LoadCampaigns());
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/landing-screen-store',
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double baseHeight = 812;
-    double ffem = fem * 0.97;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
+    final size = MediaQuery.sizeOf(context);
+    final fem = size.width / 375;
+    final ffem = fem * 0.97;
+    final hem = size.height / 812;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/background_splash.png'),
-                fit: BoxFit.cover,
+        appBar: StoreAppBar(
+          title: 'Kết quả giao dịch',
+          fem: fem,
+          ffem: ffem,
+          hem: hem,
+          onHome: () => _goHome(context),
+        ),
+        bottomNavigationBar: StoreBottomButton(
+          label: 'Trang chủ',
+          fem: fem,
+          ffem: ffem,
+          hem: hem,
+          onTap: () => _goHome(context),
+        ),
+        body: StoreResultView(
+          animation: 'assets/animations/success-animation.json',
+          animationBackground: klighGreyColor,
+          title: 'GIAO DỊCH THÀNH CÔNG!',
+          borderColor: kPrimaryColor,
+          spacing: 40,
+          fem: fem,
+          ffem: ffem,
+          hem: hem,
+          rows: [
+            StoreResultRow(
+              label: 'Thời gian thực hiện',
+              value: formatResultDateTimeString(
+                transactResultModel.dateCreated,
               ),
+              ffem: ffem,
+              hem: hem,
             ),
-          ),
-          toolbarHeight: 50 * hem,
-          centerTitle: true,
-          title: Text(
-            'Kết quả giao dịch',
-            style: GoogleFonts.openSans(
-              textStyle: TextStyle(
-                fontSize: 20 * ffem,
-                fontWeight: FontWeight.w900,
-                height: 1.3625 * ffem / fem,
-                color: Colors.white,
-              ),
+            StoreResultRow(
+              label: 'Người nhận',
+              value: transactResultModel.studentName,
+              ffem: ffem,
+              hem: hem,
+              fem: fem,
+              valueWidth: 150,
+              maxLines: 2,
             ),
-          ),
-          actions: [
-            // SvgPicture.asset('assets/icons/notification-icon.svg')
-            Padding(
-              padding: EdgeInsets.only(right: 20 * fem),
-              child: IconButton(
-                icon: Icon(Icons.home, color: Colors.white, size: 30 * fem),
-                onPressed: () {
-                  context.read<CampaignBloc>().add(LoadCampaigns());
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/landing-screen-store',
-                    (Route<dynamic> route) => false,
-                  );
-                },
-              ),
+            StoreResultRow(
+              label: 'Nội dung',
+              value: transactResultModel.description,
+              ffem: ffem,
+              hem: hem,
+              fem: fem,
+              valueWidth: 150,
+              maxLines: 2,
+            ),
+            StoreResultRow(
+              label: 'Số đậu xanh',
+              value: formatter.format(transactResultModel.amount),
+              ffem: ffem,
+              hem: hem,
             ),
           ],
-        ),
-        bottomNavigationBar: BottomAppBar(
-          color: klighGreyColor,
-          height: 80 * hem,
-          elevation: 5,
-          child: GestureDetector(
-            onTap: () {
-              context.read<CampaignBloc>().add(LoadCampaigns());
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                '/landing-screen-store',
-                (Route<dynamic> route) => false,
-              );
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Container(
-                    width: 320 * fem,
-                    height: 45 * hem,
-                    decoration: BoxDecoration(
-                      color: kPrimaryColor,
-                      borderRadius: BorderRadius.circular(10 * fem),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Trang chủ',
-                        style: GoogleFonts.openSans(
-                          textStyle: TextStyle(
-                            fontSize: 17 * ffem,
-                            fontWeight: FontWeight.w600,
-                            height: 1.3625 * ffem / fem,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      color: klighGreyColor,
-                      height: 150 * hem,
-                      // width: ,
-                      child: Lottie.asset(
-                        'assets/animations/success-animation.json',
-                        repeat: false,
-                      ),
-                    ),
-                    Container(
-                      child: Text(
-                        'GIAO DỊCH THÀNH CÔNG!',
-                        style: GoogleFonts.openSans(
-                          textStyle: TextStyle(
-                            fontSize: 18 * ffem,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 40 * hem),
-                Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(left: 15 * fem, right: 15 * fem),
-                  padding: EdgeInsets.only(
-                    left: 15 * fem,
-                    right: 15 * fem,
-                    top: 5 * hem,
-                    bottom: 5 * hem,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: kPrimaryColor),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 50 * hem,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Thời gian thực hiện',
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 14 * ffem,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              _formatDatetimeString(transactResultModel.dateCreated),
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 15 * ffem,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 50 * hem,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Người nhận',
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 14 * ffem,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 150 * fem,
-                              child: Text(
-                                transactResultModel.studentName,
-                                maxLines: 2,
-                                softWrap: true,
-                                textAlign: TextAlign.end,
-                                style: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 15 * ffem,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 50 * hem,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Nội dung',
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 14 * ffem,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 150 * fem,
-                              child: Text(
-                                transactResultModel.description,
-                                maxLines: 2,
-                                softWrap: true,
-                                textAlign: TextAlign.end,
-                                style: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 15 * ffem,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 50 * hem,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Số đậu xanh',
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 14 * ffem,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              formatter.format(transactResultModel.amount),
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 15 * ffem,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );
   }
-}
-
-String _formatDatetimeString(String date) {
-  DateTime dateTime = DateTime.parse(date).add(Duration(hours: 7));
-
-  String formattedDatetime = DateFormat("HH:mm - dd/MM/yyyy").format(dateTime);
-  return formattedDatetime;
 }

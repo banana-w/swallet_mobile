@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/campaign_repository.dart';
 import 'package:swallet_mobile/presentation/blocs/campaign_voucher/campaign_voucher_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 
+import '../widgets/store_app_bar.dart';
 import 'components/body.dart';
 
 class CampaignVoucherDetailStoreScreen extends StatelessWidget {
@@ -20,7 +20,7 @@ class CampaignVoucherDetailStoreScreen extends StatelessWidget {
             campaignId: campaignId,
             campaignVoucherId: campaignVoucherId,
           ),
-      settings: const RouteSettings(arguments: routeName),
+      settings: const RouteSettings(name: routeName),
     );
   }
 
@@ -29,80 +29,46 @@ class CampaignVoucherDetailStoreScreen extends StatelessWidget {
     required this.campaignId,
     required this.campaignVoucherId,
   });
+
   final String campaignId;
   final String campaignVoucherId;
 
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double baseHeight = 812;
-    double ffem = fem * 0.97;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
+    final size = MediaQuery.sizeOf(context);
+    final fem = size.width / 375;
+    final ffem = fem * 0.97;
+    final hem = size.height / 812;
+
     return BlocProvider(
       create:
-          (context) =>
-              CampaignVoucherBloc(
-            campaignRepository: context.read<CampaignRepository>())..add(
-                LoadCampaignVoucherById(
-                  campaignId: campaignId,
-                  campaignVoucherId: campaignVoucherId,
-                ),
-              ),
+          (context) => CampaignVoucherBloc(
+            campaignRepository: context.read<CampaignRepository>(),
+          )..add(
+            LoadCampaignVoucherById(
+              campaignId: campaignId,
+              campaignVoucherId: campaignVoucherId,
+            ),
+          ),
       child: SafeArea(
         child: Scaffold(
           backgroundColor: klighGreyColor,
-          appBar: AppBar(
-            elevation: 0,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/background_splash.png'),
-                  fit: BoxFit.cover,
+          appBar: StoreAppBar(
+            title: 'Chi tiết ưu đãi',
+            fem: fem,
+            ffem: ffem,
+            hem: hem,
+            titleSize: 18,
+            iconSize: 25,
+            onBack: () => Navigator.pop(context),
+            onHome:
+                () => Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/landing-screen-store',
+                  (route) => false,
                 ),
-              ),
-            ),
-            leading: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(
-                Icons.arrow_back_rounded,
-                color: Colors.white,
-                size: 25 * fem,
-              ),
-            ),
-            toolbarHeight: 50 * hem,
-            centerTitle: true,
-            title: Text(
-              'Chi tiết ưu đãi',
-              style: GoogleFonts.openSans(
-                textStyle: TextStyle(
-                  fontSize: 18 * ffem,
-                  fontWeight: FontWeight.w900,
-                  height: 1.3625 * ffem / fem,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            actions: [
-              // SvgPicture.asset('assets/icons/notification-icon.svg')
-              Padding(
-                padding: EdgeInsets.only(right: 20 * fem),
-                child: IconButton(
-                  icon: Icon(Icons.home, color: Colors.white, size: 25 * fem),
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      '/landing-screen-store',
-                      (Route<dynamic> route) => false,
-                    );
-                  },
-                ),
-              ),
-            ],
           ),
-          body: Body(),
+          body: const Body(),
         ),
       ),
     );

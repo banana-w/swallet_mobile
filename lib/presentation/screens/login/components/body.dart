@@ -27,7 +27,7 @@ class Body extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
+        FocusScope.of(context).unfocus();
       },
       child: SingleChildScrollView(
         child: Container(

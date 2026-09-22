@@ -28,7 +28,7 @@ class _Body3State extends State<Body3> {
     double hem = MediaQuery.of(context).size.height / baseHeight;
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
+        FocusScope.of(context).unfocus();
       },
       child: SingleChildScrollView(
         child: Container(

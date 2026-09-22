@@ -50,6 +50,10 @@ class CampaignStoreCard extends StatelessWidget {
                 child: Image.network(
                   campaignDetailModel.brandLogo,
                   fit: BoxFit.fill,
+                  // Ảnh hiển thị ở 70*fem, không cần giữ bản gốc.
+                  cacheWidth:
+                      (70 * fem * MediaQuery.devicePixelRatioOf(context))
+                          .round(),
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) {
                       return child;
@@ -91,7 +95,7 @@ class CampaignStoreCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
-                      Icons.access_time, 
+                      Icons.access_time,
                       size: 16 * ffem,
                       color: klowTextGrey,
                     ),

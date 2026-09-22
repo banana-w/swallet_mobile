@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
@@ -7,81 +8,78 @@ import 'package:swallet_mobile/presentation/screens/store_features/campaign_vouc
 import 'package:swallet_mobile/presentation/screens/store_features/failed_scan_voucher/failed_scan_voucher_screen.dart';
 
 import '../../../../config/constants.dart';
-import 'body.dart';
 import 'qr_scanner_overlay.dart';
 
 class TabScanVoucher extends StatelessWidget {
   const TabScanVoucher({
     super.key,
     required this.cameraController,
-    required this.widget,
+    required this.storeId,
   });
 
   final MobileScannerController cameraController;
-  final Body widget;
+  final String storeId;
+
+  void _onStoreState(BuildContext context, StoreState state) {
+    if (state is StoreCampaignVoucherInforFailed) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        FailedScanVoucherScreen.routeName,
+        (route) => false,
+        arguments: state.error,
+      );
+    } else if (state is StoreCampaignVoucherInforLoading) {
+      showDialog<void>(
+        context: context,
+        builder:
+            (_) => const AlertDialog(
+              content: SizedBox(
+                width: 250,
+                height: 250,
+                child: Center(
+                  child: CircularProgressIndicator(color: kPrimaryColor),
+                ),
+              ),
+            ),
+      );
+    } else if (state is StoreCampaigVoucherInforSuccess) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        CampaignVoucherInformationScreen.route(
+          campaignModel: state.campaignDetailModel,
+          voucherModel: state.campaignVoucherDetailModel,
+          studentId: state.studentId,
+          storeId: storeId,
+          voucherItemId: state.voucherItemId,
+        ),
+        (route) => false,
+      );
+    }
+  }
+
+  void _onDetect(BuildContext context, BarcodeCapture capture) {
+    for (final barcode in capture.barcodes) {
+      final value = barcode.rawValue;
+      if (value != null) {
+        if (kDebugMode) debugPrint('Barcode found! $value');
+        context.read<StoreBloc>().add(
+          LoadCampaignVoucherInformation(voucherCode: value),
+        );
+        return;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<StoreBloc, StoreState>(
-      listener: (context, state) {
-        if (state is StoreCampaignVoucherInforFailed) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            FailedScanVoucherScreen.routeName,
-            (Route<dynamic> route) => false,
-            arguments: state.error,
-          );
-        } else if (state is StoreCampaignVoucherInforLoading) {
-          showDialog<String>(
-            context: context,
-            builder: (BuildContext context) {
-              Future.delayed(Duration(seconds: 5));
-              return AlertDialog(
-                content: SizedBox(
-                  width: 250,
-                  height: 250,
-                  child: Center(
-                    child: CircularProgressIndicator(color: kPrimaryColor),
-                  ),
-                ),
-              );
-            },
-          );
-        } else if (state is StoreCampaigVoucherInforSuccess) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            CampaignVoucherInformationScreen.route(
-              campaignModel: state.campaignDetailModel,
-              voucherModel: state.campaignVoucherDetailModel,
-              studentId: state.studentId,
-              storeId: widget.id,
-              voucherItemId: state.voucherItemId,
-            ),
-            (Route<dynamic> route) => false,
-          );
-        }
-      },
+      listener: _onStoreState,
       child: Stack(
         alignment: Alignment.center,
         children: [
           MobileScanner(
             controller: cameraController,
-            onDetect: (capture) {
-              final List<Barcode> barcodes = capture.barcodes;
-              String? value;
-              for (final barcode in barcodes) {
-                print('Barcode found! ${barcode.rawValue}');
-                value = barcode.rawValue;
-                if (value != null) {
-                  break;
-                }
-              }
-              if (value != null) {
-                context.read<StoreBloc>().add(
-                  LoadCampaignVoucherInformation(voucherCode: value),
-                );
-              }
-            },
+            onDetect: (capture) => _onDetect(context, capture),
           ),
           IgnorePointer(
             child: Lottie.asset(

@@ -8,9 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_detail_model.dart';
 import 'package:swallet_mobile/data/models/student_features/campaign_voucher_model.dart';
 import 'package:swallet_mobile/data/models/student_features/student_model.dart';
-import 'package:swallet_mobile/data/interface_repositories/student_features/campaign_repository.dart';
 import 'package:swallet_mobile/data/interface_repositories/student_features/student_repository.dart';
-import 'package:swallet_mobile/presentation/blocs/campaign/campaign_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/student/student_bloc.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/cubits/counter/counter_cubit.dart';
@@ -29,16 +27,10 @@ class CampaignVoucherScreen extends StatelessWidget {
   }) {
     return MaterialPageRoute(
       builder:
-          (_) => BlocProvider(
-            create:
-                (context) => CampaignBloc(
-                  campaignRepository: context.read<CampaignRepository>(),
-                )..add(LoadCampaigns()),
-            child: CampaignVoucherScreen(
-              campaignDetailModel: campaignDetail,
-              campaignVoucherModel: campaignVoucher,
-              accountId: accountId,
-            ),
+          (_) => CampaignVoucherScreen(
+            campaignDetailModel: campaignDetail,
+            campaignVoucherModel: campaignVoucher,
+            accountId: accountId,
           ),
       settings: const RouteSettings(arguments: routeName),
     );
@@ -120,238 +112,178 @@ class CampaignVoucherScreen extends StatelessWidget {
               ),
             ],
           ),
-          bottomNavigationBar: BlocBuilder<CampaignBloc, CampaignState>(
-            builder: (context, state) {
-              if (state is CampaignsLoaded) {
-                // var containCampaign =
-                //     state.campaigns.where((c) => c.id == campaignDetailModel.id).toList(); containCampaign.isNotEmpty
-                if (true) {
-                  return MultiBlocProvider(
-                    providers: [
-                      BlocProvider(create: (context) => CounterCubit()),
-                      BlocProvider(
-                        create:
-                            (context) => CampaignBloc(
-                              campaignRepository:
-                                  context.read<CampaignRepository>(),
+          // Trước đây thanh này chờ `LoadCampaigns()` (gọi API 20 chiến dịch)
+          // chỉ để rồi vào nhánh `if (true)`, và kèm một CampaignBloc không ai
+          // dùng. Bỏ cả hai: thanh mua hiện ngay, bớt một request thừa.
+          bottomNavigationBar: BlocProvider(
+            create: (context) => CounterCubit(),
+            child: BottomAppBar(
+              color: Colors.white,
+              height: 110 * hem,
+              elevation: 50,
+              child: BlocBuilder<CounterCubit, CounterState>(
+                builder: (context, state) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Tổng coin',
+                            style: GoogleFonts.openSans(
+                              textStyle: TextStyle(
+                                fontSize: 15 * ffem,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
                             ),
-                      ),
-                    ],
-                    child: BottomAppBar(
-                      color: Colors.white,
-                      height: 110 * hem,
-                      elevation: 50,
-                      child: BlocBuilder<CounterCubit, CounterState>(
-                        builder: (context, state) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          ),
+                          Row(
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Tổng coin',
+                              Text(
+                                formatter.format(
+                                  (campaignVoucherModel.price) *
+                                      state.counterValue,
+                                ),
+                                style: GoogleFonts.openSans(
+                                  textStyle: TextStyle(
+                                    fontSize: 25 * ffem,
+                                    color: kPrimaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: 8 * fem,
+                                  top: 1 * hem,
+                                  bottom: 0 * hem,
+                                ),
+                                child: SvgPicture.asset(
+                                  'assets/icons/coin.svg',
+                                  width: 30 * fem,
+                                  height: 30 * fem,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 25 * fem,
+                                height: 25 * fem,
+                                child: FloatingActionButton(
+                                  heroTag: 'remove',
+                                  elevation: 0,
+                                  backgroundColor: klightPrimaryColor,
+                                  child: const Icon(Icons.remove, size: 15),
+                                  onPressed: () {
+                                    if (state.counterValue <= 1) {
+                                    } else {
+                                      context.read<CounterCubit>().decrement();
+                                    }
+                                  },
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                  right: 10 * fem,
+                                  left: 10 * fem,
+                                ),
+                                width: 40 * fem,
+                                height: 30 * hem,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: kbgWhiteColor,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '${state.counterValue}',
                                     style: GoogleFonts.openSans(
                                       textStyle: TextStyle(
-                                        fontSize: 15 * ffem,
-                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12 * ffem,
+                                        fontWeight: FontWeight.normal,
                                         color: Colors.black,
                                       ),
                                     ),
                                   ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        formatter.format(
-                                          (campaignVoucherModel.price) *
-                                              state.counterValue,
-                                        ),
-                                        style: GoogleFonts.openSans(
-                                          textStyle: TextStyle(
-                                            fontSize: 25 * ffem,
-                                            color: kPrimaryColor,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          left: 8 * fem,
-                                          top: 1 * hem,
-                                          bottom: 0 * hem,
-                                        ),
-                                        child: SvgPicture.asset(
-                                          'assets/icons/coin.svg',
-                                          width: 30 * fem,
-                                          height: 30 * fem,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                ),
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: 25 * fem,
-                                        height: 25 * fem,
-                                        child: FloatingActionButton(
-                                          heroTag: 'remove',
-                                          elevation: 0,
-                                          backgroundColor: klightPrimaryColor,
-                                          child: const Icon(
-                                            Icons.remove,
-                                            size: 15,
-                                          ),
-                                          onPressed: () {
-                                            if (state.counterValue <= 1) {
-                                            } else {
-                                              context
-                                                  .read<CounterCubit>()
-                                                  .decrement();
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(
-                                          right: 10 * fem,
-                                          left: 10 * fem,
-                                        ),
-                                        width: 40 * fem,
-                                        height: 30 * hem,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            5,
-                                          ),
-                                          color: kbgWhiteColor,
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            '${state.counterValue}',
-                                            style: GoogleFonts.openSans(
-                                              textStyle: TextStyle(
-                                                fontSize: 12 * ffem,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 25 * fem,
-                                        height: 25 * fem,
-                                        child: FloatingActionButton(
-                                          heroTag: 'Add',
-                                          elevation: 0,
-                                          backgroundColor: klightPrimaryColor,
-                                          child: const Icon(
-                                            Icons.add,
-                                            size: 15,
-                                          ),
-                                          onPressed: () {
-                                            int maxLimit = min(
-                                              2,
-                                              campaignVoucherModel
-                                                  .numberOfItemsAvailable!,
-                                            );
-                                            if (state.counterValue >=
-                                                maxLimit) {
-                                            } else {
-                                              context
-                                                  .read<CounterCubit>()
-                                                  .increment();
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  BlocBuilder<StudentBloc, StudentState>(
-                                    builder: (context, stateStudent) {
-                                      if (stateStudent is StudentByIdSuccess) {
-                                        return buildButtonBuy(
-                                          context,
-                                          state,
-                                          fem,
-                                          hem,
-                                          ffem,
-                                          stateStudent.studentMode,
-                                        );
-                                      }
-                                      return Container(
-                                        width: 200 * fem,
-                                        height: 35 * hem,
-                                        decoration: BoxDecoration(
-                                          color: kLowTextColor,
-                                          borderRadius: BorderRadius.circular(
-                                            10 * fem,
-                                          ),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            'Mua ngay',
-                                            style: GoogleFonts.openSans(
-                                              textStyle: TextStyle(
-                                                fontSize: 15 * ffem,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
+                              SizedBox(
+                                width: 25 * fem,
+                                height: 25 * fem,
+                                child: FloatingActionButton(
+                                  heroTag: 'Add',
+                                  elevation: 0,
+                                  backgroundColor: klightPrimaryColor,
+                                  child: const Icon(Icons.add, size: 15),
+                                  onPressed: () {
+                                    final maxLimit = min(
+                                      2,
+                                      campaignVoucherModel
+                                              .numberOfItemsAvailable ??
+                                          0,
+                                    );
+                                    if (state.counterValue >= maxLimit) {
+                                    } else {
+                                      context.read<CounterCubit>().increment();
+                                    }
+                                  },
+                                ),
                               ),
                             ],
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                } else {
-                  return BottomAppBar(
-                    color: Colors.white,
-                    height: 110 * hem,
-                    elevation: 50,
-                    child: Center(
-                      child: Text(
-                        'Bạn không thể mua vì ưu đãi này thuộc trong chiến dịch mà bạn không được tham gia.',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.openSans(
-                          textStyle: TextStyle(
-                            fontSize: 15 * ffem,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
                           ),
-                        ),
+                          BlocBuilder<StudentBloc, StudentState>(
+                            builder: (context, stateStudent) {
+                              if (stateStudent is StudentByIdSuccess) {
+                                return buildButtonBuy(
+                                  context,
+                                  state,
+                                  fem,
+                                  hem,
+                                  ffem,
+                                  stateStudent.studentMode,
+                                );
+                              }
+                              return Container(
+                                width: 200 * fem,
+                                height: 35 * hem,
+                                decoration: BoxDecoration(
+                                  color: kLowTextColor,
+                                  borderRadius: BorderRadius.circular(10 * fem),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Mua ngay',
+                                    style: GoogleFonts.openSans(
+                                      textStyle: TextStyle(
+                                        fontSize: 15 * ffem,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                    ),
+                    ],
                   );
-                }
-              }
-              return BottomAppBar(
-                color: Colors.white,
-                height: 110 * hem,
-                elevation: 50,
-                child: Center(
-                  child: CircularProgressIndicator(color: kPrimaryColor),
-                ),
-              );
-            },
+                },
+              ),
+            ),
           ),
           body: Body(
             campaignVoucherModel: campaignVoucherModel,
@@ -449,7 +381,6 @@ class CampaignVoucherScreen extends StatelessWidget {
               campaignVoucherModel.id,
               localStudent.id,
               state.counterValue,
-              'string',
               campaignDetailModel.campaignName,
               totalPrice,
               campaignVoucherModel.voucherName,

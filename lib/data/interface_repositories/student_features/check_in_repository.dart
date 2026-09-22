@@ -1,6 +1,27 @@
 abstract class CheckInRepository {
   Future<CheckInData> getCheckInData(String studentId);
   Future<CheckInData> checkIn(String studentId);
+
+  /// Check-in bằng mã QR tại một địa điểm, trả về số xu được thưởng.
+  ///
+  /// Trước đây màn hình quét QR tự gọi thẳng `http.post` và tự khai báo lại
+  /// hằng `baseUrl` ngay trong file giao diện.
+  Future<int> checkInWithQr({
+    required String studentId,
+    required String qrCode,
+    required double latitude,
+    required double longitude,
+  });
+}
+
+/// Lỗi check-in đã có sẵn thông báo tiếng Việt để hiển thị cho người dùng.
+class CheckInException implements Exception {
+  const CheckInException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => message;
 }
 
 class CheckInData {

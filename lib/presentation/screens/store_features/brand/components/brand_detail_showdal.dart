@@ -30,7 +30,7 @@ class BrandDetailShadow extends StatelessWidget {
           top: 15 * hem,
           bottom: 15 * hem,
         ),
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.sizeOf(context).width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Colors.white,

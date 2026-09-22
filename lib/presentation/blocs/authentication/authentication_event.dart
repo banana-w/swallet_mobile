@@ -4,6 +4,11 @@ sealed class AuthenticationEvent extends Equatable {
   const AuthenticationEvent();
 }
 
+/// Đưa bloc về [AuthenticationInitial].
+///
+/// Bloc này sống ở cấp app nên state của lần đăng nhập/đăng ký trước vẫn còn
+/// nguyên khi quay lại màn đăng nhập. Màn đăng nhập bắn event này lúc mở để
+/// không hiện lại lỗi cũ khi người dùng chưa gõ gì.
 final class StartAuthen extends AuthenticationEvent {
   @override
   List<Object?> get props => [];
@@ -19,11 +24,6 @@ final class LoginAccount extends AuthenticationEvent {
   List<Object?> get props => [userName, password];
 }
 
-final class LogoutAccount extends AuthenticationEvent {
-  @override
-  List<Object?> get props => [];
-}
-
 final class RegisterAccount extends AuthenticationEvent {
   final CreateAuthenModel createAuthenModel;
 
@@ -31,13 +31,4 @@ final class RegisterAccount extends AuthenticationEvent {
 
   @override
   List<Object?> get props => [createAuthenModel];
-}
-
-final class VerifyAccount extends AuthenticationEvent {
-  final VerifyAuthenModel verifyAuthenModel;
-
-  const VerifyAccount({required this.verifyAuthenModel});
-
-  @override
-  List<Object?> get props => [verifyAuthenModel];
 }

@@ -1,11 +1,8 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swallet_mobile/data/datasource/authen_local_datasource.dart';
 import 'package:swallet_mobile/data/interface_repositories/store_features/store_repository.dart';
-import 'package:swallet_mobile/presentation/blocs/internet/internet_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/landing_screen/landing_screen_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/role/role_app_bloc.dart';
 import 'package:swallet_mobile/presentation/blocs/store/store_bloc.dart';
@@ -13,61 +10,42 @@ import 'package:swallet_mobile/presentation/config/constants.dart';
 import 'package:swallet_mobile/presentation/screens/login/login_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/brand/brand_detail_store_screen.dart';
 import 'package:swallet_mobile/presentation/screens/store_features/profile_update_detail/profile_update_detail_screen.dart';
+import 'package:swallet_mobile/presentation/widgets/internet_listener.dart';
+
 import 'button_profile.dart';
 import 'information_card_profile.dart';
 
 class Body extends StatelessWidget {
   const Body({super.key});
 
+  Future<void> _openUpdateProfile(BuildContext context) async {
+    final storeModel = await AuthenLocalDataSource.getStore();
+    if (!context.mounted || storeModel == null) return;
+    Navigator.pushNamed(
+      context,
+      ProfileUpdateDetailStoreScreen.routeName,
+      arguments: storeModel,
+    );
+  }
+
+  Future<void> _openBrandDetail(BuildContext context) async {
+    final storeModel = await AuthenLocalDataSource.getStore();
+    if (!context.mounted || storeModel == null) return;
+    Navigator.pushNamed(
+      context,
+      BrandDetailStoreScreen.routeName,
+      arguments: storeModel.brandId,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
-    double baseHeight = 812;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
+    final size = MediaQuery.sizeOf(context);
+    final fem = size.width / 375;
+    final ffem = fem * 0.97;
+    final hem = size.height / 812;
 
-    return BlocListener<InternetBloc, InternetState>(
-      listener: (context, state) {
-        if (state is Connected) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                elevation: 0,
-                duration: const Duration(milliseconds: 2000),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Đã kết nối internet',
-                  message: 'Đã kết nối internet!',
-                  contentType: ContentType.success,
-                ),
-              ),
-            );
-        } else if (state is NotConnected) {
-          showCupertinoDialog(
-            context: context,
-            builder: (context) {
-              return CupertinoAlertDialog(
-                title: const Text('Không kết nối Internet'),
-                content: Text('Vui lòng kết nối Internet'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      final stateInternet = context.read<InternetBloc>().state;
-                      if (stateInternet is Connected) {
-                        Navigator.pop(context);
-                      } else {}
-                    },
-                    child: const Text('Đồng ý'),
-                  ),
-                ],
-              );
-            },
-          );
-        }
-      },
+    return InternetListener(
       child: RefreshIndicator(
         onRefresh: () async {
           context.read<RoleAppBloc>().add(RoleAppStart());
@@ -75,150 +53,96 @@ class Body extends StatelessWidget {
         child: SingleChildScrollView(
           child: BlocBuilder<RoleAppBloc, RoleAppState>(
             builder: (context, state) {
-              if (state is StoreRole) {
-                final storeModel = state.storeModel;
-                return Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/background_splash.png'),
-                      fit: BoxFit.cover,
-                    ),
+              if (state is! StoreRole) {
+                return const Center(child: Text('Error'));
+              }
+
+              final storeModel = state.storeModel;
+
+              return Container(
+                width: double.infinity,
+                height: size.height,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/background_splash.png'),
+                    fit: BoxFit.cover,
                   ),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height,
-                        child: Stack(
+                ),
+                child: Stack(
+                  children: [
+                    // Nền xám phủ phần dưới ảnh bìa.
+                    Positioned(
+                      left: 0,
+                      top: 120 * hem,
+                      child: Container(
+                        width: size.width,
+                        height: size.height,
+                        color: klighGreyColor,
+                      ),
+                    ),
+                    Positioned(
+                      top: 80 * hem,
+                      left: 25 * fem,
+                      child: BlocProvider(
+                        create:
+                            (context) => StoreBloc(
+                              storeRepository: context.read<StoreRepository>(),
+                            )..add(
+                              LoadStoreById(accountId: storeModel.accountId),
+                            ),
+                        child: InformationCardProfile(
+                          fem: fem,
+                          hem: hem,
+                          ffem: ffem,
+                          storeModel: storeModel,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 0,
+                      top: 300 * hem,
+                      child: SizedBox(
+                        width: size.width,
+                        height: size.height,
+                        child: Column(
                           children: [
-                            //background body
-                            Positioned(
-                              left: 0 * fem,
-                              top: 120 * hem,
-                              child: Align(
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.height,
-                                  color: klighGreyColor,
-                                ),
-                              ),
+                            ButtonProfile(
+                              fem: fem,
+                              hem: hem,
+                              ffem: ffem,
+                              widthIcon: 16,
+                              heightIcon: 16,
+                              onPressed: () => _openUpdateProfile(context),
+                              svgIcon: 'assets/icons/pen-icon.svg',
+                              title: 'Cập nhật thông tin',
                             ),
-
-                            //widget information of profile
-                            Positioned(
-                              top: 80 * hem,
-                              left: 25 * fem,
-                              child: BlocProvider(
-                                create:
-                                    (context) => StoreBloc(
-                                      storeRepository:
-                                          context.read<StoreRepository>(),
-                                    )..add(
-                                      LoadStoreById(
-                                        accountId: storeModel.accountId,
-                                      ),
-                                    ),
-                                child: InformationCardProfile(
-                                  fem: fem,
-                                  hem: hem,
-                                  storeModel: storeModel,
-                                  ffem: ffem,
-                                ),
-                              ),
+                            SizedBox(height: 10 * hem),
+                            ButtonProfile(
+                              fem: fem,
+                              hem: hem,
+                              ffem: ffem,
+                              widthIcon: 17,
+                              heightIcon: 17,
+                              onPressed: () => _openBrandDetail(context),
+                              svgIcon: 'assets/icons/following-icon.svg',
+                              title: 'Thông tin thương hiệu',
                             ),
-
-                            Positioned(
-                              left: 0 * fem,
-                              top: 300 * hem,
-                              child: SizedBox(
-                                // color: Colors.red,
-                                height: MediaQuery.of(context).size.height,
-                                width: MediaQuery.of(context).size.width,
-
-                                child: Column(
-                                  children: [
-                                    ButtonProfile(
-                                      fem: fem,
-                                      hem: hem,
-                                      ffem: ffem,
-                                      widthIcon: 16,
-                                      heightIcon: 16,
-                                      onPressed: () async {
-                                        final storeModel =
-                                            await AuthenLocalDataSource.getStore();
-                                        Navigator.pushNamed(
-                                          context,
-                                          ProfileUpdateDetailStoreScreen
-                                              .routeName,
-                                          arguments: storeModel,
-                                        );
-                                      },
-                                      svgIcon: 'assets/icons/pen-icon.svg',
-                                      title: 'Cập nhật thông tin',
-                                    ),
-                                    SizedBox(height: 10 * hem),
-                                    ButtonProfile(
-                                      fem: fem,
-                                      hem: hem,
-                                      ffem: ffem,
-                                      widthIcon: 17,
-                                      heightIcon: 17,
-                                      onPressed: () async {
-                                        final storeModel =
-                                            await AuthenLocalDataSource.getStore();
-                                        Navigator.pushNamed(
-                                          context,
-                                          BrandDetailStoreScreen.routeName,
-                                          arguments: storeModel!.brandId,
-                                        );
-                                      },
-                                      svgIcon:
-                                          'assets/icons/following-icon.svg',
-                                      title: 'Thông tin thương hiệu',
-                                    ),
-                                    // SizedBox(height: 10 * hem),
-                                    // ButtonProfile(
-                                    //   fem: fem,
-                                    //   hem: hem,
-                                    //   ffem: ffem,
-                                    //   widthIcon: 14,
-                                    //   heightIcon: 14,
-                                    //   onPressed: () async {
-                                    //     // final storeModel =
-                                    //     //     await AuthenLocalDataSource
-                                    //     //         .getStore();
-                                    //     // Navigator.pushNamed(
-                                    //     //     context, BonusScreen.routeName,
-                                    //     //     arguments: storeModel);
-                                    //   },
-                                    //   svgIcon:
-                                    //       'assets/icons/bonus-bean-icon.svg',
-                                    //   title: 'Danh sách tặng đậu',
-                                    // ),
-                                    SizedBox(height: 10 * hem),
-                                    //button logout
-                                    ButtonProfile(
-                                      fem: fem,
-                                      hem: hem,
-                                      ffem: ffem,
-                                      svgIcon: 'assets/icons/logout-icon.svg',
-                                      title: 'Đăng xuất',
-                                      onPressed: () => _dialogLogout(context),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                            SizedBox(height: 10 * hem),
+                            ButtonProfile(
+                              fem: fem,
+                              hem: hem,
+                              ffem: ffem,
+                              svgIcon: 'assets/icons/logout-icon.svg',
+                              title: 'Đăng xuất',
+                              onPressed: () => _confirmLogout(context),
                             ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                );
-              } else {
-                return Container(child: Text('Error'));
-              }
+                    ),
+                  ],
+                ),
+              );
             },
           ),
         ),
@@ -226,16 +150,16 @@ class Body extends StatelessWidget {
     );
   }
 
-  Future<void> _dialogLogout(BuildContext context) {
-    return showDialog(
+  Future<void> _confirmLogout(BuildContext context) {
+    return showDialog<void>(
       context: context,
-      builder: (BuildContext context) {
+      builder: (dialogContext) {
         return AlertDialog(
           title: Text(
             'Bạn có muốn đăng xuất không?',
             textAlign: TextAlign.center,
             style: GoogleFonts.openSans(
-              textStyle: TextStyle(
+              textStyle: const TextStyle(
                 fontSize: 16,
                 color: kPrimaryColor,
                 fontWeight: FontWeight.w700,
@@ -245,32 +169,29 @@ class Body extends StatelessWidget {
           actionsAlignment: MainAxisAlignment.spaceBetween,
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(dialogContext).pop(),
               child: Text(
                 'Không',
                 style: GoogleFonts.openSans(
-                  textStyle: TextStyle(color: Colors.black, fontSize: 15),
+                  textStyle: const TextStyle(color: Colors.black, fontSize: 15),
                 ),
               ),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(dialogContext).pop();
                 context.read<RoleAppBloc>().add(RoleAppEnd());
                 context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
-
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   LoginScreen.routeName,
-                  (Route<dynamic> route) => false,
+                  (route) => false,
                 );
               },
               child: Text(
                 'Có',
                 style: GoogleFonts.openSans(
-                  textStyle: TextStyle(color: Colors.black, fontSize: 15),
+                  textStyle: const TextStyle(color: Colors.black, fontSize: 15),
                 ),
               ),
             ),

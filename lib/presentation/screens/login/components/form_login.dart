@@ -33,73 +33,12 @@ class _FormLoginState extends State<FormLogin> {
   final TextEditingController passwordController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          // 1. Sử dụng BlocConsumer để cô lập phần giao diện thay đổi theo AuthState
-          BlocConsumer<AuthenticationBloc, AuthenticationState>(
-            listener: (context, state) async {
-              // Di chuyển TOÀN BỘ logic điều hướng (Side-effect) về đây
-              if (state is AuthenticationSuccess) {
-                context.read<RoleAppBloc>().add(RoleAppStart());
-                context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
-                Navigator.pushNamedAndRemoveUntil(context, '/landing-screen', (route) => false);
-              } 
-              else if (state is AuthenticationStoreSuccess) {
-                context.read<RoleAppBloc>().add(RoleAppStart());
-                context.read<StoreBloc>().add(LoadStoreCampaignVouchers());
-                context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
-                Navigator.pushNamedAndRemoveUntil(context, '/landing-screen-store', (route) => false);
-              } 
-              else if (state is AuthenticationLectureSuccess) {
-                context.read<RoleAppBloc>().add(RoleAppStart());
-                context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
-                Navigator.pushNamedAndRemoveUntil(context, '/landing-screen-lecture', (route) => false);
-              } 
-              else if (state is AuthenticationSuccessButNotVerified) {
-                final authenData = await AuthenLocalDataSource.getAuthen();
-                if (authenData == null) return;
-                
-                // Chặn lỗi Async Gap bảo vệ BuildContext trước khi điều hướng
-                if (!context.mounted) return;
-                Navigator.pushNamed(context, VerifyCodeScreen.routeName, arguments: authenData.email);
-              }
-            },
-            builder: (context, state) {
-              // Chỉ vẽ lại Widget giao diện Form nhập liệu cụ thể dựa trên State hiện tại
-              return switch (state) {
-                AuthenticationFailed(error: final error) => _buildAuthFailed(
-                    userNameController, passwordController, error, widget.fem, widget.hem, widget.ffem,
-                  ),
-                // Tất cả các trạng thái còn lại dùng chung giao diện khởi tạo ban đầu
-                _ => _buildAuthIntial(
-                    userNameController, passwordController, widget.fem, widget.hem, widget.ffem,
-                  ),
-              };
-            },
-          ),
-          
-          SizedBox(height: 25 * widget.hem),
-          
-          // 2. Nút bấm Login (Bên trong nút bấm này đã tự có BlocBuilder để đổi UI xoay tròn rồi)
-          ButtonLogin(
-            widget: widget,
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                context.read<AuthenticationBloc>().add(
-                  LoginAccount(
-                    userName: userNameController.text.trim(),
-                    password: passwordController.text,
-                  ),
-                );
-              }
-            },
-          ),
-        ],
-      ),
-    );
+  void initState() {
+    super.initState();
+    // AuthenticationBloc sống ở cấp app nên state của lần trước vẫn còn: quay
+    // lại đây sau một lần đăng nhập hoặc đăng ký hỏng là form hiện sẵn lỗi cũ
+    // dù người dùng chưa gõ gì. Đưa bloc về trạng thái ban đầu.
+    context.read<AuthenticationBloc>().add(StartAuthen());
   }
 
   @override
@@ -108,129 +47,192 @@ class _FormLoginState extends State<FormLogin> {
     passwordController.dispose();
     super.dispose();
   }
-}
-Widget _buildAuthIntial(
-  TextEditingController userNameController,
-  TextEditingController passwordController,
-  double fem,
-  double hem,
-  double ffem,
-) {
-  return Container(
-    width: 318 * fem,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(15 * fem),
-      boxShadow: [
-        BoxShadow(
-          color: Color(0x0c000000),
-          offset: Offset(0 * fem, 4 * fem),
-          blurRadius: 2.5 * fem,
+
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      context.read<AuthenticationBloc>().add(
+        LoginAccount(
+          userName: userNameController.text.trim(),
+          password: passwordController.text,
         ),
-      ],
-    ),
-    child: Column(
-      children: [
-        SizedBox(height: 30 * hem),
-        TextFormFieldDefault(
-          hem: hem,
-          fem: fem,
-          ffem: ffem,
-          labelText: 'TÀI KHOẢN *',
-          hintText: 'Nhập tài khoản của bạn',
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Tài khoản không được bỏ trống';
-            }
-            return null;
-          },
-          textController: userNameController,
-        ),
-        SizedBox(height: 25 * hem),
-        TextFormFieldPassword(
-          hem: hem,
-          fem: fem,
-          ffem: ffem,
-          labelText: 'MẬT KHẨU *',
-          hintText: '******',
-          isPassword: true,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Mật khẩu không được bỏ trống';
-            }
-            return null;
-          },
-          textController: passwordController,
-        ),
-        SizedBox(height: 30 * hem),
-      ],
-    ),
-  );
+      );
+    }
+  }
+
+  /// Toàn bộ điều hướng sau đăng nhập nằm ở đây, không nằm trong `builder`.
+  Future<void> _handleAuthState(
+    BuildContext context,
+    AuthenticationState state,
+  ) async {
+    switch (state) {
+      case AuthenticationSuccess():
+        context.read<RoleAppBloc>().add(const RoleAppStart());
+        context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/landing-screen',
+          (route) => false,
+        );
+      case AuthenticationStoreSuccess():
+        context.read<RoleAppBloc>().add(const RoleAppStart());
+        context.read<StoreBloc>().add(LoadStoreCampaignVouchers());
+        context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/landing-screen-store',
+          (route) => false,
+        );
+      case AuthenticationLectureSuccess():
+        context.read<RoleAppBloc>().add(const RoleAppStart());
+        context.read<LandingScreenBloc>().add(TabChange(tabIndex: 0));
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/landing-screen-lecture',
+          (route) => false,
+        );
+      case AuthenticationSuccessButNotVerified():
+        final authenData = await AuthenLocalDataSource.getAuthen();
+        if (authenData == null) return;
+        // Chặn lỗi Async Gap bảo vệ BuildContext trước khi điều hướng.
+        if (!context.mounted) return;
+        Navigator.pushNamed(
+          context,
+          VerifyCodeScreen.routeName,
+          arguments: authenData.email,
+        );
+      case AuthenticationInitial():
+      case AuthenticationInProcess():
+      case AuthenticationFailed():
+      case RegistrationSuccess():
+        // RegistrationSuccess là của luồng đăng ký; màn đăng nhập vẫn còn
+        // trong stack nên phải bỏ qua, nếu không nó sẽ nhảy vào trang chủ
+        // ngay giữa các bước đăng ký.
+        break;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
+        listenWhen:
+            (previous, current) =>
+                current is AuthenticationSuccess ||
+                current is AuthenticationStoreSuccess ||
+                current is AuthenticationLectureSuccess ||
+                current is AuthenticationSuccessButNotVerified,
+        listener: _handleAuthState,
+        builder: (context, state) {
+          final isLoading = state is AuthenticationInProcess;
+          return Column(
+            children: [
+              _LoginCard(
+                fem: widget.fem,
+                hem: widget.hem,
+                ffem: widget.ffem,
+                userNameController: userNameController,
+                passwordController: passwordController,
+                error: state is AuthenticationFailed ? state.error : null,
+              ),
+              SizedBox(height: 25 * widget.hem),
+              ButtonLogin(
+                fem: widget.fem,
+                hem: widget.hem,
+                ffem: widget.ffem,
+                isLoading: isLoading,
+                // Đang gọi API thì khoá nút, tránh bắn nhiều request đăng nhập.
+                onPressed: isLoading ? null : _submit,
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
 }
 
-Widget _buildAuthFailed(
-  TextEditingController userNameController,
-  TextEditingController passwordController,
-  String error,
-  double fem,
-  double hem,
-  double ffem,
-) {
-  return Container(
-    width: 318 * fem,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(15 * fem),
-      boxShadow: [
-        BoxShadow(
-          color: Color(0x0c000000),
-          offset: Offset(0 * fem, 4 * fem),
-          blurRadius: 2.5 * fem,
-        ),
-      ],
-    ),
-    child: Column(
-      children: [
-        SizedBox(height: 30 * hem),
-        TextFormFieldDefault(
-          hem: hem,
-          fem: fem,
-          ffem: ffem,
-          labelText: 'TÀI KHOẢN',
-          hintText: 'Nhập tài khoản của bạn',
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Tài khoản không được bỏ trống';
-            }
-            return null;
-          },
-          textController: userNameController,
-        ),
-        SizedBox(height: 25 * hem),
-        TextFormFieldPassword(
-          hem: hem,
-          fem: fem,
-          ffem: ffem,
-          labelText: 'MẬT KHẨU *',
-          hintText: '******',
-          isPassword: true,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Mật khẩu không được bỏ trống';
-            }
-            return null;
-          },
-          textController: passwordController,
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 5 * hem),
-          child: Text(
-            error,
-            style: GoogleFonts.openSans(color: Colors.red, fontSize: 12 * ffem),
+/// Khung trắng chứa hai ô nhập và dòng lỗi (nếu có).
+///
+/// Trước đây đây là hai hàm `_buildAuthIntial` / `_buildAuthFailed` chép gần
+/// như nguyên văn của nhau — khác mỗi dòng lỗi, khoảng cách đáy, và nhãn ô tài
+/// khoản bị rụng mất dấu `*` ở bản lỗi.
+class _LoginCard extends StatelessWidget {
+  const _LoginCard({
+    required this.fem,
+    required this.hem,
+    required this.ffem,
+    required this.userNameController,
+    required this.passwordController,
+    required this.error,
+  });
+
+  final double fem;
+  final double hem;
+  final double ffem;
+  final TextEditingController userNameController;
+  final TextEditingController passwordController;
+  final String? error;
+
+  String? _required(String? value, String message) {
+    if (value == null || value.isEmpty) return message;
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 318 * fem,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15 * fem),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0x0c000000),
+            offset: Offset(0 * fem, 4 * fem),
+            blurRadius: 2.5 * fem,
           ),
-        ),
-        SizedBox(height: 20 * hem),
-      ],
-    ),
-  );
+        ],
+      ),
+      child: Column(
+        children: [
+          SizedBox(height: 30 * hem),
+          TextFormFieldDefault(
+            hem: hem,
+            fem: fem,
+            ffem: ffem,
+            labelText: 'TÀI KHOẢN *',
+            hintText: 'Nhập tài khoản của bạn',
+            validator:
+                (value) => _required(value, 'Tài khoản không được bỏ trống'),
+            textController: userNameController,
+          ),
+          SizedBox(height: 25 * hem),
+          TextFormFieldPassword(
+            hem: hem,
+            fem: fem,
+            ffem: ffem,
+            labelText: 'MẬT KHẨU *',
+            hintText: '******',
+            isPassword: true,
+            validator:
+                (value) => _required(value, 'Mật khẩu không được bỏ trống'),
+            textController: passwordController,
+          ),
+          if (error != null)
+            Padding(
+              padding: EdgeInsets.only(top: 5 * hem),
+              child: Text(
+                error!,
+                style: GoogleFonts.openSans(
+                  color: Colors.red,
+                  fontSize: 12 * ffem,
+                ),
+              ),
+            ),
+          SizedBox(height: (error != null ? 20 : 30) * hem),
+        ],
+      ),
+    );
+  }
 }

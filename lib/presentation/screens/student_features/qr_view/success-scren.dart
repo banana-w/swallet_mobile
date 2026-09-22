@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
 import 'package:swallet_mobile/data/models/lecture_features/qr_response.dart';
 import 'package:swallet_mobile/presentation/config/constants.dart';
+import 'package:swallet_mobile/presentation/widgets/result_screen_scaffold.dart';
+import 'package:swallet_mobile/presentation/widgets/transaction_detail_row.dart';
 
-class SuccessScanLectureQRScreen extends StatelessWidget {
+class SuccessScanLectureQRScreen extends StatefulWidget {
   static const String routeName = '/success-scan-lecture-qr';
 
   const SuccessScanLectureQRScreen({super.key, required this.response});
@@ -14,285 +13,75 @@ class SuccessScanLectureQRScreen extends StatelessWidget {
 
   static Route route({required ScanQRResponse response}) {
     return PageRouteBuilder(
-      pageBuilder:
-          (_, _, _) => SuccessScanLectureQRScreen(response: response),
+      pageBuilder: (_, _, _) => SuccessScanLectureQRScreen(response: response),
       transitionDuration: const Duration(milliseconds: 400),
       transitionsBuilder: (_, animation, _, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
-        var tween = Tween(begin: begin, end: end);
-        var offsetAnimation = animation.drive(tween);
-        return SlideTransition(position: offsetAnimation, child: child);
+        final tween = Tween(begin: begin, end: end);
+        return SlideTransition(position: animation.drive(tween), child: child);
       },
       settings: const RouteSettings(name: routeName),
     );
   }
 
   @override
-  Widget build(BuildContext context) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double baseHeight = 812;
-    double ffem = fem * 0.97;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
-
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/background_splash.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          toolbarHeight: 50 * hem,
-          centerTitle: true,
-          title: Text(
-            'Kết quả quét mã QR',
-            style: GoogleFonts.openSans(
-              textStyle: TextStyle(
-                fontSize: 20 * ffem,
-                fontWeight: FontWeight.w900,
-                height: 1.3625 * ffem / fem,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 20 * fem),
-              child: IconButton(
-                icon: Icon(Icons.home, color: Colors.white, size: 30 * fem),
-                onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/landing-screen',
-                    (Route<dynamic> route) => false,
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: BottomAppBar(
-          color: klighGreyColor,
-          height: 80 * hem,
-          elevation: 5,
-          child: GestureDetector(
-            onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                '/landing-screen',
-                (Route<dynamic> route) => false,
-              );
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Container(
-                    width: 320 * fem,
-                    height: 45 * hem,
-                    decoration: BoxDecoration(
-                      color: kPrimaryColor,
-                      borderRadius: BorderRadius.circular(10 * fem),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Trang chủ',
-                        style: GoogleFonts.openSans(
-                          textStyle: TextStyle(
-                            fontSize: 17 * ffem,
-                            fontWeight: FontWeight.w600,
-                            height: 1.3625 * ffem / fem,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        body: SuccessScanLectureQRBody(response: response),
-      ),
-    );
-  }
+  State<SuccessScanLectureQRScreen> createState() =>
+      _SuccessScanLectureQRScreenState();
 }
 
-class SuccessScanLectureQRBody extends StatelessWidget {
-  const SuccessScanLectureQRBody({super.key, required this.response});
-
-  final ScanQRResponse response;
+class _SuccessScanLectureQRScreenState
+    extends State<SuccessScanLectureQRScreen> {
+  /// Chốt mốc thời gian một lần thay vì gọi `DateTime.now()` trong `build()`.
+  late final String _scannedAt = ResultScreenScaffold.formatNow();
 
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double baseHeight = 812;
-    double ffem = fem * 0.97;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
+    final response = widget.response;
 
-    return SingleChildScrollView(
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              children: [
-                Container(
-                  color: Colors.white,
-                  height: 150 * hem,
-                  child: Lottie.asset(
-                    'assets/animations/success-animation.json',
-                    repeat: false,
-                  ),
-                ),
-                Text(
-                  'QUÉT MÃ QR THÀNH CÔNG!',
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                      fontSize: 18 * ffem,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
+    return ResultScreenScaffold(
+      appBarTitle: 'Kết quả quét mã QR',
+      animationAsset: 'assets/animations/success-animation.json',
+      headline: 'QUÉT MÃ QR THÀNH CÔNG!',
+      cardBorderColor: kPrimaryColor,
+      cardHeight: 250,
+      rows:
+          (fem, hem, ffem) => [
+            TransactionDetailRow(
+              height: 50 * hem,
+              label: 'Thời gian thực hiện',
+              labelStyle: resultLabelStyle(ffem),
+              value: Text(_scannedAt, style: resultValueStyle(ffem)),
             ),
-            SizedBox(height: 50 * hem),
-            Container(
-              width: double.infinity,
-              height: 250 * hem,
-              margin: EdgeInsets.only(left: 15 * fem, right: 15 * fem),
-              padding: EdgeInsets.only(
-                left: 15 * fem,
-                right: 15 * fem,
-                top: 5 * hem,
-                bottom: 5 * hem,
+            TransactionDetailRow(
+              height: 30 * hem,
+              label: 'Điểm nhận được',
+              labelStyle: resultLabelStyle(ffem),
+              value: SizedBox(
+                width: 200 * fem,
+                child: Text(
+                  '${response.pointsTransferred} xu',
+                  textAlign: TextAlign.end,
+                  maxLines: 1,
+                  style: resultValueStyle(ffem, color: Colors.green),
+                ),
               ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: kPrimaryColor),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 50 * hem,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Thời gian thực hiện',
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
-                              fontSize: 14 * ffem,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          _formatDateTime(DateTime.now()),
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
-                              fontSize: 15 * ffem,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(
-                    height: 30 * hem,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Điểm nhận được',
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
-                              fontSize: 14 * ffem,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 200 * fem,
-                          child: Text(
-                            '${response.pointsTransferred} xu',
-                            textAlign: TextAlign.end,
-                            maxLines: 1,
-                            style: GoogleFonts.openSans(
-                              textStyle: TextStyle(
-                                fontSize: 15 * ffem,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40 * hem,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Số dư mới',
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
-                              fontSize: 14 * ffem,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 200 * fem,
-                          child: Text(
-                            '${response.newBalance} xu',
-                            textAlign: TextAlign.end,
-                            maxLines: 1,
-                            style: GoogleFonts.openSans(
-                              textStyle: TextStyle(
-                                fontSize: 15 * ffem,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+            ),
+            TransactionDetailRow(
+              height: 40 * hem,
+              label: 'Số dư mới',
+              labelStyle: resultLabelStyle(ffem),
+              value: SizedBox(
+                width: 200 * fem,
+                child: Text(
+                  '${response.newBalance} xu',
+                  textAlign: TextAlign.end,
+                  maxLines: 1,
+                  style: resultValueStyle(ffem),
+                ),
               ),
             ),
           ],
-        ),
-      ),
     );
-  }
-
-  String _formatDateTime(DateTime datetime) {
-    return DateFormat("HH:mm - dd/MM/yyyy").format(datetime);
   }
 }

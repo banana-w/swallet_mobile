@@ -262,12 +262,15 @@ final class UpdateVerification extends StudentEvent {
   List<Object?> get props => [studentId, studentCardFront];
 }
 
-class SkipUpdateVerification extends StudentEvent {
-  final String studentId;
-  const SkipUpdateVerification({required this.studentId});
+/// Gửi lại xác minh mà không đổi ảnh thẻ.
+///
+/// Handler đọc sinh viên từ bộ nhớ cục bộ chứ không dùng id truyền vào, nên
+/// tham số cũ là thừa — nơi gọi duy nhất còn truyền nhầm chuỗi "studentId".
+final class SkipUpdateVerification extends StudentEvent {
+  const SkipUpdateVerification();
 
   @override
-  List<Object?> get props => [studentId];
+  List<Object?> get props => [];
 }
 
 final class LoadOrderDetailById extends StudentEvent {

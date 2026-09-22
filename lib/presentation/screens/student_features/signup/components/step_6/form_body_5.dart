@@ -98,13 +98,8 @@ class _FormBody5State extends State<FormBody5> {
             builder: (context, state) {
               return ButtonSignUp5(
                 widget: widget,
-                onPressed: () {
-                  if (state is CheckInvitedCodeFailed) {
-                    _submitForm(context, codeController);
-                  } else {
-                    _submitForm(context, codeController);
-                  }
-                },
+                // Hai nhánh if/else cũ chạy đúng cùng một đoạn lệnh.
+                onPressed: () => _submitForm(context, codeController),
               );
             },
           ),
@@ -114,47 +109,38 @@ class _FormBody5State extends State<FormBody5> {
   }
 }
 
-void _submitForm(BuildContext context, codeController) async {
+Future<void> _submitForm(
+  BuildContext context,
+  TextEditingController codeController,
+) async {
+  final inviteCode = codeController.text;
   final authenModel = await AuthenLocalDataSource.getAuthen();
+  if (!context.mounted) return;
+
+  // Hai nhánh cũ gọi cùng một hàm kiểm tra mã mời, chỉ khác bản nháp được ghi.
+  final validationError = await context
+      .read<ValidationCubit>()
+      .validateInviteCode(inviteCode);
+  if (!context.mounted || validationError != '') return;
+
   if (authenModel == null) {
-    context
-        .read<ValidationCubit>()
-        .validateInviteCode(codeController.text)
-        .then((value) async {
-          if (value == '') {
-            final createAuthenModel =
-                await AuthenLocalDataSource.getCreateAuthen();
-            createAuthenModel!.inviteCode = codeController.text;
-            String createAuthenString = jsonEncode(createAuthenModel);
-            AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
-            Navigator.pushNamed(
-              context,
-              SignUp7Screen.routeName,
-              arguments: SignUp1Screen.defaultRegister,
-            );
-          } else {
-            return null;
-          }
-        });
+    final createAuthenModel = await AuthenLocalDataSource.getCreateAuthen();
+    // Trước đây dùng `!` trên dữ liệu đọc từ bộ nhớ cục bộ.
+    if (createAuthenModel == null) return;
+    createAuthenModel.inviteCode = inviteCode;
+    // Lưu là async, trước đây không await.
+    await AuthenLocalDataSource.saveCreateAuthen(jsonEncode(createAuthenModel));
   } else {
-    context
-        .read<ValidationCubit>()
-        .validateInviteCode(codeController.text)
-        .then((value) async {
-          if (value == '') {
-            final verifyAuthenModel =
-                await AuthenLocalDataSource.getVerifyAuthen();
-            verifyAuthenModel!.inviteCode = codeController.text;
-            String verifyAuthenString = jsonEncode(verifyAuthenModel);
-            AuthenLocalDataSource.saveVerifyAuthen(verifyAuthenString);
-            Navigator.pushNamed(
-              context,
-              SignUp7Screen.routeName,
-              arguments: SignUp1Screen.defaultRegister,
-            );
-          } else {
-            return null;
-          }
-        });
+    final verifyAuthenModel = await AuthenLocalDataSource.getVerifyAuthen();
+    if (verifyAuthenModel == null) return;
+    verifyAuthenModel.inviteCode = inviteCode;
+    await AuthenLocalDataSource.saveVerifyAuthen(jsonEncode(verifyAuthenModel));
   }
+
+  if (!context.mounted) return;
+  Navigator.pushNamed(
+    context,
+    SignUp7Screen.routeName,
+    arguments: SignUp1Screen.defaultRegister,
+  );
 }

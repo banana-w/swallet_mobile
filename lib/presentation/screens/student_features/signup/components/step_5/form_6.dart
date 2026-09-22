@@ -31,7 +31,6 @@ class _FormBody6State extends State<FormBody6> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController campusController = TextEditingController();
   File? _selectedFrontCard;
-  File? _selectedBackCard;
   String? errorCard;
   @override
   Widget build(BuildContext context) {
@@ -60,7 +59,7 @@ class _FormBody6State extends State<FormBody6> {
                 _selectedFrontCard != null
                     ? InkWell(
                       onTap: () {
-                        _imageModelBottomSheet(context, _selectedFrontCard);
+                        _imageModelBottomSheet(context);
                       },
                       child: Container(
                         width: 150 * widget.fem,
@@ -92,7 +91,7 @@ class _FormBody6State extends State<FormBody6> {
                           hem: widget.hem,
                           ffem: widget.ffem,
                           onPressed: () {
-                            _imageModelBottomSheet(context, _selectedFrontCard);
+                            _imageModelBottomSheet(context);
                           },
                         ),
                       ],
@@ -168,186 +167,144 @@ class _FormBody6State extends State<FormBody6> {
             fem: widget.fem,
             hem: widget.hem,
             ffem: widget.ffem,
-            onPressed: () async {
-              _submitForm(context, _selectedFrontCard, _selectedBackCard);
-            },
+            onPressed: () => _submitForm(context, _selectedFrontCard),
           ),
         ],
       ),
     );
   }
 
-  void _submitForm(
+  Future<void> _submitForm(
     BuildContext context,
-    selectedFrontCard,
-    selectedBackCard,
+    File? selectedFrontCard,
   ) async {
+    if (selectedFrontCard == null) {
+      setState(() => errorCard = 'Thẻ sinh viên không được bỏ trống');
+      return;
+    }
+    if (!_formKey.currentState!.validate()) return;
+
     final authenModel = await AuthenLocalDataSource.getAuthen();
+    if (!mounted) return;
+
     if (authenModel == null) {
-      if (selectedFrontCard == null) {
-        setState(() {
-          errorCard = 'Thẻ sinh viên không được bỏ trống';
-        });
-      } else if (_formKey.currentState!.validate()) {
-        final createAuthenModel = await AuthenLocalDataSource.getCreateAuthen();
-        createAuthenModel!.studentFrontCard = selectedFrontCard!.path;
-        // createAuthenModel.studentBackCard = _selectedBackCard!.path;
-        String createAuthenString = jsonEncode(createAuthenModel);
-        AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
-        Navigator.pushNamed(context, SignUp6Screen.routeName);
-      }
-    } 
-    else {
-      if (selectedFrontCard == null) {
-        setState(() {
-          errorCard = 'Thẻ sinh viên không được bỏ trống';
-        });
-      } else if (_formKey.currentState!.validate()) {
-        final verifyAuthenModel = await AuthenLocalDataSource.getVerifyAuthen();
-        verifyAuthenModel!.studentFrontCard = selectedFrontCard!.path;
-        verifyAuthenModel.studentBackCard = selectedBackCard!.path;
-        String verifyAuthenString = jsonEncode(verifyAuthenModel);
-        AuthenLocalDataSource.saveVerifyAuthen(verifyAuthenString);
-        Navigator.pushNamed(context, SignUp6Screen.routeName);
-      }
-    }
-  }
-
-  Future _pickerImageFromGallery(File? selectedImage, context) async {
-    final returnedImage = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-    );
-
-    if (returnedImage == null) return;
-
-    if (selectedImage.hashCode == _selectedFrontCard.hashCode) {
-      selectedImage = File(returnedImage.path);
-
-      setState(() {
-        _selectedFrontCard = selectedImage;
-      });
-      Navigator.pop(context);
+      final createAuthenModel = await AuthenLocalDataSource.getCreateAuthen();
+      // Trước đây dùng `!` trên dữ liệu đọc từ bộ nhớ cục bộ.
+      if (createAuthenModel == null) return;
+      createAuthenModel.studentFrontCard = selectedFrontCard.path;
+      // Lưu là async, trước đây không await.
+      await AuthenLocalDataSource.saveCreateAuthen(
+        jsonEncode(createAuthenModel),
+      );
     } else {
-      selectedImage = File(returnedImage.path);
-
-      setState(() {
-        _selectedBackCard = selectedImage;
-      });
-      Navigator.pop(context);
+      final verifyAuthenModel = await AuthenLocalDataSource.getVerifyAuthen();
+      if (verifyAuthenModel == null) return;
+      verifyAuthenModel.studentFrontCard = selectedFrontCard.path;
+      // Dòng `studentBackCard = selectedBackCard!.path` đã bị bỏ: phần chọn
+      // ảnh mặt sau bị comment từ lâu nên biến đó luôn null — nhánh xác minh
+      // lại chắc chắn ném lỗi null tại đây.
+      await AuthenLocalDataSource.saveVerifyAuthen(
+        jsonEncode(verifyAuthenModel),
+      );
     }
+
+    if (!mounted) return;
+    Navigator.pushNamed(context, SignUp6Screen.routeName);
   }
 
-  Future _pickerImageFromCamera(File? selectedImage, context) async {
-    final returnedImage = await ImagePicker().pickImage(
-      source: ImageSource.camera,
-    );
-
-    if (returnedImage == null) return;
-
-    if (selectedImage.hashCode == _selectedFrontCard.hashCode) {
-      selectedImage = File(returnedImage.path);
-
-      setState(() {
-        _selectedFrontCard = selectedImage;
-      });
-      Navigator.pop(context);
-    } else {
-      selectedImage = File(returnedImage.path);
-
-      setState(() {
-        _selectedBackCard = selectedImage;
-      });
-      Navigator.pop(context);
-    }
+  /// Chọn ảnh từ camera hoặc thư viện (trước đây là hai hàm giống hệt nhau,
+  /// phân biệt ô ảnh bằng cách so hashCode của hai File?).
+  Future<void> _pickImage(ImageSource source) async {
+    final picked = await ImagePicker().pickImage(source: source);
+    if (picked == null || !mounted) return;
+    setState(() {
+      _selectedFrontCard = File(picked.path);
+      errorCard = null;
+    });
+    Navigator.pop(context);
   }
 
-  void _imageModelBottomSheet(context, File? selectedImage) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
-    double baseHeight = 812;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
+  void _imageModelBottomSheet(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final fem = size.width / 375;
+    final hem = size.height / 812;
+    final ffem = fem * 0.97;
 
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
-      builder: (context) {
+      builder: (sheetContext) {
         return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.2,
-          width: MediaQuery.of(context).size.width,
+          height: size.height * 0.2,
+          width: size.width,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              GestureDetector(
-                onTap: () {
-                  _pickerImageFromCamera(selectedImage, context);
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.camera_alt,
-                      color: kPrimaryColor,
-                      size: 30 * fem,
-                    ),
-                    SizedBox(width: 5 * fem),
-                    Text(
-                      'Chụp ảnh',
-                      style: GoogleFonts.openSans(
-                        textStyle: TextStyle(
-                          fontSize: 20 * ffem,
-                          fontWeight: FontWeight.bold,
-                          height: 1.3625 * ffem / fem,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              _SourceOption(
+                icon: Icons.camera_alt,
+                label: 'Chụp ảnh',
+                fem: fem,
+                ffem: ffem,
+                onTap: () => _pickImage(ImageSource.camera),
               ),
               SizedBox(height: 18 * hem),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: Divider(
-                  color: kLowTextColor,
-                  thickness: 2 * fem,
-                  // height: 300*fem,
-                ),
+                width: size.width * 0.7,
+                child: Divider(color: kLowTextColor, thickness: 2 * fem),
               ),
               SizedBox(height: 18 * hem),
-              GestureDetector(
-                onTap: () {
-                  _pickerImageFromGallery(selectedImage, context);
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.photo_size_select_actual_rounded,
-                      color: kPrimaryColor,
-                      size: 30 * fem,
-                    ),
-                    SizedBox(width: 5 * fem),
-                    Text(
-                      'Chọn sẵn có',
-                      style: GoogleFonts.openSans(
-                        textStyle: TextStyle(
-                          fontSize: 20 * ffem,
-                          fontWeight: FontWeight.bold,
-                          height: 1.3625 * ffem / fem,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              _SourceOption(
+                icon: Icons.photo_size_select_actual_rounded,
+                label: 'Chọn sẵn có',
+                fem: fem,
+                ffem: ffem,
+                onTap: () => _pickImage(ImageSource.gallery),
               ),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+/// Một dòng lựa chọn nguồn ảnh trong bottom sheet.
+class _SourceOption extends StatelessWidget {
+  const _SourceOption({
+    required this.icon,
+    required this.label,
+    required this.fem,
+    required this.ffem,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final double fem;
+  final double ffem;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: kPrimaryColor, size: 30 * fem),
+          SizedBox(width: 5 * fem),
+          Text(
+            label,
+            style: GoogleFonts.openSans(
+              textStyle: TextStyle(
+                fontSize: 20 * ffem,
+                fontWeight: FontWeight.bold,
+                height: 1.3625 * ffem / fem,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

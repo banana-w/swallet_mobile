@@ -233,121 +233,78 @@ class _FormBody7State extends State<FormBody7> {
             ),
           ),
           SizedBox(height: 30 * widget.hem),
-          BlocListener<AuthenticationBloc, AuthenticationState>(
+          BlocConsumer<AuthenticationBloc, AuthenticationState>(
+            listenWhen:
+                (previous, current) =>
+                    current is RegistrationSuccess ||
+                    current is AuthenticationFailed,
             listener: (context, state) {
-              if (state is AuthenticationSuccess) {
+              if (state is RegistrationSuccess) {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   SignUp9Screen.routeName,
-                  (Route<dynamic> route) => false,
+                  (route) => false,
                 );
-              } else if (state is AuthenticationInProcess) {
-                showDialog<String>(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (BuildContext context) {
-                    Future.delayed(Duration(seconds: 20), () {
-                      if(context.mounted) {
-                        Navigator.pop(context);
-                      }
-                    });
-                    return AlertDialog(
-                      content: SizedBox(
-                        width: 250,
-                        height: 250,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: CircularProgressIndicator(
-                                color: kPrimaryColor,
-                              ),
-                            ),
-                            Text(
-                              'Đang tạo tài khoản...',
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
+              } else if (state is AuthenticationFailed) {
+                // Trước đây nhánh thất bại không được xử lý: hộp thoại "Đang
+                // tạo tài khoản..." cứ đứng yên tới khi hết 20 giây hẹn giờ
+                // rồi tự tắt, người dùng không hề biết lỗi gì.
+                setState(() => errorString = state.error);
               }
             },
-            child: BlocBuilder<ValidationCubit, ValidationState>(
-              builder: (context, state) {
-                return ButtonSignUp7(
+            builder: (context, authState) {
+              final isCreating = authState is AuthenticationInProcess;
+              return PopScope(
+                // Đang tạo tài khoản thì không cho thoát giữa chừng.
+                canPop: !isCreating,
+                child: ButtonSignUp7(
                   widget: widget,
-                  onPressed: () {
-                    if (state is CheckPhoneFailed) {
-                      if (_formKey.currentState!.validate()) {
-                        _submitForm(
-                          context,
-                          countryController,
-                          phoneNumberController,
-                        );
-                      }
-                    } else {
-                      if (_formKey.currentState!.validate()) {
-                        _submitForm(
-                          context,
-                          countryController,
-                          phoneNumberController,
-                        );
-                      }
-                    }
-                  },
-                );
-              },
-            ),
+                  isLoading: isCreating,
+                  onPressed: isCreating ? null : _onSubmitPressed,
+                ),
+              );
+            },
           ),
         ],
       ),
     );
   }
 
-  void _submitForm(
-    BuildContext context,
-    countryController,
-    phoneNumberController,
-  ) async {
-      if (context.mounted) {
-        context
-            .read<ValidationCubit>()
-            .validatePhoneNumber('0${phoneNumberController.text}')
-            .then((value) async {
-              if (value == '') {
-                // Lưu số điện thoại
-                final createAuthenModel =
-                    await AuthenLocalDataSource.getCreateAuthen();
-                createAuthenModel!.phoneNumber =
-                    '0${phoneNumberController.text}';
-                    
-                // String createAuthenString = jsonEncode(createAuthenModel);
-                // AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
+  void _onSubmitPressed() {
+    if (_formKey.currentState!.validate()) {
+      setState(() => errorString = null);
+      _submitForm();
+    }
+  }
 
-                if (context.mounted) {
-                  context.read<AuthenticationBloc>().add(
-                    RegisterAccount(createAuthenModel: createAuthenModel),
-                  );
-                }
-              } else {
-                if (value == '["Số điện thoại không hợp lệ"]') {
-                  setState(() {
-                    errorString = 'Số điện thoại không hợp lệ';
-                  });
-                }
-              }
-            });
-      }
-     
+  Future<void> _submitForm() async {
+    final phoneNumber = '0${phoneNumberController.text}';
+    final validationError = await context
+        .read<ValidationCubit>()
+        .validatePhoneNumber(phoneNumber);
+
+    if (validationError != '') {
+      if (!mounted) return;
+      // Trước đây chỉ đúng một chuỗi lỗi được hiển thị, mọi lỗi khác bị nuốt
+      // im lặng và nút bấm trông như không phản hồi.
+      setState(() => errorString = 'Số điện thoại không hợp lệ');
+      return;
+    }
+
+    final createAuthenModel = await AuthenLocalDataSource.getCreateAuthen();
+    if (!mounted) return;
+    if (createAuthenModel == null) {
+      // Trước đây dùng `createAuthenModel!` — dữ liệu đăng ký bị mất là app
+      // ném lỗi null ngay tại đây.
+      setState(() {
+        errorString = 'Không tìm thấy dữ liệu đăng ký, vui lòng làm lại từ đầu';
+      });
+      return;
+    }
+
+    createAuthenModel.phoneNumber = phoneNumber;
+    context.read<AuthenticationBloc>().add(
+      RegisterAccount(createAuthenModel: createAuthenModel),
+    );
   }
 }

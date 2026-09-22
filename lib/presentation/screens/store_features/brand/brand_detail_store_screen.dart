@@ -12,20 +12,19 @@ class BrandDetailStoreScreen extends StatelessWidget {
   static Route route({required String id}) {
     return MaterialPageRoute(
       builder: (_) => BrandDetailStoreScreen(id: id),
-      settings: const RouteSettings(arguments: routeName),
+      settings: const RouteSettings(name: routeName),
     );
   }
 
-  final String id;
   const BrandDetailStoreScreen({super.key, required this.id});
+
+  final String id;
 
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 375;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-
-    double baseHeight = 812;
-    double hem = MediaQuery.of(context).size.height / baseHeight;
+    final size = MediaQuery.sizeOf(context);
+    final fem = size.width / 375;
+    final hem = size.height / 812;
 
     return SafeArea(
       child: Scaffold(
@@ -35,14 +34,12 @@ class BrandDetailStoreScreen extends StatelessWidget {
           toolbarHeight: 50 * hem,
           leading: Container(
             margin: EdgeInsets.only(left: 20 * fem),
+            // leadingWidth vô hạn nên cần Row để icon bám mép trái.
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
+                  onTap: () => Navigator.pop(context),
                   child: Icon(
                     Icons.arrow_back_rounded,
                     color: Colors.white,
@@ -63,7 +60,7 @@ class BrandDetailStoreScreen extends StatelessWidget {
               (context) =>
                   BrandBloc(brandRepository: context.read<BrandRepository>())
                     ..add(LoadBrandById(id: id)),
-          child: Body(),
+          child: const Body(),
         ),
       ),
     );

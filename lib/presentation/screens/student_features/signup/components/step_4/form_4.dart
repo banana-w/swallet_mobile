@@ -125,22 +125,9 @@ class _FormBody4State extends State<FormBody4> {
               return ButtonSignUp4(
                 widget: widget,
                 onPressed: () {
-                  if (state is CheckStudentCodeFailed) {
-                    if (_formKey.currentState!.validate()) {
-                      _submitForm(
-                        context,
-                        studentCodeController,
-                        majorController,
-                      );
-                    }
-                  } else {
-                    if (_formKey.currentState!.validate()) {
-                      _submitForm(
-                        context,
-                        studentCodeController,
-                        majorController,
-                      );
-                    }
+                  // Hai nhánh if/else cũ chạy đúng cùng một đoạn lệnh.
+                  if (_formKey.currentState!.validate()) {
+                    _submitForm(context, studentCodeController);
                   }
                 },
               );
@@ -152,53 +139,38 @@ class _FormBody4State extends State<FormBody4> {
   }
 }
 
-void _submitForm(
+Future<void> _submitForm(
   BuildContext context,
-  studentCodeController,
-  majorController,
+  TextEditingController studentCodeController,
 ) async {
+  final code = studentCodeController.text.trim();
   final authenModel = await AuthenLocalDataSource.getAuthen();
+  if (!context.mounted) return;
+
+  // Hai nhánh cũ gọi cùng một hàm kiểm tra mã số, chỉ khác bản nháp được ghi.
+  final validationError = await context
+      .read<ValidationCubit>()
+      .validateStudentCode(code);
+  if (!context.mounted || validationError != '') return;
+
   if (authenModel == null) {
-    context
-        .read<ValidationCubit>()
-        .validateStudentCode(studentCodeController.text)
-        .then((value) async {
-          if (value == '') {
-            final createAuthenModel =
-                await AuthenLocalDataSource.getCreateAuthen();
-            createAuthenModel!.code = studentCodeController.text.trim();
-            // createAuthenModel.majorId = majorController.text.trim();
-            String createAuthenString = jsonEncode(createAuthenModel);
-            AuthenLocalDataSource.saveCreateAuthen(createAuthenString);
-            Navigator.pushNamed(
-              context,
-              SignUp5Screen.routeName,
-              arguments: SignUp1Screen.defaultRegister,
-            );
-          } else {
-            return null;
-          }
-        });
+    final createAuthenModel = await AuthenLocalDataSource.getCreateAuthen();
+    // Trước đây dùng `!` trên dữ liệu đọc từ bộ nhớ cục bộ.
+    if (createAuthenModel == null) return;
+    createAuthenModel.code = code;
+    // Lưu là async, trước đây không await.
+    await AuthenLocalDataSource.saveCreateAuthen(jsonEncode(createAuthenModel));
   } else {
-    context
-        .read<ValidationCubit>()
-        .validateStudentCode(studentCodeController.text)
-        .then((value) async {
-          if (value == '') {
-            final verifyAuthenModel =
-                await AuthenLocalDataSource.getVerifyAuthen();
-            verifyAuthenModel!.code = studentCodeController.text.trim();
-            // verifyAuthenModel.majorId = majorController.text.trim();
-            String verifyAuthenString = jsonEncode(verifyAuthenModel);
-            AuthenLocalDataSource.saveVerifyAuthen(verifyAuthenString);
-            Navigator.pushNamed(
-              context,
-              SignUp5Screen.routeName,
-              arguments: SignUp1Screen.defaultRegister,
-            );
-          } else {
-            return null;
-          }
-        });
+    final verifyAuthenModel = await AuthenLocalDataSource.getVerifyAuthen();
+    if (verifyAuthenModel == null) return;
+    verifyAuthenModel.code = code;
+    await AuthenLocalDataSource.saveVerifyAuthen(jsonEncode(verifyAuthenModel));
   }
+
+  if (!context.mounted) return;
+  Navigator.pushNamed(
+    context,
+    SignUp5Screen.routeName,
+    arguments: SignUp1Screen.defaultRegister,
+  );
 }

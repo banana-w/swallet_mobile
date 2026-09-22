@@ -29,100 +29,35 @@ class CampaignVoucherList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CampaignVoucherBloc(
-          campaignRepository: context.read<CampaignRepository>())
-        ..add(LoadCampaignVoucher(id: campaignDetailModel.id)),
+      create:
+          (context) => CampaignVoucherBloc(
+            campaignRepository: context.read<CampaignRepository>(),
+          )..add(LoadCampaignVoucher(id: campaignDetailModel.id)),
       child: BlocBuilder<CampaignVoucherBloc, CampaignVoucherState>(
         builder: (context, state) {
           if (state is CampaignVoucherLoading) {
             return buildCampaignListShimmer(fem, hem);
           } else if (state is CampaignVouchersLoaded) {
             if (state.campaignVouchers.isEmpty) {
-              return Container(
-                width: double.infinity,
-                margin: EdgeInsets.only(left: 15 * fem, right: 15 * fem),
-                height: 220 * hem,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/voucher-navbar-icon.svg',
-                      width: 60 * fem,
-                      colorFilter:
-                          ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
-                    ),
-                    Center(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 5),
-                        child: Text(
-                          'Không có ưu đãi nào đang diễn ra!',
-                          style: GoogleFonts.openSans(
-                              textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          )),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10 * fem,
-                    ),
-                  ],
-                ),
+              return _EmptyVouchers(
+                fem: fem,
+                hem: hem,
+                message: 'Không có ưu đãi nào đang diễn ra!',
               );
             } else {
               // Lọc danh sách voucher dựa trên id
-              final filteredVouchers = id == null
-                  ? state.campaignVouchers
-                  : state.campaignVouchers
-                      .asMap()
-                      .entries
-                      .where((entry) => entry.value.id != id)
-                      .map((entry) => entry.value)
-                      .toList();
+              final filteredVouchers =
+                  id == null
+                      ? state.campaignVouchers
+                      : state.campaignVouchers
+                          .where((voucher) => voucher.id != id)
+                          .toList();
 
               if (filteredVouchers.isEmpty) {
-                return Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(left: 15 * fem, right: 15 * fem),
-                  height: 220 * hem,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/voucher-navbar-icon.svg',
-                        width: 60 * fem,
-                        colorFilter:
-                            ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
-                      ),
-                      Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 5),
-                          child: Text(
-                            'Không có ưu đãi nào khác trong chiến dịch này!',
-                            style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            )),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10 * fem,
-                      ),
-                    ],
-                  ),
+                return _EmptyVouchers(
+                  fem: fem,
+                  hem: hem,
+                  message: 'Không có ưu đãi nào khác trong chiến dịch này!',
                 );
               }
 
@@ -138,13 +73,14 @@ class CampaignVoucherList extends StatelessWidget {
                     return GestureDetector(
                       onTap: () async {
                         final account = await AuthenLocalDataSource.getAuthen();
+                        if (account == null || !context.mounted) return;
                         Navigator.pushNamed(
                           context,
                           CampaignVoucherScreen.routeName,
                           arguments: <dynamic>[
                             campaignDetailModel,
-                            filteredVouchers[index],
-                            account?.accountId,
+                            campaignVoucher,
+                            account.accountId,
                           ],
                         );
                       },
@@ -163,31 +99,50 @@ class CampaignVoucherList extends StatelessWidget {
                               children: [
                                 Container(
                                   padding: EdgeInsets.only(
-                                      top: 5 * hem,
-                                      right: 5 * fem,
-                                      left: 5 * fem),
+                                    top: 5 * hem,
+                                    right: 5 * fem,
+                                    left: 5 * fem,
+                                  ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10 * fem),
-                                        topRight: Radius.circular(10 * fem)),
+                                      topLeft: Radius.circular(10 * fem),
+                                      topRight: Radius.circular(10 * fem),
+                                    ),
                                     child: SizedBox(
                                       height: 150 * hem,
                                       width: 180 * fem,
                                       child: Image.network(
                                         campaignVoucher.image,
                                         fit: BoxFit.fill,
-                                        loadingBuilder:
-                                            (context, child, loadingProgress) {
+                                        // Ảnh hiển thị ở 180*fem, không cần
+                                        // giữ bản gốc trong bộ nhớ.
+                                        cacheWidth:
+                                            (180 *
+                                                    fem *
+                                                    MediaQuery.devicePixelRatioOf(
+                                                      context,
+                                                    ))
+                                                .round(),
+                                        loadingBuilder: (
+                                          context,
+                                          child,
+                                          loadingProgress,
+                                        ) {
                                           if (loadingProgress == null) {
                                             return child;
                                           }
                                           return ShimmerWidget.rectangular(
-                                              height: 160 * hem);
+                                            height: 160 * hem,
+                                          );
                                         },
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
+                                        errorBuilder: (
+                                          context,
+                                          error,
+                                          stackTrace,
+                                        ) {
                                           return Image.asset(
-                                              'assets/images/image-404.jpg');
+                                            'assets/images/image-404.jpg',
+                                          );
                                         },
                                       ),
                                     ),
@@ -195,19 +150,21 @@ class CampaignVoucherList extends StatelessWidget {
                                 ),
                                 Container(
                                   padding: EdgeInsets.only(
-                                      left: 10 * fem,
-                                      right: 10 * fem,
-                                      top: 10 * hem),
+                                    left: 10 * fem,
+                                    right: 10 * fem,
+                                    top: 10 * hem,
+                                  ),
                                   child: Text(
                                     campaignVoucher.voucherName,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
                                     style: GoogleFonts.openSans(
-                                        textStyle: TextStyle(
-                                      fontSize: 14 * ffem,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500,
-                                    )),
+                                      textStyle: TextStyle(
+                                        fontSize: 14 * ffem,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -217,16 +174,20 @@ class CampaignVoucherList extends StatelessWidget {
                             bottom: 10 * fem,
                             child: Container(
                               padding: EdgeInsets.only(
-                                  left: 10 * fem, right: 10 * fem),
+                                left: 10 * fem,
+                                right: 10 * fem,
+                              ),
                               decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Color(0x0c000000),
-                                        offset: Offset(2 * fem, 5 * fem),
-                                        blurRadius: 5 * fem)
-                                  ]),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x0c000000),
+                                    offset: Offset(2 * fem, 5 * fem),
+                                    blurRadius: 5 * fem,
+                                  ),
+                                ],
+                              ),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -237,23 +198,25 @@ class CampaignVoucherList extends StatelessWidget {
                                       Text(
                                         formatter.format(campaignVoucher.price),
                                         style: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
-                                          fontSize: 20 * ffem,
-                                          color: kPrimaryColor,
-                                          fontWeight: FontWeight.bold,
-                                        )),
+                                          textStyle: TextStyle(
+                                            fontSize: 20 * ffem,
+                                            color: kPrimaryColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(
-                                            left: 2 * fem,
-                                            top: 2 * hem,
-                                            bottom: 0 * hem),
+                                          left: 2 * fem,
+                                          top: 2 * hem,
+                                          bottom: 0 * hem,
+                                        ),
                                         child: SvgPicture.asset(
                                           'assets/icons/coin.svg',
                                           width: 25 * fem,
                                           height: 22 * fem,
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -265,7 +228,9 @@ class CampaignVoucherList extends StatelessWidget {
                             right: 0,
                             child: Container(
                               padding: EdgeInsets.only(
-                                  left: 10 * fem, right: 10 * fem),
+                                left: 10 * fem,
+                                right: 10 * fem,
+                              ),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -274,25 +239,28 @@ class CampaignVoucherList extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        '${filteredVouchers[index].numberOfItemsAvailable}',
+                                        '${campaignVoucher.numberOfItemsAvailable ?? 0}',
                                         style: GoogleFonts.openSans(
-                                            textStyle: TextStyle(
-                                          fontSize: 14 * ffem,
-                                          color: kPrimaryColor,
-                                          fontWeight: FontWeight.normal,
-                                        )),
+                                          textStyle: TextStyle(
+                                            fontSize: 14 * ffem,
+                                            color: kPrimaryColor,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
                                       ),
                                       Padding(
-                                        padding:
-                                            EdgeInsets.only(right: 5 * fem),
+                                        padding: EdgeInsets.only(
+                                          right: 5 * fem,
+                                        ),
                                         child: Text(
-                                          '/${filteredVouchers[index].numberOfItems}',
+                                          '/${campaignVoucher.numberOfItems}',
                                           style: GoogleFonts.openSans(
-                                              textStyle: TextStyle(
-                                            fontSize: 14 * ffem,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.normal,
-                                          )),
+                                            textStyle: TextStyle(
+                                              fontSize: 14 * ffem,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -316,22 +284,66 @@ class CampaignVoucherList extends StatelessWidget {
   }
 }
 
+class _EmptyVouchers extends StatelessWidget {
+  const _EmptyVouchers({
+    required this.fem,
+    required this.hem,
+    required this.message,
+  });
+
+  final double fem;
+  final double hem;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(left: 15 * fem, right: 15 * fem),
+      height: 220 * hem,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            'assets/icons/voucher-navbar-icon.svg',
+            width: 60 * fem,
+            colorFilter: const ColorFilter.mode(kLowTextColor, BlendMode.srcIn),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(
+              message,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.openSans(
+                textStyle: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 10 * fem),
+        ],
+      ),
+    );
+  }
+}
+
 Widget buildCampaignListShimmer(double fem, double hem) {
   return Row(
     children: [
       Container(
         margin: EdgeInsets.only(left: 15 * fem, top: 20 * hem),
-        child: ShimmerWidget.rectangular(
-          height: 200 * hem,
-          width: 170 * fem,
-        ),
+        child: ShimmerWidget.rectangular(height: 200 * hem, width: 170 * fem),
       ),
       Container(
         margin: EdgeInsets.only(left: 15 * fem, top: 20 * hem),
-        child: ShimmerWidget.rectangular(
-          height: 200 * hem,
-          width: 170 * fem,
-        ),
+        child: ShimmerWidget.rectangular(height: 200 * hem, width: 170 * fem),
       ),
     ],
   );
